@@ -1,0 +1,6 @@
+list(APPEND EATSM2_SOURCES
+  ${CMAKE_CURRENT_LIST_DIR}/DataRecorder.cpp
+  ${CMAKE_CURRENT_LIST_DIR}/DataRecorder.h
+  ${CMAKE_CURRENT_LIST_DIR}/FileWriter.cpp
+  ${CMAKE_CURRENT_LIST_DIR}/FileWriter.h
+)

@@ -1,0 +1,9 @@
+list(APPEND EATSM2_SOURCES
+  ${CMAKE_CURRENT_LIST_DIR}/Constants.h
+  ${CMAKE_CURRENT_LIST_DIR}/FileReader.cpp
+  ${CMAKE_CURRENT_LIST_DIR}/FileReader.h
+  ${CMAKE_CURRENT_LIST_DIR}/InitialState.cpp
+  ${CMAKE_CURRENT_LIST_DIR}/InitialState.h
+  ${CMAKE_CURRENT_LIST_DIR}/Parameters.cpp
+  ${CMAKE_CURRENT_LIST_DIR}/Parameters.h
+)
