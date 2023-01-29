@@ -1,167 +1,167 @@
 #ifndef PARAMETERS
 #define PARAMETERS
 
-#include "Types.h"
 #include "Constants.h"
+#include "Types.h"
 
 class Parameters {
-public:
-    ~Parameters( );
+ public:
+  ~Parameters();
 
-    static Types::ParametersPointer Get( );
+  static Types::ParametersPointer Get();
 
-    bool Initialise( const Types::StringMatrix& );
+  bool Initialise(const Types::StringMatrix&);
 
-    // Getters
-    unsigned& GetRunTimeInSeconds( );
-    unsigned& GetRandomSeed( );
-    unsigned& GetSamplingRate( );
-    unsigned& GetNumberOfSizeClasses( );
+  // Getters
+  unsigned& GetRunTimeInSeconds();
+  unsigned& GetRandomSeed();
+  unsigned& GetSamplingRate();
+  unsigned& GetNumberOfSizeClasses();
 
-    bool GetReadModelState( );
-    bool GetWriteModelState( );
-    bool GetUseLinearFeeding( );
+  bool GetReadModelState();
+  bool GetWriteModelState();
+  bool GetUseLinearFeeding();
 
-    double& GetInitialAutotrophVolume( );
-    double& GetInitialHeterotrophVolume( );
-    double& GetMinimumHeterotrophicVolume( );
+  double& GetInitialAutotrophVolume();
+  double& GetInitialHeterotrophVolume();
+  double& GetMinimumHeterotrophicVolume();
 
-    double& GetSmallestIndividualVolume( );
-    double& GetLargestIndividualVolume( );
+  double& GetSmallestIndividualVolume();
+  double& GetLargestIndividualVolume();
 
-    unsigned& GetPreferredPreyVolumeRatio( );
-    double& GetPreferenceFunctionWidth( );
+  unsigned& GetPreferredPreyVolumeRatio();
+  double& GetPreferenceFunctionWidth();
 
-    double& GetSizeClassSubsetFraction( );
-    double& GetHalfSaturationConstantFraction( );
+  double& GetSizeClassSubsetFraction();
+  double& GetHalfSaturationConstantFraction();
 
-    double& GetAssimilationEfficiency( );
-    double& GetFractionalMetabolicExpense( );
-    double& GetMetabolicIndex( );
+  double& GetAssimilationEfficiency();
+  double& GetFractionalMetabolicExpense();
+  double& GetMetabolicIndex();
 
-    double& GetMutationProbability( );
-    double& GetMutationStandardDeviation( );
+  double& GetMutationProbability();
+  double& GetMutationStandardDeviation();
 
-    // Setters
-    void SetRandomSeed( const unsigned );
-    void SetRunTimeInSeconds( const unsigned );
-    void SetSamplingRate( const unsigned );
-    void SetNumberOfSizeClasses( const unsigned );
+  // Setters
+  void SetRandomSeed(const unsigned);
+  void SetRunTimeInSeconds(const unsigned);
+  void SetSamplingRate(const unsigned);
+  void SetNumberOfSizeClasses(const unsigned);
 
-    void SetReadModelState( const bool );
-    void SetWriteModelState( const bool );
-    void SetUseLinearFeeding( const bool );
+  void SetReadModelState(const bool);
+  void SetWriteModelState(const bool);
+  void SetUseLinearFeeding(const bool);
 
-    void SetInitialAutotrophicVolume( const double );
-    void SetInitialHeterotrophicVolume( const double );
-    void SetMinimumHeterotrophicVolume( const double );
+  void SetInitialAutotrophicVolume(const double);
+  void SetInitialHeterotrophicVolume(const double);
+  void SetMinimumHeterotrophicVolume(const double);
 
-    void SetSmallestIndividualVolume( const double );
-    void SetLargestIndividualVolume( const double );
+  void SetSmallestIndividualVolume(const double);
+  void SetLargestIndividualVolume(const double);
 
-    void SetPreferredPreyVolumeRatio( const unsigned );
-    void SetPreferenceFunctionWidth( const double );
+  void SetPreferredPreyVolumeRatio(const unsigned);
+  void SetPreferenceFunctionWidth(const double);
 
-    void SetSizeClassSubsetFraction( const double );
-    void SetHalfSaturationConstantFraction( const double );
+  void SetSizeClassSubsetFraction(const double);
+  void SetHalfSaturationConstantFraction(const double);
 
-    void SetAssimilationEfficiency( const double );
-    void SetFractionalMetabolicExpense( const double );
-    void SetMetabolicIndex( const double );
+  void SetAssimilationEfficiency(const double);
+  void SetFractionalMetabolicExpense(const double);
+  void SetMetabolicIndex(const double);
 
-    void SetMutationProbability( const double );
-    void SetMutationStandardDeviation( const double );
+  void SetMutationProbability(const double);
+  void SetMutationStandardDeviation(const double);
 
-    // Calculated variables
+  // Calculated variables
 
-    double& GetSmallestVolumeExponent( );
-    double& GetLargestVolumeExponent( );
+  double& GetSmallestVolumeExponent();
+  double& GetLargestVolumeExponent();
 
-    unsigned& GetAutotrophSizeClassIndex( );
+  unsigned& GetAutotrophSizeClassIndex();
 
-    double& GetSizeClassBoundary( const unsigned );
-    double& GetSizeClassMidPoint( const unsigned );
+  double& GetSizeClassBoundary(const unsigned);
+  double& GetSizeClassMidPoint(const unsigned);
 
-    double& GetInterSizeClassPreference( const unsigned, const unsigned );
-    double& GetInterSizeClassVolume( const unsigned, const unsigned );
+  double& GetInterSizeClassPreference(const unsigned, const unsigned);
+  double& GetInterSizeClassVolume(const unsigned, const unsigned);
 
-    double& GetTotalVolume( );
-    
-    unsigned& GetMaximumSizeClassPopulation( const unsigned );
-    double& GetRemainingVolume( const unsigned );
-    double& GetLinearFeedingDenominator( const unsigned );
-    double& GetHalfSaturationConstant( const unsigned );
+  double& GetTotalVolume();
 
-    const Types::DoubleVector& GetSizeClassBoundaries( );
-    const Types::DoubleVector& GetSizeClassMidPoints( );
-    
-    const Types::DoubleVector& GetLinearFeedingDenominators( );
-    const Types::DoubleVector& GetHalfSaturationConstants( );
-    
-    const Types::UnsignedVector& GetMaximumSizeClassPopulations( );
+  unsigned& GetMaximumSizeClassPopulation(const unsigned);
+  double& GetRemainingVolume(const unsigned);
+  double& GetLinearFeedingDenominator(const unsigned);
+  double& GetHalfSaturationConstant(const unsigned);
 
-    const Types::DoubleVector& GetInterSizeClassPreferenceVector( const unsigned ) const;
-    const Types::DoubleVector& GetInterSizeClassVolumeVector( const unsigned ) const;
-    
-    const Types::DoubleMatrix& GetInterSizeClassPreferenceMatrix( ) const;
-    const Types::DoubleMatrix& GetInterSizeClassVolumeMatrix( ) const;
+  const Types::DoubleVector& GetSizeClassBoundaries();
+  const Types::DoubleVector& GetSizeClassMidPoints();
 
-private:
-    Parameters( );
-    void CalculateParameters( );
-    bool IsInitialised( );
+  const Types::DoubleVector& GetLinearFeedingDenominators();
+  const Types::DoubleVector& GetHalfSaturationConstants();
 
-    static Types::ParametersPointer mThis;
+  const Types::UnsignedVector& GetMaximumSizeClassPopulations();
 
-    // User defined constants
-    unsigned mRandomSeed;
-    unsigned mRunTimeInSeconds;
-    unsigned mSamplingRate;
-    unsigned mNumberOfSizeClasses;
+  const Types::DoubleVector& GetInterSizeClassPreferenceVector(const unsigned) const;
+  const Types::DoubleVector& GetInterSizeClassVolumeVector(const unsigned) const;
 
-    bool mReadModelState;
-    bool mWriteModelState;
-    bool mUseLinearFeeding;
+  const Types::DoubleMatrix& GetInterSizeClassPreferenceMatrix() const;
+  const Types::DoubleMatrix& GetInterSizeClassVolumeMatrix() const;
 
-    double mInitialAutotrophicVolume;
-    double mInitialHeterotrophicVolume;
-    double mMinimumHeterotrophicVolume;
+ private:
+  Parameters();
+  void CalculateParameters();
+  bool IsInitialised();
 
-    double mSmallestIndividualVolume;
-    double mLargestIndividualVolume;
-    double mSizeClassSubsetFraction;
-    double mHalfSaturationConstantFraction;
+  static Types::ParametersPointer mThis;
 
-    unsigned mPreferredPreyVolumeRatio;
-    double mPreferenceFunctionWidth;
+  // User defined constants
+  unsigned mRandomSeed;
+  unsigned mRunTimeInSeconds;
+  unsigned mSamplingRate;
+  unsigned mNumberOfSizeClasses;
 
-    double mAssimilationEfficiency;
-    double mFractionalMetabolicExpense;
-    double mMetabolicIndex;
+  bool mReadModelState;
+  bool mWriteModelState;
+  bool mUseLinearFeeding;
 
-    double mMutationProbability;
-    double mMutationStandardDeviation;
+  double mInitialAutotrophicVolume;
+  double mInitialHeterotrophicVolume;
+  double mMinimumHeterotrophicVolume;
 
-    // Calculated variables
-    Types::UnsignedVector mMaximumSizeClassPopulations;
-    
-    Types::DoubleVector mRemainingVolumes;
-    Types::DoubleVector mLinearFeedingDenominators;
-    Types::DoubleVector mHalfSaturationConstants;
+  double mSmallestIndividualVolume;
+  double mLargestIndividualVolume;
+  double mSizeClassSubsetFraction;
+  double mHalfSaturationConstantFraction;
 
-    Types::DoubleVector mSizeClassBoundaries;
-    Types::DoubleVector mSizeClassMidPoints;
+  unsigned mPreferredPreyVolumeRatio;
+  double mPreferenceFunctionWidth;
 
-    Types::DoubleMatrix mInterSizeClassPreferenceMatrix;
-    Types::DoubleMatrix mInterSizeClassVolumeMatrix;
-    
-    std::array< bool, Constants::eMutationStandardDeviation + 1 > mParametersInitialised;
+  double mAssimilationEfficiency;
+  double mFractionalMetabolicExpense;
+  double mMetabolicIndex;
 
-    double mSmallestVolumeExponent;
-    double mLargestVolumeExponent;
-    double mTotalVolume;
-    
-    unsigned mAutotrophSizeClassIndex;
+  double mMutationProbability;
+  double mMutationStandardDeviation;
+
+  // Calculated variables
+  Types::UnsignedVector mMaximumSizeClassPopulations;
+
+  Types::DoubleVector mRemainingVolumes;
+  Types::DoubleVector mLinearFeedingDenominators;
+  Types::DoubleVector mHalfSaturationConstants;
+
+  Types::DoubleVector mSizeClassBoundaries;
+  Types::DoubleVector mSizeClassMidPoints;
+
+  Types::DoubleMatrix mInterSizeClassPreferenceMatrix;
+  Types::DoubleMatrix mInterSizeClassVolumeMatrix;
+
+  std::array<bool, Constants::eMutationStandardDeviation + 1> mParametersInitialised;
+
+  double mSmallestVolumeExponent;
+  double mLargestVolumeExponent;
+  double mTotalVolume;
+
+  unsigned mAutotrophSizeClassIndex;
 };
 
 #endif

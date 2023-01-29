@@ -1,21 +1,20 @@
 #ifndef TIMESTEP
-#define	TIMESTEP
+#define TIMESTEP
 
 class TimeStep {
-public:
-    TimeStep( );
-    ~TimeStep( );
+ public:
+  TimeStep();
+  ~TimeStep();
 
-    unsigned GetTimeStep( ) const;
-    
-    bool DoRecordData( ) const;
-    void IncrementTimeStep( );
+  unsigned GetTimeStep() const;
 
-private:
-    const unsigned mSamplingRate;
-    
-    unsigned mTimeStep;
+  bool DoRecordData() const;
+  void IncrementTimeStep();
+
+ private:
+  const unsigned mSamplingRate;
+
+  unsigned mTimeStep;
 };
 
 #endif
-

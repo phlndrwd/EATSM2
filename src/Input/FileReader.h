@@ -1,23 +1,21 @@
 #ifndef FILEREADER
-#define	FILEREADER
+#define FILEREADER
 
-#include "Types.h"
 #include "Constants.h"
+#include "Types.h"
 
 class FileReader {
-public:
+ public:
+  FileReader();
+  ~FileReader();
 
-    FileReader( );
-    ~FileReader( );
-    
-    void ReadInputFiles( std::string&, std::string& );
+  void ReadInputFiles(std::string&, std::string&);
 
-private:
-    bool ReadTextFile( const std::string&, bool copyToOutput = true );
-    void ClearRawTextData( );
+ private:
+  bool ReadTextFile(const std::string&, bool copyToOutput = true);
+  void ClearRawTextData();
 
-    Types::StringMatrix mRawTextData;
+  Types::StringMatrix mRawTextData;
 };
 
 #endif
-
