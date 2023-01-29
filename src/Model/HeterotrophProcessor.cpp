@@ -1,10 +1,11 @@
 #include "HeterotrophProcessor.h"
-#include "Heterotroph.h"
-#include "Parameters.h"
-#include "RandomSimple.h"
 
 #include <cmath>
 #include <iostream>
+
+#include "Heterotroph.h"
+#include "Parameters.h"
+#include "RandomSimple.h"
 
 HeterotrophProcessor::HeterotrophProcessor()
     : mSizeClassBoundaries(Parameters::Get()->GetSizeClassBoundaries()),

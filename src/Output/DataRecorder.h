@@ -1,7 +1,6 @@
 #ifndef DATARECORDER
 #define DATARECORDER
 
-#include "Constants.h"
 #include "Types.h"
 
 class DataRecorder {

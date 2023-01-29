@@ -1,8 +1,6 @@
 #ifndef NUTRIENT
 #define NUTRIENT
 
-#include "Types.h"
-
 class Nutrient {
  public:
   Nutrient();

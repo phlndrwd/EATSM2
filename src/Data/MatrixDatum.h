@@ -1,7 +1,6 @@
 #ifndef MATRIXDATUM
 #define MATRIXDATUM
 
-#include "Constants.h"
 #include "Types.h"
 
 class MatrixDatum {

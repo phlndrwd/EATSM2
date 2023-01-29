@@ -1,7 +1,7 @@
 #include "HeritableTraits.h"
+
 #include "Parameters.h"
 #include "RandomSimple.h"
-#include "Strings.h"
 
 HeritableTraits::HeritableTraits(const Types::DoubleVector& values, const Types::BoolVector& areTraitsMutations)
     : mMutationProbability(Parameters::Get()->GetMutationProbability()),
@@ -48,13 +48,21 @@ HeritableTraits HeritableTraits::GetChildTraits(RandomSimple& random) {
   return HeritableTraits(childValues, areTraitsMutations);
 }
 
-const std::vector<bool>& HeritableTraits::AreTraitsMutant() const { return mAreMutantTraits; }
+const std::vector<bool>& HeritableTraits::AreTraitsMutant() const {
+  return mAreMutantTraits;
+}
 
-const std::vector<double>& HeritableTraits::GetValues() const { return mValues; }
+const std::vector<double>& HeritableTraits::GetValues() const {
+  return mValues;
+}
 
-bool HeritableTraits::IsTraitMutant(const unsigned traitIndex) const { return mAreMutantTraits[traitIndex]; }
+bool HeritableTraits::IsTraitMutant(const unsigned traitIndex) const {
+  return mAreMutantTraits[traitIndex];
+}
 
-const double& HeritableTraits::GetValue(const Constants::eHeritableTraitIndices trait) const { return mValues[trait]; }
+const double& HeritableTraits::GetValue(const Constants::eHeritableTraitIndices trait) const {
+  return mValues[trait];
+}
 
 void HeritableTraits::SetValue(const Constants::eHeritableTraitIndices trait, const double traitValue) {
   mValues[trait] = traitValue;

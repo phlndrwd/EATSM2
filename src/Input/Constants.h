@@ -3,8 +3,6 @@
 
 #include <string>
 
-#include "Types.h"
-
 namespace Constants {
 
 // Input data file enums

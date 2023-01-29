@@ -1,10 +1,9 @@
 #include "Nutrient.h"
-#include "Constants.h"
-#include "DataRecorder.h"
-#include "InitialState.h"
-#include "Parameters.h"
 
 #include <iostream>
+
+#include "DataRecorder.h"
+#include "InitialState.h"
 
 Nutrient::Nutrient() {
   if (InitialState::Get()->IsInitialised() == true)

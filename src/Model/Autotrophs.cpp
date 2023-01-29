@@ -1,10 +1,11 @@
 #include "Autotrophs.h"
+
+#include <iostream>
+
 #include "DataRecorder.h"
 #include "InitialState.h"
 #include "Nutrient.h"
 #include "Parameters.h"
-
-#include <iostream>
 
 Autotrophs::Autotrophs(Nutrient& nutrient) : mNutrient(nutrient) {
   if (InitialState::Get()->IsInitialised() == true)
@@ -29,13 +30,19 @@ void Autotrophs::Update() {
   mNutrient.SubtractFromVolume(growthVolume);
 }
 
-double Autotrophs::GetVolume() { return mVolume; }
+double Autotrophs::GetVolume() {
+  return mVolume;
+}
 
-void Autotrophs::SetVolume(const double volume) { mVolume = volume; }
+void Autotrophs::SetVolume(const double volume) {
+  mVolume = volume;
+}
 
 void Autotrophs::AddToVolume(const double volume) {
   mVolume += volume;
   mToFlux += volume;
 }
 
-void Autotrophs::SubtractFromVolume(const double volume) { mVolume -= volume; }
+void Autotrophs::SubtractFromVolume(const double volume) {
+  mVolume -= volume;
+}

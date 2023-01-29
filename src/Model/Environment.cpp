@@ -1,5 +1,6 @@
 #include "Environment.h"
-#include "Strings.h"
+
+#include<iostream>
 
 Environment::Environment() : mNutrient(), mAutotrophs(mNutrient), mHeterotrophs(mNutrient, mAutotrophs) {
   std::cout << "Environment created." << std::endl << std::endl;
@@ -20,8 +21,14 @@ bool Environment::RecordData() {
   return isAlive;
 }
 
-Nutrient& Environment::GetNutrient() { return mNutrient; }
+Nutrient& Environment::GetNutrient() {
+  return mNutrient;
+}
 
-Autotrophs& Environment::GetAutotrophs() { return mAutotrophs; }
+Autotrophs& Environment::GetAutotrophs() {
+  return mAutotrophs;
+}
 
-Heterotrophs& Environment::GetHeterotrophs() { return mHeterotrophs; }
+Heterotrophs& Environment::GetHeterotrophs() {
+  return mHeterotrophs;
+}

@@ -1,10 +1,8 @@
 #include "HeterotrophData.h"
 
 #include "DataRecorder.h"
-#include "HeritableTraits.h"
 #include "Heterotroph.h"
 #include "Parameters.h"
-#include "Strings.h"
 
 HeterotrophData::HeterotrophData()
     : mSizeClassMidPointsFloat(Parameters::Get()->GetSizeClassMidPoints().begin(),

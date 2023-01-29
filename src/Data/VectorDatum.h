@@ -1,7 +1,6 @@
 #ifndef VECTORDATUM
 #define VECTORDATUM
 
-#include "Constants.h"
 #include "Types.h"
 
 class VectorDatum {

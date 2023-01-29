@@ -1,7 +1,8 @@
 #include "Date.h"
 
+#include <sys/time.h>  // For struct timeval
+
 #include "Constants.h"
-#include "Parameters.h"
 
 std::string Date::GetDateAndTimeString(const std::string format, unsigned addedSeconds) {
   char dateTimeChar[Constants::cDateTimeBufferSize];

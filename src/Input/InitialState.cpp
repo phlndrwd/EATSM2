@@ -15,7 +15,8 @@ Types::InitialStatePointer InitialState::Get() {
 }
 
 InitialState::~InitialState() {
-  if (mThis != nullptr) delete mThis;
+  if (mThis != nullptr)
+    delete mThis;
 }
 
 InitialState::InitialState() { mIsInitialised = false; }

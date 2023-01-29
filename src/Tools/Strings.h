@@ -6,7 +6,6 @@
 #include <sstream>
 #include <string>
 
-#include "Constants.h"
 #include "Types.h"
 
 class Strings {

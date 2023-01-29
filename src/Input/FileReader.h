@@ -1,7 +1,6 @@
 #ifndef FILEREADER
 #define FILEREADER
 
-#include "Constants.h"
 #include "Types.h"
 
 class FileReader {

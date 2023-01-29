@@ -1,8 +1,7 @@
 #include "RandomSimple.h"
 
-#include <assert.h>
-#include <math.h>
-
+#include <cassert>
+#include <cmath>
 #include <random>
 
 #include "Parameters.h"
@@ -61,7 +60,9 @@ double RandomSimple::GetNormal(double mean, double standardDeviation) {
   return mean + standardDeviation * GetNormal();
 }
 
-double RandomSimple::GetExponential() { return -log(GetUniform()); }
+double RandomSimple::GetExponential() {
+  return -log(GetUniform());
+}
 
 double RandomSimple::GetExponential(double mean) {
   assert(mean > 0);
@@ -92,9 +93,13 @@ double RandomSimple::GetGamma(double shape, double scale) {
   }
 }
 
-double RandomSimple::GetChiSquare(double degreesOfFreedom) { return GetGamma(0.5 * degreesOfFreedom, 2.0); }
+double RandomSimple::GetChiSquare(double degreesOfFreedom) {
+  return GetGamma(0.5 * degreesOfFreedom, 2.0);
+}
 
-double RandomSimple::GetInverseGamma(double shape, double scale) { return 1.0 / GetGamma(shape, 1.0 / scale); }
+double RandomSimple::GetInverseGamma(double shape, double scale) {
+  return 1.0 / GetGamma(shape, 1.0 / scale);
+}
 
 double RandomSimple::GetWeibull(double shape, double scale) {
   assert(shape > 0.);
@@ -114,7 +119,9 @@ double RandomSimple::GetLaplace(double mean, double scale) {
   return (u < 0.5) ? mean + scale * log(2.0 * u) : mean - scale * log(2 * (1 - u));
 }
 
-double RandomSimple::GetLogNormal(double mu, double sigma) { return exp(GetNormal(mu, sigma)); }
+double RandomSimple::GetLogNormal(double mu, double sigma) {
+  return exp(GetNormal(mu, sigma));
+}
 
 double RandomSimple::GetBeta(double a, double b) {
   assert(a > 0);

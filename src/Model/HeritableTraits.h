@@ -3,6 +3,7 @@
 
 #include "Constants.h"
 #include "RandomSimple.h"
+#include "Types.h"
 
 class HeritableTraits {
  public:

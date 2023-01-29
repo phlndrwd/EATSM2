@@ -2,7 +2,6 @@
 
 #include "Constants.h"
 #include "MatrixDatum.h"
-#include "Parameters.h"
 #include "Strings.h"
 #include "VectorDatum.h"
 

@@ -3,7 +3,6 @@
 #include <cmath>
 
 #include "Constants.h"
-#include "DataRecorder.h"
 #include "HeterotrophProcessor.h"
 #include "Strings.h"
 

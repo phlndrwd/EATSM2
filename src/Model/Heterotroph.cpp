@@ -3,7 +3,6 @@
 #include "HeritableTraits.h"
 #include "HeterotrophProcessor.h"
 #include "Parameters.h"
-#include "TimeStep.h"
 
 // For model initialisation.
 Heterotroph::Heterotroph(const HeritableTraits& heritableTraits, const double volumeHeritable,
