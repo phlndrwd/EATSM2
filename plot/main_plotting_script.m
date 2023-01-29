@@ -3,7 +3,7 @@ clear
 
 %% User Defined Parameters
 optionCurrentDataSet            = '1e6';
-optionOutputDirectory           = '/home/philju/Development/In Progress/EATSM/EATSM/output/0.5.5/';
+optionOutputDirectory           = '/home/philju/Development/In Progress/EATSM/EATSM2/build/Release/output/0.0.1/';
 
 optionOutputVariablesFile      = 'Variables';
 optionFileExtension             = '.csv';

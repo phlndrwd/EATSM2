@@ -1,44 +1,49 @@
 #ifndef DATARECORDER
 #define DATARECORDER
 
-#include "Types.h"
+#include <map>
+#include <string>
+#include <vector>
+
+class MatrixDatum;
+class VectorDatum;
 
 class DataRecorder {
  public:
   DataRecorder();
   ~DataRecorder();
 
-  bool Initialise(const Types::StringMatrix&);
+  bool Initialise(const std::vector<std::vector<std::string>>&);
   void InitialiseMatrix(const std::string&, const unsigned&);
 
-  static Types::DataRecorderPointer Get();
+  static DataRecorder* Get();
 
   void AddDataTo(const std::string&, const float&);
-  void AddDataTo(const std::string&, const Types::FloatVector);
+  void AddDataTo(const std::string&, const std::vector<float>);
   void AddDataTo(const std::string&, const unsigned&, const float&);
 
-  void SetVectorDataOn(const std::string&, const Types::FloatVector);
+  void SetVectorDataOn(const std::string&, const std::vector<float>);
 
   void AddInputFilePath(const std::string&);
 
-  Types::VectorDatumMap GetVectorDatumMap() const;
-  Types::MatrixDatumMap GetMatrixDatumMap() const;
+  std::map<std::string, VectorDatum*> GetVectorDatumMap() const;
+  std::map<std::string, MatrixDatum*> GetMatrixDatumMap() const;
 
-  Types::StringVector GetInputFilePaths() const;
+  std::vector<std::string> GetInputFilePaths() const;
 
  private:
-  Types::VectorDatumPointer GetVectorDatumFromName(const std::string&);
-  Types::MatrixDatumPointer GetMatrixDatumFromName(const std::string&);
+  VectorDatum* GetVectorDatumFromName(const std::string&);
+  MatrixDatum* GetMatrixDatumFromName(const std::string&);
 
-  static Types::DataRecorderPointer mThis;
+  static DataRecorder* mThis;
 
-  Types::VectorDatumMap mVectorDatumMap;
-  Types::MatrixDatumMap mMatrixDatumMap;
+  std::map<std::string, VectorDatum*> mVectorDatumMap;
+  std::map<std::string, MatrixDatum*> mMatrixDatumMap;
 
-  Types::StringMatrix mVectorDatumMetadata;
-  Types::StringMatrix mMatrixDatumMetadata;
+  std::vector<std::vector<std::string>> mVectorDatumMetadata;
+  std::vector<std::vector<std::string>> mMatrixDatumMetadata;
 
-  Types::StringVector mInputFilePaths;
+  std::vector<std::string> mInputFilePaths;
 };
 
 #endif

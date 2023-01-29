@@ -1,26 +1,29 @@
 #ifndef INITIALSTATE
 #define INITIALSTATE
 
-#include "Types.h"
+#include <string>
+#include <vector>
+
+class Heterotroph;
 
 class InitialState {
  public:
   ~InitialState();
-  static Types::InitialStatePointer Get();
+  static InitialState* Get();
 
-  bool Initialise(const Types::StringMatrix&);
+  bool Initialise(const std::vector<std::vector<std::string>>&);
   bool IsInitialised();
 
   double& GetNutrientVolume();
   double& GetAutotrophVolume();
-  Types::HeterotrophMatrix& GetHeterotrophs();
+  std::vector<std::vector<Heterotroph*>>& GetHeterotrophs();
   unsigned& GetInitialPopulationSize();
 
  private:
   InitialState();
-  static Types::InitialStatePointer mThis;
+  static InitialState* mThis;
 
-  Types::HeterotrophMatrix mHeterotrophs;
+  std::vector<std::vector<Heterotroph*>> mHeterotrophs;
 
   bool mIsInitialised;
   double mNutrientVolume;

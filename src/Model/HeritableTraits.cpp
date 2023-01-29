@@ -3,7 +3,7 @@
 #include "Parameters.h"
 #include "RandomSimple.h"
 
-HeritableTraits::HeritableTraits(const Types::DoubleVector& values, const Types::BoolVector& areTraitsMutations)
+HeritableTraits::HeritableTraits(const std::vector<double>& values, const std::vector<bool>& areTraitsMutations)
     : mMutationProbability(Parameters::Get()->GetMutationProbability()),
       mMutationStandardDeviation(Parameters::Get()->GetMutationStandardDeviation()) {
   for (unsigned i = 0; i < values.size(); ++i) {

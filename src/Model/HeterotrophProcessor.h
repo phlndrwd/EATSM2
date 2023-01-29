@@ -1,8 +1,10 @@
 #ifndef HETEROTROPHPROCESSOR
 #define HETEROTROPHPROCESSOR
 
-#include "RandomSimple.h"
-#include "Types.h"
+#include <vector>
+
+class Heterotroph;
+class RandomSimple;
 
 class HeterotrophProcessor {
  public:
@@ -12,16 +14,16 @@ class HeterotrophProcessor {
   double CalculatePreferenceForPrey(const double, const double) const;
   double CalculateFeedingProbability(const unsigned, const double);
 
-  double CalculateMetabolicDeduction(const Types::HeterotrophPointer) const;
-  double CalculateStarvationProbability(const Types::HeterotrophPointer) const;
+  double CalculateMetabolicDeduction(const Heterotroph*) const;
+  double CalculateStarvationProbability(const Heterotroph*) const;
 
-  bool UpdateSizeClassIndex(Types::HeterotrophPointer) const;
+  bool UpdateSizeClassIndex(Heterotroph*) const;
   unsigned FindSizeClassIndexFromVolume(const double) const;
-  unsigned FindIndividualSizeClassIndex(const Types::HeterotrophPointer, unsigned) const;
-  unsigned DirectionIndividualShouldMoveSizeClasses(const Types::HeterotrophPointer) const;
+  unsigned FindIndividualSizeClassIndex(const Heterotroph*, unsigned) const;
+  unsigned DirectionIndividualShouldMoveSizeClasses(const Heterotroph*) const;
 
-  void UpdateHerbivoreTrophicIndex(const Types::HeterotrophPointer) const;
-  void UpdateCarnivoreTrophicIndex(const Types::HeterotrophPointer, const Types::HeterotrophPointer) const;
+  void UpdateHerbivoreTrophicIndex(Heterotroph*);
+  void UpdateCarnivoreTrophicIndex(Heterotroph*, const Heterotroph*);
 
   double CalculateHerbivoreTrophicIndex(const double) const;
   double CalculateCarnivoreTrophicIndex(const double, const double) const;
@@ -41,9 +43,9 @@ class HeterotrophProcessor {
   typedef double (HeterotrophProcessor::*function)(const unsigned, const double);
   double (HeterotrophProcessor::*fStarvationProbability)(const unsigned, const double);
 
-  const Types::DoubleVector mSizeClassBoundaries;
-  const Types::DoubleVector mLinearFeedingDenominators;
-  const Types::DoubleVector mHalfSaturationConstants;
+  const std::vector<double> mSizeClassBoundaries;
+  const std::vector<double> mLinearFeedingDenominators;
+  const std::vector<double> mHalfSaturationConstants;
 
   const double mPreferredPreyVolumeRatio;
   const double mPreferenceFunctionWidth;

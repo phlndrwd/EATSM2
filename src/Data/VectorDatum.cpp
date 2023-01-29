@@ -10,7 +10,7 @@ float VectorDatum::GetDataAtIndex(const unsigned& index) const {
   return mData[index];
 }
 
-void VectorDatum::SetData(const Types::FloatVector data) {
+void VectorDatum::SetData(const std::vector<float> data) {
   mData = data;
 }
 

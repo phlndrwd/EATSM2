@@ -6,7 +6,7 @@
 #include "HeterotrophProcessor.h"
 #include "Strings.h"
 
-Types::ParametersPointer Parameters::mThis = nullptr;
+Parameters* Parameters::mThis = nullptr;
 
 Parameters::Parameters() { mParametersInitialised = {false}; }
 
@@ -29,13 +29,13 @@ Parameters::~Parameters() {
   }
 }
 
-Types::ParametersPointer Parameters::Get() {
+Parameters* Parameters::Get() {
   if (mThis == nullptr) mThis = new Parameters();
 
   return mThis;
 }
 
-bool Parameters::Initialise(const Types::StringMatrix& rawInputParameterData) {
+bool Parameters::Initialise(const std::vector<std::vector<std::string>>& rawInputParameterData) {
   if (rawInputParameterData.size() > 0) {
     for (unsigned rowIndex = 0; rowIndex < rawInputParameterData.size(); ++rowIndex) {
       std::string parameterName = Strings::ToLowercase(rawInputParameterData[rowIndex][Constants::eParameterName]);
@@ -211,15 +211,15 @@ double& Parameters::GetSizeClassBoundary(const unsigned index) { return mSizeCla
 
 double& Parameters::GetSizeClassMidPoint(const unsigned index) { return mSizeClassMidPoints[index]; }
 
-const Types::DoubleVector& Parameters::GetSizeClassBoundaries() { return mSizeClassBoundaries; }
+const std::vector<double>& Parameters::GetSizeClassBoundaries() { return mSizeClassBoundaries; }
 
-const Types::DoubleVector& Parameters::GetSizeClassMidPoints() { return mSizeClassMidPoints; }
+const std::vector<double>& Parameters::GetSizeClassMidPoints() { return mSizeClassMidPoints; }
 
-const Types::DoubleVector& Parameters::GetLinearFeedingDenominators() { return mLinearFeedingDenominators; }
+const std::vector<double>& Parameters::GetLinearFeedingDenominators() { return mLinearFeedingDenominators; }
 
-const Types::DoubleVector& Parameters::GetHalfSaturationConstants() { return mHalfSaturationConstants; }
+const std::vector<double>& Parameters::GetHalfSaturationConstants() { return mHalfSaturationConstants; }
 
-const Types::UnsignedVector& Parameters::GetMaximumSizeClassPopulations() { return mMaximumSizeClassPopulations; }
+const std::vector<unsigned>& Parameters::GetMaximumSizeClassPopulations() { return mMaximumSizeClassPopulations; }
 
 double& Parameters::GetInterSizeClassPreference(const unsigned predatorIndex, const unsigned preyIndex) {
   return mInterSizeClassPreferenceMatrix[predatorIndex][preyIndex];
@@ -245,19 +245,19 @@ double& Parameters::GetHalfSaturationConstant(const unsigned sizeClassIndex) {
   return mHalfSaturationConstants[sizeClassIndex];
 }
 
-const Types::DoubleVector& Parameters::GetInterSizeClassPreferenceVector(const unsigned index) const {
+const std::vector<double>& Parameters::GetInterSizeClassPreferenceVector(const unsigned index) const {
   return mInterSizeClassPreferenceMatrix[index];
 }
 
-const Types::DoubleVector& Parameters::GetInterSizeClassVolumeVector(const unsigned index) const {
+const std::vector<double>& Parameters::GetInterSizeClassVolumeVector(const unsigned index) const {
   return mInterSizeClassVolumeMatrix[index];
 }
 
-const Types::DoubleMatrix& Parameters::GetInterSizeClassPreferenceMatrix() const {
+const std::vector<std::vector<double>>& Parameters::GetInterSizeClassPreferenceMatrix() const {
   return mInterSizeClassPreferenceMatrix;
 }
 
-const Types::DoubleMatrix& Parameters::GetInterSizeClassVolumeMatrix() const { return mInterSizeClassVolumeMatrix; }
+const std::vector<std::vector<double>>& Parameters::GetInterSizeClassVolumeMatrix() const { return mInterSizeClassVolumeMatrix; }
 
 void Parameters::SetRandomSeed(const unsigned randomNumberSeed) {
   mRandomSeed = randomNumberSeed;

@@ -2,9 +2,9 @@
 #define HETEROTROPH
 
 #include "HeritableTraits.h"
-#include "HeterotrophProcessor.h"
-#include "RandomSimple.h"
-#include "Types.h"
+
+class HeterotrophProcessor;
+class RandomSimple;
 
 class Heterotroph {
  public:
@@ -19,7 +19,7 @@ class Heterotroph {
   Heterotroph& operator=(const Heterotroph&);
   bool operator==(const Heterotroph&);
 
-  Types::HeterotrophPointer Reproduce(RandomSimple&, HeterotrophProcessor&);
+  Heterotroph* Reproduce(RandomSimple&, HeterotrophProcessor&);
 
   double ConsumePreyVolume(const double);
   double Metabolise(const double);

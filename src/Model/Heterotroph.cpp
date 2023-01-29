@@ -1,8 +1,8 @@
 #include "Heterotroph.h"
 
-#include "HeritableTraits.h"
 #include "HeterotrophProcessor.h"
 #include "Parameters.h"
+#include "RandomSimple.h"
 
 // For model initialisation.
 Heterotroph::Heterotroph(const HeritableTraits& heritableTraits, const double volumeHeritable,
@@ -124,9 +124,9 @@ Heterotroph::Heterotroph(const Heterotroph&& individual) noexcept
 
 Heterotroph::~Heterotroph() {}
 
-Types::HeterotrophPointer Heterotroph::Reproduce(RandomSimple& random, HeterotrophProcessor& heterotrophProcessor) {
+Heterotroph* Heterotroph::Reproduce(RandomSimple& random, HeterotrophProcessor& heterotrophProcessor) {
   HeritableTraits childHeritableTraits = mHeritableTraits.GetChildTraits(random);
-  Types::HeterotrophPointer childIndividual = 0;
+ Heterotroph* childIndividual = 0;
 
   double childVolumeHeritable = 0;
   double childVolumeActual = 0;
@@ -194,34 +194,66 @@ double Heterotroph::Metabolise(const double metabolicDeduction) {
   return metabolicDeduction;
 }
 
-HeritableTraits& Heterotroph::GetHeritableTraits() { return mHeritableTraits; }
+HeritableTraits& Heterotroph::GetHeritableTraits() {
+  return mHeritableTraits;
+}
 
-double Heterotroph::GetTrophicLevel() const { return mTrophicLevel; }
+double Heterotroph::GetTrophicLevel() const {
+  return mTrophicLevel;
+}
 
-unsigned Heterotroph::GetSizeClassIndex() const { return mSizeClassIndex; }
+unsigned Heterotroph::GetSizeClassIndex() const {
+  return mSizeClassIndex;
+}
 
-unsigned Heterotroph::GetAge() const { return mAge; }
+unsigned Heterotroph::GetAge() const {
+  return mAge;
+}
 
-bool Heterotroph::HasFed() const { return mHasFed; }
+bool Heterotroph::HasFed() const {
+  return mHasFed;
+}
 
-bool Heterotroph::IsDead() const { return mIsDead; }
+bool Heterotroph::IsDead() const {
+  return mIsDead;
+}
 
-double Heterotroph::GetVolumeActual() const { return mVolumeActual; }
+double Heterotroph::GetVolumeActual() const {
+  return mVolumeActual;
+}
 
-double Heterotroph::GetVolumeHeritable() const { return mVolumeHeritable; }
+double Heterotroph::GetVolumeHeritable() const {
+  return mVolumeHeritable;
+}
 
-double Heterotroph::GetVolumeMinimum() const { return mVolumeMinimum; }
+double Heterotroph::GetVolumeMinimum() const {
+  return mVolumeMinimum;
+}
 
-double Heterotroph::GetVolumeReproduction() const { return mVolumeReproduction; }
+double Heterotroph::GetVolumeReproduction() const {
+  return mVolumeReproduction;
+}
 
-double Heterotroph::GetStarvationMultiplier() const { return mStarvationMultiplier; }
+double Heterotroph::GetStarvationMultiplier() const {
+  return mStarvationMultiplier;
+}
 
-void Heterotroph::SetTrophicLevel(const double trophicLevel) { mTrophicLevel = trophicLevel; }
+void Heterotroph::SetTrophicLevel(const double trophicLevel) {
+  mTrophicLevel = trophicLevel;
+}
 
-void Heterotroph::SetSizeClassIndex(const unsigned sizeClassIndex) { mSizeClassIndex = sizeClassIndex; }
+void Heterotroph::SetSizeClassIndex(const unsigned sizeClassIndex) {
+  mSizeClassIndex = sizeClassIndex;
+}
 
-void Heterotroph::SetAge(const unsigned age) { mAge = age; }
+void Heterotroph::SetAge(const unsigned age) {
+  mAge = age;
+}
 
-void Heterotroph::SetHasFed(const bool hasFed) { mHasFed = hasFed; }
+void Heterotroph::SetHasFed(const bool hasFed) {
+  mHasFed = hasFed;
+}
 
-void Heterotroph::Kill() { mIsDead = true; }
+void Heterotroph::Kill() {
+  mIsDead = true;
+}

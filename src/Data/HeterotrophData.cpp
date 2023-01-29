@@ -140,7 +140,7 @@ void HeterotrophData::SetCoupledSizeClassIndex(const unsigned sizeClassIndex, co
   mSizeClassCouplings[sizeClassIndex] = coupledIndex;
 }
 
-void HeterotrophData::AddIndividualData(const Types::HeterotrophPointer individual) {
+void HeterotrophData::AddIndividualData(const Heterotroph* individual) {
   AddTrophicLevel(individual->GetTrophicLevel(), individual->GetVolumeActual(), individual->GetSizeClassIndex(),
                   individual->GetAge());
   mSizeClassGrowthRatios[individual->GetSizeClassIndex()] +=
@@ -241,7 +241,7 @@ void HeterotrophData::ResetDataStructures() {
   mSizeClassCouplings.resize(mNumberOfSizeClasses, Constants::cMissingValue);
 }
 
-void HeterotrophData::IncrementVegetarianFrequencies(const Types::HeterotrophPointer grazer) {
+void HeterotrophData::IncrementVegetarianFrequencies(const Heterotroph* grazer) {
   ++mSizeClassHerbivoreFrequencies[grazer->GetSizeClassIndex()];
 
   double preyVolumeRatio = grazer->GetVolumeActual() / mSmallestIndividualVolume;
@@ -250,8 +250,8 @@ void HeterotrophData::IncrementVegetarianFrequencies(const Types::HeterotrophPoi
   mToFlux += mSmallestIndividualVolume;
 }
 
-void HeterotrophData::IncrementCarnivoreFrequencies(const Types::HeterotrophPointer predator,
-                                                    const Types::HeterotrophPointer prey) {
+void HeterotrophData::IncrementCarnivoreFrequencies(const Heterotroph* predator,
+                                                    const Heterotroph* prey) {
   ++mSizeClassCarnivoreFrequencies[predator->GetSizeClassIndex()];
   ++mSizeClassPreyFrequencies[prey->GetSizeClassIndex()];
 

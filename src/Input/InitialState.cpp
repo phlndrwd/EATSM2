@@ -6,9 +6,9 @@
 #include "Parameters.h"
 #include "Strings.h"
 
-Types::InitialStatePointer InitialState::mThis = nullptr;
+InitialState* InitialState::mThis = nullptr;
 
-Types::InitialStatePointer InitialState::Get() {
+InitialState* InitialState::Get() {
   if (mThis == nullptr) mThis = new InitialState();
 
   return mThis;
@@ -21,7 +21,7 @@ InitialState::~InitialState() {
 
 InitialState::InitialState() { mIsInitialised = false; }
 
-bool InitialState::Initialise(const Types::StringMatrix& rawInitialStateData) {
+bool InitialState::Initialise(const std::vector<std::vector<std::string>>& rawInitialStateData) {
   // Model variables
   mNutrientVolume = Strings::StringToNumber(rawInitialStateData[Constants::cStateLineNutrientVol][0]);
   mAutotrophVolume = Strings::StringToNumber(rawInitialStateData[Constants::cStateLineAutotrophVol][0]);
@@ -40,7 +40,7 @@ bool InitialState::Initialise(const Types::StringMatrix& rawInitialStateData) {
     std::vector<double> heritableTraitValues{traitValue};
     std::vector<bool> areTraitsMutant{false};
     HeritableTraits heritableTraits(heritableTraitValues, areTraitsMutant);
-    Types::HeterotrophPointer individual =
+    Heterotroph* individual =
         new Heterotroph(heritableTraits, volumeHeritable, volumeActual, sizeClassIndex);
     mHeterotrophs[sizeClassIndex].push_back(individual);
     ++mInitialPopulationSize;
@@ -54,7 +54,7 @@ double& InitialState::GetNutrientVolume() { return mNutrientVolume; }
 
 double& InitialState::GetAutotrophVolume() { return mAutotrophVolume; }
 
-Types::HeterotrophMatrix& InitialState::GetHeterotrophs() { return mHeterotrophs; }
+std::vector<std::vector<Heterotroph*>>& InitialState::GetHeterotrophs() { return mHeterotrophs; }
 
 unsigned& InitialState::GetInitialPopulationSize() { return mInitialPopulationSize; }
 

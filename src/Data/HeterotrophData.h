@@ -1,7 +1,9 @@
 #ifndef HETEROTROPHDATA
 #define HETEROTROPHDATA
 
-#include "Types.h"
+#include <vector>
+
+class Heterotroph;
 
 class HeterotrophData {
  public:
@@ -23,14 +25,14 @@ class HeterotrophData {
   void SetFeedingProbability(const unsigned, const double);
   void SetCoupledSizeClassIndex(const unsigned, const unsigned);
 
-  void AddIndividualData(const Types::HeterotrophPointer);
+  void AddIndividualData(const Heterotroph*);
   void AddSizeClassData(const unsigned, const unsigned, const double);
   void NormaliseData();
 
   bool AreHeterotrophsAlive() const;
 
-  void IncrementVegetarianFrequencies(const Types::HeterotrophPointer);
-  void IncrementCarnivoreFrequencies(const Types::HeterotrophPointer, const Types::HeterotrophPointer);
+  void IncrementVegetarianFrequencies(const Heterotroph*);
+  void IncrementCarnivoreFrequencies(const Heterotroph*, const Heterotroph*);
   void IncrementStarvedFrequencies(const unsigned);
   void IncrementParentFrequencies(const unsigned);
   void IncrementChildFrequencies(const unsigned);
@@ -44,37 +46,37 @@ class HeterotrophData {
  private:
   void AddTrophicLevel(const double, const double, const unsigned, const unsigned);
 
-  const Types::FloatVector mSizeClassMidPointsFloat;
-  const Types::FloatVector mSizeClassBoundariesFloat;
+  const std::vector<float> mSizeClassMidPointsFloat;
+  const std::vector<float> mSizeClassBoundariesFloat;
 
   const double mMinimumHeterotrophicVolume;
   const double mSmallestIndividualVolume;
 
   const unsigned mNumberOfSizeClasses;
 
-  Types::DoubleMatrix mEffectiveSizeClassVolumeMatrix;
+  std::vector<std::vector<double>> mEffectiveSizeClassVolumeMatrix;
 
-  Types::FloatVector mSizeClassPopulation;
-  Types::FloatVector mSizeClassHerbivoreFrequencies;
-  Types::FloatVector mSizeClassCarnivoreFrequencies;
-  Types::FloatVector mSizeClassPreyFrequencies;
-  Types::FloatVector mSizeClassStarvedFrequencies;
-  Types::FloatVector mSizeClassParentFrequencies;
-  Types::FloatVector mSizeClassChildFrequencies;
-  Types::FloatVector mSizeClassVolumeMutantFrequencies;
-  Types::FloatVector mSizeClassVolumes;
-  Types::FloatVector mSizeClassApproxVolumes;
-  Types::FloatVector mSizeClassEffectivePreyVolumes;
-  Types::FloatVector mSizeClassGrowthRatios;
-  Types::FloatVector mSizeClassCouplings;
-  Types::FloatVector mSizeClassPreyVolumeRatios;
-  Types::FloatVector mSizeClassFeedingProbabilities;
-  Types::FloatVector mSizeClassTrophicClassifications;
-  Types::FloatVector mSizeClassAges;
+  std::vector<float> mSizeClassPopulation;
+  std::vector<float> mSizeClassHerbivoreFrequencies;
+  std::vector<float> mSizeClassCarnivoreFrequencies;
+  std::vector<float> mSizeClassPreyFrequencies;
+  std::vector<float> mSizeClassStarvedFrequencies;
+  std::vector<float> mSizeClassParentFrequencies;
+  std::vector<float> mSizeClassChildFrequencies;
+  std::vector<float> mSizeClassVolumeMutantFrequencies;
+  std::vector<float> mSizeClassVolumes;
+  std::vector<float> mSizeClassApproxVolumes;
+  std::vector<float> mSizeClassEffectivePreyVolumes;
+  std::vector<float> mSizeClassGrowthRatios;
+  std::vector<float> mSizeClassCouplings;
+  std::vector<float> mSizeClassPreyVolumeRatios;
+  std::vector<float> mSizeClassFeedingProbabilities;
+  std::vector<float> mSizeClassTrophicClassifications;
+  std::vector<float> mSizeClassAges;
 
-  Types::FloatVector mTrophicFrequencies;
-  Types::FloatVector mTrophicVolumes;
-  Types::FloatVector mTrophicAges;
+  std::vector<float> mTrophicFrequencies;
+  std::vector<float> mTrophicVolumes;
+  std::vector<float> mTrophicAges;
 
   unsigned mFrequency;
   double mVolume;

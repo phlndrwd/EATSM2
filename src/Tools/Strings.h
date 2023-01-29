@@ -1,12 +1,9 @@
 #ifndef CONVERTOR
 #define CONVERTOR
 
-#include <iomanip>
-#include <iostream>
 #include <sstream>
 #include <string>
-
-#include "Types.h"
+#include <vector>
 
 class Strings {
  public:
@@ -20,7 +17,7 @@ class Strings {
 
   static double StringToNumber(const std::string&);
 
-  static const Types::StringVector StringToWords(const std::string&, const char);
+  static const std::vector<std::string> StringToWords(const std::string&, const char);
   static const std::string DoubleToPrecisionString(const double&, const unsigned&);
 
   static int FindFirstPositionOfCharacter(const std::string, const char);

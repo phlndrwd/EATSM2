@@ -1,16 +1,19 @@
 #ifndef PARAMETERS
 #define PARAMETERS
 
+#include <array>
+#include <string>
+#include <vector>
+
 #include "Constants.h"
-#include "Types.h"
 
 class Parameters {
  public:
   ~Parameters();
 
-  static Types::ParametersPointer Get();
+  static Parameters* Get();
 
-  bool Initialise(const Types::StringMatrix&);
+  bool Initialise(const std::vector<std::vector<std::string>>&);
 
   // Getters
   unsigned& GetRunTimeInSeconds();
@@ -92,26 +95,26 @@ class Parameters {
   double& GetLinearFeedingDenominator(const unsigned);
   double& GetHalfSaturationConstant(const unsigned);
 
-  const Types::DoubleVector& GetSizeClassBoundaries();
-  const Types::DoubleVector& GetSizeClassMidPoints();
+  const std::vector<double>& GetSizeClassBoundaries();
+  const std::vector<double>& GetSizeClassMidPoints();
 
-  const Types::DoubleVector& GetLinearFeedingDenominators();
-  const Types::DoubleVector& GetHalfSaturationConstants();
+  const std::vector<double>& GetLinearFeedingDenominators();
+  const std::vector<double>& GetHalfSaturationConstants();
 
-  const Types::UnsignedVector& GetMaximumSizeClassPopulations();
+  const std::vector<unsigned>& GetMaximumSizeClassPopulations();
 
-  const Types::DoubleVector& GetInterSizeClassPreferenceVector(const unsigned) const;
-  const Types::DoubleVector& GetInterSizeClassVolumeVector(const unsigned) const;
+  const std::vector<double>& GetInterSizeClassPreferenceVector(const unsigned) const;
+  const std::vector<double>& GetInterSizeClassVolumeVector(const unsigned) const;
 
-  const Types::DoubleMatrix& GetInterSizeClassPreferenceMatrix() const;
-  const Types::DoubleMatrix& GetInterSizeClassVolumeMatrix() const;
+  const std::vector<std::vector<double>>& GetInterSizeClassPreferenceMatrix() const;
+  const std::vector<std::vector<double>>& GetInterSizeClassVolumeMatrix() const;
 
  private:
   Parameters();
   void CalculateParameters();
   bool IsInitialised();
 
-  static Types::ParametersPointer mThis;
+  static Parameters* mThis;
 
   // User defined constants
   unsigned mRandomSeed;
@@ -143,17 +146,17 @@ class Parameters {
   double mMutationStandardDeviation;
 
   // Calculated variables
-  Types::UnsignedVector mMaximumSizeClassPopulations;
+  std::vector<unsigned> mMaximumSizeClassPopulations;
 
-  Types::DoubleVector mRemainingVolumes;
-  Types::DoubleVector mLinearFeedingDenominators;
-  Types::DoubleVector mHalfSaturationConstants;
+  std::vector<double> mRemainingVolumes;
+  std::vector<double> mLinearFeedingDenominators;
+  std::vector<double> mHalfSaturationConstants;
 
-  Types::DoubleVector mSizeClassBoundaries;
-  Types::DoubleVector mSizeClassMidPoints;
+  std::vector<double> mSizeClassBoundaries;
+  std::vector<double> mSizeClassMidPoints;
 
-  Types::DoubleMatrix mInterSizeClassPreferenceMatrix;
-  Types::DoubleMatrix mInterSizeClassVolumeMatrix;
+  std::vector<std::vector<double>> mInterSizeClassPreferenceMatrix;
+  std::vector<std::vector<double>> mInterSizeClassVolumeMatrix;
 
   std::array<bool, Constants::eMutationStandardDeviation + 1> mParametersInitialised;
 

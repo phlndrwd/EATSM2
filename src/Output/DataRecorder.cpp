@@ -5,9 +5,9 @@
 #include "Strings.h"
 #include "VectorDatum.h"
 
-Types::DataRecorderPointer DataRecorder::mThis = nullptr;
+DataRecorder* DataRecorder::mThis = nullptr;
 
-Types::DataRecorderPointer DataRecorder::Get() {
+DataRecorder* DataRecorder::Get() {
   if (mThis == nullptr) mThis = new DataRecorder();
 
   return mThis;
@@ -16,23 +16,23 @@ Types::DataRecorderPointer DataRecorder::Get() {
 DataRecorder::DataRecorder() {}
 
 DataRecorder::~DataRecorder() {
-  for (Types::VectorDatumMap::iterator iter = mVectorDatumMap.begin(); iter != mVectorDatumMap.end(); ++iter) {
+  for (std::map<std::string, VectorDatum*>::iterator iter = mVectorDatumMap.begin(); iter != mVectorDatumMap.end(); ++iter) {
     delete iter->second;
   }
-  for (Types::MatrixDatumMap::iterator iter = mMatrixDatumMap.begin(); iter != mMatrixDatumMap.end(); ++iter) {
+  for (std::map<std::string, MatrixDatum*>::iterator iter = mMatrixDatumMap.begin(); iter != mMatrixDatumMap.end(); ++iter) {
     delete iter->second;
   }
   if (mThis != nullptr) delete mThis;
 }
 
-bool DataRecorder::Initialise(const Types::StringMatrix& rawOutputParameterData) {
+bool DataRecorder::Initialise(const std::vector<std::vector<std::string>>& rawOutputParameterData) {
   if (rawOutputParameterData.size() > 0) {
     for (unsigned rowIndex = 0; rowIndex < rawOutputParameterData.size(); ++rowIndex) {
       std::string name = Strings::RemoveWhiteSpace(rawOutputParameterData[rowIndex][Constants::eDatumName]);
       std::string type =
           Strings::RemoveWhiteSpace(Strings::ToLowercase(rawOutputParameterData[rowIndex][Constants::eDatumType]));
 
-      Types::StringVector datumMetadata;
+      std::vector<std::string> datumMetadata;
       datumMetadata.push_back(name);
       datumMetadata.push_back(type);
 
@@ -49,46 +49,46 @@ bool DataRecorder::Initialise(const Types::StringMatrix& rawOutputParameterData)
 }
 
 void DataRecorder::InitialiseMatrix(const std::string& name, const unsigned& size) {
-  Types::MatrixDatumPointer matrixDatum = GetMatrixDatumFromName(name);
+  MatrixDatum* matrixDatum = GetMatrixDatumFromName(name);
 
   if (matrixDatum != nullptr) matrixDatum->SetGroupSize(size);
 }
 
 void DataRecorder::AddDataTo(const std::string& name, const float& data) {
-  Types::VectorDatumPointer vectorDatum = GetVectorDatumFromName(name);
+  VectorDatum* vectorDatum = GetVectorDatumFromName(name);
 
   if (vectorDatum != nullptr) vectorDatum->AddData(data);
 }
 
-void DataRecorder::AddDataTo(const std::string& name, const Types::FloatVector data) {
-  Types::MatrixDatumPointer matrixDatum = GetMatrixDatumFromName(name);
+void DataRecorder::AddDataTo(const std::string& name, const std::vector<float> data) {
+  MatrixDatum* matrixDatum = GetMatrixDatumFromName(name);
 
   if (matrixDatum != nullptr) matrixDatum->AddData(data);
 }
 
 void DataRecorder::AddDataTo(const std::string& name, const unsigned& index, const float& data) {
-  Types::MatrixDatumPointer matrixDatum = GetMatrixDatumFromName(name);
+  MatrixDatum* matrixDatum = GetMatrixDatumFromName(name);
 
   if (matrixDatum != nullptr) matrixDatum->AddDataAtIndex(index, data);
 }
 
-void DataRecorder::SetVectorDataOn(const std::string& name, const Types::FloatVector data) {
-  Types::VectorDatumPointer vectorDatum = GetVectorDatumFromName(name);
+void DataRecorder::SetVectorDataOn(const std::string& name, const std::vector<float> data) {
+  VectorDatum* vectorDatum = GetVectorDatumFromName(name);
 
   if (vectorDatum != nullptr) vectorDatum->SetData(data);
 }
 
 void DataRecorder::AddInputFilePath(const std::string& inputFilePath) { mInputFilePaths.push_back(inputFilePath); }
 
-Types::VectorDatumMap DataRecorder::GetVectorDatumMap() const { return mVectorDatumMap; }
+std::map<std::string, VectorDatum*> DataRecorder::GetVectorDatumMap() const { return mVectorDatumMap; }
 
-Types::MatrixDatumMap DataRecorder::GetMatrixDatumMap() const { return mMatrixDatumMap; }
+std::map<std::string, MatrixDatum*> DataRecorder::GetMatrixDatumMap() const { return mMatrixDatumMap; }
 
-Types::StringVector DataRecorder::GetInputFilePaths() const { return mInputFilePaths; }
+std::vector<std::string> DataRecorder::GetInputFilePaths() const { return mInputFilePaths; }
 
-Types::VectorDatumPointer DataRecorder::GetVectorDatumFromName(const std::string& name) {
-  Types::VectorDatumPointer vectorDatum = nullptr;
-  Types::VectorDatumMap::iterator iter = mVectorDatumMap.find(name);
+VectorDatum* DataRecorder::GetVectorDatumFromName(const std::string& name) {
+  VectorDatum* vectorDatum = nullptr;
+  std::map<std::string, VectorDatum*>::iterator iter = mVectorDatumMap.find(name);
 
   if (iter != mVectorDatumMap.end()) {
     vectorDatum = iter->second;
@@ -98,7 +98,7 @@ Types::VectorDatumPointer DataRecorder::GetVectorDatumFromName(const std::string
 
       if (datumName == name) {
         vectorDatum = new VectorDatum(datumName);
-        mVectorDatumMap.insert(std::pair<std::string, Types::VectorDatumPointer>(datumName, vectorDatum));
+        mVectorDatumMap.insert(std::pair<std::string, VectorDatum*>(datumName, vectorDatum));
         break;
       }
     }
@@ -106,9 +106,9 @@ Types::VectorDatumPointer DataRecorder::GetVectorDatumFromName(const std::string
   return vectorDatum;
 }
 
-Types::MatrixDatumPointer DataRecorder::GetMatrixDatumFromName(const std::string& name) {
-  Types::MatrixDatumPointer matrixDatum = nullptr;
-  Types::MatrixDatumMap::iterator iter = mMatrixDatumMap.find(name);
+MatrixDatum* DataRecorder::GetMatrixDatumFromName(const std::string& name) {
+  MatrixDatum* matrixDatum = nullptr;
+  std::map<std::string, MatrixDatum*>::iterator iter = mMatrixDatumMap.find(name);
 
   if (iter != mMatrixDatumMap.end()) {
     matrixDatum = iter->second;
@@ -118,7 +118,7 @@ Types::MatrixDatumPointer DataRecorder::GetMatrixDatumFromName(const std::string
 
       if (datumName == name) {
         matrixDatum = new MatrixDatum(datumName);
-        mMatrixDatumMap.insert(std::pair<std::string, Types::MatrixDatumPointer>(datumName, matrixDatum));
+        mMatrixDatumMap.insert(std::pair<std::string, MatrixDatum*>(datumName, matrixDatum));
         break;
       }
     }

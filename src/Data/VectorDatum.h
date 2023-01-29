@@ -1,7 +1,8 @@
 #ifndef VECTORDATUM
 #define VECTORDATUM
 
-#include "Types.h"
+#include <string>
+#include <vector>
 
 class VectorDatum {
  public:
@@ -10,14 +11,14 @@ class VectorDatum {
 
   float GetDataAtIndex(const unsigned&) const;
 
-  void SetData(const Types::FloatVector);
+  void SetData(const std::vector<float>);
   void AddData(const float&);
 
   unsigned GetSize() const;
   const std::string& GetName() const;
 
  private:
-  Types::FloatVector mData;
+  std::vector<float> mData;
   std::string mName;
 };
 

@@ -1,7 +1,9 @@
 #ifndef FILEWRITER
 #define FILEWRITER
 
-#include "Environment.h"
+#include <string>
+
+class Environment;
 
 class FileWriter {
  public:

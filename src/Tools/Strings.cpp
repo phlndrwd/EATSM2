@@ -1,6 +1,8 @@
 #include "Strings.h"
 
 #include <algorithm>
+#include <iomanip>
+#include <iostream>
 
 #include "Constants.h"
 
@@ -10,11 +12,11 @@ double Strings::StringToNumber(const std::string& string) {
   return number;
 }
 
-const Types::StringVector Strings::StringToWords(const std::string& inputString, const char wordTerminationCharacter) {
+const std::vector<std::string> Strings::StringToWords(const std::string& inputString, const char wordTerminationCharacter) {
   std::stringstream stringStream(inputString);
 
   std::string word = "";
-  Types::StringVector wordList;
+  std::vector<std::string> wordList;
 
   while (std::getline(stringStream, word, wordTerminationCharacter)) {
     wordList.push_back(word);

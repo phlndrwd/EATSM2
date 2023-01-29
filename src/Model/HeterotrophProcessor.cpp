@@ -38,16 +38,16 @@ double HeterotrophProcessor::CalculateFeedingProbability(const unsigned predator
   return (this->*fStarvationProbability)(predatorIndex, effectivePreyVolume);
 }
 
-double HeterotrophProcessor::CalculateMetabolicDeduction(const Types::HeterotrophPointer individual) const {
+double HeterotrophProcessor::CalculateMetabolicDeduction(const Heterotroph* individual) const {
   return mFractionalMetabolicExpense * std::pow(individual->GetVolumeActual(), mMetabolicIndex);
 }
 
-double HeterotrophProcessor::CalculateStarvationProbability(const Types::HeterotrophPointer individual) const {
+double HeterotrophProcessor::CalculateStarvationProbability(const Heterotroph* individual) const {
   return CalculateLinearStarvation(individual->GetVolumeActual(), individual->GetVolumeHeritable(),
                                    individual->GetVolumeMinimum(), individual->GetStarvationMultiplier());
 }
 
-unsigned HeterotrophProcessor::FindIndividualSizeClassIndex(const Types::HeterotrophPointer individual,
+unsigned HeterotrophProcessor::FindIndividualSizeClassIndex(const Heterotroph* individual,
                                                             unsigned directionToMove) const {
   unsigned currentSizeClass = individual->GetSizeClassIndex();
   unsigned newSizeClassIndex = currentSizeClass;
@@ -72,7 +72,7 @@ unsigned HeterotrophProcessor::FindIndividualSizeClassIndex(const Types::Heterot
   return newSizeClassIndex;
 }
 
-bool HeterotrophProcessor::UpdateSizeClassIndex(Types::HeterotrophPointer individual) const {
+bool HeterotrophProcessor::UpdateSizeClassIndex(Heterotroph* individual) const {
   unsigned directionToMove = DirectionIndividualShouldMoveSizeClasses(individual);
   if (directionToMove != Constants::eNoMovement) {
     unsigned newSizeClassIndex = FindIndividualSizeClassIndex(individual, directionToMove);
@@ -95,7 +95,7 @@ unsigned HeterotrophProcessor::FindSizeClassIndexFromVolume(const double volume)
 }
 
 unsigned HeterotrophProcessor::DirectionIndividualShouldMoveSizeClasses(
-    const Types::HeterotrophPointer individual) const {
+    const Heterotroph* individual) const {
   unsigned directionToMove = Constants::eNoMovement;
 
   unsigned sizeClassIndex = individual->GetSizeClassIndex();
@@ -109,7 +109,7 @@ unsigned HeterotrophProcessor::DirectionIndividualShouldMoveSizeClasses(
   return directionToMove;
 }
 
-void HeterotrophProcessor::UpdateHerbivoreTrophicIndex(const Types::HeterotrophPointer grazer) const {
+void HeterotrophProcessor::UpdateHerbivoreTrophicIndex(Heterotroph* grazer) {
   double trophicLevel = grazer->GetTrophicLevel();
   if (trophicLevel != 0)
     grazer->SetTrophicLevel((trophicLevel + 2) * 0.5);
@@ -117,8 +117,8 @@ void HeterotrophProcessor::UpdateHerbivoreTrophicIndex(const Types::HeterotrophP
     grazer->SetTrophicLevel(2);
 }
 
-void HeterotrophProcessor::UpdateCarnivoreTrophicIndex(const Types::HeterotrophPointer predator,
-                                                       const Types::HeterotrophPointer prey) const {
+void HeterotrophProcessor::UpdateCarnivoreTrophicIndex(Heterotroph* predator,
+                                                       const Heterotroph* prey) {
   double predatorTrophicLevel = predator->GetTrophicLevel();
   double preyTrophicLevel = prey->GetTrophicLevel();
   if (predatorTrophicLevel != 0) {

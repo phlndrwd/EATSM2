@@ -1,7 +1,8 @@
 #ifndef FILEREADER
 #define FILEREADER
 
-#include "Types.h"
+#include <string>
+#include <vector>
 
 class FileReader {
  public:
@@ -14,7 +15,7 @@ class FileReader {
   bool ReadTextFile(const std::string&, bool copyToOutput = true);
   void ClearRawTextData();
 
-  Types::StringMatrix mRawTextData;
+  std::vector<std::vector<std::string>> mRawTextData;
 };
 
 #endif

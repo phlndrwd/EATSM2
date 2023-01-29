@@ -17,7 +17,7 @@ void MatrixDatum::AddDataAtIndex(const unsigned& index, const float& data) {
   mData[index].push_back(data);
 }
 
-void MatrixDatum::AddData(const Types::FloatVector data) {
+void MatrixDatum::AddData(const std::vector<float> data) {
   mData.push_back(data);
 }
 

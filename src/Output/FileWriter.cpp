@@ -1,6 +1,11 @@
 #include "FileWriter.h"
 
+#include <sys/stat.h>
+
+#include <fstream>
 #include <ios>
+#include <map>
+#include <iostream>
 #include <limits>
 
 #include "Autotrophs.h"
@@ -61,13 +66,13 @@ void FileWriter::InitialiseOutputDirectory() {
 }
 
 bool FileWriter::WriteInputFiles() {
-  Types::StringVector inputFilePaths = DataRecorder::Get()->GetInputFilePaths();
+  std::vector<std::string> inputFilePaths = DataRecorder::Get()->GetInputFilePaths();
 
   for (unsigned stringIndex = 0; stringIndex < inputFilePaths.size(); ++stringIndex) {
     std::ifstream sourceFileStream(inputFilePaths[stringIndex].c_str(), std::ios::in);
 
     std::string outputFilePath = mOutputPath;
-    Types::StringVector inputFilePathComponents =
+    std::vector<std::string> inputFilePathComponents =
         Strings::StringToWords(inputFilePaths[stringIndex], Constants::cFolderDelimiter);
 
     std::string fileName = inputFilePathComponents[inputFilePathComponents.size() - 1];
@@ -100,11 +105,11 @@ void FileWriter::WriteOutputData(Environment& environment) {
 }
 
 bool FileWriter::WriteVectorDatums() {
-  Types::VectorDatumMap vectorDatumMap = DataRecorder::Get()->GetVectorDatumMap();
+  std::map<std::string, VectorDatum*> vectorDatumMap = DataRecorder::Get()->GetVectorDatumMap();
 
-  for (Types::VectorDatumMap::iterator iter = vectorDatumMap.begin(); iter != vectorDatumMap.end(); ++iter) {
+  for (std::map<std::string, VectorDatum*>::iterator iter = vectorDatumMap.begin(); iter != vectorDatumMap.end(); ++iter) {
     std::string fileName = iter->first;
-    Types::VectorDatumPointer vectorDatum = iter->second;
+    VectorDatum* vectorDatum = iter->second;
     unsigned datumSize = vectorDatum->GetSize();
     if (datumSize > 0) {
       fileName.insert(0, mOutputPath).append(Constants::cFileNameExtension);
@@ -126,10 +131,10 @@ bool FileWriter::WriteVectorDatums() {
 }
 
 bool FileWriter::WriteMatrixDatums() {
-  Types::MatrixDatumMap matrixDatumMap = DataRecorder::Get()->GetMatrixDatumMap();
-  for (Types::MatrixDatumMap::iterator iter = matrixDatumMap.begin(); iter != matrixDatumMap.end(); ++iter) {
+  std::map<std::string, MatrixDatum*> matrixDatumMap = DataRecorder::Get()->GetMatrixDatumMap();
+  for (std::map<std::string, MatrixDatum*>::iterator iter = matrixDatumMap.begin(); iter != matrixDatumMap.end(); ++iter) {
     std::string fileName = iter->first;
-    Types::MatrixDatumPointer matrixDatum = iter->second;
+    MatrixDatum* matrixDatum = iter->second;
     unsigned rowSize = matrixDatum->GetRows();
     if (rowSize > 0) {
       fileName.insert(0, mOutputPath).append(Constants::cFileNameExtension);
@@ -173,8 +178,7 @@ bool FileWriter::WriteStateFile(Environment& environment) {
         for (std::size_t individualIndex = 0;
              individualIndex < environment.GetHeterotrophs().GetSizeClassPopulation(sizeClassIndex);
              ++individualIndex) {
-          Types::HeterotrophPointer individual =
-              environment.GetHeterotrophs().GetIndividual(sizeClassIndex, individualIndex);
+          Heterotroph* individual = environment.GetHeterotrophs().GetIndividual(sizeClassIndex, individualIndex);
           modelStateFileStream << individual->GetHeritableTraits().GetValue(Constants::eVolume)
                                << Constants::cDataDelimiterValue << individual->GetVolumeActual()
                                << Constants::cDataDelimiterValue << individual->GetSizeClassIndex() << std::endl;

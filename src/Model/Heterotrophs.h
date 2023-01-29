@@ -1,25 +1,13 @@
 #ifndef HETEROTROPHS
 #define HETEROTROPHS
 
-#include "Autotrophs.h"
 #include "HeterotrophData.h"
 #include "HeterotrophProcessor.h"
-#include "Nutrient.h"
+#include "RandomSimple.h"
 #include "Timer.h"
 
-struct TestStruct {
-  double mVolumeHeritable;
-  double mVolumeMinimum;
-  double mVolumeReproduction;
-
-  double mVolumeActual;
-  double mTrophicLevel;
-
-  unsigned mAge;
-
-  bool mHasFed;
-  bool mIsDead;
-};
+class Autotrophs;
+class Nutrient;
 
 class Heterotrophs {
  public:
@@ -29,7 +17,7 @@ class Heterotrophs {
   void Update();
   bool RecordData();
 
-  Types::HeterotrophPointer GetIndividual(const unsigned, const unsigned);
+  Heterotroph* GetIndividual(const unsigned, const unsigned);
   std::size_t GetSizeClassPopulation(const unsigned) const;
 
  private:
@@ -41,20 +29,20 @@ class Heterotrophs {
   void Starvation();
   void Reproduction();
 
-  Types::HeterotrophPointer GetRandomIndividualFromSizeClass(const unsigned);
-  Types::HeterotrophPointer GetRandomPredatorFromSizeClass(const unsigned);
-  Types::HeterotrophPointer GetRandomPreyFromSizeClass(const unsigned, const Types::HeterotrophPointer);
+  Heterotroph* GetRandomIndividualFromSizeClass(const unsigned);
+  Heterotroph* GetRandomPredatorFromSizeClass(const unsigned);
+  Heterotroph* GetRandomPreyFromSizeClass(const unsigned, const Heterotroph*);
 
-  void FeedFromAutotrophs(Types::HeterotrophPointer);
-  void FeedFromHeterotrophs(Types::HeterotrophPointer, const unsigned);
+  void FeedFromAutotrophs(Heterotroph*);
+  void FeedFromHeterotrophs(Heterotroph*, const unsigned);
 
-  void StageForMoving(Types::HeterotrophPointer, const unsigned);
-  void MoveSizeClass(Types::HeterotrophPointer, const unsigned);
-  bool RemoveFromSizeClass(Types::HeterotrophPointer, const unsigned);
-  void DeleteIndividual(Types::HeterotrophPointer);
+  void StageForMoving(Heterotroph*, const unsigned);
+  void MoveSizeClass(Heterotroph*, const unsigned);
+  bool RemoveFromSizeClass(Heterotroph*, const unsigned);
+  void DeleteIndividual(Heterotroph*);
 
-  void Starve(Types::HeterotrophPointer);
-  void Kill(Types::HeterotrophPointer);
+  void Starve(Heterotroph*);
+  void Kill(Heterotroph*);
 
   void AddChildren();
   void MoveIndividuals();
@@ -69,11 +57,11 @@ class Heterotrophs {
   RandomSimple mRandom;
   Timer mTimer;
 
-  const Types::DoubleMatrix mInterSizeClassPreferenceMatrix;
-  const Types::DoubleMatrix mInterSizeClassVolumeMatrix;
+  const std::vector<std::vector<double>> mInterSizeClassPreferenceMatrix;
+  const std::vector<std::vector<double>> mInterSizeClassVolumeMatrix;
 
-  const Types::DoubleVector mSizeClassMidPoints;
-  const Types::UnsignedVector mMaximumSizeClassPopulations;
+  const std::vector<double> mSizeClassMidPoints;
+  const std::vector<unsigned> mMaximumSizeClassPopulations;
 
   const double mSmallestIndividualVolume;
   const double mInitialHeterotrophicVolume;
@@ -83,15 +71,13 @@ class Heterotrophs {
   const unsigned mPreferredPreyVolumeRatio;
   const unsigned mAutotrophSizeClassIndex;
 
-  Types::UnsignedVector mFedCount;
+  std::vector<unsigned> mFedCount;
 
-  Types::HeterotrophVector mChildren;
-  Types::HeterotrophIndexVector mIndividualsToMove;
+  std::vector<Heterotroph*> mChildren;
+  std::vector<std::pair<Heterotroph*, unsigned>> mIndividualsToMove;
 
-  Types::HeterotrophMatrix mIndividuals;
-  Types::HeterotrophMatrix mIndividualsDead;
-
-  TestStruct* mTestStructure;
+  std::vector<std::vector<Heterotroph*>> mIndividuals;
+  std::vector<std::vector<Heterotroph*>> mIndividualsDead;
 };
 
 #endif
