@@ -5,41 +5,41 @@
 #include "Strings.h"
 #include "VectorDatum.h"
 
-DataRecorder* DataRecorder::mThis = nullptr;
+DataRecorder* DataRecorder::this_ = nullptr;
 
-DataRecorder* DataRecorder::Get() {
-  if (mThis == nullptr) mThis = new DataRecorder();
+DataRecorder* DataRecorder::get() {
+  if (this_ == nullptr) this_ = new DataRecorder();
 
-  return mThis;
+  return this_;
 }
 
 DataRecorder::DataRecorder() {}
 
 DataRecorder::~DataRecorder() {
-  for (std::map<std::string, VectorDatum*>::iterator iter = mVectorDatumMap.begin(); iter != mVectorDatumMap.end(); ++iter) {
+  for (std::map<std::string, VectorDatum*>::iterator iter = vectorDatumMap_.begin(); iter != vectorDatumMap_.end(); ++iter) {
     delete iter->second;
   }
-  for (std::map<std::string, MatrixDatum*>::iterator iter = mMatrixDatumMap.begin(); iter != mMatrixDatumMap.end(); ++iter) {
+  for (std::map<std::string, MatrixDatum*>::iterator iter = matrixDatumMap_.begin(); iter != matrixDatumMap_.end(); ++iter) {
     delete iter->second;
   }
-  if (mThis != nullptr) delete mThis;
+  if (this_ != nullptr) delete this_;
 }
 
-bool DataRecorder::Initialise(const std::vector<std::vector<std::string>>& rawOutputParameterData) {
+bool DataRecorder::initialise(const std::vector<std::vector<std::string>>& rawOutputParameterData) {
   if (rawOutputParameterData.size() > 0) {
     for (unsigned rowIndex = 0; rowIndex < rawOutputParameterData.size(); ++rowIndex) {
-      std::string name = Strings::RemoveWhiteSpace(rawOutputParameterData[rowIndex][Constants::eDatumName]);
+      std::string name = Strings::removeWhiteSpace(rawOutputParameterData[rowIndex][constants::eDatumName]);
       std::string type =
-          Strings::RemoveWhiteSpace(Strings::ToLowercase(rawOutputParameterData[rowIndex][Constants::eDatumType]));
+          Strings::removeWhiteSpace(Strings::toLowercase(rawOutputParameterData[rowIndex][constants::eDatumType]));
 
       std::vector<std::string> datumMetadata;
       datumMetadata.push_back(name);
       datumMetadata.push_back(type);
 
-      if (type == Constants::cVectorDatumTypeName) {
-        mVectorDatumMetadata.push_back(datumMetadata);
-      } else if (type == Constants::cMatrixDatumTypeName) {
-        mMatrixDatumMetadata.push_back(datumMetadata);
+      if (type == constants::kVectorDatumTypeName) {
+        vectorDatumMetadata_.push_back(datumMetadata);
+      } else if (type == constants::kMatrixDatumTypeName) {
+        matrixDatumMetadata_.push_back(datumMetadata);
       }
     }
     return true;
@@ -48,57 +48,57 @@ bool DataRecorder::Initialise(const std::vector<std::vector<std::string>>& rawOu
   }
 }
 
-void DataRecorder::InitialiseMatrix(const std::string& name, const unsigned& size) {
-  MatrixDatum* matrixDatum = GetMatrixDatumFromName(name);
+void DataRecorder::initialiseMatrix(const std::string& name, const unsigned& size) {
+  MatrixDatum* matrixDatum = getMatrixDatumFromName(name);
 
-  if (matrixDatum != nullptr) matrixDatum->SetGroupSize(size);
+  if (matrixDatum != nullptr) matrixDatum->setGroupSize(size);
 }
 
-void DataRecorder::AddDataTo(const std::string& name, const float& data) {
-  VectorDatum* vectorDatum = GetVectorDatumFromName(name);
+void DataRecorder::addDataTo(const std::string& name, const float& data) {
+  VectorDatum* vectorDatum = getVectorDatumFromName(name);
 
-  if (vectorDatum != nullptr) vectorDatum->AddData(data);
+  if (vectorDatum != nullptr) vectorDatum->addData(data);
 }
 
-void DataRecorder::AddDataTo(const std::string& name, const std::vector<float> data) {
-  MatrixDatum* matrixDatum = GetMatrixDatumFromName(name);
+void DataRecorder::addDataTo(const std::string& name, const std::vector<float> data) {
+  MatrixDatum* matrixDatum = getMatrixDatumFromName(name);
 
-  if (matrixDatum != nullptr) matrixDatum->AddData(data);
+  if (matrixDatum != nullptr) matrixDatum->addData(data);
 }
 
-void DataRecorder::AddDataTo(const std::string& name, const unsigned& index, const float& data) {
-  MatrixDatum* matrixDatum = GetMatrixDatumFromName(name);
+void DataRecorder::addDataTo(const std::string& name, const unsigned& index, const float& data) {
+  MatrixDatum* matrixDatum = getMatrixDatumFromName(name);
 
-  if (matrixDatum != nullptr) matrixDatum->AddDataAtIndex(index, data);
+  if (matrixDatum != nullptr) matrixDatum->addDataAtIndex(index, data);
 }
 
-void DataRecorder::SetVectorDataOn(const std::string& name, const std::vector<float> data) {
-  VectorDatum* vectorDatum = GetVectorDatumFromName(name);
+void DataRecorder::setVectorDataOn(const std::string& name, const std::vector<float> data) {
+  VectorDatum* vectorDatum = getVectorDatumFromName(name);
 
-  if (vectorDatum != nullptr) vectorDatum->SetData(data);
+  if (vectorDatum != nullptr) vectorDatum->setData(data);
 }
 
-void DataRecorder::AddInputFilePath(const std::string& inputFilePath) { mInputFilePaths.push_back(inputFilePath); }
+void DataRecorder::addInputFilePath(const std::string& inputFilePath) { inputFilePaths_.push_back(inputFilePath); }
 
-std::map<std::string, VectorDatum*> DataRecorder::GetVectorDatumMap() const { return mVectorDatumMap; }
+std::map<std::string, VectorDatum*> DataRecorder::getVectorDatumMap() const { return vectorDatumMap_; }
 
-std::map<std::string, MatrixDatum*> DataRecorder::GetMatrixDatumMap() const { return mMatrixDatumMap; }
+std::map<std::string, MatrixDatum*> DataRecorder::getMatrixDatumMap() const { return matrixDatumMap_; }
 
-std::vector<std::string> DataRecorder::GetInputFilePaths() const { return mInputFilePaths; }
+std::vector<std::string> DataRecorder::getInputFilePaths() const { return inputFilePaths_; }
 
-VectorDatum* DataRecorder::GetVectorDatumFromName(const std::string& name) {
+VectorDatum* DataRecorder::getVectorDatumFromName(const std::string& name) {
   VectorDatum* vectorDatum = nullptr;
-  std::map<std::string, VectorDatum*>::iterator iter = mVectorDatumMap.find(name);
+  std::map<std::string, VectorDatum*>::iterator iter = vectorDatumMap_.find(name);
 
-  if (iter != mVectorDatumMap.end()) {
+  if (iter != vectorDatumMap_.end()) {
     vectorDatum = iter->second;
   } else {
-    for (unsigned datumIndex = 0; datumIndex < mVectorDatumMetadata.size(); ++datumIndex) {
-      std::string datumName = mVectorDatumMetadata[datumIndex][Constants::eDatumName];
+    for (unsigned datumIndex = 0; datumIndex < vectorDatumMetadata_.size(); ++datumIndex) {
+      std::string datumName = vectorDatumMetadata_[datumIndex][constants::eDatumName];
 
       if (datumName == name) {
         vectorDatum = new VectorDatum(datumName);
-        mVectorDatumMap.insert(std::pair<std::string, VectorDatum*>(datumName, vectorDatum));
+        vectorDatumMap_.insert(std::pair<std::string, VectorDatum*>(datumName, vectorDatum));
         break;
       }
     }
@@ -106,19 +106,19 @@ VectorDatum* DataRecorder::GetVectorDatumFromName(const std::string& name) {
   return vectorDatum;
 }
 
-MatrixDatum* DataRecorder::GetMatrixDatumFromName(const std::string& name) {
+MatrixDatum* DataRecorder::getMatrixDatumFromName(const std::string& name) {
   MatrixDatum* matrixDatum = nullptr;
-  std::map<std::string, MatrixDatum*>::iterator iter = mMatrixDatumMap.find(name);
+  std::map<std::string, MatrixDatum*>::iterator iter = matrixDatumMap_.find(name);
 
-  if (iter != mMatrixDatumMap.end()) {
+  if (iter != matrixDatumMap_.end()) {
     matrixDatum = iter->second;
   } else {
-    for (unsigned datumIndex = 0; datumIndex < mMatrixDatumMetadata.size(); ++datumIndex) {
-      std::string datumName = mMatrixDatumMetadata[datumIndex][Constants::eDatumName];
+    for (unsigned datumIndex = 0; datumIndex < matrixDatumMetadata_.size(); ++datumIndex) {
+      std::string datumName = matrixDatumMetadata_[datumIndex][constants::eDatumName];
 
       if (datumName == name) {
         matrixDatum = new MatrixDatum(datumName);
-        mMatrixDatumMap.insert(std::pair<std::string, MatrixDatum*>(datumName, matrixDatum));
+        matrixDatumMap_.insert(std::pair<std::string, MatrixDatum*>(datumName, matrixDatum));
         break;
       }
     }

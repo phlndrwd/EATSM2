@@ -4,35 +4,35 @@
 #include "RandomSimple.h"
 
 HeritableTraits::HeritableTraits(const std::vector<double>& values, const std::vector<bool>& areTraitsMutations)
-    : mMutationProbability(Parameters::Get()->GetMutationProbability()),
-      mMutationStandardDeviation(Parameters::Get()->GetMutationStandardDeviation()) {
+    : mutationProbability_(Parameters::Get()->getMutationProbability()),
+      mutationStandardDeviation_(Parameters::Get()->getMutationStandardDeviation()) {
   for (unsigned i = 0; i < values.size(); ++i) {
-    mValues.push_back(values[i]);
-    mAreMutantTraits.push_back(areTraitsMutations[i]);
+    values_.push_back(values[i]);
+    areMutantTraits_.push_back(areTraitsMutations[i]);
   }
 }
 
-HeritableTraits::~HeritableTraits() { mValues.clear(); }
+HeritableTraits::~HeritableTraits() { values_.clear(); }
 
 HeritableTraits& HeritableTraits::operator=(const HeritableTraits& heritableTraits) {
   if (this != &heritableTraits) {
-    mValues = heritableTraits.mValues;
-    mAreMutantTraits = heritableTraits.mAreMutantTraits;
+    values_ = heritableTraits.values_;
+    areMutantTraits_ = heritableTraits.areMutantTraits_;
   }
   return *this;
 }
 
-HeritableTraits HeritableTraits::GetChildTraits(RandomSimple& random) {
-  std::size_t numberOfGenes = mValues.size();
-  std::vector<double> childValues = mValues;
+HeritableTraits HeritableTraits::getChildTraits(RandomSimple& random) {
+  std::size_t numberOfGenes = values_.size();
+  std::vector<double> childValues = values_;
   std::vector<bool> areTraitsMutations(numberOfGenes, false);
 
-  if (mMutationProbability > 0) {
+  if (mutationProbability_ > 0) {
     for (std::size_t i = 0; i < numberOfGenes; ++i) {
-      if (random.GetUniform() <= mMutationProbability) {
+      if (random.getUniform() <= mutationProbability_) {
         areTraitsMutations[i] = true;
 
-        double mutationValue = random.GetNormal(0.0, mMutationStandardDeviation);
+        double mutationValue = random.getNormal(0.0, mutationStandardDeviation_);
 
         childValues[i] += mutationValue;
 
@@ -48,22 +48,22 @@ HeritableTraits HeritableTraits::GetChildTraits(RandomSimple& random) {
   return HeritableTraits(childValues, areTraitsMutations);
 }
 
-const std::vector<bool>& HeritableTraits::AreTraitsMutant() const {
-  return mAreMutantTraits;
+const std::vector<bool>& HeritableTraits::areTraitsMutant() const {
+  return areMutantTraits_;
 }
 
-const std::vector<double>& HeritableTraits::GetValues() const {
-  return mValues;
+const std::vector<double>& HeritableTraits::getValues() const {
+  return values_;
 }
 
-bool HeritableTraits::IsTraitMutant(const unsigned traitIndex) const {
-  return mAreMutantTraits[traitIndex];
+bool HeritableTraits::isTraitMutant(const unsigned traitIndex) const {
+  return areMutantTraits_[traitIndex];
 }
 
-const double& HeritableTraits::GetValue(const Constants::eHeritableTraitIndices trait) const {
-  return mValues[trait];
+const double& HeritableTraits::getValue(const constants::eHeritableTraitIndices trait) const {
+  return values_[trait];
 }
 
-void HeritableTraits::SetValue(const Constants::eHeritableTraitIndices trait, const double traitValue) {
-  mValues[trait] = traitValue;
+void HeritableTraits::setValue(const constants::eHeritableTraitIndices trait, const double traitValue) {
+  values_[trait] = traitValue;
 }

@@ -13,21 +13,21 @@ class HeritableTraits {
   ~HeritableTraits();
   HeritableTraits& operator=(const HeritableTraits&);
 
-  HeritableTraits GetChildTraits(RandomSimple&);
-  const std::vector<double>& GetValues() const;
-  const std::vector<bool>& AreTraitsMutant() const;
+  HeritableTraits getChildTraits(RandomSimple&);
+  const std::vector<double>& getValues() const;
+  const std::vector<bool>& areTraitsMutant() const;
 
-  const double& GetValue(const Constants::eHeritableTraitIndices) const;
-  bool IsTraitMutant(const unsigned) const;
+  const double& getValue(const constants::eHeritableTraitIndices) const;
+  bool isTraitMutant(const unsigned) const;
 
-  void SetValue(const Constants::eHeritableTraitIndices, const double);
+  void setValue(const constants::eHeritableTraitIndices, const double);
 
  private:
-  const double mMutationProbability;
-  const double mMutationStandardDeviation;
+  const double mutationProbability_;
+  const double mutationStandardDeviation_;
 
-  std::vector<double> mValues;
-  std::vector<bool> mAreMutantTraits;
+  std::vector<double> values_;
+  std::vector<bool> areMutantTraits_;
 };
 
 #endif

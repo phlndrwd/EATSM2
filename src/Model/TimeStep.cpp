@@ -2,20 +2,20 @@
 #include "Parameters.h"
 
 TimeStep::TimeStep()
-    : mSamplingRate(Parameters::Get()->GetSamplingRate()) {
-  mTimeStep = 0;
+    : samplingRate_(Parameters::Get()->getSamplingRate()) {
+  timeStep_ = 0;
 }
 
 TimeStep::~TimeStep() {}
 
-unsigned TimeStep::GetTimeStep() const {
-  return mTimeStep;
+unsigned TimeStep::getTimeStep() const {
+  return timeStep_;
 }
 
-bool TimeStep::DoRecordData() const {
-  return (mTimeStep % mSamplingRate == 0);
+bool TimeStep::doRecordData() const {
+  return (timeStep_ % samplingRate_ == 0);
 }
 
-void TimeStep::IncrementTimeStep() {
-  ++mTimeStep;
+void TimeStep::incrementTimeStep() {
+  ++timeStep_;
 }

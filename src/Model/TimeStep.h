@@ -6,15 +6,15 @@ class TimeStep {
   TimeStep();
   ~TimeStep();
 
-  unsigned GetTimeStep() const;
+  unsigned getTimeStep() const;
 
-  bool DoRecordData() const;
-  void IncrementTimeStep();
+  bool doRecordData() const;
+  void incrementTimeStep();
 
  private:
-  const unsigned mSamplingRate;
+  const unsigned samplingRate_;
 
-  unsigned mTimeStep;
+  unsigned timeStep_;
 };
 
 #endif

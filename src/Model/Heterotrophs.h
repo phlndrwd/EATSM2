@@ -14,70 +14,70 @@ class Heterotrophs {
   Heterotrophs(Nutrient&, Autotrophs&);
   ~Heterotrophs();
 
-  void Update();
-  bool RecordData();
+  void update();
+  bool recordData();
 
-  Heterotroph* GetIndividual(const unsigned, const unsigned);
-  std::size_t GetSizeClassPopulation(const unsigned) const;
+  Heterotroph* getIndividual(const unsigned, const unsigned);
+  std::size_t getSizeClassPopulation(const unsigned) const;
 
  private:
-  void CreateInitialPopulation();
-  void CalculateFeedingProbabilities();
+  void createInitialPopulation();
+  void calculateFeedingProbabilities();
 
-  void Feeding();
-  void Metabolisation();
-  void Starvation();
-  void Reproduction();
+  void feeding();
+  void metabolisation();
+  void starvation();
+  void reproduction();
 
-  Heterotroph* GetRandomIndividualFromSizeClass(const unsigned);
-  Heterotroph* GetRandomPredatorFromSizeClass(const unsigned);
-  Heterotroph* GetRandomPreyFromSizeClass(const unsigned, const Heterotroph*);
+  Heterotroph* getRandomIndividualFromSizeClass(const unsigned);
+  Heterotroph* getRandomPredatorFromSizeClass(const unsigned);
+  Heterotroph* getRandomPreyFromSizeClass(const unsigned, const Heterotroph*);
 
-  void FeedFromAutotrophs(Heterotroph*);
-  void FeedFromHeterotrophs(Heterotroph*, const unsigned);
+  void feedFromAutotrophs(Heterotroph*);
+  void feedFromHeterotrophs(Heterotroph*, const unsigned);
 
-  void StageForMoving(Heterotroph*, const unsigned);
-  void MoveSizeClass(Heterotroph*, const unsigned);
-  bool RemoveFromSizeClass(Heterotroph*, const unsigned);
-  void DeleteIndividual(Heterotroph*);
+  void stageForMoving(Heterotroph*, const unsigned);
+  void moveSizeClass(Heterotroph*, const unsigned);
+  bool removeFromSizeClass(Heterotroph*, const unsigned);
+  void deleteIndividual(Heterotroph*);
 
-  void Starve(Heterotroph*);
-  void Kill(Heterotroph*);
+  void starve(Heterotroph*);
+  void kill(Heterotroph*);
 
-  void AddChildren();
-  void MoveIndividuals();
-  void DeleteDead();
+  void addChildren();
+  void moveIndividuals();
+  void deleteDead();
 
-  Nutrient& mNutrient;
-  Autotrophs& mAutotrophs;
+  Nutrient& nutrient_;
+  Autotrophs& autotrophs_;
 
-  HeterotrophProcessor mHeterotrophProcessor;
-  HeterotrophData mHeterotrophData;
+  HeterotrophProcessor heterotrophProcessor_;
+  HeterotrophData heterotrophData_;
 
-  RandomSimple mRandom;
-  Timer mTimer;
+  RandomSimple random_;
+  Timer timer_;
 
-  const std::vector<std::vector<double>> mInterSizeClassPreferenceMatrix;
-  const std::vector<std::vector<double>> mInterSizeClassVolumeMatrix;
+  const std::vector<std::vector<double>> interSizeClassPreferenceMatrix_;
+  const std::vector<std::vector<double>> interSizeClassVolumeMatrix_;
 
-  const std::vector<double> mSizeClassMidPoints;
-  const std::vector<unsigned> mMaximumSizeClassPopulations;
+  const std::vector<double> sizeClassMidPoints_;
+  const std::vector<unsigned> maximumSizeClassPopulations_;
 
-  const double mSmallestIndividualVolume;
-  const double mInitialHeterotrophicVolume;
-  const double mSizeClassSubsetFraction;
+  const double smallestIndividualVolume_;
+  const double initialHeterotrophicVolume_;
+  const double sizeClassSubsetFraction_;
 
-  const unsigned mNumberOfSizeClasses;
-  const unsigned mPreferredPreyVolumeRatio;
-  const unsigned mAutotrophSizeClassIndex;
+  const unsigned numberOfSizeClasses_;
+  const unsigned preferredPreyVolumeRatio_;
+  const unsigned autotrophSizeClassIndex_;
 
-  std::vector<unsigned> mFedCount;
+  std::vector<unsigned> fedCount_;
 
-  std::vector<Heterotroph*> mChildren;
-  std::vector<std::pair<Heterotroph*, unsigned>> mIndividualsToMove;
+  std::vector<Heterotroph*> children_;
+  std::vector<std::pair<Heterotroph*, unsigned>> individualsToMove_;
 
-  std::vector<std::vector<Heterotroph*>> mIndividuals;
-  std::vector<std::vector<Heterotroph*>> mIndividualsDead;
+  std::vector<std::vector<Heterotroph*>> individuals_;
+  std::vector<std::vector<Heterotroph*>> individualsDead_;
 };
 
 #endif

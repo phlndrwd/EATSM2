@@ -1,34 +1,34 @@
 #include "MatrixDatum.h"
 
 MatrixDatum::MatrixDatum(const std::string& name)
-    : mName(name) {}
+    : name_(name) {}
 
 MatrixDatum::~MatrixDatum() {}
 
-void MatrixDatum::SetGroupSize(const unsigned& size) {
-  mData.resize(size);
+void MatrixDatum::setGroupSize(const unsigned& size) {
+  data_.resize(size);
 }
 
-float MatrixDatum::GetDataAtIndices(const unsigned& rowIndex, const unsigned& columnIndex) const {
-  return mData[columnIndex][rowIndex];
+float MatrixDatum::getDataAtIndices(const unsigned& rowIndex, const unsigned& columnIndex) const {
+  return data_[columnIndex][rowIndex];
 }
 
-void MatrixDatum::AddDataAtIndex(const unsigned& index, const float& data) {
-  mData[index].push_back(data);
+void MatrixDatum::addDataAtIndex(const unsigned& index, const float& data) {
+  data_[index].push_back(data);
 }
 
-void MatrixDatum::AddData(const std::vector<float> data) {
-  mData.push_back(data);
+void MatrixDatum::addData(const std::vector<float> data) {
+  data_.push_back(data);
 }
 
-unsigned MatrixDatum::GetRows() const {
-  return mData[0].size();
+unsigned MatrixDatum::getRows() const {
+  return data_[0].size();
 }
 
-unsigned MatrixDatum::GetColumns() const {
-  return mData.size();
+unsigned MatrixDatum::getColumns() const {
+  return data_.size();
 }
 
-const std::string& MatrixDatum::GetName() const {
-  return mName;
+const std::string& MatrixDatum::getName() const {
+  return name_;
 }

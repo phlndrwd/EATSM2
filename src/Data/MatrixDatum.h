@@ -9,19 +9,19 @@ class MatrixDatum {
   MatrixDatum(const std::string&);
   ~MatrixDatum();
 
-  void SetGroupSize(const unsigned&);
+  void setGroupSize(const unsigned&);
 
-  float GetDataAtIndices(const unsigned&, const unsigned&) const;
-  void AddDataAtIndex(const unsigned&, const float&);
-  void AddData(const std::vector<float>);
+  float getDataAtIndices(const unsigned&, const unsigned&) const;
+  void addDataAtIndex(const unsigned&, const float&);
+  void addData(const std::vector<float>);
 
-  unsigned GetRows() const;
-  unsigned GetColumns() const;
-  const std::string& GetName() const;
+  unsigned getRows() const;
+  unsigned getColumns() const;
+  const std::string& getName() const;
 
  private:
-  std::vector<std::vector<float>> mData;
-  const std::string mName;
+  std::vector<std::vector<float>> data_;
+  const std::string name_;
 };
 
 #endif

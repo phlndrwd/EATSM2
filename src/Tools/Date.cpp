@@ -4,8 +4,8 @@
 
 #include "Constants.h"
 
-std::string Date::GetDateAndTimeString(const std::string format, unsigned addedSeconds) {
-  char dateTimeChar[Constants::cDateTimeBufferSize];
+std::string Date::getDateAndTimeString(const std::string format, unsigned addedSeconds) {
+  char dateTimeChar[constants::kDateTimeBufferSize];
   timeval timeNow;
   gettimeofday(&timeNow, nullptr);
   time_t rawtime = static_cast<time_t>(timeNow.tv_sec + addedSeconds);
@@ -13,7 +13,7 @@ std::string Date::GetDateAndTimeString(const std::string format, unsigned addedS
   struct tm *timeinfo;
   timeinfo = localtime(&rawtime);
 
-  strftime(dateTimeChar, Constants::cDateTimeBufferSize, format.c_str(), timeinfo);
+  strftime(dateTimeChar, constants::kDateTimeBufferSize, format.c_str(), timeinfo);
   std::string dateTime(dateTimeChar);
 
   return dateTime;

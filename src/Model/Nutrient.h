@@ -6,17 +6,17 @@ class Nutrient {
   Nutrient();
   ~Nutrient();
 
-  void RecordData();
+  void recordData();
 
-  double GetVolume();
-  void SetVolume(const double);
+  double getVolume();
+  void setVolume(const double);
 
-  void AddToVolume(const double);
-  void SubtractFromVolume(const double);
+  void addToVolume(const double);
+  void subtractFromVolume(const double);
 
  private:
-  double mVolume;
-  double mToFlux;
+  double volume_;
+  double toFlux_;
 };
 
 #endif

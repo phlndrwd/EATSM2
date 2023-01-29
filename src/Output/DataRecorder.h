@@ -13,37 +13,37 @@ class DataRecorder {
   DataRecorder();
   ~DataRecorder();
 
-  bool Initialise(const std::vector<std::vector<std::string>>&);
-  void InitialiseMatrix(const std::string&, const unsigned&);
+  bool initialise(const std::vector<std::vector<std::string>>&);
+  void initialiseMatrix(const std::string&, const unsigned&);
 
-  static DataRecorder* Get();
+  static DataRecorder* get();
 
-  void AddDataTo(const std::string&, const float&);
-  void AddDataTo(const std::string&, const std::vector<float>);
-  void AddDataTo(const std::string&, const unsigned&, const float&);
+  void addDataTo(const std::string&, const float&);
+  void addDataTo(const std::string&, const std::vector<float>);
+  void addDataTo(const std::string&, const unsigned&, const float&);
 
-  void SetVectorDataOn(const std::string&, const std::vector<float>);
+  void setVectorDataOn(const std::string&, const std::vector<float>);
 
-  void AddInputFilePath(const std::string&);
+  void addInputFilePath(const std::string&);
 
-  std::map<std::string, VectorDatum*> GetVectorDatumMap() const;
-  std::map<std::string, MatrixDatum*> GetMatrixDatumMap() const;
+  std::map<std::string, VectorDatum*> getVectorDatumMap() const;
+  std::map<std::string, MatrixDatum*> getMatrixDatumMap() const;
 
-  std::vector<std::string> GetInputFilePaths() const;
+  std::vector<std::string> getInputFilePaths() const;
 
  private:
-  VectorDatum* GetVectorDatumFromName(const std::string&);
-  MatrixDatum* GetMatrixDatumFromName(const std::string&);
+  VectorDatum* getVectorDatumFromName(const std::string&);
+  MatrixDatum* getMatrixDatumFromName(const std::string&);
 
-  static DataRecorder* mThis;
+  static DataRecorder* this_;
 
-  std::map<std::string, VectorDatum*> mVectorDatumMap;
-  std::map<std::string, MatrixDatum*> mMatrixDatumMap;
+  std::map<std::string, VectorDatum*> vectorDatumMap_;
+  std::map<std::string, MatrixDatum*> matrixDatumMap_;
 
-  std::vector<std::vector<std::string>> mVectorDatumMetadata;
-  std::vector<std::vector<std::string>> mMatrixDatumMetadata;
+  std::vector<std::vector<std::string>> vectorDatumMetadata_;
+  std::vector<std::vector<std::string>> matrixDatumMetadata_;
 
-  std::vector<std::string> mInputFilePaths;
+  std::vector<std::string> inputFilePaths_;
 };
 
 #endif

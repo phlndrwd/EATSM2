@@ -3,7 +3,7 @@
 
 #include <string>
 
-namespace Constants {
+namespace constants {
 
 // Input data file enums
 enum eInputParameters {
@@ -30,68 +30,75 @@ enum eInputParameters {
   eMutationStandardDeviation
 };
 
-enum eInputParametersMetadata { eParameterName, eParameterValue };
+enum eInputParametersMetadata {
+  eParameterName,
+  eParameterValue
+};
 
-enum eOutputControlParameters { eDatumName, eDatumType };
+enum eOutputControlParameters {
+  eDatumName,
+  eDatumType
+};
 
-enum eHeritableTraitIndices { eVolume };
+enum eHeritableTraitIndices {
+  eVolume
+};
 
 // Model enums
 
-enum eMovementDirection { eNoMovement, eMoveUp, eMoveDown };
+enum eMovementDirection {
+  eNoMovement,
+  eMoveUp,
+  eMoveDown
+};
 
-const unsigned cStateLineNutrientVol = 0;
-const unsigned cStateLineAutotrophVol = 1;
-const unsigned cStateLineFirstHeterotroph = 2;
+const unsigned kStateLineNutrientVol = 0;
+const unsigned kStateLineAutotrophVol = 1;
+const unsigned kStateLineFirstHeterotroph = 2;
 
-const std::string cConfigurationDirectory = "./input/";
-const std::string cOutputDirectoryName = "output";
+const std::string kConfigurationDirectory = "./input/";
+const std::string kOutputDirectoryName = "output";
 
-const std::string cInputParametersFileName = "Parameters.csv";
-const std::string cOutputParametersFileName = "Variables.csv";
-const std::string cInitialStateFileName = "InitialState.csv";
-const std::string cModelStateFileName = "State.csv";
-const std::string cFileNameExtension = ".csv";
+const std::string kInputParametersFileName = "Parameters.csv";
+const std::string kOutputParametersFileName = "Variables.csv";
+const std::string kInitialStateFileName = "InitialState.csv";
+const std::string kModelStateFileName = "State.csv";
+const std::string kFileNameExtension = ".csv";
 
-const std::string cTagFileName = "Tag_";
-const std::string cAttributesFileName = "Attributes.csv";
-const std::string cHerbivoryEventsFileName = "HerbivoryEvents.csv";
-const std::string cCarnivoryEventsFileName = "CarnivoryEvents.csv";
+const std::string kVectorDatumTypeName = "vector";
+const std::string kMatrixDatumTypeName = "matrix";
 
-const std::string cVectorDatumTypeName = "vector";
-const std::string cMatrixDatumTypeName = "matrix";
+const unsigned kMaximumNumberOfTrophicLevels = 11;  // 0 = unclassified, 1 = primary, etc.
+const int kMissingValue = -9999;
 
-const unsigned cMaximumNumberOfTrophicLevels = 11;  // 0 = unclassified, 1 = primary, etc.
-const int cMissingValue = -9999;
+const unsigned kDateTimeBufferSize = 25;
+const unsigned kOutputFolderPermissions = 0777;
 
-const unsigned cDateTimeBufferSize = 25;
-const unsigned cOutputFolderPermissions = 0777;
+const unsigned kReproductionFactor = 2;
+const double kReproductionMultiplier = 1 / (double)kReproductionFactor;  // Equivalent to 1 / 2
+const double kMinimumFractionalVolume = 0.5;
 
-const unsigned cReproductionFactor = 2;
-const double cReproductionMultiplier = 1 / (double)cReproductionFactor;  // Equivalent to 1 / 2
-const double cMinimumFractionalVolume = 0.5;
+const unsigned kSecondsInAMinute = 60;
+const unsigned kMinutesInAnHour = 60;
+const unsigned kHoursInADay = 24;
 
-const unsigned cSecondsInAMinute = 60;
-const unsigned cMinutesInAnHour = 60;
-const unsigned cHoursInADay = 24;
+const std::string kCompleteDateFormat = "%c";
+const std::string kDataSetNameFormat = "%Y-%m-%d_%H-%M-%S";
 
-const std::string cCompleteDateFormat = "%c";
-const std::string cDataSetNameFormat = "%Y-%m-%d_%H-%M-%S";
+const char kFolderDelimiter = '/';
+const char kWhiteSpaceCharacter = ' ';
+const char kDataDelimiterValue = ',';
+const char kCommentCharacter = '#';
 
-const char cFolderDelimiter = '/';
-const char cWhiteSpaceCharacter = ' ';
-const char cDataDelimiterValue = ',';
-const char cCommentCharacter = '#';
+const std::string kParameterFileCommand = "-p";
+const std::string kStateFileCommand = "-s";
+const std::string kRestartCommand = "-r";
+const std::string kVersionCommand = "-v";
 
-const std::string cParameterFileCommand = "-p";
-const std::string cStateFileCommand = "-s";
-const std::string cRestartCommand = "-r";
-const std::string cVersionCommand = "-v";
-
-const std::string cSystemName = "EATSM2";
-const std::string cSystemVersion = "0.0.1";
-const std::string cSystemDate = "29/01/2023";
-const std::string cSystemTime = "00:00";
+const std::string kSystemName = "EATSM2";
+const std::string kSystemVersion = "0.0.1";
+const std::string kSystemDate = "29/01/2023";
+const std::string kSystemTime = "00:00";
 }  // namespace Constants
 
 #endif

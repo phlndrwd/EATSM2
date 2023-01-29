@@ -12,23 +12,23 @@ class InitialState {
   static InitialState* Get();
 
   bool Initialise(const std::vector<std::vector<std::string>>&);
-  bool IsInitialised();
+  bool isInitialised();
 
-  double& GetNutrientVolume();
-  double& GetAutotrophVolume();
-  std::vector<std::vector<Heterotroph*>>& GetHeterotrophs();
-  unsigned& GetInitialPopulationSize();
+  double& getNutrientVolume();
+  double& getAutotrophVolume();
+  std::vector<std::vector<Heterotroph*>>& getHeterotrophs();
+  unsigned& getInitialPopulationSize();
 
  private:
   InitialState();
-  static InitialState* mThis;
+  static InitialState* this_;
 
-  std::vector<std::vector<Heterotroph*>> mHeterotrophs;
+  std::vector<std::vector<Heterotroph*>> heterotrophs_;
 
-  bool mIsInitialised;
-  double mNutrientVolume;
-  double mAutotrophVolume;
-  unsigned mInitialPopulationSize;
+  bool isInitialised_;
+  double nutrientVolume_;
+  double autotrophVolume_;
+  unsigned initialPopulationSize_;
 };
 
 #endif

@@ -12,22 +12,22 @@ FileReader::FileReader() {}
 
 FileReader::~FileReader() {}
 
-void FileReader::ReadInputFiles(std::string& parametersFile, std::string& stateFile) {
+void FileReader::readInputFiles(std::string& parametersFile, std::string& stateFile) {
   bool success = false;
 
-  if (parametersFile == "") parametersFile = Constants::cConfigurationDirectory + Constants::cInputParametersFileName;
-  if (ReadTextFile(parametersFile))
-    if (Parameters::Get()->Initialise(mRawTextData))
-      if (ReadTextFile(Constants::cConfigurationDirectory + Constants::cOutputParametersFileName))
-        success = DataRecorder::Get()->Initialise(mRawTextData);
+  if (parametersFile == "") parametersFile = constants::kConfigurationDirectory + constants::kInputParametersFileName;
+  if (readTextFile(parametersFile))
+    if (Parameters::Get()->initialise(rawTextData_))
+      if (readTextFile(constants::kConfigurationDirectory + constants::kOutputParametersFileName))
+        success = DataRecorder::get()->initialise(rawTextData_);
 
   // State file is specified, this overrides the option to avoid a restart.
-  if (success == true && (Parameters::Get()->GetReadModelState() == true || stateFile != "")) {
-    Parameters::Get()->SetReadModelState(true);  // For cases when a state file is specified, but the option not
+  if (success == true && (Parameters::Get()->getReadModelState() == true || stateFile != "")) {
+    Parameters::Get()->setReadModelState(true);  // For cases when a state file is specified, but the option not
                                                  // set.
     success = false;
-    if (stateFile == "") stateFile = Constants::cConfigurationDirectory + Constants::cInitialStateFileName;
-    if (ReadTextFile(stateFile, false) == true) success = InitialState::Get()->Initialise(mRawTextData);
+    if (stateFile == "") stateFile = constants::kConfigurationDirectory + constants::kInitialStateFileName;
+    if (readTextFile(stateFile, false) == true) success = InitialState::Get()->Initialise(rawTextData_);
   }
 
   if (success) {
@@ -38,9 +38,9 @@ void FileReader::ReadInputFiles(std::string& parametersFile, std::string& stateF
   }
 }
 
-bool FileReader::ReadTextFile(const std::string& filePath, bool copyToOutput) {
+bool FileReader::readTextFile(const std::string& filePath, bool copyToOutput) {
   std::cout << "Reading text file \"" << filePath << "\"..." << std::endl;
-  ClearRawTextData();
+  clearRawTextData();
   std::ifstream fileStream(filePath.c_str(), std::ios::in);
 
   if (fileStream.is_open()) {
@@ -49,11 +49,11 @@ bool FileReader::ReadTextFile(const std::string& filePath, bool copyToOutput) {
 
     while (std::getline(fileStream, readLine)) {
       if (readLine.length() > 0) {
-        if (readLine[0] != Constants::cCommentCharacter) {
+        if (readLine[0] != constants::kCommentCharacter) {
           readLine =
-              Strings::RemoveWhiteSpace(Strings::TruncateStringAtCharacter(readLine, Constants::cCommentCharacter));
+              Strings::removeWhiteSpace(Strings::truncateStringAtCharacter(readLine, constants::kCommentCharacter));
           if (lineCount > 0) {
-            mRawTextData.push_back(Strings::StringToWords(readLine, Constants::cDataDelimiterValue));
+            rawTextData_.push_back(Strings::stringToWords(readLine, constants::kDataDelimiterValue));
           }
           lineCount++;
         }
@@ -64,14 +64,14 @@ bool FileReader::ReadTextFile(const std::string& filePath, bool copyToOutput) {
   } else
     std::cout << "File path \"" << filePath << "\" is invalid." << std::endl;
 
-  if (copyToOutput == true) DataRecorder::Get()->AddInputFilePath(filePath);
+  if (copyToOutput == true) DataRecorder::get()->addInputFilePath(filePath);
 
-  return mRawTextData.size() > 0;
+  return rawTextData_.size() > 0;
 }
 
-void FileReader::ClearRawTextData() {
-  for (unsigned rowIndex = 0; rowIndex < mRawTextData.size(); ++rowIndex) {
-    mRawTextData[rowIndex].clear();
+void FileReader::clearRawTextData() {
+  for (unsigned rowIndex = 0; rowIndex < rawTextData_.size(); ++rowIndex) {
+    rawTextData_[rowIndex].clear();
   }
-  mRawTextData.clear();
+  rawTextData_.clear();
 }

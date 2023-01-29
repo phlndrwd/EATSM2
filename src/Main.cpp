@@ -6,10 +6,7 @@
 #include "Environment.h"
 #include "FileReader.h"
 #include "FileWriter.h"
-#include "HeterotrophProcessor.h"
-#include "Heterotrophs.h"
 #include "Parameters.h"
-#include "Strings.h"
 #include "TimeStep.h"
 #include "Timer.h"
 
@@ -25,11 +22,11 @@ int main(int numberOfArguments, char *commandlineArguments[]) {
 
     case 2: {
       std::string command = commandlineArguments[1];
-      if (command == Constants::cVersionCommand) {
-        std::cout << Constants::cSystemName << std::endl;
-        std::cout << Constants::cSystemVersion << std::endl;
-        std::cout << Constants::cSystemDate << std::endl;
-        std::cout << Constants::cSystemTime << std::endl;
+      if (command == constants::kVersionCommand) {
+        std::cout << constants::kSystemName << std::endl;
+        std::cout << constants::kSystemVersion << std::endl;
+        std::cout << constants::kSystemDate << std::endl;
+        std::cout << constants::kSystemTime << std::endl;
         return 0;
       } else
         showErrorMessage = true;
@@ -40,13 +37,13 @@ int main(int numberOfArguments, char *commandlineArguments[]) {
       std::string command = commandlineArguments[1];
       std::string filePath = commandlineArguments[2];
 
-      if (command == Constants::cParameterFileCommand)
+      if (command == constants::kParameterFileCommand)
         parametersFile = filePath;
-      else if (command == Constants::cStateFileCommand)
+      else if (command == constants::kStateFileCommand)
         stateFile = filePath;
-      else if (command == Constants::cRestartCommand) {
-        parametersFile = filePath + Constants::cInputParametersFileName;
-        stateFile = filePath + Constants::cModelStateFileName;
+      else if (command == constants::kRestartCommand) {
+        parametersFile = filePath + constants::kInputParametersFileName;
+        stateFile = filePath + constants::kModelStateFileName;
       } else
         showErrorMessage = true;
       break;
@@ -57,16 +54,16 @@ int main(int numberOfArguments, char *commandlineArguments[]) {
       std::string thirdTerm = commandlineArguments[3];
       std::string fourthTerm = commandlineArguments[4];
 
-      if (firstTerm == Constants::cParameterFileCommand && secondTerm == Constants::cStateFileCommand) {
+      if (firstTerm == constants::kParameterFileCommand && secondTerm == constants::kStateFileCommand) {
         parametersFile = thirdTerm;
         stateFile = fourthTerm;
-      } else if (firstTerm == Constants::cParameterFileCommand && thirdTerm == Constants::cStateFileCommand) {
+      } else if (firstTerm == constants::kParameterFileCommand && thirdTerm == constants::kStateFileCommand) {
         parametersFile = secondTerm;
         stateFile = fourthTerm;
-      } else if (firstTerm == Constants::cStateFileCommand && secondTerm == Constants::cParameterFileCommand) {
+      } else if (firstTerm == constants::kStateFileCommand && secondTerm == constants::kParameterFileCommand) {
         stateFile = thirdTerm;
         parametersFile = fourthTerm;
-      } else if (firstTerm == Constants::cStateFileCommand && thirdTerm == Constants::cParameterFileCommand) {
+      } else if (firstTerm == constants::kStateFileCommand && thirdTerm == constants::kParameterFileCommand) {
         stateFile = secondTerm;
         parametersFile = fourthTerm;
       } else
@@ -80,15 +77,15 @@ int main(int numberOfArguments, char *commandlineArguments[]) {
   }
 
   if (showErrorMessage == false) {
-    std::cout << Constants::cSystemName + " " + Constants::cSystemVersion + " starting on "
-              << Date::GetDateAndTimeString() << "..." << std::endl
+    std::cout << constants::kSystemName + " " + constants::kSystemVersion + " starting on "
+              << Date::getDateAndTimeString() << "..." << std::endl
               << std::endl;
     FileReader fileReader;
-    fileReader.ReadInputFiles(parametersFile, stateFile);
+    fileReader.readInputFiles(parametersFile, stateFile);
     Timer timer = Timer(true);
     FileWriter fileWriter;  // Created here to initialise output directory
 
-    unsigned runTimeInSeconds = Parameters::Get()->GetRunTimeInSeconds();
+    unsigned runTimeInSeconds = Parameters::Get()->getRunTimeInSeconds();
     double oneTenthOfRunTimeInSeconds = runTimeInSeconds / 10.0;
     double cumulativeTenthsOfRunTime = 0;
     bool isAlive = true;
@@ -97,42 +94,42 @@ int main(int numberOfArguments, char *commandlineArguments[]) {
     TimeStep timeStep;
 
     std::cout << "Model run due to complete on "
-              << Date::GetDateAndTimeString(Constants::cCompleteDateFormat, runTimeInSeconds) << std::endl
+              << Date::getDateAndTimeString(constants::kCompleteDateFormat, runTimeInSeconds) << std::endl
               << std::endl;
     std::cout << "Starting main time loop..." << std::endl;
     do {
       // Update before data collection; calculates essential variables for
       // encounter rates.
-      environment.Update();
+      environment.update();
 
       // Data collection
-      if (timeStep.DoRecordData() == true) {
-        DataRecorder::Get()->AddDataTo("AxisTimeSteps", timeStep.GetTimeStep());
-        DataRecorder::Get()->AddDataTo("TimeSampling", timer.Split());
-        isAlive = environment.RecordData();
+      if (timeStep.doRecordData() == true) {
+        DataRecorder::get()->addDataTo("AxisTimeSteps", timeStep.getTimeStep());
+        DataRecorder::get()->addDataTo("TimeSampling", timer.split());
+        isAlive = environment.recordData();
       }
 
       // Text output at the completion of each ten percent of the run
-      if (timer.Elapsed() >= (unsigned)cumulativeTenthsOfRunTime) {
+      if (timer.elapsed() >= (unsigned)cumulativeTenthsOfRunTime) {
         cumulativeTenthsOfRunTime = cumulativeTenthsOfRunTime + oneTenthOfRunTimeInSeconds;
-        std::cout << "t = " << timeStep.GetTimeStep() << Constants::cDataDelimiterValue
-                  << Constants::cWhiteSpaceCharacter << timer.RemainingString() << " remaining at "
-                  << Date::GetDateAndTimeString() << "..." << std::endl;
+        std::cout << "t = " << timeStep.getTimeStep() << constants::kDataDelimiterValue
+                  << constants::kWhiteSpaceCharacter << timer.remainingString() << " remaining at "
+                  << Date::getDateAndTimeString() << "..." << std::endl;
       }
 
-      timeStep.IncrementTimeStep();
+      timeStep.incrementTimeStep();
       // std::cout << "timer.Elapsed( )> " << timer.Elapsed( ) << ",
       // runTimeInSeconds> " << runTimeInSeconds << ", isAlive> " << isAlive <<
       // std::endl;
-    } while (timer.Elapsed() < runTimeInSeconds && isAlive == true);
+    } while (timer.elapsed() < runTimeInSeconds && isAlive == true);
 
-    if (timer.Elapsed() >= runTimeInSeconds)
+    if (timer.elapsed() >= runTimeInSeconds)
       std::cout << "Main time loop complete." << std::endl << std::endl;
     else
       std::cout << "Heterotroph population crashed. Main time loop aborted." << std::endl << std::endl;
 
-    fileWriter.WriteOutputData(environment);
-    std::cout << "Total run time " << timer.Stop() << "s" << std::endl;
+    fileWriter.writeOutputData(environment);
+    std::cout << "Total run time " << timer.stop() << "s" << std::endl;
   } else if (showErrorMessage == true) {
     std::cout << "ERROR> Command combination not recognised. System exiting..." << std::endl;
     return 1;

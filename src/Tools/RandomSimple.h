@@ -11,33 +11,33 @@ class RandomSimple {
   RandomSimple();
   ~RandomSimple();
 
-  void Reset();
+  void reset();
 
-  unsigned GetSeed() const;
-  void SetSeed(unsigned, unsigned);
-  void SetSeed(unsigned);
+  unsigned getSeed() const;
+  void setSeed(unsigned, unsigned);
+  void setSeed(unsigned);
 
-  double GetUniform();
-  unsigned GetUniformInt();
-  unsigned GetUniformInt(unsigned);
-  double GetNormal();
-  double GetNormal(double, double);
-  double GetExponential();
-  double GetExponential(double);
-  double GetGamma(double, double);
-  double GetChiSquare(double);
-  double GetInverseGamma(double, double);
-  double GetWeibull(double, double);
-  double GetCauchy(double, double);
-  double GetLaplace(double, double);
-  double GetLogNormal(double, double);
-  double GetBeta(double, double);
+  double getUniform();
+  unsigned getUniformInt();
+  unsigned getUniformInt(unsigned);
+  double getNormal();
+  double getNormal(double, double);
+  double getExponential();
+  double getExponential(double);
+  double getGamma(double, double);
+  double getChiSquare(double);
+  double getInverseGamma(double, double);
+  double getWeibull(double, double);
+  double getCauchy(double, double);
+  double getLaplace(double, double);
+  double getLogNormal(double, double);
+  double getBeta(double, double);
 
  private:
-  unsigned mSeed;
-  unsigned mW;
-  unsigned mZ;
-  double mTwoPi;
+  unsigned seed_;
+  unsigned w_;
+  unsigned z_;
+  double twoPi_;
 };
 
 #endif

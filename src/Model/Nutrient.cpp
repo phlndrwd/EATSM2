@@ -6,29 +6,29 @@
 #include "InitialState.h"
 
 Nutrient::Nutrient() {
-  if (InitialState::Get()->IsInitialised() == true)
-    mVolume = InitialState::Get()->GetNutrientVolume();
+  if (InitialState::Get()->isInitialised() == true)
+    volume_ = InitialState::Get()->getNutrientVolume();
   else
-    mVolume = 0;
+    volume_ = 0;
 
   std::cout << "Nutrient pool created." << std::endl;
 }
 
 Nutrient::~Nutrient() {}
 
-void Nutrient::RecordData() {
-  DataRecorder::Get()->AddDataTo("NutrientVolume", mVolume);
-  DataRecorder::Get()->AddDataTo("ToNutrientFlux", mToFlux);
-  mToFlux = 0;
+void Nutrient::recordData() {
+  DataRecorder::get()->addDataTo("NutrientVolume", volume_);
+  DataRecorder::get()->addDataTo("ToNutrientFlux", toFlux_);
+  toFlux_ = 0;
 }
 
-double Nutrient::GetVolume() { return mVolume; }
+double Nutrient::getVolume() { return volume_; }
 
-void Nutrient::SetVolume(const double volume) { mVolume = volume; }
+void Nutrient::setVolume(const double volume) { volume_ = volume; }
 
-void Nutrient::AddToVolume(const double volume) {
-  mVolume += volume;
-  mToFlux += volume;
+void Nutrient::addToVolume(const double volume) {
+  volume_ += volume;
+  toFlux_ += volume;
 }
 
-void Nutrient::SubtractFromVolume(const double volume) { mVolume -= volume; }
+void Nutrient::subtractFromVolume(const double volume) { volume_ -= volume; }

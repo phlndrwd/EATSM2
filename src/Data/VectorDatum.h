@@ -9,17 +9,17 @@ class VectorDatum {
   VectorDatum(const std::string&);
   ~VectorDatum();
 
-  float GetDataAtIndex(const unsigned&) const;
+  float getDataAtIndex(const unsigned&) const;
 
-  void SetData(const std::vector<float>);
-  void AddData(const float&);
+  void setData(const std::vector<float>);
+  void addData(const float&);
 
-  unsigned GetSize() const;
-  const std::string& GetName() const;
+  unsigned getSize() const;
+  const std::string& getName() const;
 
  private:
-  std::vector<float> mData;
-  std::string mName;
+  std::vector<float> data_;
+  std::string name_;
 };
 
 #endif

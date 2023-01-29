@@ -7,42 +7,42 @@
 #include "Nutrient.h"
 #include "Parameters.h"
 
-Autotrophs::Autotrophs(Nutrient& nutrient) : mNutrient(nutrient) {
-  if (InitialState::Get()->IsInitialised() == true)
-    mVolume = InitialState::Get()->GetAutotrophVolume();
+Autotrophs::Autotrophs(Nutrient& nutrient) : nutrient_(nutrient) {
+  if (InitialState::Get()->isInitialised() == true)
+    volume_ = InitialState::Get()->getAutotrophVolume();
   else
-    mVolume = Parameters::Get()->GetInitialAutotrophVolume();
+    volume_ = Parameters::Get()->getInitialAutotrophVolume();
 
   std::cout << "Autotroph pool created." << std::endl;
 }
 
 Autotrophs::~Autotrophs() {}
 
-void Autotrophs::RecordData() {
-  DataRecorder::Get()->AddDataTo("AutotrophVolume", mVolume);
-  DataRecorder::Get()->AddDataTo("ToAutotrophFlux", mToFlux);
-  mToFlux = 0;
+void Autotrophs::recordData() {
+  DataRecorder::get()->addDataTo("AutotrophVolume", volume_);
+  DataRecorder::get()->addDataTo("ToAutotrophFlux", toFlux_);
+  toFlux_ = 0;
 }
 
-void Autotrophs::Update() {
-  double growthVolume = mNutrient.GetVolume();
-  AddToVolume(growthVolume);
-  mNutrient.SubtractFromVolume(growthVolume);
+void Autotrophs::update() {
+  double growthVolume = nutrient_.getVolume();
+  addToVolume(growthVolume);
+  nutrient_.subtractFromVolume(growthVolume);
 }
 
-double Autotrophs::GetVolume() {
-  return mVolume;
+double Autotrophs::getVolume() {
+  return volume_;
 }
 
-void Autotrophs::SetVolume(const double volume) {
-  mVolume = volume;
+void Autotrophs::setVolume(const double volume) {
+  volume_ = volume;
 }
 
-void Autotrophs::AddToVolume(const double volume) {
-  mVolume += volume;
-  mToFlux += volume;
+void Autotrophs::addToVolume(const double volume) {
+  volume_ += volume;
+  toFlux_ += volume;
 }
 
-void Autotrophs::SubtractFromVolume(const double volume) {
-  mVolume -= volume;
+void Autotrophs::subtractFromVolume(const double volume) {
+  volume_ -= volume;
 }

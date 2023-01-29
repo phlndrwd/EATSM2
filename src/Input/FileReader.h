@@ -9,13 +9,13 @@ class FileReader {
   FileReader();
   ~FileReader();
 
-  void ReadInputFiles(std::string&, std::string&);
+  void readInputFiles(std::string&, std::string&);
 
  private:
-  bool ReadTextFile(const std::string&, bool copyToOutput = true);
-  void ClearRawTextData();
+  bool readTextFile(const std::string&, bool copyToOutput = true);
+  void clearRawTextData();
 
-  std::vector<std::vector<std::string>> mRawTextData;
+  std::vector<std::vector<std::string>> rawTextData_;
 };
 
 #endif

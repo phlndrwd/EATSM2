@@ -8,61 +8,61 @@
 #include "RandomSimple.h"
 
 HeterotrophProcessor::HeterotrophProcessor()
-    : mSizeClassBoundaries(Parameters::Get()->GetSizeClassBoundaries()),
-      mLinearFeedingDenominators(Parameters::Get()->GetLinearFeedingDenominators()),
-      mHalfSaturationConstants(Parameters::Get()->GetHalfSaturationConstants()),
-      mPreferredPreyVolumeRatio(Parameters::Get()->GetPreferredPreyVolumeRatio()),
-      mPreferenceFunctionWidth(Parameters::Get()->GetPreferenceFunctionWidth()),
-      mFractionalMetabolicExpense(Parameters::Get()->GetFractionalMetabolicExpense()),
-      mMetabolicIndex(Parameters::Get()->GetMetabolicIndex()),
-      mNumberOfSizeClasses(Parameters::Get()->GetNumberOfSizeClasses()),
-      mLargestVolumeExponent(Parameters::Get()->GetLargestVolumeExponent()),
-      mSmallestVolumeExponent(Parameters::Get()->GetSmallestVolumeExponent()),
-      mPreferenceDenominator(2 * std::pow(mPreferenceFunctionWidth, 2)) {
+    : sizeClassBoundaries_(Parameters::Get()->getSizeClassBoundaries()),
+      linearFeedingDenominators_(Parameters::Get()->getLinearFeedingDenominators()),
+      halfSaturationConstants_(Parameters::Get()->getHalfSaturationConstants()),
+      preferredPreyVolumeRatio_(Parameters::Get()->getPreferredPreyVolumeRatio()),
+      preferenceFunctionWidth_(Parameters::Get()->getPreferenceFunctionWidth()),
+      fractionalMetabolicExpense_(Parameters::Get()->getFractionalMetabolicExpense()),
+      metabolicIndex_(Parameters::Get()->getMetabolicIndex()),
+      numberOfSizeClasses_(Parameters::Get()->getNumberOfSizeClasses()),
+      largestVolumeExponent_(Parameters::Get()->getLargestVolumeExponent()),
+      smallestVolumeExponent_(Parameters::Get()->getSmallestVolumeExponent()),
+      preferenceDenominator_(2 * std::pow(preferenceFunctionWidth_, 2)) {
   // Set function option once for the duration of the model execution
-  if (Parameters::Get()->GetUseLinearFeeding() == true)
-    fStarvationProbability = &HeterotrophProcessor::CalculateFeedingProbabilityLinear;
+  if (Parameters::Get()->getUseLinearFeeding() == true)
+    fStarvationProbability = &HeterotrophProcessor::calculateFeedingProbabilityLinear;
   else
-    fStarvationProbability = &HeterotrophProcessor::CalculateFeedingProbabilityNonLinear;
+    fStarvationProbability = &HeterotrophProcessor::calculateFeedingProbabilityNonLinear;
 }
 
 HeterotrophProcessor::~HeterotrophProcessor() {}
 
-double HeterotrophProcessor::CalculatePreferenceForPrey(const double grazerVolume, const double preyVolume) const {
-  return std::exp(-std::pow((std::log((mPreferredPreyVolumeRatio * preyVolume) / grazerVolume)), 2) /
-                  mPreferenceDenominator);
+double HeterotrophProcessor::calculatePreferenceForPrey(const double grazerVolume, const double preyVolume) const {
+  return std::exp(-std::pow((std::log((preferredPreyVolumeRatio_ * preyVolume) / grazerVolume)), 2) /
+                  preferenceDenominator_);
 }
 
-double HeterotrophProcessor::CalculateFeedingProbability(const unsigned predatorIndex,
+double HeterotrophProcessor::calculateFeedingProbability(const unsigned predatorIndex,
                                                          const double effectivePreyVolume) {
   return (this->*fStarvationProbability)(predatorIndex, effectivePreyVolume);
 }
 
-double HeterotrophProcessor::CalculateMetabolicDeduction(const Heterotroph* individual) const {
-  return mFractionalMetabolicExpense * std::pow(individual->GetVolumeActual(), mMetabolicIndex);
+double HeterotrophProcessor::calculateMetabolicDeduction(const Heterotroph* individual) const {
+  return fractionalMetabolicExpense_ * std::pow(individual->getVolumeActual(), metabolicIndex_);
 }
 
-double HeterotrophProcessor::CalculateStarvationProbability(const Heterotroph* individual) const {
-  return CalculateLinearStarvation(individual->GetVolumeActual(), individual->GetVolumeHeritable(),
-                                   individual->GetVolumeMinimum(), individual->GetStarvationMultiplier());
+double HeterotrophProcessor::calculateStarvationProbability(const Heterotroph* individual) const {
+  return calculateLinearStarvation(individual->getVolumeActual(), individual->getVolumeHeritable(),
+                                   individual->getVolumeMinimum(), individual->getStarvationMultiplier());
 }
 
-unsigned HeterotrophProcessor::FindIndividualSizeClassIndex(const Heterotroph* individual,
+unsigned HeterotrophProcessor::findIndividualSizeClassIndex(const Heterotroph* individual,
                                                             unsigned directionToMove) const {
-  unsigned currentSizeClass = individual->GetSizeClassIndex();
+  unsigned currentSizeClass = individual->getSizeClassIndex();
   unsigned newSizeClassIndex = currentSizeClass;
-  double volume = individual->GetVolumeActual();
+  double volume = individual->getVolumeActual();
 
-  if (directionToMove == Constants::eMoveUp) {
-    for (unsigned index = currentSizeClass; index < mNumberOfSizeClasses; ++index) {
-      if (volume < mSizeClassBoundaries[index]) {
+  if (directionToMove == constants::eMoveUp) {
+    for (unsigned index = currentSizeClass; index < numberOfSizeClasses_; ++index) {
+      if (volume < sizeClassBoundaries_[index]) {
         newSizeClassIndex = index - 1;
         break;
       }
     }
-  } else if (directionToMove == Constants::eMoveDown) {
+  } else if (directionToMove == constants::eMoveDown) {
     for (int index = currentSizeClass; index >= 0; --index) {
-      if (volume >= mSizeClassBoundaries[index]) {
+      if (volume >= sizeClassBoundaries_[index]) {
         newSizeClassIndex = (unsigned)index;
         break;
       }
@@ -72,21 +72,21 @@ unsigned HeterotrophProcessor::FindIndividualSizeClassIndex(const Heterotroph* i
   return newSizeClassIndex;
 }
 
-bool HeterotrophProcessor::UpdateSizeClassIndex(Heterotroph* individual) const {
-  unsigned directionToMove = DirectionIndividualShouldMoveSizeClasses(individual);
-  if (directionToMove != Constants::eNoMovement) {
-    unsigned newSizeClassIndex = FindIndividualSizeClassIndex(individual, directionToMove);
-    individual->SetSizeClassIndex(newSizeClassIndex);
+bool HeterotrophProcessor::updateSizeClassIndex(Heterotroph* individual) const {
+  unsigned directionToMove = directionIndividualShouldMoveSizeClasses(individual);
+  if (directionToMove != constants::eNoMovement) {
+    unsigned newSizeClassIndex = findIndividualSizeClassIndex(individual, directionToMove);
+    individual->setSizeClassIndex(newSizeClassIndex);
     return true;
   }
   return false;
 }
 
-unsigned HeterotrophProcessor::FindSizeClassIndexFromVolume(const double volume) const {
+unsigned HeterotrophProcessor::findSizeClassIndexFromVolume(const double volume) const {
   unsigned sizeClassIndex = 0;
 
-  for (unsigned index = 1; index <= mNumberOfSizeClasses; ++index) {
-    if (volume < mSizeClassBoundaries[index]) {
+  for (unsigned index = 1; index <= numberOfSizeClasses_; ++index) {
+    if (volume < sizeClassBoundaries_[index]) {
       sizeClassIndex = index - 1;
       break;
     }
@@ -94,33 +94,33 @@ unsigned HeterotrophProcessor::FindSizeClassIndexFromVolume(const double volume)
   return sizeClassIndex;
 }
 
-unsigned HeterotrophProcessor::DirectionIndividualShouldMoveSizeClasses(
+unsigned HeterotrophProcessor::directionIndividualShouldMoveSizeClasses(
     const Heterotroph* individual) const {
-  unsigned directionToMove = Constants::eNoMovement;
+  unsigned directionToMove = constants::eNoMovement;
 
-  unsigned sizeClassIndex = individual->GetSizeClassIndex();
-  double volumeActual = individual->GetVolumeActual();
+  unsigned sizeClassIndex = individual->getSizeClassIndex();
+  double volumeActual = individual->getVolumeActual();
 
-  if (volumeActual < mSizeClassBoundaries[sizeClassIndex])
-    directionToMove = Constants::eMoveDown;
-  else if (volumeActual >= mSizeClassBoundaries[sizeClassIndex + 1])
-    directionToMove = Constants::eMoveUp;
+  if (volumeActual < sizeClassBoundaries_[sizeClassIndex])
+    directionToMove = constants::eMoveDown;
+  else if (volumeActual >= sizeClassBoundaries_[sizeClassIndex + 1])
+    directionToMove = constants::eMoveUp;
 
   return directionToMove;
 }
 
-void HeterotrophProcessor::UpdateHerbivoreTrophicIndex(Heterotroph* grazer) {
-  double trophicLevel = grazer->GetTrophicLevel();
+void HeterotrophProcessor::updateHerbivoreTrophicIndex(Heterotroph* grazer) {
+  double trophicLevel = grazer->getTrophicLevel();
   if (trophicLevel != 0)
-    grazer->SetTrophicLevel((trophicLevel + 2) * 0.5);
+    grazer->setTrophicLevel((trophicLevel + 2) * 0.5);
   else
-    grazer->SetTrophicLevel(2);
+    grazer->setTrophicLevel(2);
 }
 
-void HeterotrophProcessor::UpdateCarnivoreTrophicIndex(Heterotroph* predator,
+void HeterotrophProcessor::updateCarnivoreTrophicIndex(Heterotroph* predator,
                                                        const Heterotroph* prey) {
-  double predatorTrophicLevel = predator->GetTrophicLevel();
-  double preyTrophicLevel = prey->GetTrophicLevel();
+  double predatorTrophicLevel = predator->getTrophicLevel();
+  double preyTrophicLevel = prey->getTrophicLevel();
   if (predatorTrophicLevel != 0) {
     if (preyTrophicLevel != 0)
       predatorTrophicLevel = (predatorTrophicLevel + preyTrophicLevel + 1) * 0.5;
@@ -132,20 +132,20 @@ void HeterotrophProcessor::UpdateCarnivoreTrophicIndex(Heterotroph* predator,
     else
       predatorTrophicLevel = 3;
   }
-  predator->SetTrophicLevel(predatorTrophicLevel);
+  predator->setTrophicLevel(predatorTrophicLevel);
 }
 
-double HeterotrophProcessor::CalculateFeedingProbabilityLinear(const unsigned predatorIndex,
+double HeterotrophProcessor::calculateFeedingProbabilityLinear(const unsigned predatorIndex,
                                                                const double effectivePreyVolume) {
-  return std::min(effectivePreyVolume / mLinearFeedingDenominators[predatorIndex], 1.0);
+  return std::min(effectivePreyVolume / linearFeedingDenominators_[predatorIndex], 1.0);
 }
 
-double HeterotrophProcessor::CalculateFeedingProbabilityNonLinear(const unsigned predatorIndex,
+double HeterotrophProcessor::calculateFeedingProbabilityNonLinear(const unsigned predatorIndex,
                                                                   const double effectivePreyVolume) {
-  return (effectivePreyVolume / (mHalfSaturationConstants[predatorIndex] + effectivePreyVolume));
+  return (effectivePreyVolume / (halfSaturationConstants_[predatorIndex] + effectivePreyVolume));
 }
 
-double HeterotrophProcessor::CalculateLinearStarvation(const double volumeActual, const double volumeHeritable,
+double HeterotrophProcessor::calculateLinearStarvation(const double volumeActual, const double volumeHeritable,
                                                        const double volumeMinimum,
                                                        const double starvationMultiplier) const {
   if (volumeActual <= volumeMinimum)
@@ -156,7 +156,7 @@ double HeterotrophProcessor::CalculateLinearStarvation(const double volumeActual
     return (1 + ((volumeMinimum - volumeActual) * starvationMultiplier));
 }
 
-double HeterotrophProcessor::CalculateBetaExponentialStarvation(const double volumeActual, const double volumeHeritable,
+double HeterotrophProcessor::calculateBetaExponentialStarvation(const double volumeActual, const double volumeHeritable,
                                                                 const double volumeMinimum,
                                                                 const double starvationMultiplier) const {
   if (volumeActual <= volumeMinimum)
@@ -168,20 +168,20 @@ double HeterotrophProcessor::CalculateBetaExponentialStarvation(const double vol
                     ((volumeActual - volumeMinimum) * starvationMultiplier));
 }
 
-double HeterotrophProcessor::TraitValueToVolume(const double traitValue) {
-  double volumeExponent = traitValue * (mLargestVolumeExponent - mSmallestVolumeExponent) + mSmallestVolumeExponent;
+double HeterotrophProcessor::traitValueToVolume(const double traitValue) {
+  double volumeExponent = traitValue * (largestVolumeExponent_ - smallestVolumeExponent_) + smallestVolumeExponent_;
   return std::pow(10, volumeExponent);
 }
 
-double HeterotrophProcessor::VolumeToTraitValue(const double volume) const {
-  return (std::log10(volume) - mSmallestVolumeExponent) / (mLargestVolumeExponent - mSmallestVolumeExponent);
+double HeterotrophProcessor::volumeToTraitValue(const double volume) const {
+  return (std::log10(volume) - smallestVolumeExponent_) / (largestVolumeExponent_ - smallestVolumeExponent_);
 }
 
-int HeterotrophProcessor::RoundWithProbability(RandomSimple& random, const double value) const {
+int HeterotrophProcessor::roundWithProbability(RandomSimple& random, const double value) const {
   int flooredValue = static_cast<int>(::floor(value));
   double probability = value - flooredValue;
 
-  if (random.GetUniform() < probability)
+  if (random.getUniform() < probability)
     return flooredValue + 1;
   else
     return flooredValue;

@@ -6,23 +6,23 @@
 
 class Timer {
  public:
-  Timer(bool start = true);
+  Timer(bool goNow = true);
   ~Timer();
 
-  void Start();
-  double Split();
-  double Elapsed();
-  double Stop();
+  void go();
+  double split();
+  double elapsed();
+  double stop();
 
-  std::string RemainingString();
+  std::string remainingString();
 
  private:
-  const unsigned mRunTimeInSeconds;
+  const unsigned runTimeInSeconds_;
 
-  std::chrono::high_resolution_clock::time_point mStartTime;
-  std::chrono::high_resolution_clock::time_point mSplitTime;
-  std::chrono::high_resolution_clock::time_point mElapsedTime;
-  std::chrono::high_resolution_clock::time_point mStopTime;
+  std::chrono::high_resolution_clock::time_point startTime_;
+  std::chrono::high_resolution_clock::time_point splitTime_;
+  std::chrono::high_resolution_clock::time_point elapsedTime_;
+  std::chrono::high_resolution_clock::time_point stopTime_;
 };
 
 #endif

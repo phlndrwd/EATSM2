@@ -3,53 +3,53 @@
 #include "Constants.h"
 #include "Parameters.h"
 
-Timer::Timer(bool start) : mRunTimeInSeconds(Parameters::Get()->GetRunTimeInSeconds()) {
-  if (start == true) Start();
+Timer::Timer(bool goNow) : runTimeInSeconds_(Parameters::Get()->getRunTimeInSeconds()) {
+  if (goNow == true) go();
 }
 
 Timer::~Timer() {}
 
-void Timer::Start() {
-  mStartTime = std::chrono::high_resolution_clock::now();
-  mSplitTime = mStartTime;
+void Timer::go() {
+  startTime_ = std::chrono::high_resolution_clock::now();
+  splitTime_ = startTime_;
 }
 
-double Timer::Elapsed() {
-  mElapsedTime = std::chrono::high_resolution_clock::now();
+double Timer::elapsed() {
+  elapsedTime_ = std::chrono::high_resolution_clock::now();
   std::chrono::duration<double> elapsed;
 
-  elapsed = mElapsedTime - mStartTime;
+  elapsed = elapsedTime_ - startTime_;
 
   return elapsed.count();
 }
 
-double Timer::Split() {
+double Timer::split() {
   std::chrono::high_resolution_clock::time_point timeNow = std::chrono::high_resolution_clock::now();
   std::chrono::duration<double> split;
 
-  split = timeNow - mSplitTime;
-  mSplitTime = timeNow;
+  split = timeNow - splitTime_;
+  splitTime_ = timeNow;
 
   return split.count();
 }
 
-double Timer::Stop() {
-  mStopTime = std::chrono::high_resolution_clock::now();
+double Timer::stop() {
+  stopTime_ = std::chrono::high_resolution_clock::now();
   std::chrono::duration<double> total;
 
-  total = mStopTime - mStartTime;
+  total = stopTime_ - startTime_;
 
   return total.count();
 }
 
-std::string Timer::RemainingString() {
-  unsigned secondsRemaining = mRunTimeInSeconds - Elapsed();
-  unsigned minutesRemaining = secondsRemaining / Constants::cSecondsInAMinute;
-  secondsRemaining = secondsRemaining - (minutesRemaining * Constants::cSecondsInAMinute);
-  unsigned hoursRemaining = minutesRemaining / Constants::cMinutesInAnHour;
-  minutesRemaining = minutesRemaining - (hoursRemaining * Constants::cMinutesInAnHour);
-  unsigned daysRemaining = hoursRemaining / Constants::cHoursInADay;
-  hoursRemaining = hoursRemaining - (daysRemaining * Constants::cHoursInADay);
+std::string Timer::remainingString() {
+  unsigned secondsRemaining = runTimeInSeconds_ - elapsed();
+  unsigned minutesRemaining = secondsRemaining / constants::kSecondsInAMinute;
+  secondsRemaining = secondsRemaining - (minutesRemaining * constants::kSecondsInAMinute);
+  unsigned hoursRemaining = minutesRemaining / constants::kMinutesInAnHour;
+  minutesRemaining = minutesRemaining - (hoursRemaining * constants::kMinutesInAnHour);
+  unsigned daysRemaining = hoursRemaining / constants::kHoursInADay;
+  hoursRemaining = hoursRemaining - (daysRemaining * constants::kHoursInADay);
 
   std::string str = "";
   if (daysRemaining > 0) str.append(std::to_string(daysRemaining)).append("d");

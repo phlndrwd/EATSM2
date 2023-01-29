@@ -6,56 +6,68 @@
 #include "Parameters.h"
 #include "Strings.h"
 
-InitialState* InitialState::mThis = nullptr;
+InitialState* InitialState::this_ = nullptr;
 
 InitialState* InitialState::Get() {
-  if (mThis == nullptr) mThis = new InitialState();
+  if (this_ == nullptr) this_ = new InitialState();
 
-  return mThis;
+  return this_;
 }
 
 InitialState::~InitialState() {
-  if (mThis != nullptr)
-    delete mThis;
+  if (this_ != nullptr)
+    delete this_;
 }
 
-InitialState::InitialState() { mIsInitialised = false; }
+InitialState::InitialState() {
+  isInitialised_ = false;
+}
 
 bool InitialState::Initialise(const std::vector<std::vector<std::string>>& rawInitialStateData) {
   // Model variables
-  mNutrientVolume = Strings::StringToNumber(rawInitialStateData[Constants::cStateLineNutrientVol][0]);
-  mAutotrophVolume = Strings::StringToNumber(rawInitialStateData[Constants::cStateLineAutotrophVol][0]);
+  nutrientVolume_ = Strings::stringToNumber(rawInitialStateData[constants::kStateLineNutrientVol][0]);
+  autotrophVolume_ = Strings::stringToNumber(rawInitialStateData[constants::kStateLineAutotrophVol][0]);
   // Heterotrophs
-  mInitialPopulationSize = 0;
+  initialPopulationSize_ = 0;
 
   HeterotrophProcessor heterotrophProcessor;
 
-  mHeterotrophs.resize(Parameters::Get()->GetNumberOfSizeClasses());
-  for (unsigned lineIndex = Constants::cStateLineFirstHeterotroph; lineIndex < rawInitialStateData.size();
+  heterotrophs_.resize(Parameters::Get()->getNumberOfSizeClasses());
+  for (unsigned lineIndex = constants::kStateLineFirstHeterotroph; lineIndex < rawInitialStateData.size();
        ++lineIndex) {
-    double traitValue = Strings::StringToNumber(rawInitialStateData[lineIndex][0]);
-    double volumeActual = Strings::StringToNumber(rawInitialStateData[lineIndex][1]);
-    unsigned sizeClassIndex = Strings::StringToNumber(rawInitialStateData[lineIndex][2]);
-    double volumeHeritable = heterotrophProcessor.TraitValueToVolume(traitValue);
+    double traitValue = Strings::stringToNumber(rawInitialStateData[lineIndex][0]);
+    double volumeActual = Strings::stringToNumber(rawInitialStateData[lineIndex][1]);
+    unsigned sizeClassIndex = Strings::stringToNumber(rawInitialStateData[lineIndex][2]);
+    double volumeHeritable = heterotrophProcessor.traitValueToVolume(traitValue);
     std::vector<double> heritableTraitValues{traitValue};
     std::vector<bool> areTraitsMutant{false};
     HeritableTraits heritableTraits(heritableTraitValues, areTraitsMutant);
     Heterotroph* individual =
         new Heterotroph(heritableTraits, volumeHeritable, volumeActual, sizeClassIndex);
-    mHeterotrophs[sizeClassIndex].push_back(individual);
-    ++mInitialPopulationSize;
+    heterotrophs_[sizeClassIndex].push_back(individual);
+    ++initialPopulationSize_;
   }
-  mIsInitialised = true;
-  return mIsInitialised;  // Currently no circumstance under which this function
-                          // can return false.
+  isInitialised_ = true;
+  // Currently no circumstance under which this function can return false.
+  return isInitialised_;
 }
 
-double& InitialState::GetNutrientVolume() { return mNutrientVolume; }
+double& InitialState::getNutrientVolume() {
+  return nutrientVolume_;
+}
 
-double& InitialState::GetAutotrophVolume() { return mAutotrophVolume; }
+double& InitialState::getAutotrophVolume() {
+  return autotrophVolume_;
+}
 
-std::vector<std::vector<Heterotroph*>>& InitialState::GetHeterotrophs() { return mHeterotrophs; }
+std::vector<std::vector<Heterotroph*>>& InitialState::getHeterotrophs() {
+  return heterotrophs_;
+}
 
-unsigned& InitialState::GetInitialPopulationSize() { return mInitialPopulationSize; }
+unsigned& InitialState::getInitialPopulationSize() {
+  return initialPopulationSize_;
+}
 
-bool InitialState::IsInitialised() { return mIsInitialised; }
+bool InitialState::isInitialised() {
+  return isInitialised_;
+}

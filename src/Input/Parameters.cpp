@@ -6,360 +6,424 @@
 #include "HeterotrophProcessor.h"
 #include "Strings.h"
 
-Parameters* Parameters::mThis = nullptr;
+Parameters* Parameters::this_ = nullptr;
 
-Parameters::Parameters() { mParametersInitialised = {false}; }
+Parameters::Parameters() {
+  parametersInitialised_ = {false};
+}
 
 Parameters::~Parameters() {
-  if (mThis != nullptr) {
-    for (unsigned sizeClassIndex = 0; sizeClassIndex < mNumberOfSizeClasses; ++sizeClassIndex) {
-      mInterSizeClassPreferenceMatrix[sizeClassIndex].clear();
-      mInterSizeClassVolumeMatrix[sizeClassIndex].clear();
+  if (this_ != nullptr) {
+    for (unsigned sizeClassIndex = 0; sizeClassIndex < numberOfSizeClasses_; ++sizeClassIndex) {
+      interSizeClassPreferenceMatrix_[sizeClassIndex].clear();
+      interSizeClassVolumeMatrix_[sizeClassIndex].clear();
     }
-    mInterSizeClassPreferenceMatrix.clear();
-    mInterSizeClassVolumeMatrix.clear();
+    interSizeClassPreferenceMatrix_.clear();
+    interSizeClassVolumeMatrix_.clear();
 
-    mRemainingVolumes.clear();
-    mLinearFeedingDenominators.clear();
-    mHalfSaturationConstants.clear();
-    mSizeClassBoundaries.clear();
-    mSizeClassMidPoints.clear();
+    remainingVolumes_.clear();
+    linearFeedingDenominators_.clear();
+    halfSaturationConstants_.clear();
+    sizeClassBoundaries_.clear();
+    sizeClassMidPoints_.clear();
 
-    delete mThis;
+    delete this_;
   }
 }
 
 Parameters* Parameters::Get() {
-  if (mThis == nullptr) mThis = new Parameters();
+  if (this_ == nullptr) this_ = new Parameters();
 
-  return mThis;
+  return this_;
 }
 
-bool Parameters::Initialise(const std::vector<std::vector<std::string>>& rawInputParameterData) {
+bool Parameters::initialise(const std::vector<std::vector<std::string>>& rawInputParameterData) {
   if (rawInputParameterData.size() > 0) {
     for (unsigned rowIndex = 0; rowIndex < rawInputParameterData.size(); ++rowIndex) {
-      std::string parameterName = Strings::ToLowercase(rawInputParameterData[rowIndex][Constants::eParameterName]);
-      double parameterValue = Strings::StringToNumber(rawInputParameterData[rowIndex][Constants::eParameterValue]);
+      std::string parameterName = Strings::toLowercase(rawInputParameterData[rowIndex][constants::eParameterName]);
+      double parameterValue = Strings::stringToNumber(rawInputParameterData[rowIndex][constants::eParameterValue]);
 
       if (parameterName == "randomseed")
-        SetRandomSeed(parameterValue);
+        setRandomSeed(parameterValue);
       else if (parameterName == "runtimeinseconds")
-        SetRunTimeInSeconds(parameterValue);
+        setRunTimeInSeconds(parameterValue);
       else if (parameterName == "samplingrate")
-        SetSamplingRate(parameterValue);
+        setSamplingRate(parameterValue);
       else if (parameterName == "numberofsizeclasses")
-        SetNumberOfSizeClasses(parameterValue);
+        setNumberOfSizeClasses(parameterValue);
 
       else if (parameterName == "readmodelstate")
-        SetReadModelState(parameterValue);
+        setReadModelState(parameterValue);
       else if (parameterName == "writemodelstate")
-        SetWriteModelState(parameterValue);
+        setWriteModelState(parameterValue);
       else if (parameterName == "uselinearfeeding")
-        SetUseLinearFeeding(parameterValue);
+        setUseLinearFeeding(parameterValue);
 
       else if (parameterName == "initialautotrophicvolume")
-        SetInitialAutotrophicVolume(parameterValue);
+        setInitialAutotrophicVolume(parameterValue);
       else if (parameterName == "initialheterotrophicvolume")
-        SetInitialHeterotrophicVolume(parameterValue);
+        setInitialHeterotrophicVolume(parameterValue);
       else if (parameterName == "minimumheterotrophicvolume")
-        SetMinimumHeterotrophicVolume(parameterValue);
+        setMinimumHeterotrophicVolume(parameterValue);
 
       else if (parameterName == "smallestindividualvolume")
-        SetSmallestIndividualVolume(parameterValue);
+        setSmallestIndividualVolume(parameterValue);
       else if (parameterName == "largestindividualvolume")
-        SetLargestIndividualVolume(parameterValue);
+        setLargestIndividualVolume(parameterValue);
       else if (parameterName == "preferredpreyvolumeratio")
-        SetPreferredPreyVolumeRatio(parameterValue);
+        setPreferredPreyVolumeRatio(parameterValue);
       else if (parameterName == "preferencefunctionwidth")
-        SetPreferenceFunctionWidth(parameterValue);
+        setPreferenceFunctionWidth(parameterValue);
       else if (parameterName == "sizeclasssubsetfraction")
-        SetSizeClassSubsetFraction(parameterValue);
+        setSizeClassSubsetFraction(parameterValue);
       else if (parameterName == "halfsaturationconstantfraction")
-        SetHalfSaturationConstantFraction(parameterValue);
+        setHalfSaturationConstantFraction(parameterValue);
 
       else if (parameterName == "assimilationefficiency")
-        SetAssimilationEfficiency(parameterValue);
+        setAssimilationEfficiency(parameterValue);
       else if (parameterName == "fractionalmetabolicexpense")
-        SetFractionalMetabolicExpense(parameterValue);
+        setFractionalMetabolicExpense(parameterValue);
 
       else if (parameterName == "metabolicindex")
-        SetMetabolicIndex(parameterValue);
+        setMetabolicIndex(parameterValue);
       else if (parameterName == "mutationprobability")
-        SetMutationProbability(parameterValue);
+        setMutationProbability(parameterValue);
       else if (parameterName == "mutationstandarddeviation")
-        SetMutationStandardDeviation(parameterValue);
+        setMutationStandardDeviation(parameterValue);
     }
-    CalculateParameters();
+    calculateParameters();
 
-    return IsInitialised();
+    return isInitialised();
   } else
     return false;
 }
 
-void Parameters::CalculateParameters() {
-  mMaximumSizeClassPopulations.resize(mNumberOfSizeClasses, 0);
-  mRemainingVolumes.resize(mNumberOfSizeClasses);
-  mLinearFeedingDenominators.resize(mNumberOfSizeClasses);
-  mHalfSaturationConstants.resize(mNumberOfSizeClasses);
-  mSizeClassMidPoints.resize(mNumberOfSizeClasses);
-  mSizeClassBoundaries.resize(mNumberOfSizeClasses + 1);
+void Parameters::calculateParameters() {
+  maximumSizeClassPopulations_.resize(numberOfSizeClasses_, 0);
+  remainingVolumes_.resize(numberOfSizeClasses_);
+  linearFeedingDenominators_.resize(numberOfSizeClasses_);
+  halfSaturationConstants_.resize(numberOfSizeClasses_);
+  sizeClassMidPoints_.resize(numberOfSizeClasses_);
+  sizeClassBoundaries_.resize(numberOfSizeClasses_ + 1);
 
-  mSmallestVolumeExponent = std::log10(mSmallestIndividualVolume);
-  mLargestVolumeExponent = std::log10(mLargestIndividualVolume);
+  smallestVolumeExponent_ = std::log10(smallestIndividualVolume_);
+  largestVolumeExponent_ = std::log10(largestIndividualVolume_);
 
-  mTotalVolume = mInitialAutotrophicVolume + mInitialHeterotrophicVolume;
+  totalVolume_ = initialAutotrophicVolume_ + initialHeterotrophicVolume_;
 
-  double sizeClassExponentIncrement = (mLargestVolumeExponent - mSmallestVolumeExponent) / mNumberOfSizeClasses;
+  double sizeClassExponentIncrement = (largestVolumeExponent_ - smallestVolumeExponent_) / numberOfSizeClasses_;
 
-  for (unsigned sizeClassIndex = 0; sizeClassIndex < mNumberOfSizeClasses; ++sizeClassIndex) {
-    double sizeClassMidPointExponent = mSmallestVolumeExponent + ((sizeClassIndex + 0.5) * sizeClassExponentIncrement);
-    double sizeClassBoundaryExponent = mSmallestVolumeExponent + (sizeClassIndex * sizeClassExponentIncrement);
+  for (unsigned sizeClassIndex = 0; sizeClassIndex < numberOfSizeClasses_; ++sizeClassIndex) {
+    double sizeClassMidPointExponent = smallestVolumeExponent_ + ((sizeClassIndex + 0.5) * sizeClassExponentIncrement);
+    double sizeClassBoundaryExponent = smallestVolumeExponent_ + (sizeClassIndex * sizeClassExponentIncrement);
 
-    mSizeClassBoundaries[sizeClassIndex] = std::pow(10, sizeClassBoundaryExponent);
-    mSizeClassMidPoints[sizeClassIndex] = std::pow(10, sizeClassMidPointExponent);
+    sizeClassBoundaries_[sizeClassIndex] = std::pow(10, sizeClassBoundaryExponent);
+    sizeClassMidPoints_[sizeClassIndex] = std::pow(10, sizeClassMidPointExponent);
 
-    mRemainingVolumes[sizeClassIndex] = mTotalVolume - mSizeClassMidPoints[sizeClassIndex];
-    mLinearFeedingDenominators[sizeClassIndex] =
-        (2 * mHalfSaturationConstantFraction) * mRemainingVolumes[sizeClassIndex];
-    mHalfSaturationConstants[sizeClassIndex] = mHalfSaturationConstantFraction * mRemainingVolumes[sizeClassIndex];
-    mMaximumSizeClassPopulations[sizeClassIndex] = std::ceil(mTotalVolume / mSizeClassMidPoints[sizeClassIndex]);
+    remainingVolumes_[sizeClassIndex] = totalVolume_ - sizeClassMidPoints_[sizeClassIndex];
+    linearFeedingDenominators_[sizeClassIndex] =
+        (2 * halfSaturationConstantFraction_) * remainingVolumes_[sizeClassIndex];
+    halfSaturationConstants_[sizeClassIndex] = halfSaturationConstantFraction_ * remainingVolumes_[sizeClassIndex];
+    maximumSizeClassPopulations_[sizeClassIndex] = std::ceil(totalVolume_ / sizeClassMidPoints_[sizeClassIndex]);
   }
-  double sizeClassBoundaryExponent = mSmallestVolumeExponent + (mNumberOfSizeClasses * sizeClassExponentIncrement);
-  mSizeClassBoundaries[mNumberOfSizeClasses] = std::pow(10, sizeClassBoundaryExponent);
+  double sizeClassBoundaryExponent = smallestVolumeExponent_ + (numberOfSizeClasses_ * sizeClassExponentIncrement);
+  sizeClassBoundaries_[numberOfSizeClasses_] = std::pow(10, sizeClassBoundaryExponent);
 
   HeterotrophProcessor temporaryHeterotrophProcessor;
-  mAutotrophSizeClassIndex = temporaryHeterotrophProcessor.FindSizeClassIndexFromVolume(mSmallestIndividualVolume);
+  autotrophSizeClassIndex_ = temporaryHeterotrophProcessor.findSizeClassIndexFromVolume(smallestIndividualVolume_);
 
-  mInterSizeClassPreferenceMatrix.resize(mNumberOfSizeClasses);
-  mInterSizeClassVolumeMatrix.resize(mNumberOfSizeClasses);
+  interSizeClassPreferenceMatrix_.resize(numberOfSizeClasses_);
+  interSizeClassVolumeMatrix_.resize(numberOfSizeClasses_);
 
-  for (unsigned subjectIndex = 0; subjectIndex < mNumberOfSizeClasses; ++subjectIndex) {
-    double subjectVolumeMean = mSizeClassMidPoints[subjectIndex];
+  for (unsigned subjectIndex = 0; subjectIndex < numberOfSizeClasses_; ++subjectIndex) {
+    double subjectVolumeMean = sizeClassMidPoints_[subjectIndex];
     double preferenceSum = 0;
 
-    for (unsigned referenceIndex = 0; referenceIndex < mNumberOfSizeClasses; ++referenceIndex) {
-      double referenceVolumeMean = mSizeClassMidPoints[referenceIndex];
+    for (unsigned referenceIndex = 0; referenceIndex < numberOfSizeClasses_; ++referenceIndex) {
+      double referenceVolumeMean = sizeClassMidPoints_[referenceIndex];
 
       double preferenceForReferenceSizeClass =
-          temporaryHeterotrophProcessor.CalculatePreferenceForPrey(subjectVolumeMean, referenceVolumeMean);
+          temporaryHeterotrophProcessor.calculatePreferenceForPrey(subjectVolumeMean, referenceVolumeMean);
 
       preferenceSum += preferenceForReferenceSizeClass;
 
-      mInterSizeClassPreferenceMatrix[subjectIndex].push_back(preferenceForReferenceSizeClass);
-      mInterSizeClassVolumeMatrix[subjectIndex].push_back(preferenceForReferenceSizeClass * referenceVolumeMean);
+      interSizeClassPreferenceMatrix_[subjectIndex].push_back(preferenceForReferenceSizeClass);
+      interSizeClassVolumeMatrix_[subjectIndex].push_back(preferenceForReferenceSizeClass * referenceVolumeMean);
     }
   }
 }
 
-bool Parameters::IsInitialised() {
+bool Parameters::isInitialised() {
   bool isInitialised = true;
-  for (unsigned i = 0; i < Constants::eMutationStandardDeviation + 1; ++i)
-    if (mParametersInitialised[i] == false) isInitialised = false;
+  for (unsigned i = 0; i < constants::eMutationStandardDeviation + 1; ++i)
+    if (parametersInitialised_[i] == false) isInitialised = false;
 
   return isInitialised;
 }
 
-unsigned& Parameters::GetRunTimeInSeconds() { return mRunTimeInSeconds; }
-
-unsigned& Parameters::GetRandomSeed() { return mRandomSeed; }
-
-unsigned& Parameters::GetSamplingRate() { return mSamplingRate; }
-
-unsigned& Parameters::GetNumberOfSizeClasses() { return mNumberOfSizeClasses; }
-
-bool Parameters::GetReadModelState() { return mReadModelState; }
-
-bool Parameters::GetWriteModelState() { return mWriteModelState; }
-
-bool Parameters::GetUseLinearFeeding() { return mUseLinearFeeding; }
-
-double& Parameters::GetInitialAutotrophVolume() { return mInitialAutotrophicVolume; }
-
-double& Parameters::GetInitialHeterotrophVolume() { return mInitialHeterotrophicVolume; }
-
-double& Parameters::GetMinimumHeterotrophicVolume() { return mMinimumHeterotrophicVolume; }
-
-double& Parameters::GetSmallestIndividualVolume() { return mSmallestIndividualVolume; }
-
-double& Parameters::GetLargestIndividualVolume() { return mLargestIndividualVolume; }
-
-unsigned& Parameters::GetPreferredPreyVolumeRatio() { return mPreferredPreyVolumeRatio; }
-
-double& Parameters::GetPreferenceFunctionWidth() { return mPreferenceFunctionWidth; }
-
-double& Parameters::GetSizeClassSubsetFraction() { return mSizeClassSubsetFraction; }
-
-double& Parameters::GetHalfSaturationConstantFraction() { return mHalfSaturationConstantFraction; }
-
-double& Parameters::GetAssimilationEfficiency() { return mAssimilationEfficiency; }
-
-double& Parameters::GetFractionalMetabolicExpense() { return mFractionalMetabolicExpense; }
-
-double& Parameters::GetMetabolicIndex() { return mMetabolicIndex; }
-
-double& Parameters::GetMutationProbability() { return mMutationProbability; }
-
-double& Parameters::GetMutationStandardDeviation() { return mMutationStandardDeviation; }
-
-unsigned& Parameters::GetAutotrophSizeClassIndex() { return mAutotrophSizeClassIndex; }
-
-double& Parameters::GetSmallestVolumeExponent() { return mSmallestVolumeExponent; }
-
-double& Parameters::GetLargestVolumeExponent() { return mLargestVolumeExponent; }
-
-double& Parameters::GetSizeClassBoundary(const unsigned index) { return mSizeClassBoundaries[index]; }
-
-double& Parameters::GetSizeClassMidPoint(const unsigned index) { return mSizeClassMidPoints[index]; }
-
-const std::vector<double>& Parameters::GetSizeClassBoundaries() { return mSizeClassBoundaries; }
-
-const std::vector<double>& Parameters::GetSizeClassMidPoints() { return mSizeClassMidPoints; }
-
-const std::vector<double>& Parameters::GetLinearFeedingDenominators() { return mLinearFeedingDenominators; }
-
-const std::vector<double>& Parameters::GetHalfSaturationConstants() { return mHalfSaturationConstants; }
-
-const std::vector<unsigned>& Parameters::GetMaximumSizeClassPopulations() { return mMaximumSizeClassPopulations; }
-
-double& Parameters::GetInterSizeClassPreference(const unsigned predatorIndex, const unsigned preyIndex) {
-  return mInterSizeClassPreferenceMatrix[predatorIndex][preyIndex];
+unsigned& Parameters::getRunTimeInSeconds() {
+  return runTimeInSeconds_;
 }
 
-double& Parameters::GetInterSizeClassVolume(const unsigned predatorIndex, const unsigned preyIndex) {
-  return mInterSizeClassVolumeMatrix[predatorIndex][preyIndex];
+unsigned& Parameters::getRandomSeed() {
+  return randomSeed_;
 }
 
-double& Parameters::GetTotalVolume() { return mTotalVolume; }
-
-unsigned& Parameters::GetMaximumSizeClassPopulation(const unsigned sizeClassIndex) {
-  return mMaximumSizeClassPopulations[sizeClassIndex];
+unsigned& Parameters::getSamplingRate() {
+  return samplingRate_;
 }
 
-double& Parameters::GetRemainingVolume(const unsigned sizeClassIndex) { return mRemainingVolumes[sizeClassIndex]; }
-
-double& Parameters::GetLinearFeedingDenominator(const unsigned sizeClassIndex) {
-  return mLinearFeedingDenominators[sizeClassIndex];
+unsigned& Parameters::getNumberOfSizeClasses() {
+  return numberOfSizeClasses_;
 }
 
-double& Parameters::GetHalfSaturationConstant(const unsigned sizeClassIndex) {
-  return mHalfSaturationConstants[sizeClassIndex];
+bool Parameters::getReadModelState() {
+  return readModelState_;
 }
 
-const std::vector<double>& Parameters::GetInterSizeClassPreferenceVector(const unsigned index) const {
-  return mInterSizeClassPreferenceMatrix[index];
+bool Parameters::getWriteModelState() {
+  return writeModelState_;
 }
 
-const std::vector<double>& Parameters::GetInterSizeClassVolumeVector(const unsigned index) const {
-  return mInterSizeClassVolumeMatrix[index];
+bool Parameters::getUseLinearFeeding() {
+  return useLinearFeeding_;
 }
 
-const std::vector<std::vector<double>>& Parameters::GetInterSizeClassPreferenceMatrix() const {
-  return mInterSizeClassPreferenceMatrix;
+double& Parameters::getInitialAutotrophVolume() {
+  return initialAutotrophicVolume_;
 }
 
-const std::vector<std::vector<double>>& Parameters::GetInterSizeClassVolumeMatrix() const { return mInterSizeClassVolumeMatrix; }
-
-void Parameters::SetRandomSeed(const unsigned randomNumberSeed) {
-  mRandomSeed = randomNumberSeed;
-  mParametersInitialised[Constants::eRandomSeed] = true;
+double& Parameters::getInitialHeterotrophVolume() {
+  return initialHeterotrophicVolume_;
 }
 
-void Parameters::SetRunTimeInSeconds(const unsigned runTimeInSeconds) {
-  mRunTimeInSeconds = runTimeInSeconds;
-  mParametersInitialised[Constants::eRunTimeInSeconds] = true;
+double& Parameters::getMinimumHeterotrophicVolume() {
+  return minimumHeterotrophicVolume_;
 }
 
-void Parameters::SetSamplingRate(const unsigned samplingRate) {
-  mSamplingRate = samplingRate;
-  mParametersInitialised[Constants::eSamplingRate] = true;
+double& Parameters::getSmallestIndividualVolume() {
+  return smallestIndividualVolume_;
 }
 
-void Parameters::SetNumberOfSizeClasses(const unsigned numberOfSizeClasses) {
-  mNumberOfSizeClasses = numberOfSizeClasses;
-  mParametersInitialised[Constants::eNumberOfSizeClasses] = true;
+double& Parameters::getLargestIndividualVolume() {
+  return largestIndividualVolume_;
 }
 
-void Parameters::SetReadModelState(const bool createNewPopulation) {
-  mReadModelState = createNewPopulation;
-  mParametersInitialised[Constants::eReadModelState] = true;
+unsigned& Parameters::getPreferredPreyVolumeRatio() {
+  return preferredPreyVolumeRatio_;
 }
 
-void Parameters::SetWriteModelState(const bool writeModelState) {
-  mWriteModelState = writeModelState;
-  mParametersInitialised[Constants::eWriteModelState] = true;
+double& Parameters::getPreferenceFunctionWidth() {
+  return preferenceFunctionWidth_;
 }
 
-void Parameters::SetUseLinearFeeding(const bool useLinearFeeding) {
-  mUseLinearFeeding = useLinearFeeding;
-  mParametersInitialised[Constants::eUseLinearFeeding] = true;
+double& Parameters::getSizeClassSubsetFraction() {
+  return sizeClassSubsetFraction_;
 }
 
-void Parameters::SetInitialAutotrophicVolume(const double initialAutotrophicVolume) {
-  mInitialAutotrophicVolume = initialAutotrophicVolume;
-  mParametersInitialised[Constants::eInitialAutotrophicVolume] = true;
+double& Parameters::getHalfSaturationConstantFraction() {
+  return halfSaturationConstantFraction_;
 }
 
-void Parameters::SetInitialHeterotrophicVolume(const double initialHeterotrophicVolume) {
-  mInitialHeterotrophicVolume = initialHeterotrophicVolume;
-  mParametersInitialised[Constants::eInitialHeterotrophicVolume] = true;
+double& Parameters::getAssimilationEfficiency() {
+  return assimilationEfficiency_;
 }
 
-void Parameters::SetMinimumHeterotrophicVolume(const double minimumHeterotrophicVolume) {
-  mMinimumHeterotrophicVolume = minimumHeterotrophicVolume;
-  mParametersInitialised[Constants::eMinimumHeterotrophicVolume] = true;
+double& Parameters::getFractionalMetabolicExpense() {
+  return fractionalMetabolicExpense_;
 }
 
-void Parameters::SetSmallestIndividualVolume(double smallestIndividualVolume) {
-  mSmallestIndividualVolume = smallestIndividualVolume;
-  mParametersInitialised[Constants::eSmallestIndividualVolume] = true;
+double& Parameters::getMetabolicIndex() {
+  return metabolicIndex_;
 }
 
-void Parameters::SetLargestIndividualVolume(double largestIndividualVolume) {
-  mLargestIndividualVolume = largestIndividualVolume;
-  mParametersInitialised[Constants::eLargestIndividualVolume] = true;
+double& Parameters::getMutationProbability() {
+  return mutationProbability_;
 }
 
-void Parameters::SetPreferredPreyVolumeRatio(const unsigned preferredPreyVolumeRatio) {
-  mPreferredPreyVolumeRatio = preferredPreyVolumeRatio;
-  mParametersInitialised[Constants::ePreferredPreyVolumeRatio] = true;
+double& Parameters::getMutationStandardDeviation() {
+  return mutationStandardDeviation_;
 }
 
-void Parameters::SetPreferenceFunctionWidth(const double preferenceFunctionWidth) {
-  mPreferenceFunctionWidth = preferenceFunctionWidth;
-  mParametersInitialised[Constants::ePreferenceFunctionWidth] = true;
+unsigned& Parameters::getAutotrophSizeClassIndex() {
+  return autotrophSizeClassIndex_;
 }
 
-void Parameters::SetSizeClassSubsetFraction(const double sizeClassSubsetFraction) {
-  mSizeClassSubsetFraction = sizeClassSubsetFraction;
-  mParametersInitialised[Constants::eSizeClassSubsetFraction] = true;
+double& Parameters::getSmallestVolumeExponent() {
+  return smallestVolumeExponent_;
 }
 
-void Parameters::SetHalfSaturationConstantFraction(const double halfSaturationConstantFraction) {
-  mHalfSaturationConstantFraction = halfSaturationConstantFraction;
-  mParametersInitialised[Constants::eHalfSaturationConstantFraction] = true;
+double& Parameters::getLargestVolumeExponent() {
+  return largestVolumeExponent_;
 }
 
-void Parameters::SetAssimilationEfficiency(const double assimilationEfficiency) {
-  mAssimilationEfficiency = assimilationEfficiency;
-  mParametersInitialised[Constants::eAssimilationEfficiency] = true;
+double& Parameters::getSizeClassBoundary(const unsigned index) {
+  return sizeClassBoundaries_[index];
 }
 
-void Parameters::SetFractionalMetabolicExpense(const double fractionalMetabolicExpense) {
-  mFractionalMetabolicExpense = fractionalMetabolicExpense;
-  mParametersInitialised[Constants::eFractionalMetabolicExpense] = true;
+double& Parameters::getSizeClassMidPoint(const unsigned index) {
+  return sizeClassMidPoints_[index];
 }
 
-void Parameters::SetMetabolicIndex(const double metabolicIndex) {
-  mMetabolicIndex = metabolicIndex;
-  mParametersInitialised[Constants::eMetabolicIndex] = true;
+const std::vector<double>& Parameters::getSizeClassBoundaries() {
+  return sizeClassBoundaries_;
 }
 
-void Parameters::SetMutationProbability(const double mutationProbability) {
-  mMutationProbability = mutationProbability;
-  mParametersInitialised[Constants::eMutationProbability] = true;
+const std::vector<double>& Parameters::getSizeClassMidPoints() {
+  return sizeClassMidPoints_;
 }
 
-void Parameters::SetMutationStandardDeviation(const double mutationStandardDeviation) {
-  mMutationStandardDeviation = mutationStandardDeviation;
-  mParametersInitialised[Constants::eMutationStandardDeviation] = true;
+const std::vector<double>& Parameters::getLinearFeedingDenominators() {
+  return linearFeedingDenominators_;
+}
+
+const std::vector<double>& Parameters::getHalfSaturationConstants() {
+  return halfSaturationConstants_;
+}
+
+const std::vector<unsigned>& Parameters::getMaximumSizeClassPopulations() {
+  return maximumSizeClassPopulations_;
+}
+
+double& Parameters::getInterSizeClassPreference(const unsigned predatorIndex, const unsigned preyIndex) {
+  return interSizeClassPreferenceMatrix_[predatorIndex][preyIndex];
+}
+
+double& Parameters::getInterSizeClassVolume(const unsigned predatorIndex, const unsigned preyIndex) {
+  return interSizeClassVolumeMatrix_[predatorIndex][preyIndex];
+}
+
+double& Parameters::getTotalVolume() { return totalVolume_; }
+
+unsigned& Parameters::getMaximumSizeClassPopulation(const unsigned sizeClassIndex) {
+  return maximumSizeClassPopulations_[sizeClassIndex];
+}
+
+double& Parameters::getRemainingVolume(const unsigned sizeClassIndex) { return remainingVolumes_[sizeClassIndex]; }
+
+double& Parameters::getLinearFeedingDenominator(const unsigned sizeClassIndex) {
+  return linearFeedingDenominators_[sizeClassIndex];
+}
+
+double& Parameters::getHalfSaturationConstant(const unsigned sizeClassIndex) {
+  return halfSaturationConstants_[sizeClassIndex];
+}
+
+const std::vector<double>& Parameters::getInterSizeClassPreferenceVector(const unsigned index) const {
+  return interSizeClassPreferenceMatrix_[index];
+}
+
+const std::vector<double>& Parameters::getInterSizeClassVolumeVector(const unsigned index) const {
+  return interSizeClassVolumeMatrix_[index];
+}
+
+const std::vector<std::vector<double>>& Parameters::getInterSizeClassPreferenceMatrix() const {
+  return interSizeClassPreferenceMatrix_;
+}
+
+const std::vector<std::vector<double>>& Parameters::getInterSizeClassVolumeMatrix() const { return interSizeClassVolumeMatrix_; }
+
+void Parameters::setRandomSeed(const unsigned randomNumberSeed) {
+  randomSeed_ = randomNumberSeed;
+  parametersInitialised_[constants::eRandomSeed] = true;
+}
+
+void Parameters::setRunTimeInSeconds(const unsigned runTimeInSeconds) {
+  runTimeInSeconds_ = runTimeInSeconds;
+  parametersInitialised_[constants::eRunTimeInSeconds] = true;
+}
+
+void Parameters::setSamplingRate(const unsigned samplingRate) {
+  samplingRate_ = samplingRate;
+  parametersInitialised_[constants::eSamplingRate] = true;
+}
+
+void Parameters::setNumberOfSizeClasses(const unsigned numberOfSizeClasses) {
+  numberOfSizeClasses_ = numberOfSizeClasses;
+  parametersInitialised_[constants::eNumberOfSizeClasses] = true;
+}
+
+void Parameters::setReadModelState(const bool createNewPopulation) {
+  readModelState_ = createNewPopulation;
+  parametersInitialised_[constants::eReadModelState] = true;
+}
+
+void Parameters::setWriteModelState(const bool writeModelState) {
+  writeModelState_ = writeModelState;
+  parametersInitialised_[constants::eWriteModelState] = true;
+}
+
+void Parameters::setUseLinearFeeding(const bool useLinearFeeding) {
+  useLinearFeeding_ = useLinearFeeding;
+  parametersInitialised_[constants::eUseLinearFeeding] = true;
+}
+
+void Parameters::setInitialAutotrophicVolume(const double initialAutotrophicVolume) {
+  initialAutotrophicVolume_ = initialAutotrophicVolume;
+  parametersInitialised_[constants::eInitialAutotrophicVolume] = true;
+}
+
+void Parameters::setInitialHeterotrophicVolume(const double initialHeterotrophicVolume) {
+  initialHeterotrophicVolume_ = initialHeterotrophicVolume;
+  parametersInitialised_[constants::eInitialHeterotrophicVolume] = true;
+}
+
+void Parameters::setMinimumHeterotrophicVolume(const double minimumHeterotrophicVolume) {
+  minimumHeterotrophicVolume_ = minimumHeterotrophicVolume;
+  parametersInitialised_[constants::eMinimumHeterotrophicVolume] = true;
+}
+
+void Parameters::setSmallestIndividualVolume(double smallestIndividualVolume) {
+  smallestIndividualVolume_ = smallestIndividualVolume;
+  parametersInitialised_[constants::eSmallestIndividualVolume] = true;
+}
+
+void Parameters::setLargestIndividualVolume(double largestIndividualVolume) {
+  largestIndividualVolume_ = largestIndividualVolume;
+  parametersInitialised_[constants::eLargestIndividualVolume] = true;
+}
+
+void Parameters::setPreferredPreyVolumeRatio(const unsigned preferredPreyVolumeRatio) {
+  preferredPreyVolumeRatio_ = preferredPreyVolumeRatio;
+  parametersInitialised_[constants::ePreferredPreyVolumeRatio] = true;
+}
+
+void Parameters::setPreferenceFunctionWidth(const double preferenceFunctionWidth) {
+  preferenceFunctionWidth_ = preferenceFunctionWidth;
+  parametersInitialised_[constants::ePreferenceFunctionWidth] = true;
+}
+
+void Parameters::setSizeClassSubsetFraction(const double sizeClassSubsetFraction) {
+  sizeClassSubsetFraction_ = sizeClassSubsetFraction;
+  parametersInitialised_[constants::eSizeClassSubsetFraction] = true;
+}
+
+void Parameters::setHalfSaturationConstantFraction(const double halfSaturationConstantFraction) {
+  halfSaturationConstantFraction_ = halfSaturationConstantFraction;
+  parametersInitialised_[constants::eHalfSaturationConstantFraction] = true;
+}
+
+void Parameters::setAssimilationEfficiency(const double assimilationEfficiency) {
+  assimilationEfficiency_ = assimilationEfficiency;
+  parametersInitialised_[constants::eAssimilationEfficiency] = true;
+}
+
+void Parameters::setFractionalMetabolicExpense(const double fractionalMetabolicExpense) {
+  fractionalMetabolicExpense_ = fractionalMetabolicExpense;
+  parametersInitialised_[constants::eFractionalMetabolicExpense] = true;
+}
+
+void Parameters::setMetabolicIndex(const double metabolicIndex) {
+  metabolicIndex_ = metabolicIndex;
+  parametersInitialised_[constants::eMetabolicIndex] = true;
+}
+
+void Parameters::setMutationProbability(const double mutationProbability) {
+  mutationProbability_ = mutationProbability;
+  parametersInitialised_[constants::eMutationProbability] = true;
+}
+
+void Parameters::setMutationStandardDeviation(const double mutationStandardDeviation) {
+  mutationStandardDeviation_ = mutationStandardDeviation;
+  parametersInitialised_[constants::eMutationStandardDeviation] = true;
 }

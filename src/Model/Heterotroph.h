@@ -19,52 +19,52 @@ class Heterotroph {
   Heterotroph& operator=(const Heterotroph&);
   bool operator==(const Heterotroph&);
 
-  Heterotroph* Reproduce(RandomSimple&, HeterotrophProcessor&);
+  Heterotroph* reproduce(RandomSimple&, HeterotrophProcessor&);
 
-  double ConsumePreyVolume(const double);
-  double Metabolise(const double);
+  double consumePreyVolume(const double);
+  double metabolise(const double);
 
-  HeritableTraits& GetHeritableTraits();
-  double GetTrophicLevel() const;
-  unsigned GetSizeClassIndex() const;
-  unsigned GetAge() const;
+  HeritableTraits& getHeritableTraits();
+  double getTrophicLevel() const;
+  unsigned getSizeClassIndex() const;
+  unsigned getAge() const;
 
-  bool HasFed() const;
-  bool IsDead() const;
+  bool hasFed() const;
+  bool isDead() const;
 
-  double GetVolumeActual() const;
-  double GetVolumeHeritable() const;
-  double GetVolumeMinimum() const;
-  double GetVolumeReproduction() const;
+  double getVolumeActual() const;
+  double getVolumeHeritable() const;
+  double getVolumeMinimum() const;
+  double getVolumeReproduction() const;
 
-  double GetStarvationMultiplier() const;
+  double getStarvationMultiplier() const;
 
-  void SetTrophicLevel(const double);
-  void SetSizeClassIndex(const unsigned);
+  void setTrophicLevel(const double);
+  void setSizeClassIndex(const unsigned);
 
-  void SetAge(const unsigned);
-  void SetHasFed(const bool);
-  void Kill();
+  void setAge(const unsigned);
+  void setHasFed(const bool);
+  void setDead();
 
  private:
-  HeritableTraits mHeritableTraits;
+  HeritableTraits heritableTraits_;
 
-  const double mAssimilationEfficiency;
+  const double assimilationEfficiency_;
 
-  double mVolumeHeritable;
-  double mVolumeMinimum;
-  double mVolumeReproduction;
+  double volumeHeritable_;
+  double volumeMinimum_;
+  double volumeReproduction_;
 
-  double mVolumeActual;
-  double mTrophicLevel;
+  double volumeActual_;
+  double trophicLevel_;
 
-  double mStarvationMultiplier;
+  double starvationMultiplier_;
 
-  unsigned mSizeClassIndex;
-  unsigned mAge;
+  unsigned sizeClassIndex_;
+  unsigned age_;
 
-  bool mHasFed;
-  bool mIsDead;
+  bool hasFed_;
+  bool isDead_;
 };
 
 #endif

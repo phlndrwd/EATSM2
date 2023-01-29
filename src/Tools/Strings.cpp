@@ -6,13 +6,24 @@
 
 #include "Constants.h"
 
-double Strings::StringToNumber(const std::string& string) {
+template <class T>
+const std::string Strings::toString(const T& input) {
+  std::stringstream stringStream;
+  stringStream << input;
+
+  return stringStream.str();
+}
+
+template const std::string Strings::toString<char>(const char& input);
+template const std::string Strings::toString<int>(const int& input);
+
+double Strings::stringToNumber(const std::string& string) {
   double number = strtod(string.c_str(), nullptr);
 
   return number;
 }
 
-const std::vector<std::string> Strings::StringToWords(const std::string& inputString, const char wordTerminationCharacter) {
+const std::vector<std::string> Strings::stringToWords(const std::string& inputString, const char wordTerminationCharacter) {
   std::stringstream stringStream(inputString);
 
   std::string word = "";
@@ -25,15 +36,15 @@ const std::vector<std::string> Strings::StringToWords(const std::string& inputSt
   return wordList;
 }
 
-const std::string Strings::DoubleToPrecisionString(const double& value, const unsigned& decimals) {
+const std::string Strings::doubleToPrecisionString(const double& value, const unsigned& decimals) {
   std::ostringstream outputStringStream;
   outputStringStream << std::fixed << std::setprecision(decimals) << value;
 
   return outputStringStream.str();
 }
 
-int Strings::FindFirstPositionOfCharacter(const std::string inString, const char character) {
-  int index = Constants::cMissingValue;
+int Strings::findFirstPositionOfCharacter(const std::string inString, const char character) {
+  int index = constants::kMissingValue;
 
   for (unsigned charIndex = 0; charIndex < inString.length(); charIndex++) {
     if (inString[charIndex] == character) {
@@ -44,16 +55,16 @@ int Strings::FindFirstPositionOfCharacter(const std::string inString, const char
   return index;
 }
 
-std::string Strings::TruncateStringAtCharacter(const std::string inString, const char character) {
+std::string Strings::truncateStringAtCharacter(const std::string inString, const char character) {
   std::string outString = inString;
 
-  int index = FindFirstPositionOfCharacter(outString, character);
-  if (index != Constants::cMissingValue) outString = outString.substr(0, index);
+  int index = findFirstPositionOfCharacter(outString, character);
+  if (index != constants::kMissingValue) outString = outString.substr(0, index);
 
   return outString;
 }
 
-std::string Strings::ToLowercase(const std::string inString) {
+std::string Strings::toLowercase(const std::string inString) {
   std::string outString;
 
   std::transform(inString.begin(), inString.end(), std::back_inserter(outString), tolower);
@@ -61,13 +72,13 @@ std::string Strings::ToLowercase(const std::string inString) {
   return outString;
 }
 
-std::string Strings::RemoveCharacter(const std::string inString, const char character) {
+std::string Strings::removeCharacter(const std::string inString, const char character) {
   std::string outString = inString;
   outString.erase(remove(outString.begin(), outString.end(), character), outString.end());
 
   return outString;
 }
 
-std::string Strings::RemoveWhiteSpace(const std::string inString) {
-  return RemoveCharacter(inString, Constants::cWhiteSpaceCharacter);
+std::string Strings::removeWhiteSpace(const std::string inString) {
+  return removeCharacter(inString, constants::kWhiteSpaceCharacter);
 }

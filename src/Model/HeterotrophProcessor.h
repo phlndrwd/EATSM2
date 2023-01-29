@@ -11,52 +11,52 @@ class HeterotrophProcessor {
   HeterotrophProcessor();
   ~HeterotrophProcessor();
 
-  double CalculatePreferenceForPrey(const double, const double) const;
-  double CalculateFeedingProbability(const unsigned, const double);
+  double calculatePreferenceForPrey(const double, const double) const;
+  double calculateFeedingProbability(const unsigned, const double);
 
-  double CalculateMetabolicDeduction(const Heterotroph*) const;
-  double CalculateStarvationProbability(const Heterotroph*) const;
+  double calculateMetabolicDeduction(const Heterotroph*) const;
+  double calculateStarvationProbability(const Heterotroph*) const;
 
-  bool UpdateSizeClassIndex(Heterotroph*) const;
-  unsigned FindSizeClassIndexFromVolume(const double) const;
-  unsigned FindIndividualSizeClassIndex(const Heterotroph*, unsigned) const;
-  unsigned DirectionIndividualShouldMoveSizeClasses(const Heterotroph*) const;
+  bool updateSizeClassIndex(Heterotroph*) const;
+  unsigned findSizeClassIndexFromVolume(const double) const;
+  unsigned findIndividualSizeClassIndex(const Heterotroph*, unsigned) const;
+  unsigned directionIndividualShouldMoveSizeClasses(const Heterotroph*) const;
 
-  void UpdateHerbivoreTrophicIndex(Heterotroph*);
-  void UpdateCarnivoreTrophicIndex(Heterotroph*, const Heterotroph*);
+  void updateHerbivoreTrophicIndex(Heterotroph*);
+  void updateCarnivoreTrophicIndex(Heterotroph*, const Heterotroph*);
 
-  double CalculateHerbivoreTrophicIndex(const double) const;
-  double CalculateCarnivoreTrophicIndex(const double, const double) const;
+  double calculateHerbivoreTrophicIndex(const double) const;
+  double calculateCarnivoreTrophicIndex(const double, const double) const;
 
-  double TraitValueToVolume(const double);
-  double VolumeToTraitValue(const double) const;
+  double traitValueToVolume(const double);
+  double volumeToTraitValue(const double) const;
 
-  int RoundWithProbability(RandomSimple&, const double) const;
+  int roundWithProbability(RandomSimple&, const double) const;
 
  private:
-  double CalculateFeedingProbabilityLinear(const unsigned, const double);
-  double CalculateFeedingProbabilityNonLinear(const unsigned, const double);
+  double calculateFeedingProbabilityLinear(const unsigned, const double);
+  double calculateFeedingProbabilityNonLinear(const unsigned, const double);
 
-  double CalculateLinearStarvation(const double, const double, const double, const double) const;
-  double CalculateBetaExponentialStarvation(const double, const double, const double, const double) const;
+  double calculateLinearStarvation(const double, const double, const double, const double) const;
+  double calculateBetaExponentialStarvation(const double, const double, const double, const double) const;
 
   typedef double (HeterotrophProcessor::*function)(const unsigned, const double);
   double (HeterotrophProcessor::*fStarvationProbability)(const unsigned, const double);
 
-  const std::vector<double> mSizeClassBoundaries;
-  const std::vector<double> mLinearFeedingDenominators;
-  const std::vector<double> mHalfSaturationConstants;
+  const std::vector<double> sizeClassBoundaries_;
+  const std::vector<double> linearFeedingDenominators_;
+  const std::vector<double> halfSaturationConstants_;
 
-  const double mPreferredPreyVolumeRatio;
-  const double mPreferenceFunctionWidth;
-  const double mFractionalMetabolicExpense;
-  const double mMetabolicIndex;
-  const double mNumberOfSizeClasses;
+  const double preferredPreyVolumeRatio_;
+  const double preferenceFunctionWidth_;
+  const double fractionalMetabolicExpense_;
+  const double metabolicIndex_;
+  const double numberOfSizeClasses_;
 
-  const double mLargestVolumeExponent;
-  const double mSmallestVolumeExponent;
+  const double largestVolumeExponent_;
+  const double smallestVolumeExponent_;
 
-  const double mPreferenceDenominator;
+  const double preferenceDenominator_;
 };
 
 #endif

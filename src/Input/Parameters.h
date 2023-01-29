@@ -13,158 +13,158 @@ class Parameters {
 
   static Parameters* Get();
 
-  bool Initialise(const std::vector<std::vector<std::string>>&);
+  bool initialise(const std::vector<std::vector<std::string>>&);
 
   // Getters
-  unsigned& GetRunTimeInSeconds();
-  unsigned& GetRandomSeed();
-  unsigned& GetSamplingRate();
-  unsigned& GetNumberOfSizeClasses();
+  unsigned& getRunTimeInSeconds();
+  unsigned& getRandomSeed();
+  unsigned& getSamplingRate();
+  unsigned& getNumberOfSizeClasses();
 
-  bool GetReadModelState();
-  bool GetWriteModelState();
-  bool GetUseLinearFeeding();
+  bool getReadModelState();
+  bool getWriteModelState();
+  bool getUseLinearFeeding();
 
-  double& GetInitialAutotrophVolume();
-  double& GetInitialHeterotrophVolume();
-  double& GetMinimumHeterotrophicVolume();
+  double& getInitialAutotrophVolume();
+  double& getInitialHeterotrophVolume();
+  double& getMinimumHeterotrophicVolume();
 
-  double& GetSmallestIndividualVolume();
-  double& GetLargestIndividualVolume();
+  double& getSmallestIndividualVolume();
+  double& getLargestIndividualVolume();
 
-  unsigned& GetPreferredPreyVolumeRatio();
-  double& GetPreferenceFunctionWidth();
+  unsigned& getPreferredPreyVolumeRatio();
+  double& getPreferenceFunctionWidth();
 
-  double& GetSizeClassSubsetFraction();
-  double& GetHalfSaturationConstantFraction();
+  double& getSizeClassSubsetFraction();
+  double& getHalfSaturationConstantFraction();
 
-  double& GetAssimilationEfficiency();
-  double& GetFractionalMetabolicExpense();
-  double& GetMetabolicIndex();
+  double& getAssimilationEfficiency();
+  double& getFractionalMetabolicExpense();
+  double& getMetabolicIndex();
 
-  double& GetMutationProbability();
-  double& GetMutationStandardDeviation();
+  double& getMutationProbability();
+  double& getMutationStandardDeviation();
 
   // Setters
-  void SetRandomSeed(const unsigned);
-  void SetRunTimeInSeconds(const unsigned);
-  void SetSamplingRate(const unsigned);
-  void SetNumberOfSizeClasses(const unsigned);
+  void setRandomSeed(const unsigned);
+  void setRunTimeInSeconds(const unsigned);
+  void setSamplingRate(const unsigned);
+  void setNumberOfSizeClasses(const unsigned);
 
-  void SetReadModelState(const bool);
-  void SetWriteModelState(const bool);
-  void SetUseLinearFeeding(const bool);
+  void setReadModelState(const bool);
+  void setWriteModelState(const bool);
+  void setUseLinearFeeding(const bool);
 
-  void SetInitialAutotrophicVolume(const double);
-  void SetInitialHeterotrophicVolume(const double);
-  void SetMinimumHeterotrophicVolume(const double);
+  void setInitialAutotrophicVolume(const double);
+  void setInitialHeterotrophicVolume(const double);
+  void setMinimumHeterotrophicVolume(const double);
 
-  void SetSmallestIndividualVolume(const double);
-  void SetLargestIndividualVolume(const double);
+  void setSmallestIndividualVolume(const double);
+  void setLargestIndividualVolume(const double);
 
-  void SetPreferredPreyVolumeRatio(const unsigned);
-  void SetPreferenceFunctionWidth(const double);
+  void setPreferredPreyVolumeRatio(const unsigned);
+  void setPreferenceFunctionWidth(const double);
 
-  void SetSizeClassSubsetFraction(const double);
-  void SetHalfSaturationConstantFraction(const double);
+  void setSizeClassSubsetFraction(const double);
+  void setHalfSaturationConstantFraction(const double);
 
-  void SetAssimilationEfficiency(const double);
-  void SetFractionalMetabolicExpense(const double);
-  void SetMetabolicIndex(const double);
+  void setAssimilationEfficiency(const double);
+  void setFractionalMetabolicExpense(const double);
+  void setMetabolicIndex(const double);
 
-  void SetMutationProbability(const double);
-  void SetMutationStandardDeviation(const double);
+  void setMutationProbability(const double);
+  void setMutationStandardDeviation(const double);
 
   // Calculated variables
 
-  double& GetSmallestVolumeExponent();
-  double& GetLargestVolumeExponent();
+  double& getSmallestVolumeExponent();
+  double& getLargestVolumeExponent();
 
-  unsigned& GetAutotrophSizeClassIndex();
+  unsigned& getAutotrophSizeClassIndex();
 
-  double& GetSizeClassBoundary(const unsigned);
-  double& GetSizeClassMidPoint(const unsigned);
+  double& getSizeClassBoundary(const unsigned);
+  double& getSizeClassMidPoint(const unsigned);
 
-  double& GetInterSizeClassPreference(const unsigned, const unsigned);
-  double& GetInterSizeClassVolume(const unsigned, const unsigned);
+  double& getInterSizeClassPreference(const unsigned, const unsigned);
+  double& getInterSizeClassVolume(const unsigned, const unsigned);
 
-  double& GetTotalVolume();
+  double& getTotalVolume();
 
-  unsigned& GetMaximumSizeClassPopulation(const unsigned);
-  double& GetRemainingVolume(const unsigned);
-  double& GetLinearFeedingDenominator(const unsigned);
-  double& GetHalfSaturationConstant(const unsigned);
+  unsigned& getMaximumSizeClassPopulation(const unsigned);
+  double& getRemainingVolume(const unsigned);
+  double& getLinearFeedingDenominator(const unsigned);
+  double& getHalfSaturationConstant(const unsigned);
 
-  const std::vector<double>& GetSizeClassBoundaries();
-  const std::vector<double>& GetSizeClassMidPoints();
+  const std::vector<double>& getSizeClassBoundaries();
+  const std::vector<double>& getSizeClassMidPoints();
 
-  const std::vector<double>& GetLinearFeedingDenominators();
-  const std::vector<double>& GetHalfSaturationConstants();
+  const std::vector<double>& getLinearFeedingDenominators();
+  const std::vector<double>& getHalfSaturationConstants();
 
-  const std::vector<unsigned>& GetMaximumSizeClassPopulations();
+  const std::vector<unsigned>& getMaximumSizeClassPopulations();
 
-  const std::vector<double>& GetInterSizeClassPreferenceVector(const unsigned) const;
-  const std::vector<double>& GetInterSizeClassVolumeVector(const unsigned) const;
+  const std::vector<double>& getInterSizeClassPreferenceVector(const unsigned) const;
+  const std::vector<double>& getInterSizeClassVolumeVector(const unsigned) const;
 
-  const std::vector<std::vector<double>>& GetInterSizeClassPreferenceMatrix() const;
-  const std::vector<std::vector<double>>& GetInterSizeClassVolumeMatrix() const;
+  const std::vector<std::vector<double>>& getInterSizeClassPreferenceMatrix() const;
+  const std::vector<std::vector<double>>& getInterSizeClassVolumeMatrix() const;
 
  private:
   Parameters();
-  void CalculateParameters();
-  bool IsInitialised();
+  void calculateParameters();
+  bool isInitialised();
 
-  static Parameters* mThis;
+  static Parameters* this_;
 
   // User defined constants
-  unsigned mRandomSeed;
-  unsigned mRunTimeInSeconds;
-  unsigned mSamplingRate;
-  unsigned mNumberOfSizeClasses;
+  unsigned randomSeed_;
+  unsigned runTimeInSeconds_;
+  unsigned samplingRate_;
+  unsigned numberOfSizeClasses_;
 
-  bool mReadModelState;
-  bool mWriteModelState;
-  bool mUseLinearFeeding;
+  bool readModelState_;
+  bool writeModelState_;
+  bool useLinearFeeding_;
 
-  double mInitialAutotrophicVolume;
-  double mInitialHeterotrophicVolume;
-  double mMinimumHeterotrophicVolume;
+  double initialAutotrophicVolume_;
+  double initialHeterotrophicVolume_;
+  double minimumHeterotrophicVolume_;
 
-  double mSmallestIndividualVolume;
-  double mLargestIndividualVolume;
-  double mSizeClassSubsetFraction;
-  double mHalfSaturationConstantFraction;
+  double smallestIndividualVolume_;
+  double largestIndividualVolume_;
+  double sizeClassSubsetFraction_;
+  double halfSaturationConstantFraction_;
 
-  unsigned mPreferredPreyVolumeRatio;
-  double mPreferenceFunctionWidth;
+  unsigned preferredPreyVolumeRatio_;
+  double preferenceFunctionWidth_;
 
-  double mAssimilationEfficiency;
-  double mFractionalMetabolicExpense;
-  double mMetabolicIndex;
+  double assimilationEfficiency_;
+  double fractionalMetabolicExpense_;
+  double metabolicIndex_;
 
-  double mMutationProbability;
-  double mMutationStandardDeviation;
+  double mutationProbability_;
+  double mutationStandardDeviation_;
 
   // Calculated variables
-  std::vector<unsigned> mMaximumSizeClassPopulations;
+  std::vector<unsigned> maximumSizeClassPopulations_;
 
-  std::vector<double> mRemainingVolumes;
-  std::vector<double> mLinearFeedingDenominators;
-  std::vector<double> mHalfSaturationConstants;
+  std::vector<double> remainingVolumes_;
+  std::vector<double> linearFeedingDenominators_;
+  std::vector<double> halfSaturationConstants_;
 
-  std::vector<double> mSizeClassBoundaries;
-  std::vector<double> mSizeClassMidPoints;
+  std::vector<double> sizeClassBoundaries_;
+  std::vector<double> sizeClassMidPoints_;
 
-  std::vector<std::vector<double>> mInterSizeClassPreferenceMatrix;
-  std::vector<std::vector<double>> mInterSizeClassVolumeMatrix;
+  std::vector<std::vector<double>> interSizeClassPreferenceMatrix_;
+  std::vector<std::vector<double>> interSizeClassVolumeMatrix_;
 
-  std::array<bool, Constants::eMutationStandardDeviation + 1> mParametersInitialised;
+  std::array<bool, constants::eMutationStandardDeviation + 1> parametersInitialised_;
 
-  double mSmallestVolumeExponent;
-  double mLargestVolumeExponent;
-  double mTotalVolume;
+  double smallestVolumeExponent_;
+  double largestVolumeExponent_;
+  double totalVolume_;
 
-  unsigned mAutotrophSizeClassIndex;
+  unsigned autotrophSizeClassIndex_;
 };
 
 #endif

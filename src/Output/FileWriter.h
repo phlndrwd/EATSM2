@@ -10,18 +10,18 @@ class FileWriter {
   FileWriter();
   ~FileWriter();
 
-  void WriteOutputData(Environment&);
+  void writeOutputData(Environment&);
 
  private:
-  void InitialiseOutputDirectory();
-  bool WriteInputFiles();
+  void initialiseOutputDirectory();
+  bool writeInputFiles();
 
-  bool WriteVectorDatums();
-  bool WriteMatrixDatums();
-  bool WriteStateFile(Environment&);
+  bool writeVectorDatums();
+  bool writeMatrixDatums();
+  bool writeStateFile(Environment&);
 
-  std::string mOutputPath;
-  std::string mDataSetDirectoryName;
+  std::string outputPath_;
+  std::string dataSetDirectoryName_;
 };
 
 #endif

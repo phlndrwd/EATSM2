@@ -10,17 +10,17 @@ class Environment {
   Environment();
   ~Environment();
 
-  void Update();
-  bool RecordData();
+  void update();
+  bool recordData();
 
-  Nutrient& GetNutrient();
-  Autotrophs& GetAutotrophs();
-  Heterotrophs& GetHeterotrophs();
+  Nutrient& getNutrient();
+  Autotrophs& getAutotrophs();
+  Heterotrophs& getHeterotrophs();
 
  private:
-  Nutrient mNutrient;
-  Autotrophs mAutotrophs;
-  Heterotrophs mHeterotrophs;
+  Nutrient nutrient_;
+  Autotrophs autotrophs_;
+  Heterotrophs heterotrophs_;
 };
 
 #endif
