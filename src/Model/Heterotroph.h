@@ -17,10 +17,7 @@ class Heterotroph {
   ~Heterotroph();
   Heterotroph& operator=(const Heterotroph&);
   Heterotroph& operator=(const Heterotroph&&);
-
-  //bool operator==(const Heterotroph&);
-
-  Heterotroph* getChild(RandomSimple&, HeterotrophProcessor&);
+  Heterotroph* getChild(RandomSimple&, const HeterotrophProcessor&);
 
   double consumePreyVolume(const double);
   double metabolise(const double);

@@ -154,7 +154,7 @@ Heterotroph& Heterotroph::operator=(const Heterotroph&& individual) {
 //  return (volumeActual_ == individual.volumeActual_ && volumeHeritable_ == individual.volumeHeritable_);
 //}
 
-Heterotroph* Heterotroph::getChild(RandomSimple& random, HeterotrophProcessor& heterotrophProcessor) {
+Heterotroph* Heterotroph::getChild(RandomSimple& random, const HeterotrophProcessor& heterotrophProcessor) {
   Traits childTraits = traits_.getChildTraits(random);
 
   double childVolumeHeritable = 0;

@@ -28,7 +28,7 @@ class HeterotrophProcessor {
   double calculateHerbivoreTrophicIndex(const double) const;
   double calculateCarnivoreTrophicIndex(const double, const double) const;
 
-  double traitValueToVolume(const double);
+  double traitValueToVolume(const double) const;
   double volumeToTraitValue(const double) const;
 
   int roundWithProbability(RandomSimple&, const double) const;

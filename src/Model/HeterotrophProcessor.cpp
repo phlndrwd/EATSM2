@@ -168,7 +168,7 @@ double HeterotrophProcessor::calculateBetaExponentialStarvation(const double vol
                     ((volumeActual - volumeMinimum) * starvationMultiplier));
 }
 
-double HeterotrophProcessor::traitValueToVolume(const double traitValue) {
+double HeterotrophProcessor::traitValueToVolume(const double traitValue) const {
   double volumeExponent = traitValue * (largestVolumeExponent_ - smallestVolumeExponent_) + smallestVolumeExponent_;
   return std::pow(10, volumeExponent);
 }
