@@ -20,8 +20,8 @@ include(${CMAKE_SOURCE_DIR}/src/Model/CMakeLists.txt)
 include(${CMAKE_SOURCE_DIR}/src/Output/CMakeLists.txt)
 include(${CMAKE_SOURCE_DIR}/src/Tools/CMakeLists.txt)
 
+add_compile_options(-Wall -Wextra -Wpedantic -std=c++17)
 add_executable(EATSM2 ${EATSM2_SOURCES})
 
-install(TARGETS EATSM2
-  LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR})
+install(TARGETS EATSM2 LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR})
 

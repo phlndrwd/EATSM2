@@ -4,9 +4,8 @@
 class TimeStep {
  public:
   TimeStep();
-  ~TimeStep();
 
-  unsigned getTimeStep() const;
+  const unsigned& getTimeStep() const;
 
   bool doRecordData() const;
   void incrementTimeStep();

@@ -1,6 +1,6 @@
 #include "InitialState.h"
 
-#include "HeritableTraits.h"
+#include "Traits.h"
 #include "Heterotroph.h"
 #include "HeterotrophProcessor.h"
 #include "Parameters.h"
@@ -41,7 +41,7 @@ bool InitialState::Initialise(const std::vector<std::vector<std::string>>& rawIn
     double volumeHeritable = heterotrophProcessor.traitValueToVolume(traitValue);
     std::vector<double> heritableTraitValues{traitValue};
     std::vector<bool> areTraitsMutant{false};
-    HeritableTraits heritableTraits(heritableTraitValues, areTraitsMutant);
+    Traits heritableTraits(heritableTraitValues, areTraitsMutant);
     Heterotroph* individual =
         new Heterotroph(heritableTraits, volumeHeritable, volumeActual, sizeClassIndex);
     heterotrophs_[sizeClassIndex].push_back(individual);

@@ -8,7 +8,6 @@
 class Environment {
  public:
   Environment();
-  ~Environment();
 
   void update();
   bool recordData();
@@ -16,6 +15,10 @@ class Environment {
   Nutrient& getNutrient();
   Autotrophs& getAutotrophs();
   Heterotrophs& getHeterotrophs();
+
+  const Nutrient& getNutrient() const;
+  const Autotrophs& getAutotrophs() const;
+  const Heterotrophs& getHeterotrophs() const;
 
  private:
   Nutrient nutrient_;

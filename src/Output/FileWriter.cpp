@@ -12,7 +12,7 @@
 #include "DataRecorder.h"
 #include "Date.h"
 #include "Environment.h"
-#include "HeritableTraits.h"
+#include "Traits.h"
 #include "Heterotroph.h"
 #include "Heterotrophs.h"
 #include "MatrixDatum.h"

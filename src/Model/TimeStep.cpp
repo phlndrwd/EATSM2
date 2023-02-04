@@ -1,14 +1,12 @@
 #include "TimeStep.h"
 #include "Parameters.h"
 
-TimeStep::TimeStep()
-    : samplingRate_(Parameters::Get()->getSamplingRate()) {
+TimeStep::TimeStep() :
+    samplingRate_(Parameters::Get()->getSamplingRate()) {
   timeStep_ = 0;
 }
 
-TimeStep::~TimeStep() {}
-
-unsigned TimeStep::getTimeStep() const {
+const unsigned& TimeStep::getTimeStep() const {
   return timeStep_;
 }
 

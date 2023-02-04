@@ -1,30 +1,31 @@
 #ifndef HETEROTROPH
 #define HETEROTROPH
 
-#include "HeritableTraits.h"
+#include "Traits.h"
 
 class HeterotrophProcessor;
 class RandomSimple;
 
 class Heterotroph {
  public:
-  Heterotroph(const HeritableTraits&, const double, const unsigned);
-  Heterotroph(const HeritableTraits&, const double, const double, const double, const double, const unsigned);
-  Heterotroph(const HeritableTraits&, const double, const double, const unsigned);
-  Heterotroph(const HeritableTraits&, const double, const double, const double, const double, const double,
-              const double, const unsigned, const unsigned, const bool, const bool);
+  Heterotroph() = delete;
+  Heterotroph(const Traits&, const double, const unsigned);
+  Heterotroph(const Traits&, const double, const double, const double, const double, const unsigned);
+  Heterotroph(const Traits&, const double, const double, const unsigned);
   Heterotroph(const Heterotroph&);
   Heterotroph(const Heterotroph&&) noexcept;
   ~Heterotroph();
   Heterotroph& operator=(const Heterotroph&);
-  bool operator==(const Heterotroph&);
+  Heterotroph& operator=(const Heterotroph&&);
 
-  Heterotroph* reproduce(RandomSimple&, HeterotrophProcessor&);
+  //bool operator==(const Heterotroph&);
+
+  Heterotroph* getChild(RandomSimple&, HeterotrophProcessor&);
 
   double consumePreyVolume(const double);
   double metabolise(const double);
 
-  HeritableTraits& getHeritableTraits();
+  Traits& getHeritableTraits();
   double getTrophicLevel() const;
   unsigned getSizeClassIndex() const;
   unsigned getAge() const;
@@ -47,9 +48,9 @@ class Heterotroph {
   void setDead();
 
  private:
-  HeritableTraits heritableTraits_;
+  Traits traits_;
 
-  const double assimilationEfficiency_;
+  double assimilationEfficiency_;
 
   double volumeHeritable_;
   double volumeMinimum_;

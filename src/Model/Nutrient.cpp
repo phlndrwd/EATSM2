@@ -14,17 +14,15 @@ Nutrient::Nutrient() {
   std::cout << "Nutrient pool created." << std::endl;
 }
 
-Nutrient::~Nutrient() {}
-
 void Nutrient::recordData() {
   DataRecorder::get()->addDataTo("NutrientVolume", volume_);
   DataRecorder::get()->addDataTo("ToNutrientFlux", toFlux_);
   toFlux_ = 0;
 }
 
-double Nutrient::getVolume() { return volume_; }
-
-void Nutrient::setVolume(const double volume) { volume_ = volume; }
+const double& Nutrient::getVolume() const {
+  return volume_;
+}
 
 void Nutrient::addToVolume(const double volume) {
   volume_ += volume;

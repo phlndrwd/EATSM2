@@ -12,8 +12,6 @@ RandomSimple::RandomSimple() {
   twoPi_ = 2.0 * M_PI;
 }
 
-RandomSimple::~RandomSimple() {}
-
 void RandomSimple::reset() {
   w_ = 521288629;
   z_ = 362436069;

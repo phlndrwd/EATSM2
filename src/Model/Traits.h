@@ -1,5 +1,5 @@
-#ifndef HERITABLETRAITS
-#define HERITABLETRAITS
+#ifndef TRAITS
+#define TRAITS
 
 #include <vector>
 
@@ -7,13 +7,19 @@
 
 class RandomSimple;
 
-class HeritableTraits {
+class Traits {
  public:
-  HeritableTraits(const std::vector<double>&, const std::vector<bool>&);
-  ~HeritableTraits();
-  HeritableTraits& operator=(const HeritableTraits&);
+  Traits() = delete;
+  Traits(const std::vector<double>&, const std::vector<bool>&);
+  ~Traits();
 
-  HeritableTraits getChildTraits(RandomSimple&);
+  Traits(const Traits&);
+  Traits(Traits&&) noexcept;
+
+  Traits& operator=(const Traits&);
+  Traits& operator=(Traits&&) noexcept;
+
+  const Traits getChildTraits(RandomSimple&);
   const std::vector<double>& getValues() const;
   const std::vector<bool>& areTraitsMutant() const;
 
@@ -23,8 +29,8 @@ class HeritableTraits {
   void setValue(const constants::eHeritableTraitIndices, const double);
 
  private:
-  const double mutationProbability_;
-  const double mutationStandardDeviation_;
+  double mutationProbability_;
+  double mutationStandardDeviation_;
 
   std::vector<double> values_;
   std::vector<bool> areMutantTraits_;

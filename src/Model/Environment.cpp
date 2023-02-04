@@ -2,11 +2,12 @@
 
 #include<iostream>
 
-Environment::Environment() : nutrient_(), autotrophs_(nutrient_), heterotrophs_(nutrient_, autotrophs_) {
+Environment::Environment() :
+    nutrient_(),
+    autotrophs_(nutrient_),
+    heterotrophs_(nutrient_, autotrophs_) {
   std::cout << "Environment created." << std::endl << std::endl;
 }
-
-Environment::~Environment() {}
 
 void Environment::update() {
   autotrophs_.update();
@@ -32,3 +33,16 @@ Autotrophs& Environment::getAutotrophs() {
 Heterotrophs& Environment::getHeterotrophs() {
   return heterotrophs_;
 }
+
+const Nutrient& Environment::getNutrient() const {
+  return nutrient_;
+}
+
+const Autotrophs& Environment::getAutotrophs() const {
+  return autotrophs_;
+}
+
+const Heterotrophs& Environment::getHeterotrophs() const {
+  return heterotrophs_;
+}
+

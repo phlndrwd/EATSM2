@@ -5,10 +5,10 @@
 #include "RandomSimple.h"
 
 // For model initialisation.
-Heterotroph::Heterotroph(const HeritableTraits& heritableTraits, const double volumeHeritable,
-                         const unsigned sizeClassIndex)
-    : heritableTraits_(heritableTraits.getValues(), heritableTraits.areTraitsMutant()),
-      assimilationEfficiency_(Parameters::Get()->getAssimilationEfficiency()) {
+Heterotroph::Heterotroph(const Traits& heritableTraits, const double volumeHeritable,
+                         const unsigned sizeClassIndex) :
+    traits_(heritableTraits.getValues(), heritableTraits.areTraitsMutant()),
+    assimilationEfficiency_(Parameters::Get()->getAssimilationEfficiency()) {
   volumeHeritable_ = volumeHeritable;
   sizeClassIndex_ = sizeClassIndex;
 
@@ -25,11 +25,11 @@ Heterotroph::Heterotroph(const HeritableTraits& heritableTraits, const double vo
 }
 
 // For reproduction.
-Heterotroph::Heterotroph(const HeritableTraits& heritableTraits, const double volumeHeritable,
+Heterotroph::Heterotroph(const Traits& heritableTraits, const double volumeHeritable,
                          const double volumeActual, const double volumeMinimum, const double trophicLevel,
-                         const unsigned sizeClassIndex)
-    : heritableTraits_(heritableTraits.getValues(), heritableTraits.areTraitsMutant()),
-      assimilationEfficiency_(Parameters::Get()->getAssimilationEfficiency()) {
+                         const unsigned sizeClassIndex) :
+    traits_(heritableTraits),
+    assimilationEfficiency_(Parameters::Get()->getAssimilationEfficiency()) {
   volumeHeritable_ = volumeHeritable;
   volumeActual_ = volumeActual;
   volumeMinimum_ = volumeMinimum;
@@ -46,10 +46,10 @@ Heterotroph::Heterotroph(const HeritableTraits& heritableTraits, const double vo
 }
 
 // For model restart.
-Heterotroph::Heterotroph(const HeritableTraits& heritableTraits, const double volumeHeritable,
-                         const double volumeActual, const unsigned sizeClassIndex)
-    : heritableTraits_(heritableTraits.getValues(), heritableTraits.areTraitsMutant()),
-      assimilationEfficiency_(Parameters::Get()->getAssimilationEfficiency()) {
+Heterotroph::Heterotroph(const Traits& heritableTraits, const double volumeHeritable,
+                         const double volumeActual, const unsigned sizeClassIndex) :
+    traits_(heritableTraits),
+    assimilationEfficiency_(Parameters::Get()->getAssimilationEfficiency()) {
   volumeActual_ = volumeActual;
   sizeClassIndex_ = sizeClassIndex;
 
@@ -65,27 +65,9 @@ Heterotroph::Heterotroph(const HeritableTraits& heritableTraits, const double vo
   isDead_ = false;
 }
 
-Heterotroph::Heterotroph(const HeritableTraits& heritableTraits, const double volumeHeritable,
-                         const double volumeMinimum, const double volumeReproduction, const double volumeActual,
-                         const double trophicLevel, const double starvationMultiplier, const unsigned sizeClassIndex,
-                         const unsigned age, const bool hasFed, const bool isDead)
-    : heritableTraits_(heritableTraits.getValues(), heritableTraits.areTraitsMutant()),
-      assimilationEfficiency_(Parameters::Get()->getAssimilationEfficiency()),
-      volumeHeritable_(std::move(volumeHeritable)),
-      volumeMinimum_(std::move(volumeMinimum)),
-      volumeReproduction_(std::move(volumeReproduction)),
-      volumeActual_(std::move(volumeActual)),
-      trophicLevel_(std::move(trophicLevel)),
-      starvationMultiplier_(std::move(starvationMultiplier)),
-      sizeClassIndex_(std::move(sizeClassIndex)),
-      age_(std::move(age)),
-      hasFed_(std::move(hasFed)),
-      isDead_(std::move(isDead)) {}
-
-// Copy constructor
-Heterotroph::Heterotroph(const Heterotroph& individual)
-    : heritableTraits_(individual.heritableTraits_.getValues(), individual.heritableTraits_.areTraitsMutant()),
-      assimilationEfficiency_(Parameters::Get()->getAssimilationEfficiency()) {
+Heterotroph::Heterotroph(const Heterotroph& individual) :
+    traits_(individual.traits_),
+    assimilationEfficiency_(individual.assimilationEfficiency_) {
   volumeHeritable_ = individual.volumeHeritable_;
   volumeMinimum_ = individual.volumeMinimum_;
   volumeReproduction_ = individual.volumeReproduction_;
@@ -102,10 +84,9 @@ Heterotroph::Heterotroph(const Heterotroph& individual)
   isDead_ = individual.isDead_;
 }
 
-// Move constructor
-Heterotroph::Heterotroph(const Heterotroph&& individual) noexcept
-    : heritableTraits_(individual.heritableTraits_.getValues(), individual.heritableTraits_.areTraitsMutant()),
-      assimilationEfficiency_(Parameters::Get()->getAssimilationEfficiency()) {
+Heterotroph::Heterotroph(const Heterotroph&& individual) noexcept :
+    traits_(std::move(individual.traits_)),
+    assimilationEfficiency_(std::move(individual.assimilationEfficiency_)) {
   volumeHeritable_ = std::move(individual.volumeHeritable_);
   volumeMinimum_ = std::move(individual.volumeMinimum_);
   volumeReproduction_ = std::move(individual.volumeReproduction_);
@@ -124,37 +105,9 @@ Heterotroph::Heterotroph(const Heterotroph&& individual) noexcept
 
 Heterotroph::~Heterotroph() {}
 
-Heterotroph* Heterotroph::reproduce(RandomSimple& random, HeterotrophProcessor& heterotrophProcessor) {
-  HeritableTraits childHeritableTraits = heritableTraits_.getChildTraits(random);
- Heterotroph* childIndividual = 0;
-
-  double childVolumeHeritable = 0;
-  double childVolumeActual = 0;
-  double childVolumeMinimum = 0;
-
-  if (childHeritableTraits.isTraitMutant(constants::eVolume) == false) {
-    childVolumeActual = volumeActual_ * constants::kReproductionMultiplier;
-    childVolumeHeritable = volumeHeritable_;
-    childVolumeMinimum = volumeMinimum_;
-  } else {
-    childVolumeHeritable = heterotrophProcessor.traitValueToVolume(childHeritableTraits.getValue(constants::eVolume));
-    childVolumeMinimum = childVolumeHeritable * constants::kMinimumFractionalVolume;
-
-    if (childVolumeHeritable < volumeActual_)
-      childVolumeActual = childVolumeHeritable;
-    else
-      childVolumeActual = volumeActual_ * constants::kReproductionMultiplier;
-  }
-  volumeActual_ = volumeActual_ - childVolumeActual;
-  childIndividual = new Heterotroph(childHeritableTraits, childVolumeHeritable, childVolumeActual, childVolumeMinimum,
-                                    trophicLevel_, sizeClassIndex_);
-
-  return childIndividual;
-}
-
 Heterotroph& Heterotroph::operator=(const Heterotroph& individual) {
   if (this != &individual) {
-    heritableTraits_ = individual.heritableTraits_;
+    traits_ = individual.traits_;
 
     volumeHeritable_ = individual.volumeHeritable_;
     volumeMinimum_ = individual.volumeMinimum_;
@@ -174,8 +127,56 @@ Heterotroph& Heterotroph::operator=(const Heterotroph& individual) {
   return *this;
 }
 
-bool Heterotroph::operator==(const Heterotroph& individual) {
-  return (volumeActual_ == individual.volumeActual_ && volumeHeritable_ == individual.volumeHeritable_);
+Heterotroph& Heterotroph::operator=(const Heterotroph&& individual) {
+  if (this != &individual) {
+    traits_ = std::move(individual.traits_);
+    assimilationEfficiency_ = std::move(individual.assimilationEfficiency_);
+
+    volumeHeritable_ = std::move(individual.volumeHeritable_);
+    volumeMinimum_ = std::move(individual.volumeMinimum_);
+    volumeReproduction_ = std::move(individual.volumeReproduction_);
+
+    volumeActual_ = std::move(individual.volumeActual_);
+    trophicLevel_ = std::move(individual.trophicLevel_);
+
+    starvationMultiplier_ = std::move(individual.starvationMultiplier_);
+
+    sizeClassIndex_ = std::move(individual.sizeClassIndex_);
+    age_ = std::move(individual.age_);
+
+    hasFed_ = std::move(individual.hasFed_);
+    isDead_ = std::move(individual.isDead_);
+  }
+  return *this;
+}
+
+//bool Heterotroph::operator==(const Heterotroph& individual) {
+//  return (volumeActual_ == individual.volumeActual_ && volumeHeritable_ == individual.volumeHeritable_);
+//}
+
+Heterotroph* Heterotroph::getChild(RandomSimple& random, HeterotrophProcessor& heterotrophProcessor) {
+  Traits childTraits = traits_.getChildTraits(random);
+
+  double childVolumeHeritable = 0;
+  double childVolumeActual = 0;
+  double childVolumeMinimum = 0;
+
+  if (childTraits.isTraitMutant(constants::eVolume) == false) {
+    childVolumeActual = volumeActual_ * constants::kReproductionMultiplier;
+    childVolumeHeritable = volumeHeritable_;
+    childVolumeMinimum = volumeMinimum_;
+  } else {
+    childVolumeHeritable = heterotrophProcessor.traitValueToVolume(childTraits.getValue(constants::eVolume));
+    childVolumeMinimum = childVolumeHeritable * constants::kMinimumFractionalVolume;
+
+    if (childVolumeHeritable < volumeActual_)
+      childVolumeActual = childVolumeHeritable;
+    else
+      childVolumeActual = volumeActual_ * constants::kReproductionMultiplier;
+  }
+  volumeActual_ = volumeActual_ - childVolumeActual;
+
+  return new Heterotroph(childTraits, childVolumeHeritable, childVolumeActual, childVolumeMinimum, trophicLevel_, sizeClassIndex_);
 }
 
 double Heterotroph::consumePreyVolume(const double preyVolume) {
@@ -194,8 +195,8 @@ double Heterotroph::metabolise(const double metabolicDeduction) {
   return metabolicDeduction;
 }
 
-HeritableTraits& Heterotroph::getHeritableTraits() {
-  return heritableTraits_;
+Traits& Heterotroph::getHeritableTraits() {
+  return traits_;
 }
 
 double Heterotroph::getTrophicLevel() const {

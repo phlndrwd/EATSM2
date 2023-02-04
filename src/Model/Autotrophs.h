@@ -5,18 +5,16 @@ class Nutrient;
 
 class Autotrophs {
  public:
+  Autotrophs() = delete;
   Autotrophs(Nutrient&);
-  ~Autotrophs();
-
-  void recordData();
 
   void update();
-
-  double getVolume();
-  void setVolume(const double);
-
   void addToVolume(const double);
   void subtractFromVolume(const double);
+  void recordData();
+
+  double& getVolume();
+  const double& getVolume() const;
 
  private:
   Nutrient& nutrient_;

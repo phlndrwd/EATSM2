@@ -4,12 +4,10 @@
 class Nutrient {
  public:
   Nutrient();
-  ~Nutrient();
 
   void recordData();
 
-  double getVolume();
-  void setVolume(const double);
+  const double& getVolume() const;
 
   void addToVolume(const double);
   void subtractFromVolume(const double);

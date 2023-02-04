@@ -9,7 +9,6 @@
 class RandomSimple {
  public:
   RandomSimple();
-  ~RandomSimple();
 
   void reset();
 

@@ -4,7 +4,7 @@
 #include <iostream>
 
 #include "Autotrophs.h"
-#include "HeritableTraits.h"
+#include "Traits.h"
 #include "Heterotroph.h"
 #include "InitialState.h"
 #include "Nutrient.h"
@@ -62,7 +62,7 @@ void Heterotrophs::createInitialPopulation() {
       initialHeterotrophVolume -= individualVolume;
       std::vector<double> heritableTraitValues{traitValue};
       std::vector<bool> areTraitsMutant{false};
-      HeritableTraits heritableTraits(heritableTraitValues, areTraitsMutant);
+      Traits heritableTraits(heritableTraitValues, areTraitsMutant);
       individuals_[firstPopulatedIndex].push_back(
           new Heterotroph(heritableTraits, individualVolume, firstPopulatedIndex));
       ++initialPopulationSize;
@@ -238,7 +238,7 @@ void Heterotrophs::reproduction() {
     for (std::size_t individualIndex = 0; individualIndex < getSizeClassPopulation(sizeClassIndex); ++individualIndex) {
       Heterotroph* individual = getIndividual(sizeClassIndex, individualIndex);
       if (individual->getVolumeActual() >= individual->getVolumeReproduction()) {
-        Heterotroph* childIndividual = individual->reproduce(random_, heterotrophProcessor_);
+        Heterotroph* childIndividual = individual->getChild(random_, heterotrophProcessor_);
 
         // Parent data needs to be collected before size class is updated.
         heterotrophData_.incrementParentFrequencies(individual->getSizeClassIndex());
