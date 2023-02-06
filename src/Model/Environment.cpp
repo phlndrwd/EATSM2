@@ -2,10 +2,13 @@
 
 #include<iostream>
 
+#include "Parameters.h"
+
 Environment::Environment() :
     nutrient_(),
     autotrophs_(nutrient_),
-    heterotrophs_(nutrient_, autotrophs_) {
+    heterotrophs_(nutrient_, autotrophs_),
+    population_(nutrient_, autotrophs_, Parameters::Get()->getNumberOfSizeClasses()) {
   std::cout << "Environment created." << std::endl << std::endl;
 }
 

@@ -4,11 +4,9 @@
 #include <cmath>
 #include <random>
 
-#include "Parameters.h"
-
-RandomSimple::RandomSimple() {
+RandomSimple::RandomSimple(unsigned seed) {
   reset();
-  setSeed(Parameters::Get()->getRandomSeed());
+  setSeed(seed);
   twoPi_ = 2.0 * M_PI;
 }
 

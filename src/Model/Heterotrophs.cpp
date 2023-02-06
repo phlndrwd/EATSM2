@@ -3,11 +3,9 @@
 #include <algorithm>
 #include <iostream>
 
-#include "Autotrophs.h"
 #include "Traits.h"
 #include "Heterotroph.h"
 #include "InitialState.h"
-#include "Nutrient.h"
 #include "Parameters.h"
 
 Heterotrophs::Heterotrophs(Nutrient& nutrient, Autotrophs& autotrophs)

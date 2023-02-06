@@ -1,13 +1,12 @@
 #ifndef HETEROTROPHS
 #define HETEROTROPHS
 
+#include "Autotrophs.h"
 #include "HeterotrophData.h"
 #include "HeterotrophProcessor.h"
+#include "Nutrient.h"
 #include "RandomSimple.h"
 #include "Timer.h"
-
-class Autotrophs;
-class Nutrient;
 
 class Heterotrophs {
  public:

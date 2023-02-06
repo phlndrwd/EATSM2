@@ -8,7 +8,7 @@
  */
 class RandomSimple {
  public:
-  RandomSimple();
+  RandomSimple(unsigned seed = 0);
 
   void reset();
 

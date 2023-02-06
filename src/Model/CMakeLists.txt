@@ -11,6 +11,10 @@ list(APPEND EATSM2_SOURCES
   ${CMAKE_CURRENT_LIST_DIR}/Heterotrophs.h
   ${CMAKE_CURRENT_LIST_DIR}/Nutrient.cpp
   ${CMAKE_CURRENT_LIST_DIR}/Nutrient.h
+  ${CMAKE_CURRENT_LIST_DIR}/Population.cpp
+  ${CMAKE_CURRENT_LIST_DIR}/Population.h
+  ${CMAKE_CURRENT_LIST_DIR}/SizeClass.cpp
+  ${CMAKE_CURRENT_LIST_DIR}/SizeClass.h
   ${CMAKE_CURRENT_LIST_DIR}/TimeStep.cpp
   ${CMAKE_CURRENT_LIST_DIR}/TimeStep.h
   ${CMAKE_CURRENT_LIST_DIR}/Traits.cpp

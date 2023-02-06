@@ -4,6 +4,7 @@
 #include "Autotrophs.h"
 #include "Heterotrophs.h"
 #include "Nutrient.h"
+#include "Population.h"
 
 class Environment {
  public:
@@ -24,6 +25,7 @@ class Environment {
   Nutrient nutrient_;
   Autotrophs autotrophs_;
   Heterotrophs heterotrophs_;
+  Population population_;
 };
 
 #endif
