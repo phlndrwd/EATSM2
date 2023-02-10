@@ -14,6 +14,7 @@ class Population {
   Population(Nutrient&, Autotrophs&, unsigned);
 
   void update();
+  bool recordData();
 
  private:
   Nutrient& nutrient_;

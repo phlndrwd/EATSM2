@@ -9,7 +9,7 @@ class RandomSimple;
 class Heterotroph {
  public:
   Heterotroph() = delete;
-  Heterotroph(const Traits&, const double, const unsigned);
+  Heterotroph(const Traits&, const double);
   Heterotroph(const Traits&, const double, const double, const double, const double, const unsigned);
   Heterotroph(const Traits&, const double, const double, const unsigned);
   Heterotroph(const Heterotroph&);

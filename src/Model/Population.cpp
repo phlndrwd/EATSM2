@@ -10,7 +10,9 @@ Population::Population(Nutrient& nutrient, Autotrophs& autotrophs, unsigned numb
     numberOfSizeClasses_(numberOfSizeClasses),
     random_(Parameters::Get()->getRandomSeed()) {
   for(unsigned index = 0; index < numberOfSizeClasses_; ++index) {
-    sizeClasses_.push_back(SizeClass(random_, Parameters::Get()->getMaximumSizeClassPopulation(index)));
+    sizeClasses_.push_back(SizeClass(random_,
+                                     Parameters::Get()->getSizeClassMidPoint(index),
+                                     Parameters::Get()->getMaximumSizeClassPopulation(index)));
   }
 }
 
@@ -20,4 +22,8 @@ void Population::update() {
   {
     sizeClass.update();
   });
+}
+
+bool Population::recordData() {
+  return true;
 }

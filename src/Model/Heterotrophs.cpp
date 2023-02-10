@@ -62,7 +62,7 @@ void Heterotrophs::createInitialPopulation() {
       std::vector<bool> areTraitsMutant{false};
       Traits heritableTraits(heritableTraitValues, areTraitsMutant);
       individuals_[firstPopulatedIndex].push_back(
-          new Heterotroph(heritableTraits, individualVolume, firstPopulatedIndex));
+          new Heterotroph(heritableTraits, individualVolume));
       ++initialPopulationSize;
     }
 

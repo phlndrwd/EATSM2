@@ -3,14 +3,26 @@
 #include <algorithm>
 #include <stdexcept>
 
-SizeClass::SizeClass(RandomSimple& random, const unsigned maxPopulation) :
+#include <Parameters.h>
+
+SizeClass::SizeClass(RandomSimple& random, const double sizeClassMidPoint, const unsigned maxPopulation) :
     random_(random),
+    sizeClassMidPoint_(sizeClassMidPoint),
     maxPopulation_(maxPopulation)
 {
   heterotrophs_.reserve(maxPopulation);
   pointer_ = heterotrophs_.begin();
+
+  double individualVolume = sizeClassMidPoint_;
+  double traitValue = heterotrophProcessor_.volumeToTraitValue(individualVolume);
+
+  std::vector<double> heritableTraitValues{traitValue};
+  std::vector<bool> areTraitsMutant{false};
+  Traits heritableTraits(heritableTraitValues, areTraitsMutant);
+
   for(unsigned index = 0; index < maxPopulation; ++index) {
     dead_.push(index);
+    heterotrophs_.push_back(Heterotroph(heritableTraits, individualVolume));
   }
 }
 

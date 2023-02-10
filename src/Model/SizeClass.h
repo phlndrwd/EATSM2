@@ -5,12 +5,13 @@
 #include <vector>
 
 #include "Heterotroph.h"
+#include "HeterotrophProcessor.h"
 #include "RandomSimple.h"
 
 class SizeClass {
  public:
   SizeClass() = delete;
-  SizeClass(RandomSimple&, const unsigned);
+  SizeClass(RandomSimple&, const double, const unsigned);
 
   void update();
 
@@ -23,10 +24,10 @@ class SizeClass {
   void addHeterotroph(Heterotroph);
 
  private:
-  //void metabolisation(Heterotroph&);
-
+  HeterotrophProcessor heterotrophProcessor_;
 
   RandomSimple& random_;
+  const double sizeClassMidPoint_;
   const unsigned maxPopulation_;
 
   std::vector<Heterotroph> heterotrophs_;

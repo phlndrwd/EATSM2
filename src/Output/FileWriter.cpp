@@ -173,17 +173,17 @@ bool FileWriter::writeStateFile(Environment& environment) {
       modelStateFileStream << environment.getNutrient().getVolume() << std::endl;
       modelStateFileStream << environment.getAutotrophs().getVolume() << std::endl;
 
-      for (unsigned sizeClassIndex = 0; sizeClassIndex < Parameters::Get()->getNumberOfSizeClasses();
-           ++sizeClassIndex) {
-        for (std::size_t individualIndex = 0;
-             individualIndex < environment.getHeterotrophs().getSizeClassPopulation(sizeClassIndex);
-             ++individualIndex) {
-          Heterotroph* individual = environment.getHeterotrophs().getIndividual(sizeClassIndex, individualIndex);
-          modelStateFileStream << individual->getHeritableTraits().getValue(constants::eVolume)
-                               << constants::kDataDelimiterValue << individual->getVolumeActual()
-                               << constants::kDataDelimiterValue << individual->getSizeClassIndex() << std::endl;
-        }
-      }
+//      for (unsigned sizeClassIndex = 0; sizeClassIndex < Parameters::Get()->getNumberOfSizeClasses();
+//           ++sizeClassIndex) {
+//        for (std::size_t individualIndex = 0;
+//             individualIndex < environment.getHeterotrophs().getSizeClassPopulation(sizeClassIndex);
+//             ++individualIndex) {
+//          Heterotroph* individual = environment.getHeterotrophs().getIndividual(sizeClassIndex, individualIndex);
+//          modelStateFileStream << individual->getHeritableTraits().getValue(constants::eVolume)
+//                               << constants::kDataDelimiterValue << individual->getVolumeActual()
+//                               << constants::kDataDelimiterValue << individual->getSizeClassIndex() << std::endl;
+//        }
+//      }
       modelStateFileStream.close();
     } else
       return false;

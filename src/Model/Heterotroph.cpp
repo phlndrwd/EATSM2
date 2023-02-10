@@ -5,12 +5,10 @@
 #include "RandomSimple.h"
 
 // For model initialisation.
-Heterotroph::Heterotroph(const Traits& heritableTraits, const double volumeHeritable,
-                         const unsigned sizeClassIndex) :
+Heterotroph::Heterotroph(const Traits& heritableTraits, const double volumeHeritable) :
     traits_(heritableTraits.getValues(), heritableTraits.areTraitsMutant()),
     assimilationEfficiency_(Parameters::Get()->getAssimilationEfficiency()) {
   volumeHeritable_ = volumeHeritable;
-  sizeClassIndex_ = sizeClassIndex;
 
   volumeActual_ = volumeHeritable_;
   volumeMinimum_ = volumeHeritable_ * constants::kMinimumFractionalVolume;
