@@ -26,8 +26,6 @@ HeterotrophProcessor::HeterotrophProcessor()
     fStarvationProbability = &HeterotrophProcessor::calculateFeedingProbabilityNonLinear;
 }
 
-HeterotrophProcessor::~HeterotrophProcessor() {}
-
 double HeterotrophProcessor::calculatePreferenceForPrey(const double grazerVolume, const double preyVolume) const {
   return std::exp(-std::pow((std::log((preferredPreyVolumeRatio_ * preyVolume) / grazerVolume)), 2) /
                   preferenceDenominator_);

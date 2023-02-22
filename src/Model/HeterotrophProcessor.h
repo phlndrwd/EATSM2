@@ -9,7 +9,6 @@ class RandomSimple;
 class HeterotrophProcessor {
  public:
   HeterotrophProcessor();
-  ~HeterotrophProcessor();
 
   double calculatePreferenceForPrey(const double, const double) const;
   double calculateFeedingProbability(const unsigned, const double);

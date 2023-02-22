@@ -1,6 +1,7 @@
 #include "SizeClass.h"
 
 #include <algorithm>
+#include <iostream>
 #include <stdexcept>
 
 #include <Parameters.h>
@@ -27,9 +28,10 @@ SizeClass::SizeClass(RandomSimple& random, const double sizeClassMidPoint, const
 }
 
 void SizeClass::update() {
-  std::for_each(std::begin(heterotrophs_), std::end(heterotrophs_),
-  [] (Heterotroph& heterotroph)
+  std::for_each(std::begin(alive_), std::end(alive_),
+  [&] (unsigned& index)
   {
+    Heterotroph& heterotroph = heterotrophs_[index];
     heterotroph.setDead();
   });}
 
@@ -61,7 +63,9 @@ const Heterotroph& SizeClass::getHeterotroph(const unsigned index) const {
 Heterotroph SizeClass::removeHeterotroph(const unsigned index) {
   if(alive_.size() != 0) {
     dead_.push(index);
-    alive_.push(index);
+
+
+    //alive_.find_and_remove(index);
     return std::move(heterotrophs_[index]);
   } else {
     throw std::runtime_error("Size class is empty...");
@@ -72,7 +76,7 @@ void SizeClass::addHeterotroph(Heterotroph heterotroph) {
   if(dead_.size() != 0) {
     unsigned index = dead_.front();
     dead_.pop();
-    alive_.push(index);
+    alive_.push_back(index);
     heterotrophs_[index] = std::move(heterotroph);
   } else {
     throw std::runtime_error("Size class is full...");

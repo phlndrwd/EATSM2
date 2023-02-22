@@ -32,7 +32,7 @@ class SizeClass {
 
   std::vector<Heterotroph> heterotrophs_;
   std::vector<Heterotroph>::iterator pointer_;
-  std::queue<unsigned> alive_;
+  std::vector<unsigned> alive_;
   std::queue<unsigned> dead_;
 
 };
