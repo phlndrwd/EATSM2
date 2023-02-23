@@ -28,7 +28,6 @@ class SizeClass {
 
   RandomSimple& random_;
   const double sizeClassMidPoint_;
-  const unsigned maxPopulation_;
 
   std::vector<Heterotroph> heterotrophs_;
   std::vector<Heterotroph>::iterator pointer_;

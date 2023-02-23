@@ -8,10 +8,9 @@
 
 SizeClass::SizeClass(RandomSimple& random, const double sizeClassMidPoint, const unsigned maxPopulation) :
     random_(random),
-    sizeClassMidPoint_(sizeClassMidPoint),
-    maxPopulation_(maxPopulation)
-{
+    sizeClassMidPoint_(sizeClassMidPoint) {
   heterotrophs_.reserve(maxPopulation);
+  alive_.reserve(maxPopulation);
   pointer_ = heterotrophs_.begin();
 
   double individualVolume = sizeClassMidPoint_;
@@ -37,8 +36,8 @@ void SizeClass::update() {
 
 Heterotroph& SizeClass::getRandomHeterotroph() {
   if(alive_.size() != 0) {
-    unsigned randomIndex = random_.getUniformInt(maxPopulation_);
-    return heterotrophs_[randomIndex];
+    unsigned randomIndex = random_.getUniformInt(alive_.size());
+    return heterotrophs_[alive_[randomIndex]];
   } else {
     throw std::runtime_error("Size class is empty...");
   }
@@ -62,10 +61,8 @@ const Heterotroph& SizeClass::getHeterotroph(const unsigned index) const {
 
 Heterotroph SizeClass::removeHeterotroph(const unsigned index) {
   if(alive_.size() != 0) {
+    alive_.erase(std::find(std::begin(alive_), std::end(alive_), index));
     dead_.push(index);
-
-
-    //alive_.find_and_remove(index);
     return std::move(heterotrophs_[index]);
   } else {
     throw std::runtime_error("Size class is empty...");

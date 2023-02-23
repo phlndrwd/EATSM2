@@ -9,9 +9,8 @@
 Population::Population(Nutrient& nutrient, Autotrophs& autotrophs, unsigned numberOfSizeClasses) :
     nutrient_(nutrient),
     autotrophs_(autotrophs),
-    numberOfSizeClasses_(numberOfSizeClasses),
     random_(Parameters::Get()->getRandomSeed()) {
-  for(unsigned index = 0; index < numberOfSizeClasses_; ++index) {
+  for(unsigned index = 0; index < numberOfSizeClasses; ++index) {
     sizeClasses_.push_back(SizeClass(random_,
                                      Parameters::Get()->getSizeClassMidPoint(index),
                                      Parameters::Get()->getMaximumSizeClassPopulation(index)));
