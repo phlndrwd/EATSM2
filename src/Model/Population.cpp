@@ -11,7 +11,8 @@ Population::Population(Nutrient& nutrient, Autotrophs& autotrophs, unsigned numb
     autotrophs_(autotrophs),
     random_(Parameters::Get()->getRandomSeed()) {
   for(unsigned index = 0; index < numberOfSizeClasses; ++index) {
-    sizeClasses_.push_back(SizeClass(random_,
+    sizeClasses_.push_back(SizeClass(heterotrophData_,
+                                     random_,
                                      Parameters::Get()->getSizeClassMidPoint(index),
                                      Parameters::Get()->getMaximumSizeClassPopulation(index)));
   }
@@ -38,7 +39,9 @@ void Population::createInitialPopulation() {
       ++initialPopulationSize;
     }
 
-    if (initialHeterotrophVolume > 0) nutrient_.addToVolume(initialHeterotrophVolume);
+    if (initialHeterotrophVolume > 0) {
+      nutrient_.addToVolume(initialHeterotrophVolume);
+    }
 
     std::cout << "A single heterotrophic size class initialised with " << initialPopulationSize + 1 << " individuals."
               << std::endl;
@@ -51,9 +54,9 @@ void Population::createInitialPopulation() {
 
 void Population::update() {
   std::for_each(std::begin(sizeClasses_), std::end(sizeClasses_),
-  [] (SizeClass& sizeClass)
+  [&] (SizeClass& sizeClass)
   {
-    sizeClass.update();
+    std::vector<Heterotroph> heterotrophsToMove = sizeClass.metabolisation(nutrient_);
   });
 }
 

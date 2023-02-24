@@ -187,28 +187,29 @@ void Heterotrophs::feeding() {
 }
 
 void Heterotrophs::metabolisation() {
-  for (unsigned sizeClassIndex = 0; sizeClassIndex < numberOfSizeClasses_; ++sizeClassIndex) {
-    for (std::size_t individualIndex = 0; individualIndex < getSizeClassPopulation(sizeClassIndex); ++individualIndex) {
-      Heterotroph* individual = getIndividual(sizeClassIndex, individualIndex);
+//  for (unsigned sizeClassIndex = 0; sizeClassIndex < numberOfSizeClasses_; ++sizeClassIndex) {
+//    for (std::size_t individualIndex = 0; individualIndex < getSizeClassPopulation(sizeClassIndex); ++individualIndex) {
+//      Heterotroph* individual = getIndividual(sizeClassIndex, individualIndex);
 
-      double metabolicDeduction = heterotrophProcessor_.calculateMetabolicDeduction(individual);
+//      double metabolicDeduction = 0;//heterotrophProcessor_.calculateMetabolicDeduction(individual);
 
-      if ((individual->getVolumeActual() - metabolicDeduction) > 0) {
-        individual->setHasFed(false);  // Reset for the next time step
-        double waste = individual->metabolise(metabolicDeduction);
-        nutrient_.addToVolume(waste);
+//      if ((individual->getVolumeActual() - metabolicDeduction) > 0) {
+//        individual->setHasFed(false);  // Reset for the next time step
+//        double waste = individual->metabolise(metabolicDeduction);
+//        nutrient_.addToVolume(waste);
 
-        // Individuals can move up a size class from having consumed a
-        // lot. They need to move after this function has completed to
-        // avoid handling them twice.
-        if (heterotrophProcessor_.updateSizeClassIndex(individual) == true) stageForMoving(individual, sizeClassIndex);
+//        // Individuals can move up a size class from having consumed a
+//        // lot. They need to move after this function has completed to
+//        // avoid handling them twice.
+//        if (heterotrophProcessor_.updateSizeClassIndex(individual) == true)
+//          stageForMoving(individual, sizeClassIndex);
 
-      } else
-        starve(individual);
-    }
-  }
-  moveIndividuals();
-  deleteDead();
+//      } else
+//        starve(individual);
+//    }
+//  }
+//  moveIndividuals();
+//  deleteDead();
 }
 
 void Heterotrophs::starvation() {
@@ -232,29 +233,29 @@ void Heterotrophs::starvation() {
 }
 
 void Heterotrophs::reproduction() {
-  for (unsigned sizeClassIndex = 0; sizeClassIndex < numberOfSizeClasses_; ++sizeClassIndex) {
-    for (std::size_t individualIndex = 0; individualIndex < getSizeClassPopulation(sizeClassIndex); ++individualIndex) {
-      Heterotroph* individual = getIndividual(sizeClassIndex, individualIndex);
-      if (individual->getVolumeActual() >= individual->getVolumeReproduction()) {
-        Heterotroph* childIndividual = individual->getChild(random_, heterotrophProcessor_);
+//  for (unsigned sizeClassIndex = 0; sizeClassIndex < numberOfSizeClasses_; ++sizeClassIndex) {
+//    for (std::size_t individualIndex = 0; individualIndex < getSizeClassPopulation(sizeClassIndex); ++individualIndex) {
+//      Heterotroph* individual = getIndividual(sizeClassIndex, individualIndex);
+//      if (individual->getVolumeActual() >= individual->getVolumeReproduction()) {
+//        Heterotroph* childIndividual = individual->getChild(random_, heterotrophProcessor_);
 
-        // Parent data needs to be collected before size class is updated.
-        heterotrophData_.incrementParentFrequencies(individual->getSizeClassIndex());
-        if (heterotrophProcessor_.updateSizeClassIndex(individual) == true) stageForMoving(individual, sizeClassIndex);
+//        // Parent data needs to be collected before size class is updated.
+//        heterotrophData_.incrementParentFrequencies(individual->getSizeClassIndex());
+//        if (heterotrophProcessor_.updateSizeClassIndex(individual) == true) stageForMoving(individual, sizeClassIndex);
 
-        if (childIndividual->getHeritableTraits().isTraitMutant(constants::eVolume) == true) {
-          heterotrophProcessor_.updateSizeClassIndex(
-              childIndividual);  // Mutants may inherit more than a fixed fraction of the parent's volume
-          heterotrophData_.incrementMutantFrequency(childIndividual->getSizeClassIndex(), constants::eVolume);
-        }
+//        if (childIndividual->getHeritableTraits().isTraitMutant(constants::eVolume) == true) {
+//          heterotrophProcessor_.updateSizeClassIndex(
+//              childIndividual);  // Mutants may inherit more than a fixed fraction of the parent's volume
+//          heterotrophData_.incrementMutantFrequency(childIndividual->getSizeClassIndex(), constants::eVolume);
+//        }
 
-        heterotrophData_.incrementChildFrequencies(childIndividual->getSizeClassIndex());
-        children_.push_back(childIndividual);
-      }
-    }
-  }
-  moveIndividuals();
-  addChildren();
+//        heterotrophData_.incrementChildFrequencies(childIndividual->getSizeClassIndex());
+//        children_.push_back(childIndividual);
+//      }
+//    }
+//  }
+//  moveIndividuals();
+//  addChildren();
 }
 
 void Heterotrophs::feedFromAutotrophs(Heterotroph* grazer) {
@@ -330,7 +331,8 @@ Heterotroph* Heterotrophs::getRandomPreyFromSizeClass(const unsigned sizeClassIn
 
   // Only applicable when predator feeds from its own size class. Check
   // ensures numberActive does not go out of bounds
-  if (predator->getSizeClassIndex() == sizeClassIndex && numberActive > 0) --numberActive;
+  if (predator->getSizeClassIndex() == sizeClassIndex && numberActive > 0)
+    --numberActive;
 
   Heterotroph* randomIndividual = nullptr;
   if (numberActive > 0) {

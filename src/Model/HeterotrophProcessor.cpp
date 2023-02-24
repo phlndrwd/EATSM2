@@ -26,6 +26,10 @@ HeterotrophProcessor::HeterotrophProcessor()
     fStarvationProbability = &HeterotrophProcessor::calculateFeedingProbabilityNonLinear;
 }
 
+double HeterotrophProcessor::calculateMetabolicDeduction(const Heterotroph& heterotroph) const {
+  return fractionalMetabolicExpense_ * std::pow(heterotroph.getVolumeActual(), metabolicIndex_);
+}
+
 double HeterotrophProcessor::calculatePreferenceForPrey(const double grazerVolume, const double preyVolume) const {
   return std::exp(-std::pow((std::log((preferredPreyVolumeRatio_ * preyVolume) / grazerVolume)), 2) /
                   preferenceDenominator_);
@@ -36,20 +40,16 @@ double HeterotrophProcessor::calculateFeedingProbability(const unsigned predator
   return (this->*fStarvationProbability)(predatorIndex, effectivePreyVolume);
 }
 
-double HeterotrophProcessor::calculateMetabolicDeduction(const Heterotroph* individual) const {
-  return fractionalMetabolicExpense_ * std::pow(individual->getVolumeActual(), metabolicIndex_);
-}
-
 double HeterotrophProcessor::calculateStarvationProbability(const Heterotroph* individual) const {
   return calculateLinearStarvation(individual->getVolumeActual(), individual->getVolumeHeritable(),
                                    individual->getVolumeMinimum(), individual->getStarvationMultiplier());
 }
 
-unsigned HeterotrophProcessor::findIndividualSizeClassIndex(const Heterotroph* individual,
+unsigned HeterotrophProcessor::findIndividualSizeClassIndex(const Heterotroph& heterotroph,
                                                             unsigned directionToMove) const {
-  unsigned currentSizeClass = individual->getSizeClassIndex();
+  unsigned currentSizeClass = heterotroph.getSizeClassIndex();
   unsigned newSizeClassIndex = currentSizeClass;
-  double volume = individual->getVolumeActual();
+  double volume = heterotroph.getVolumeActual();
 
   if (directionToMove == constants::eMoveUp) {
     for (unsigned index = currentSizeClass; index < numberOfSizeClasses_; ++index) {
@@ -70,11 +70,11 @@ unsigned HeterotrophProcessor::findIndividualSizeClassIndex(const Heterotroph* i
   return newSizeClassIndex;
 }
 
-bool HeterotrophProcessor::updateSizeClassIndex(Heterotroph* individual) const {
-  unsigned directionToMove = directionIndividualShouldMoveSizeClasses(individual);
+bool HeterotrophProcessor::updateSizeClassIndex(Heterotroph& heterotroph) const {
+  unsigned directionToMove = directionIndividualShouldMoveSizeClasses(heterotroph);
   if (directionToMove != constants::eNoMovement) {
-    unsigned newSizeClassIndex = findIndividualSizeClassIndex(individual, directionToMove);
-    individual->setSizeClassIndex(newSizeClassIndex);
+    unsigned newSizeClassIndex = findIndividualSizeClassIndex(heterotroph, directionToMove);
+    heterotroph.setSizeClassIndex(newSizeClassIndex);
     return true;
   }
   return false;
@@ -92,12 +92,11 @@ unsigned HeterotrophProcessor::findSizeClassIndexFromVolume(const double volume)
   return sizeClassIndex;
 }
 
-unsigned HeterotrophProcessor::directionIndividualShouldMoveSizeClasses(
-    const Heterotroph* individual) const {
+unsigned HeterotrophProcessor::directionIndividualShouldMoveSizeClasses(const Heterotroph& heterotroph) const {
   unsigned directionToMove = constants::eNoMovement;
 
-  unsigned sizeClassIndex = individual->getSizeClassIndex();
-  double volumeActual = individual->getVolumeActual();
+  unsigned sizeClassIndex = heterotroph.getSizeClassIndex();
+  double volumeActual = heterotroph.getVolumeActual();
 
   if (volumeActual < sizeClassBoundaries_[sizeClassIndex])
     directionToMove = constants::eMoveDown;

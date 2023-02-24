@@ -10,16 +10,20 @@ class HeterotrophProcessor {
  public:
   HeterotrophProcessor();
 
+  double calculateMetabolicDeduction(const Heterotroph&) const;
+  bool updateSizeClassIndex(Heterotroph&) const;
+  unsigned directionIndividualShouldMoveSizeClasses(const Heterotroph&) const;
+  unsigned findIndividualSizeClassIndex(const Heterotroph&, unsigned) const;
+
+
+
+
   double calculatePreferenceForPrey(const double, const double) const;
   double calculateFeedingProbability(const unsigned, const double);
 
-  double calculateMetabolicDeduction(const Heterotroph*) const;
   double calculateStarvationProbability(const Heterotroph*) const;
 
-  bool updateSizeClassIndex(Heterotroph*) const;
   unsigned findSizeClassIndexFromVolume(const double) const;
-  unsigned findIndividualSizeClassIndex(const Heterotroph*, unsigned) const;
-  unsigned directionIndividualShouldMoveSizeClasses(const Heterotroph*) const;
 
   void updateHerbivoreTrophicIndex(Heterotroph*);
   void updateCarnivoreTrophicIndex(Heterotroph*, const Heterotroph*);

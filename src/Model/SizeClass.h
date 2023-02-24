@@ -5,15 +5,17 @@
 #include <vector>
 
 #include "Heterotroph.h"
+#include "HeterotrophData.h"
 #include "HeterotrophProcessor.h"
+#include "Nutrient.h"
 #include "RandomSimple.h"
 
 class SizeClass {
  public:
   SizeClass() = delete;
-  SizeClass(RandomSimple&, const double, const unsigned);
+  SizeClass(HeterotrophData&, RandomSimple&, const double, const unsigned);
 
-  void update();
+  std::vector<Heterotroph> metabolisation(Nutrient&);
 
   Heterotroph& getRandomHeterotroph();
   Heterotroph& getHeterotroph(const unsigned);
@@ -24,8 +26,11 @@ class SizeClass {
   void addHeterotroph(Heterotroph);
 
  private:
+  void starve(Heterotroph&, Nutrient& nutrient);
+
   HeterotrophProcessor heterotrophProcessor_;
 
+  HeterotrophData& heterotrophData_;
   RandomSimple& random_;
   const double sizeClassMidPoint_;
 

@@ -6,7 +6,11 @@
 
 #include <Parameters.h>
 
-SizeClass::SizeClass(RandomSimple& random, const double sizeClassMidPoint, const unsigned maxPopulation) :
+SizeClass::SizeClass(HeterotrophData& heterotrophData,
+                     RandomSimple& random,
+                     const double sizeClassMidPoint,
+                     const unsigned maxPopulation) :
+    heterotrophData_(heterotrophData),
     random_(random),
     sizeClassMidPoint_(sizeClassMidPoint) {
   heterotrophs_.reserve(maxPopulation);
@@ -26,13 +30,32 @@ SizeClass::SizeClass(RandomSimple& random, const double sizeClassMidPoint, const
   }
 }
 
-void SizeClass::update() {
+std::vector<Heterotroph> SizeClass::metabolisation(Nutrient& nutrient) {
+  std::vector<Heterotroph> heterotrophsToMove;
   std::for_each(std::begin(alive_), std::end(alive_),
   [&] (unsigned& index)
   {
     Heterotroph& heterotroph = heterotrophs_[index];
-    heterotroph.setDead();
-  });}
+
+    double metabolicDeduction = heterotrophProcessor_.calculateMetabolicDeduction(heterotroph);
+
+    if ((heterotroph.getVolumeActual() - metabolicDeduction) > 0) {
+      heterotroph.setHasFed(false);  // Reset for the next time step
+      double waste = heterotroph.metabolise(metabolicDeduction);
+      nutrient.addToVolume(waste);
+
+      // Individuals can move up a size class from having consumed a
+      // lot. They need to move after this function has completed to
+      // avoid handling them twice.
+      if (heterotrophProcessor_.updateSizeClassIndex(heterotroph) == true) {
+        heterotrophsToMove.push_back(removeHeterotroph(index));
+      }
+    } else {
+      starve(heterotroph, nutrient);
+    }
+  });
+  return heterotrophsToMove;
+}
 
 Heterotroph& SizeClass::getRandomHeterotroph() {
   if(alive_.size() != 0) {
@@ -78,4 +101,10 @@ void SizeClass::addHeterotroph(Heterotroph heterotroph) {
   } else {
     throw std::runtime_error("Size class is full...");
   }
+}
+
+void SizeClass::starve(Heterotroph& heterotroph, Nutrient& nutrient) {
+  nutrient.addToVolume(heterotroph.getVolumeActual());
+  heterotrophData_.incrementStarvedFrequencies(heterotroph.getSizeClassIndex());
+  //kill(heterotroph);
 }
