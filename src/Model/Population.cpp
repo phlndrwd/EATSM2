@@ -2,6 +2,7 @@
 
 #include <algorithm>
 #include <iostream>
+#include <climits>
 
 #include "InitialState.h"
 #include "Parameters.h"
@@ -12,9 +13,9 @@ Population::Population(Nutrient& nutrient, Autotrophs& autotrophs, unsigned numb
     random_(Parameters::Get()->getRandomSeed()) {
   for(unsigned index = 0; index < numberOfSizeClasses; ++index) {
     sizeClasses_.push_back(SizeClass(heterotrophData_,
-                                     random_,
                                      Parameters::Get()->getSizeClassMidPoint(index),
-                                     Parameters::Get()->getMaximumSizeClassPopulation(index)));
+                                     Parameters::Get()->getMaximumSizeClassPopulation(index),
+                                     random_.getUniformInt(1, UINT_MAX)));
   }
   createInitialPopulation();
 }
@@ -56,7 +57,12 @@ void Population::update() {
   std::for_each(std::begin(sizeClasses_), std::end(sizeClasses_),
   [&] (SizeClass& sizeClass)
   {
-    std::vector<Heterotroph> heterotrophsToMove = sizeClass.metabolisation(nutrient_);
+    std::vector<Heterotroph> heterotrophsToMove = sizeClass.update(nutrient_);
+    for (const auto& heterotroph : heterotrophsToMove) {
+      std::vector<SizeClass>::iterator sizeClassIt = sizeClasses_.begin();
+      std::advance(sizeClassIt, heterotroph.getSizeClassIndex());
+      sizeClassIt->addHeterotroph(heterotroph);
+    }
   });
 }
 

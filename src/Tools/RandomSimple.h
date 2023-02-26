@@ -19,6 +19,7 @@ class RandomSimple {
   double getUniform();
   unsigned getUniformInt();
   unsigned getUniformInt(unsigned);
+  unsigned getUniformInt(unsigned, unsigned);
   double getNormal();
   double getNormal(double, double);
   double getExponential();

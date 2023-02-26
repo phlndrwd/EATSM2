@@ -15,7 +15,9 @@ void RandomSimple::reset() {
   z_ = 362436069;
 }
 
-unsigned RandomSimple::getSeed() const { return seed_; }
+unsigned RandomSimple::getSeed() const {
+  return seed_;
+}
 
 void RandomSimple::setSeed(unsigned u, unsigned v) {
   if (u != 0) w_ = u;
@@ -42,7 +44,13 @@ unsigned RandomSimple::getUniformInt() {
   return (z_ << 16) + w_;
 }
 
-unsigned RandomSimple::getUniformInt(unsigned maximum) { return getUniformInt() % (maximum + 1); }
+unsigned RandomSimple::getUniformInt(unsigned maximum) {
+  return getUniformInt() % (maximum + 1);
+}
+
+unsigned RandomSimple::getUniformInt(unsigned minimum, unsigned maximum) {
+  return (getUniformInt() % (maximum - minimum + 1)) + minimum;
+}
 
 double RandomSimple::getNormal() {
   double u1 = getUniform();
@@ -79,7 +87,8 @@ double RandomSimple::getGamma(double shape, double scale) {
       v = v * v * v;
       u = getUniform();
       xsquared = x * x;
-      if (u < 1.0 - .0331 * xsquared * xsquared || log(u) < 0.5 * xsquared + d * (1.0 - v + log(v)))
+      if (u < 1.0 - .0331 * xsquared * xsquared ||
+         log(u) < 0.5 * xsquared + d * (1.0 - v + log(v)))
         return scale * d * v;
     }
   } else {

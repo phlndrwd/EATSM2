@@ -97,20 +97,13 @@ int main(int numberOfArguments, char *commandlineArguments[]) {
               << Date::getDateAndTimeString(constants::kCompleteDateFormat, runTimeInSeconds) << std::endl
               << std::endl;
     std::cout << "Starting main time loop..." << std::endl;
-    RandomSimple rand;
-    unsigned randMin = 100;
-    unsigned randMax = 0;
+
     do {
       // Update before data collection; calculates essential variables for
       // encounter rates.
       environment.update();
 
-      unsigned randVal = rand.getUniformInt(100);
 
-      if(randVal > randMax)
-        randMax = randVal;
-      if(randVal < randMin)
-        randMin = randVal;
       // Data collection
       if (timeStep.doRecordData() == true) {
         DataRecorder::get()->addDataTo("AxisTimeSteps", timeStep.getTimeStep());
@@ -127,7 +120,7 @@ int main(int numberOfArguments, char *commandlineArguments[]) {
       }
 
       timeStep.incrementTimeStep();
-      // std::cout << "timer.Elapsed( )> " << timer.Elapsed( ) << ",
+      //std::cout << "timer.Elapsed( )> " << timer.Elapsed( ) << ",
       // runTimeInSeconds> " << runTimeInSeconds << ", isAlive> " << isAlive <<
       // std::endl;
     } while (timer.elapsed() < runTimeInSeconds && isAlive == true);
@@ -137,7 +130,6 @@ int main(int numberOfArguments, char *commandlineArguments[]) {
     else
       std::cout << "Heterotroph population crashed. Main time loop aborted." << std::endl << std::endl;
 
-    std::cout << "randMax> " << randMax << ", randMin> " << randMin << std::endl;
     fileWriter.writeOutputData(environment);
     std::cout << "Total run time " << timer.stop() << "s" << std::endl;
   } else if (showErrorMessage == true) {

@@ -7,15 +7,15 @@
 #include <Parameters.h>
 
 SizeClass::SizeClass(HeterotrophData& heterotrophData,
-                     RandomSimple& random,
                      const double sizeClassMidPoint,
-                     const unsigned maxPopulation) :
+                     const unsigned maxPopulation,
+                     const unsigned randomSeed) :
     heterotrophData_(heterotrophData),
-    random_(random),
+    random_(randomSeed),
     sizeClassMidPoint_(sizeClassMidPoint) {
   heterotrophs_.reserve(maxPopulation);
   alive_.reserve(maxPopulation);
-  pointer_ = heterotrophs_.begin();
+  //pointer_ = heterotrophs_.begin();
 
   double individualVolume = sizeClassMidPoint_;
   double traitValue = heterotrophProcessor_.volumeToTraitValue(individualVolume);
@@ -30,8 +30,15 @@ SizeClass::SizeClass(HeterotrophData& heterotrophData,
   }
 }
 
-std::vector<Heterotroph> SizeClass::metabolisation(Nutrient& nutrient) {
+std::vector<Heterotroph> SizeClass::update(Nutrient& nutrient) {
   std::vector<Heterotroph> heterotrophsToMove;
+
+  metabolisation(nutrient);
+
+  return heterotrophsToMove;
+}
+
+void SizeClass::metabolisation(Nutrient& nutrient) {
   std::for_each(std::begin(alive_), std::end(alive_),
   [&] (unsigned& index)
   {
@@ -47,14 +54,13 @@ std::vector<Heterotroph> SizeClass::metabolisation(Nutrient& nutrient) {
       // Individuals can move up a size class from having consumed a
       // lot. They need to move after this function has completed to
       // avoid handling them twice.
-      if (heterotrophProcessor_.updateSizeClassIndex(heterotroph) == true) {
-        heterotrophsToMove.push_back(removeHeterotroph(index));
-      }
+//      if (heterotrophProcessor_.updateSizeClassIndex(heterotroph) == true) {
+//        heterotrophsToMove.push_back(removeHeterotroph(index));
+//      }
     } else {
       starve(heterotroph, nutrient);
     }
   });
-  return heterotrophsToMove;
 }
 
 Heterotroph& SizeClass::getRandomHeterotroph() {
@@ -86,7 +92,7 @@ Heterotroph SizeClass::removeHeterotroph(const unsigned index) {
   if(alive_.size() != 0) {
     alive_.erase(std::find(std::begin(alive_), std::end(alive_), index));
     dead_.push(index);
-    return std::move(heterotrophs_[index]);
+    return heterotrophs_[index];
   } else {
     throw std::runtime_error("Size class is empty...");
   }
