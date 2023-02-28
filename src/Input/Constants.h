@@ -27,7 +27,8 @@ enum eInputParameters {
   eFractionalMetabolicExpense,
   eMetabolicIndex,
   eMutationProbability,
-  eMutationStandardDeviation
+  eMutationStandardDeviation,
+  eNumberOfParamters
 };
 
 enum eInputParametersMetadata {

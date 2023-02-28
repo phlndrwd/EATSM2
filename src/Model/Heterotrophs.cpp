@@ -20,7 +20,7 @@ Heterotrophs::Heterotrophs(Nutrient& nutrient, Autotrophs& autotrophs)
       maximumSizeClassPopulations_(Parameters::Get()->getMaximumSizeClassPopulations()),
       smallestIndividualVolume_(Parameters::Get()->getSmallestIndividualVolume()),
       initialHeterotrophicVolume_(Parameters::Get()->getInitialHeterotrophVolume()),
-      sizeClassSubsetFraction_(Parameters::Get()->getSizeClassSubsetFraction()),
+      sizeClassSubsetFraction_(Parameters::Get()->getPopulationSubsetFraction()),
       numberOfSizeClasses_(Parameters::Get()->getNumberOfSizeClasses()),
       preferredPreyVolumeRatio_(Parameters::Get()->getPreferredPreyVolumeRatio()),
       autotrophSizeClassIndex_(Parameters::Get()->getAutotrophSizeClassIndex()) {
@@ -224,7 +224,7 @@ void Heterotrophs::starvation() {
         Heterotroph* individual = getRandomIndividualFromSizeClass(sizeClassIndex);
 
         if (individual != nullptr)
-          if (random_.getUniform() <= heterotrophProcessor_.calculateStarvationProbability(individual))
+          //if (random_.getUniform() <= heterotrophProcessor_.calculateStarvationProbability(individual))
             starve(individual);
       }
     }

@@ -75,7 +75,7 @@ bool Parameters::initialise(const std::vector<std::vector<std::string>>& rawInpu
       else if (parameterName == "preferencefunctionwidth")
         setPreferenceFunctionWidth(parameterValue);
       else if (parameterName == "sizeclasssubsetfraction")
-        setSizeClassSubsetFraction(parameterValue);
+        setPopulationSubsetFraction(parameterValue);
       else if (parameterName == "halfsaturationconstantfraction")
         setHalfSaturationConstantFraction(parameterValue);
 
@@ -129,8 +129,8 @@ void Parameters::calculateParameters() {
   double sizeClassBoundaryExponent = smallestVolumeExponent_ + (numberOfSizeClasses_ * sizeClassExponentIncrement);
   sizeClassBoundaries_[numberOfSizeClasses_] = std::pow(10, sizeClassBoundaryExponent);
 
-  HeterotrophProcessor temporaryHeterotrophProcessor;
-  autotrophSizeClassIndex_ = temporaryHeterotrophProcessor.findSizeClassIndexFromVolume(smallestIndividualVolume_);
+  HeterotrophProcessor heterotrophProcessor;
+  autotrophSizeClassIndex_ = heterotrophProcessor.findSizeClassIndexFromVolume(smallestIndividualVolume_);
 
   interSizeClassPreferenceMatrix_.resize(numberOfSizeClasses_);
   interSizeClassVolumeMatrix_.resize(numberOfSizeClasses_);
@@ -143,7 +143,7 @@ void Parameters::calculateParameters() {
       double referenceVolumeMean = sizeClassMidPoints_[referenceIndex];
 
       double preferenceForReferenceSizeClass =
-          temporaryHeterotrophProcessor.calculatePreferenceForPrey(subjectVolumeMean, referenceVolumeMean);
+          heterotrophProcessor.calculatePreferenceForPrey(subjectVolumeMean, referenceVolumeMean);
 
       preferenceSum += preferenceForReferenceSizeClass;
 
@@ -155,25 +155,25 @@ void Parameters::calculateParameters() {
 
 bool Parameters::isInitialised() {
   bool isInitialised = true;
-  for (unsigned i = 0; i < constants::eMutationStandardDeviation + 1; ++i)
+  for (unsigned i = 0; i < constants::eNumberOfParamters; ++i)
     if (parametersInitialised_[i] == false) isInitialised = false;
 
   return isInitialised;
 }
 
-unsigned& Parameters::getRunTimeInSeconds() {
+unsigned Parameters::getRunTimeInSeconds() {
   return runTimeInSeconds_;
 }
 
-unsigned& Parameters::getRandomSeed() {
+unsigned Parameters::getRandomSeed() {
   return randomSeed_;
 }
 
-unsigned& Parameters::getSamplingRate() {
+unsigned Parameters::getSamplingRate() {
   return samplingRate_;
 }
 
-unsigned& Parameters::getNumberOfSizeClasses() {
+unsigned Parameters::getNumberOfSizeClasses() {
   return numberOfSizeClasses_;
 }
 
@@ -189,79 +189,79 @@ bool Parameters::getUseLinearFeeding() {
   return useLinearFeeding_;
 }
 
-double& Parameters::getInitialAutotrophVolume() {
+double Parameters::getInitialAutotrophVolume() {
   return initialAutotrophicVolume_;
 }
 
-double& Parameters::getInitialHeterotrophVolume() {
+double Parameters::getInitialHeterotrophVolume() {
   return initialHeterotrophicVolume_;
 }
 
-double& Parameters::getMinimumHeterotrophicVolume() {
+double Parameters::getMinimumHeterotrophicVolume() {
   return minimumHeterotrophicVolume_;
 }
 
-double& Parameters::getSmallestIndividualVolume() {
+double Parameters::getSmallestIndividualVolume() {
   return smallestIndividualVolume_;
 }
 
-double& Parameters::getLargestIndividualVolume() {
+double Parameters::getLargestIndividualVolume() {
   return largestIndividualVolume_;
 }
 
-unsigned& Parameters::getPreferredPreyVolumeRatio() {
+unsigned Parameters::getPreferredPreyVolumeRatio() {
   return preferredPreyVolumeRatio_;
 }
 
-double& Parameters::getPreferenceFunctionWidth() {
+double Parameters::getPreferenceFunctionWidth() {
   return preferenceFunctionWidth_;
 }
 
-double& Parameters::getSizeClassSubsetFraction() {
-  return sizeClassSubsetFraction_;
+double Parameters::getPopulationSubsetFraction() {
+  return populationSubsetFraction_;
 }
 
-double& Parameters::getHalfSaturationConstantFraction() {
+double Parameters::getHalfSaturationConstantFraction() {
   return halfSaturationConstantFraction_;
 }
 
-double& Parameters::getAssimilationEfficiency() {
+double Parameters::getAssimilationEfficiency() {
   return assimilationEfficiency_;
 }
 
-double& Parameters::getFractionalMetabolicExpense() {
+double Parameters::getFractionalMetabolicExpense() {
   return fractionalMetabolicExpense_;
 }
 
-double& Parameters::getMetabolicIndex() {
+double Parameters::getMetabolicIndex() {
   return metabolicIndex_;
 }
 
-double& Parameters::getMutationProbability() {
+double Parameters::getMutationProbability() {
   return mutationProbability_;
 }
 
-double& Parameters::getMutationStandardDeviation() {
+double Parameters::getMutationStandardDeviation() {
   return mutationStandardDeviation_;
 }
 
-unsigned& Parameters::getAutotrophSizeClassIndex() {
+unsigned Parameters::getAutotrophSizeClassIndex() {
   return autotrophSizeClassIndex_;
 }
 
-double& Parameters::getSmallestVolumeExponent() {
+double Parameters::getSmallestVolumeExponent() {
   return smallestVolumeExponent_;
 }
 
-double& Parameters::getLargestVolumeExponent() {
+double Parameters::getLargestVolumeExponent() {
   return largestVolumeExponent_;
 }
 
-double& Parameters::getSizeClassBoundary(const unsigned index) {
+double Parameters::getSizeClassBoundary(const unsigned index) {
   return sizeClassBoundaries_[index];
 }
 
-double& Parameters::getSizeClassMidPoint(const unsigned index) {
+double Parameters::getSizeClassMidPoint(const unsigned index) {
   return sizeClassMidPoints_[index];
 }
 
@@ -285,27 +285,27 @@ const std::vector<unsigned>& Parameters::getMaximumSizeClassPopulations() {
   return maximumSizeClassPopulations_;
 }
 
-double& Parameters::getInterSizeClassPreference(const unsigned predatorIndex, const unsigned preyIndex) {
+double Parameters::getInterSizeClassPreference(const unsigned predatorIndex, const unsigned preyIndex) {
   return interSizeClassPreferenceMatrix_[predatorIndex][preyIndex];
 }
 
-double& Parameters::getInterSizeClassVolume(const unsigned predatorIndex, const unsigned preyIndex) {
+double Parameters::getInterSizeClassVolume(const unsigned predatorIndex, const unsigned preyIndex) {
   return interSizeClassVolumeMatrix_[predatorIndex][preyIndex];
 }
 
-double& Parameters::getTotalVolume() { return totalVolume_; }
+double Parameters::getTotalVolume() { return totalVolume_; }
 
-unsigned& Parameters::getMaximumSizeClassPopulation(const unsigned sizeClassIndex) {
+unsigned Parameters::getMaximumSizeClassPopulation(const unsigned sizeClassIndex) {
   return maximumSizeClassPopulations_[sizeClassIndex];
 }
 
-double& Parameters::getRemainingVolume(const unsigned sizeClassIndex) { return remainingVolumes_[sizeClassIndex]; }
+double Parameters::getRemainingVolume(const unsigned sizeClassIndex) { return remainingVolumes_[sizeClassIndex]; }
 
-double& Parameters::getLinearFeedingDenominator(const unsigned sizeClassIndex) {
+double Parameters::getLinearFeedingDenominator(const unsigned sizeClassIndex) {
   return linearFeedingDenominators_[sizeClassIndex];
 }
 
-double& Parameters::getHalfSaturationConstant(const unsigned sizeClassIndex) {
+double Parameters::getHalfSaturationConstant(const unsigned sizeClassIndex) {
   return halfSaturationConstants_[sizeClassIndex];
 }
 
@@ -393,8 +393,8 @@ void Parameters::setPreferenceFunctionWidth(const double preferenceFunctionWidth
   parametersInitialised_[constants::ePreferenceFunctionWidth] = true;
 }
 
-void Parameters::setSizeClassSubsetFraction(const double sizeClassSubsetFraction) {
-  sizeClassSubsetFraction_ = sizeClassSubsetFraction;
+void Parameters::setPopulationSubsetFraction(const double sizeClassSubsetFraction) {
+  populationSubsetFraction_ = sizeClassSubsetFraction;
   parametersInitialised_[constants::eSizeClassSubsetFraction] = true;
 }
 

@@ -14,14 +14,12 @@ class HeterotrophProcessor {
   bool updateSizeClassIndex(Heterotroph&) const;
   unsigned directionIndividualShouldMoveSizeClasses(const Heterotroph&) const;
   unsigned findIndividualSizeClassIndex(const Heterotroph&, unsigned) const;
-
+  double calculateStarvationProbability(const Heterotroph&) const;
 
 
 
   double calculatePreferenceForPrey(const double, const double) const;
   double calculateFeedingProbability(const unsigned, const double);
-
-  double calculateStarvationProbability(const Heterotroph*) const;
 
   unsigned findSizeClassIndexFromVolume(const double) const;
 

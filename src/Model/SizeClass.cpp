@@ -8,11 +8,13 @@
 
 SizeClass::SizeClass(HeterotrophData& heterotrophData,
                      const double sizeClassMidPoint,
+                     const double populationSubsetFraction,
                      const unsigned maxPopulation,
                      const unsigned randomSeed) :
     heterotrophData_(heterotrophData),
     random_(randomSeed),
-    sizeClassMidPoint_(sizeClassMidPoint) {
+    sizeClassMidPoint_(sizeClassMidPoint),
+    populationSubsetFraction_(populationSubsetFraction) {
   heterotrophs_.reserve(maxPopulation);
   alive_.reserve(maxPopulation);
   //pointer_ = heterotrophs_.begin();
@@ -35,6 +37,7 @@ std::vector<Heterotroph> SizeClass::update(Nutrient& nutrient) {
 
   metabolisation(nutrient);
 
+
   return heterotrophsToMove;
 }
 
@@ -42,25 +45,43 @@ void SizeClass::metabolisation(Nutrient& nutrient) {
   std::for_each(std::begin(alive_), std::end(alive_),
   [&] (unsigned& index)
   {
-    Heterotroph& heterotroph = heterotrophs_[index];
+    heterotrophs_[index];
 
-    double metabolicDeduction = heterotrophProcessor_.calculateMetabolicDeduction(heterotroph);
+    double metabolicDeduction = heterotrophProcessor_.calculateMetabolicDeduction(heterotrophs_[index]);
 
-    if ((heterotroph.getVolumeActual() - metabolicDeduction) > 0) {
-      heterotroph.setHasFed(false);  // Reset for the next time step
-      double waste = heterotroph.metabolise(metabolicDeduction);
+    if ((heterotrophs_[index].getVolumeActual() - metabolicDeduction) > 0) {
+      heterotrophs_[index].setHasFed(false);  // Reset for the next time step
+      double waste = heterotrophs_[index].metabolise(metabolicDeduction);
       nutrient.addToVolume(waste);
-
-      // Individuals can move up a size class from having consumed a
-      // lot. They need to move after this function has completed to
-      // avoid handling them twice.
-//      if (heterotrophProcessor_.updateSizeClassIndex(heterotroph) == true) {
-//        heterotrophsToMove.push_back(removeHeterotroph(index));
-//      }
     } else {
-      starve(heterotroph, nutrient);
+      starve(nutrient, index);
     }
   });
+}
+
+void SizeClass::starvation(Nutrient& nutrient) {
+  std::size_t populationSize = alive_.size();
+
+  if (populationSize > 0) {
+    unsigned populationSubset = heterotrophProcessor_.roundWithProbability(random_, populationSize * populationSubsetFraction_);
+
+    for (unsigned potentialStarvation = 0; potentialStarvation < populationSubset; ++potentialStarvation) {
+      unsigned randomHeterotrophIndex = getRandomHeterotrophIndex();
+
+      if (random_.getUniform() <= heterotrophProcessor_.calculateStarvationProbability(heterotrophs_[randomHeterotrophIndex])) {
+        starve(nutrient, randomHeterotrophIndex);
+      }
+    }
+  }
+}
+
+unsigned SizeClass::getRandomHeterotrophIndex() {
+  if(alive_.size() != 0) {
+    unsigned randomIndex = random_.getUniformInt(alive_.size());
+    return alive_[randomIndex];
+  } else {
+    throw std::runtime_error("Size class is empty...");
+  }
 }
 
 Heterotroph& SizeClass::getRandomHeterotroph() {
@@ -109,8 +130,8 @@ void SizeClass::addHeterotroph(Heterotroph heterotroph) {
   }
 }
 
-void SizeClass::starve(Heterotroph& heterotroph, Nutrient& nutrient) {
+void SizeClass::starve(Nutrient& nutrient, const unsigned index) {
+  Heterotroph heterotroph = removeHeterotroph(index);
   nutrient.addToVolume(heterotroph.getVolumeActual());
   heterotrophData_.incrementStarvedFrequencies(heterotroph.getSizeClassIndex());
-  //kill(heterotroph);
 }

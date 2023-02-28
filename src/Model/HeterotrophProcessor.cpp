@@ -40,9 +40,9 @@ double HeterotrophProcessor::calculateFeedingProbability(const unsigned predator
   return (this->*fStarvationProbability)(predatorIndex, effectivePreyVolume);
 }
 
-double HeterotrophProcessor::calculateStarvationProbability(const Heterotroph* individual) const {
-  return calculateLinearStarvation(individual->getVolumeActual(), individual->getVolumeHeritable(),
-                                   individual->getVolumeMinimum(), individual->getStarvationMultiplier());
+double HeterotrophProcessor::calculateStarvationProbability(const Heterotroph& heterotroph) const {
+  return calculateLinearStarvation(heterotroph.getVolumeActual(), heterotroph.getVolumeHeritable(),
+                                   heterotroph.getVolumeMinimum(), heterotroph.getStarvationMultiplier());
 }
 
 unsigned HeterotrophProcessor::findIndividualSizeClassIndex(const Heterotroph& heterotroph,
@@ -142,7 +142,8 @@ double HeterotrophProcessor::calculateFeedingProbabilityNonLinear(const unsigned
   return (effectivePreyVolume / (halfSaturationConstants_[predatorIndex] + effectivePreyVolume));
 }
 
-double HeterotrophProcessor::calculateLinearStarvation(const double volumeActual, const double volumeHeritable,
+double HeterotrophProcessor::calculateLinearStarvation(const double volumeActual,
+                                                       const double volumeHeritable,
                                                        const double volumeMinimum,
                                                        const double starvationMultiplier) const {
   if (volumeActual <= volumeMinimum)
@@ -153,7 +154,8 @@ double HeterotrophProcessor::calculateLinearStarvation(const double volumeActual
     return (1 + ((volumeMinimum - volumeActual) * starvationMultiplier));
 }
 
-double HeterotrophProcessor::calculateBetaExponentialStarvation(const double volumeActual, const double volumeHeritable,
+double HeterotrophProcessor::calculateBetaExponentialStarvation(const double volumeActual,
+                                                                const double volumeHeritable,
                                                                 const double volumeMinimum,
                                                                 const double starvationMultiplier) const {
   if (volumeActual <= volumeMinimum)

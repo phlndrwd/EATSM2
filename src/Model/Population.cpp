@@ -14,6 +14,7 @@ Population::Population(Nutrient& nutrient, Autotrophs& autotrophs, unsigned numb
   for(unsigned index = 0; index < numberOfSizeClasses; ++index) {
     sizeClasses_.push_back(SizeClass(heterotrophData_,
                                      Parameters::Get()->getSizeClassMidPoint(index),
+                                     Parameters::Get()->getPopulationSubsetFraction(),
                                      Parameters::Get()->getMaximumSizeClassPopulation(index),
                                      random_.getUniformInt(1, UINT_MAX)));
   }

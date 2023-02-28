@@ -16,34 +16,34 @@ class Parameters {
   bool initialise(const std::vector<std::vector<std::string>>&);
 
   // Getters
-  unsigned& getRunTimeInSeconds();
-  unsigned& getRandomSeed();
-  unsigned& getSamplingRate();
-  unsigned& getNumberOfSizeClasses();
+  unsigned getRunTimeInSeconds();
+  unsigned getRandomSeed();
+  unsigned getSamplingRate();
+  unsigned getNumberOfSizeClasses();
 
   bool getReadModelState();
   bool getWriteModelState();
   bool getUseLinearFeeding();
 
-  double& getInitialAutotrophVolume();
-  double& getInitialHeterotrophVolume();
-  double& getMinimumHeterotrophicVolume();
+  double getInitialAutotrophVolume();
+  double getInitialHeterotrophVolume();
+  double getMinimumHeterotrophicVolume();
 
-  double& getSmallestIndividualVolume();
-  double& getLargestIndividualVolume();
+  double getSmallestIndividualVolume();
+  double getLargestIndividualVolume();
 
-  unsigned& getPreferredPreyVolumeRatio();
-  double& getPreferenceFunctionWidth();
+  unsigned getPreferredPreyVolumeRatio();
+  double getPreferenceFunctionWidth();
 
-  double& getSizeClassSubsetFraction();
-  double& getHalfSaturationConstantFraction();
+  double getPopulationSubsetFraction();
+  double getHalfSaturationConstantFraction();
 
-  double& getAssimilationEfficiency();
-  double& getFractionalMetabolicExpense();
-  double& getMetabolicIndex();
+  double getAssimilationEfficiency();
+  double getFractionalMetabolicExpense();
+  double getMetabolicIndex();
 
-  double& getMutationProbability();
-  double& getMutationStandardDeviation();
+  double getMutationProbability();
+  double getMutationStandardDeviation();
 
   // Setters
   void setRandomSeed(const unsigned);
@@ -65,7 +65,7 @@ class Parameters {
   void setPreferredPreyVolumeRatio(const unsigned);
   void setPreferenceFunctionWidth(const double);
 
-  void setSizeClassSubsetFraction(const double);
+  void setPopulationSubsetFraction(const double);
   void setHalfSaturationConstantFraction(const double);
 
   void setAssimilationEfficiency(const double);
@@ -77,23 +77,23 @@ class Parameters {
 
   // Calculated variables
 
-  double& getSmallestVolumeExponent();
-  double& getLargestVolumeExponent();
+  double getSmallestVolumeExponent();
+  double getLargestVolumeExponent();
 
-  unsigned& getAutotrophSizeClassIndex();
+  unsigned getAutotrophSizeClassIndex();
 
-  double& getSizeClassBoundary(const unsigned);
-  double& getSizeClassMidPoint(const unsigned);
+  double getSizeClassBoundary(const unsigned);
+  double getSizeClassMidPoint(const unsigned);
 
-  double& getInterSizeClassPreference(const unsigned, const unsigned);
-  double& getInterSizeClassVolume(const unsigned, const unsigned);
+  double getInterSizeClassPreference(const unsigned, const unsigned);
+  double getInterSizeClassVolume(const unsigned, const unsigned);
 
-  double& getTotalVolume();
+  double getTotalVolume();
 
-  unsigned& getMaximumSizeClassPopulation(const unsigned);
-  double& getRemainingVolume(const unsigned);
-  double& getLinearFeedingDenominator(const unsigned);
-  double& getHalfSaturationConstant(const unsigned);
+  unsigned getMaximumSizeClassPopulation(const unsigned);
+  double getRemainingVolume(const unsigned);
+  double getLinearFeedingDenominator(const unsigned);
+  double getHalfSaturationConstant(const unsigned);
 
   const std::vector<double>& getSizeClassBoundaries();
   const std::vector<double>& getSizeClassMidPoints();
@@ -132,7 +132,7 @@ class Parameters {
 
   double smallestIndividualVolume_;
   double largestIndividualVolume_;
-  double sizeClassSubsetFraction_;
+  double populationSubsetFraction_;
   double halfSaturationConstantFraction_;
 
   unsigned preferredPreyVolumeRatio_;
