@@ -36,14 +36,23 @@ std::vector<Heterotroph> SizeClass::update(Nutrient& nutrient) {
   std::vector<Heterotroph> heterotrophsToMove;
 
   metabolisation(nutrient);
-
+  starvation(nutrient);
 
   return heterotrophsToMove;
 }
 
+void SizeClass::sizeClassSubset(std::function<void(unsigned)> func) {
+  std::size_t numberAlive = alive_.size();
+  if (numberAlive > 0) {
+    unsigned sizeClassSubset = heterotrophProcessor_.roundWithProbability(random_, numberAlive * sizeClassSubsetFraction_);
+    for (auto _ = sizeClassSubset; _--;) {
+      func(getRandomHeterotrophIndex());
+    }
+  }
+}
+
 void SizeClass::metabolisation(Nutrient& nutrient) {
-  std::for_each(std::begin(alive_), std::end(alive_),
-  [&] (unsigned& index)
+  std::for_each(std::begin(alive_), std::end(alive_), [&] (unsigned index)
   {
     heterotrophs_[index];
 
@@ -60,19 +69,12 @@ void SizeClass::metabolisation(Nutrient& nutrient) {
 }
 
 void SizeClass::starvation(Nutrient& nutrient) {
-  std::size_t numberAlive = alive_.size();
-
-  if (numberAlive > 0) {
-    unsigned populationSubset = heterotrophProcessor_.roundWithProbability(random_, numberAlive * sizeClassSubsetFraction_);
-
-    for (unsigned potentialStarvation = 0; potentialStarvation < populationSubset; ++potentialStarvation) {
-      unsigned randomHeterotrophIndex = getRandomHeterotrophIndex();
-
-      if (random_.getUniform() <= heterotrophProcessor_.calculateStarvationProbability(heterotrophs_[randomHeterotrophIndex])) {
-        starve(nutrient, randomHeterotrophIndex);
-      }
+  sizeClassSubset([&](unsigned randomIndex) {
+    Heterotroph& heterotroph = heterotrophs_[randomIndex];
+    if (random_.getUniform() <= heterotrophProcessor_.calculateStarvationProbability(heterotroph)) {
+      starve(nutrient, randomIndex);
     }
-  }
+  });
 }
 
 unsigned SizeClass::getRandomHeterotrophIndex() {
@@ -109,7 +111,7 @@ const Heterotroph& SizeClass::getHeterotroph(const unsigned index) const {
   }
 }
 
-Heterotroph SizeClass::removeHeterotroph(const unsigned index) {
+Heterotroph& SizeClass::removeHeterotroph(const unsigned index) {
   if(alive_.size() != 0) {
     alive_.erase(std::find(std::begin(alive_), std::end(alive_), index));
     dead_.push(index);
@@ -131,7 +133,7 @@ void SizeClass::addHeterotroph(Heterotroph heterotroph) {
 }
 
 void SizeClass::starve(Nutrient& nutrient, const unsigned index) {
-  Heterotroph heterotroph = removeHeterotroph(index);
+  Heterotroph& heterotroph = removeHeterotroph(index);
   nutrient.addToVolume(heterotroph.getVolumeActual());
   heterotrophData_.incrementStarvedFrequencies(heterotroph.getSizeClassIndex());
 }

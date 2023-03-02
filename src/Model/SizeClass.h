@@ -1,6 +1,7 @@
 #ifndef SIZECLASS_H
 #define SIZECLASS_H
 
+#include <functional>
 #include <queue>
 #include <vector>
 
@@ -21,12 +22,12 @@ class SizeClass {
   Heterotroph& getRandomHeterotroph();
   Heterotroph& getHeterotroph(const unsigned);
   const Heterotroph& getHeterotroph(const unsigned) const;
-  Heterotroph removeHeterotroph(const unsigned);
-  const Heterotroph removeHeterotroph(const unsigned) const;
+  Heterotroph& removeHeterotroph(const unsigned);
 
   void addHeterotroph(Heterotroph);
 
  private:
+  void sizeClassSubset(std::function<void(unsigned)>);
   void metabolisation(Nutrient&);
   void starvation(Nutrient&);
 

@@ -97,7 +97,6 @@ int main(int numberOfArguments, char *commandlineArguments[]) {
               << Date::getDateAndTimeString(constants::kCompleteDateFormat, runTimeInSeconds) << std::endl
               << std::endl;
     std::cout << "Starting main time loop..." << std::endl;
-
     do {
       // Update before data collection; calculates essential variables for
       // encounter rates.
