@@ -20,7 +20,7 @@ Heterotrophs::Heterotrophs(Nutrient& nutrient, Autotrophs& autotrophs)
       maximumSizeClassPopulations_(Parameters::Get()->getMaximumSizeClassPopulations()),
       smallestIndividualVolume_(Parameters::Get()->getSmallestIndividualVolume()),
       initialHeterotrophicVolume_(Parameters::Get()->getInitialHeterotrophVolume()),
-      sizeClassSubsetFraction_(Parameters::Get()->getPopulationSubsetFraction()),
+      sizeClassSubsetFraction_(Parameters::Get()->getSizeClassSubsetFraction()),
       numberOfSizeClasses_(Parameters::Get()->getNumberOfSizeClasses()),
       preferredPreyVolumeRatio_(Parameters::Get()->getPreferredPreyVolumeRatio()),
       autotrophSizeClassIndex_(Parameters::Get()->getAutotrophSizeClassIndex()) {

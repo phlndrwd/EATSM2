@@ -35,7 +35,7 @@ class Parameters {
   unsigned getPreferredPreyVolumeRatio();
   double getPreferenceFunctionWidth();
 
-  double getPopulationSubsetFraction();
+  double getSizeClassSubsetFraction();
   double getHalfSaturationConstantFraction();
 
   double getAssimilationEfficiency();
@@ -65,7 +65,7 @@ class Parameters {
   void setPreferredPreyVolumeRatio(const unsigned);
   void setPreferenceFunctionWidth(const double);
 
-  void setPopulationSubsetFraction(const double);
+  void setSizeClassSubsetFraction(const double);
   void setHalfSaturationConstantFraction(const double);
 
   void setAssimilationEfficiency(const double);
@@ -132,7 +132,7 @@ class Parameters {
 
   double smallestIndividualVolume_;
   double largestIndividualVolume_;
-  double populationSubsetFraction_;
+  double sizeClassSubsetFraction_;
   double halfSaturationConstantFraction_;
 
   unsigned preferredPreyVolumeRatio_;

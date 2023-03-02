@@ -75,7 +75,7 @@ bool Parameters::initialise(const std::vector<std::vector<std::string>>& rawInpu
       else if (parameterName == "preferencefunctionwidth")
         setPreferenceFunctionWidth(parameterValue);
       else if (parameterName == "sizeclasssubsetfraction")
-        setPopulationSubsetFraction(parameterValue);
+        setSizeClassSubsetFraction(parameterValue);
       else if (parameterName == "halfsaturationconstantfraction")
         setHalfSaturationConstantFraction(parameterValue);
 
@@ -217,8 +217,8 @@ double Parameters::getPreferenceFunctionWidth() {
   return preferenceFunctionWidth_;
 }
 
-double Parameters::getPopulationSubsetFraction() {
-  return populationSubsetFraction_;
+double Parameters::getSizeClassSubsetFraction() {
+  return sizeClassSubsetFraction_;
 }
 
 double Parameters::getHalfSaturationConstantFraction() {
@@ -393,8 +393,8 @@ void Parameters::setPreferenceFunctionWidth(const double preferenceFunctionWidth
   parametersInitialised_[constants::ePreferenceFunctionWidth] = true;
 }
 
-void Parameters::setPopulationSubsetFraction(const double sizeClassSubsetFraction) {
-  populationSubsetFraction_ = sizeClassSubsetFraction;
+void Parameters::setSizeClassSubsetFraction(const double sizeClassSubsetFraction) {
+  sizeClassSubsetFraction_ = sizeClassSubsetFraction;
   parametersInitialised_[constants::eSizeClassSubsetFraction] = true;
 }
 

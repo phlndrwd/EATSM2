@@ -8,13 +8,13 @@
 
 SizeClass::SizeClass(HeterotrophData& heterotrophData,
                      const double sizeClassMidPoint,
-                     const double populationSubsetFraction,
+                     const double sizeClassSubsetFraction,
                      const unsigned maxPopulation,
                      const unsigned randomSeed) :
     heterotrophData_(heterotrophData),
     random_(randomSeed),
     sizeClassMidPoint_(sizeClassMidPoint),
-    populationSubsetFraction_(populationSubsetFraction) {
+    sizeClassSubsetFraction_(sizeClassSubsetFraction) {
   heterotrophs_.reserve(maxPopulation);
   alive_.reserve(maxPopulation);
   //pointer_ = heterotrophs_.begin();
@@ -60,10 +60,10 @@ void SizeClass::metabolisation(Nutrient& nutrient) {
 }
 
 void SizeClass::starvation(Nutrient& nutrient) {
-  std::size_t populationSize = alive_.size();
+  std::size_t numberAlive = alive_.size();
 
-  if (populationSize > 0) {
-    unsigned populationSubset = heterotrophProcessor_.roundWithProbability(random_, populationSize * populationSubsetFraction_);
+  if (numberAlive > 0) {
+    unsigned populationSubset = heterotrophProcessor_.roundWithProbability(random_, numberAlive * sizeClassSubsetFraction_);
 
     for (unsigned potentialStarvation = 0; potentialStarvation < populationSubset; ++potentialStarvation) {
       unsigned randomHeterotrophIndex = getRandomHeterotrophIndex();

@@ -37,7 +37,7 @@ class SizeClass {
   HeterotrophData& heterotrophData_;
   RandomSimple random_;
   const double sizeClassMidPoint_;
-  const double populationSubsetFraction_;
+  const double sizeClassSubsetFraction_;
 
   std::vector<Heterotroph> heterotrophs_;
   //std::vector<Heterotroph>::iterator pointer_;
