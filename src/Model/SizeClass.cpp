@@ -19,20 +19,6 @@ SizeClass::SizeClass(HeterotrophData& heterotrophData,
     random_(randomSeed) {
   heterotrophs_.reserve(maxPopulation_);
   alive_.reserve(maxPopulation_);
-
-  //pointer_ = heterotrophs_.begin();
-
-//  double individualVolume = sizeClassMidPoint_;
-//  double traitValue = heterotrophProcessor_.volumeToTraitValue(individualVolume);
-
-//  std::vector<double> heritableTraitValues{traitValue};
-//  std::vector<bool> areTraitsMutant{false};
-//  Traits heritableTraits(heritableTraitValues, areTraitsMutant);
-
-//  for(unsigned index = 0; index < maxPopulation; ++index) {
-//    dead_.push(index);
-//    heterotrophs_.push_back(Heterotroph(heritableTraits, individualVolume));
-//  }
 }
 
 std::vector<Heterotroph> SizeClass::update(Nutrient& nutrient) {
@@ -42,16 +28,6 @@ std::vector<Heterotroph> SizeClass::update(Nutrient& nutrient) {
   starvation(nutrient);
 
   return heterotrophsToMove;
-}
-
-void SizeClass::sizeClassSubset(std::function<void(unsigned)> func) {
-  std::size_t numberAlive = alive_.size();
-  if (numberAlive > 0) {
-    unsigned sizeClassSubset = heterotrophProcessor_.roundWithProbability(random_, numberAlive * sizeClassSubsetFraction_);
-    for (auto _ = sizeClassSubset; _--;) {
-      func(getRandomHeterotrophIndex());
-    }
-  }
 }
 
 void SizeClass::metabolisation(Nutrient& nutrient) {
@@ -77,6 +53,26 @@ void SizeClass::starvation(Nutrient& nutrient) {
       starve(nutrient, randomIndex);
     }
   });
+}
+
+void SizeClass::sizeClassSubset(std::function<void(unsigned)> func) {
+  std::size_t numberAlive = alive_.size();
+  if (numberAlive != 0) {
+    unsigned sizeClassSubset = heterotrophProcessor_.roundWithProbability(random_, numberAlive * sizeClassSubsetFraction_);
+    for (auto _ = sizeClassSubset; _--;) {
+      func(getRandomHeterotrophIndex());
+    }
+  }
+}
+
+void SizeClass::starve(Nutrient& nutrient, const unsigned index) {
+  Heterotroph& heterotroph = removeHeterotroph(index);
+  nutrient.addToVolume(heterotroph.getVolumeActual());
+  heterotrophData_.incrementStarvedFrequencies(heterotroph.getSizeClassIndex());
+}
+
+size_t SizeClass::getPopulationSize() {
+  return alive_.size();
 }
 
 unsigned SizeClass::getRandomHeterotrophIndex() {
@@ -128,7 +124,7 @@ void SizeClass::addHeterotroph(Heterotroph heterotroph) {
     unsigned index;
     if(dead_.size() == 0) {
       index = heterotrophs_.size();
-      heterotrophs_.push_back(heterotroph);
+      heterotrophs_.push_back(std::move(heterotroph));
     } else {
       index = dead_.front();
       dead_.pop();
@@ -138,10 +134,4 @@ void SizeClass::addHeterotroph(Heterotroph heterotroph) {
   } else {
     throw std::runtime_error("Size class is full...");
   }
-}
-
-void SizeClass::starve(Nutrient& nutrient, const unsigned index) {
-  Heterotroph& heterotroph = removeHeterotroph(index);
-  nutrient.addToVolume(heterotroph.getVolumeActual());
-  heterotrophData_.incrementStarvedFrequencies(heterotroph.getSizeClassIndex());
 }

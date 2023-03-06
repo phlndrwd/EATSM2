@@ -18,6 +18,7 @@ class SizeClass {
 
   std::vector<Heterotroph> update(Nutrient&);
 
+  size_t getPopulationSize();
   unsigned getRandomHeterotrophIndex();
   Heterotroph& getRandomHeterotroph();
   Heterotroph& getHeterotroph(const unsigned);
@@ -27,10 +28,11 @@ class SizeClass {
   void addHeterotroph(Heterotroph);
 
  private:
-  void sizeClassSubset(std::function<void(unsigned)>);
+  void feeding();
   void metabolisation(Nutrient&);
   void starvation(Nutrient&);
 
+  void sizeClassSubset(std::function<void(unsigned)>);
   void starve(Nutrient&, const unsigned);
 
   HeterotrophProcessor heterotrophProcessor_;
@@ -45,6 +47,8 @@ class SizeClass {
   //std::vector<Heterotroph>::iterator pointer_;
   std::vector<unsigned> alive_;
   std::queue<unsigned> dead_;
+
+  std::vector<double> preferenceVector;
 
 };
 

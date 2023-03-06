@@ -20,6 +20,7 @@ class Population {
 
  private:
   void createInitialPopulation();
+  void calculateFeedingProbabilities();
 
   Nutrient& nutrient_;
   Autotrophs& autotrophs_;
