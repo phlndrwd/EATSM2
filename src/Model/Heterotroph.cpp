@@ -63,23 +63,23 @@ Heterotroph::Heterotroph(const Traits& heritableTraits, const double volumeHerit
   isDead_ = false;
 }
 
-Heterotroph::Heterotroph(const Heterotroph& individual) :
-    traits_(individual.traits_),
-    assimilationEfficiency_(individual.assimilationEfficiency_) {
-  volumeHeritable_ = individual.volumeHeritable_;
-  volumeMinimum_ = individual.volumeMinimum_;
-  volumeReproduction_ = individual.volumeReproduction_;
+Heterotroph::Heterotroph(const Heterotroph& heterotroph) :
+    traits_(heterotroph.traits_),
+    assimilationEfficiency_(heterotroph.assimilationEfficiency_) {
+  volumeHeritable_ = heterotroph.volumeHeritable_;
+  volumeMinimum_ = heterotroph.volumeMinimum_;
+  volumeReproduction_ = heterotroph.volumeReproduction_;
 
-  volumeActual_ = individual.volumeActual_;
-  trophicLevel_ = individual.trophicLevel_;
+  volumeActual_ = heterotroph.volumeActual_;
+  trophicLevel_ = heterotroph.trophicLevel_;
 
-  starvationMultiplier_ = individual.starvationMultiplier_;
+  starvationMultiplier_ = heterotroph.starvationMultiplier_;
 
-  sizeClassIndex_ = individual.sizeClassIndex_;
-  age_ = individual.age_;
+  sizeClassIndex_ = heterotroph.sizeClassIndex_;
+  age_ = heterotroph.age_;
 
-  hasFed_ = individual.hasFed_;
-  isDead_ = individual.isDead_;
+  hasFed_ = heterotroph.hasFed_;
+  isDead_ = heterotroph.isDead_;
 }
 
 Heterotroph::Heterotroph(const Heterotroph&& individual) noexcept :

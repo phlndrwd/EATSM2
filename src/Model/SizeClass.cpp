@@ -1,6 +1,7 @@
 #include "SizeClass.h"
 
 #include <algorithm>
+#include <climits>
 #include <iostream>
 #include <stdexcept>
 
@@ -12,24 +13,26 @@ SizeClass::SizeClass(HeterotrophData& heterotrophData,
                      const unsigned maxPopulation,
                      const unsigned randomSeed) :
     heterotrophData_(heterotrophData),
-    random_(randomSeed),
     sizeClassMidPoint_(sizeClassMidPoint),
-    sizeClassSubsetFraction_(sizeClassSubsetFraction) {
-  heterotrophs_.reserve(maxPopulation);
-  alive_.reserve(maxPopulation);
+    sizeClassSubsetFraction_(sizeClassSubsetFraction),
+    maxPopulation_(maxPopulation),
+    random_(randomSeed) {
+  heterotrophs_.reserve(maxPopulation_);
+  alive_.reserve(maxPopulation_);
+
   //pointer_ = heterotrophs_.begin();
 
-  double individualVolume = sizeClassMidPoint_;
-  double traitValue = heterotrophProcessor_.volumeToTraitValue(individualVolume);
+//  double individualVolume = sizeClassMidPoint_;
+//  double traitValue = heterotrophProcessor_.volumeToTraitValue(individualVolume);
 
-  std::vector<double> heritableTraitValues{traitValue};
-  std::vector<bool> areTraitsMutant{false};
-  Traits heritableTraits(heritableTraitValues, areTraitsMutant);
+//  std::vector<double> heritableTraitValues{traitValue};
+//  std::vector<bool> areTraitsMutant{false};
+//  Traits heritableTraits(heritableTraitValues, areTraitsMutant);
 
-  for(unsigned index = 0; index < maxPopulation; ++index) {
-    dead_.push(index);
-    heterotrophs_.push_back(Heterotroph(heritableTraits, individualVolume));
-  }
+//  for(unsigned index = 0; index < maxPopulation; ++index) {
+//    dead_.push(index);
+//    heterotrophs_.push_back(Heterotroph(heritableTraits, individualVolume));
+//  }
 }
 
 std::vector<Heterotroph> SizeClass::update(Nutrient& nutrient) {
@@ -52,8 +55,7 @@ void SizeClass::sizeClassSubset(std::function<void(unsigned)> func) {
 }
 
 void SizeClass::metabolisation(Nutrient& nutrient) {
-  std::for_each(std::begin(alive_), std::end(alive_), [&] (unsigned index)
-  {
+  std::for_each(std::begin(alive_), std::end(alive_), [&](unsigned index) {
     heterotrophs_[index];
 
     double metabolicDeduction = heterotrophProcessor_.calculateMetabolicDeduction(heterotrophs_[index]);
@@ -122,11 +124,17 @@ Heterotroph& SizeClass::removeHeterotroph(const unsigned index) {
 }
 
 void SizeClass::addHeterotroph(Heterotroph heterotroph) {
-  if(dead_.size() != 0) {
-    unsigned index = dead_.front();
-    dead_.pop();
+  if(alive_.size() != maxPopulation_) {
+    unsigned index;
+    if(dead_.size() == 0) {
+      index = heterotrophs_.size();
+      heterotrophs_.push_back(heterotroph);
+    } else {
+      index = dead_.front();
+      dead_.pop();
+      heterotrophs_[index] = std::move(heterotroph);
+    }
     alive_.push_back(index);
-    heterotrophs_[index] = std::move(heterotroph);
   } else {
     throw std::runtime_error("Size class is full...");
   }

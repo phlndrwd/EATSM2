@@ -26,8 +26,8 @@ void Population::createInitialPopulation() {
     unsigned initialPopulationSize = 0;
     double secondaryProducerVolume = Parameters::Get()->getSmallestIndividualVolume() * Parameters::Get()->getPreferredPreyVolumeRatio();
 
-    unsigned firstPopulatedIndex = heterotrophProcessor_.findSizeClassIndexFromVolume(secondaryProducerVolume);
-    double individualVolume = Parameters::Get()->getSizeClassMidPoint(firstPopulatedIndex);
+    unsigned sizeClassIndex = heterotrophProcessor_.findSizeClassIndexFromVolume(secondaryProducerVolume);
+    double individualVolume = Parameters::Get()->getSizeClassMidPoint(sizeClassIndex);
     double traitValue = heterotrophProcessor_.volumeToTraitValue(individualVolume);
 
     double initialHeterotrophVolume = Parameters::Get()->getInitialHeterotrophVolume();
@@ -37,7 +37,8 @@ void Population::createInitialPopulation() {
       std::vector<double> traitValues{traitValue};
       std::vector<bool> areTraitsMutant{false};
       Traits traits(traitValues, areTraitsMutant);
-      //individuals_[firstPopulatedIndex].push_back(new Heterotroph(heritableTraits, individualVolume));
+      Heterotroph heterotroph(std::move(traits), individualVolume);
+      sizeClasses_[sizeClassIndex].addHeterotroph(std::move(heterotroph));
       ++initialPopulationSize;
     }
 
