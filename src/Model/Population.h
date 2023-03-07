@@ -13,7 +13,7 @@
 class Population {
  public:
   Population() = delete;
-  Population(Nutrient&, Autotrophs&, unsigned);
+  Population(Nutrient&, Autotrophs&, const unsigned);
 
   void update();
   bool recordData();

@@ -14,7 +14,8 @@
 class SizeClass {
  public:
   SizeClass() = delete;
-  SizeClass(HeterotrophData&, const double, const double, const unsigned, const unsigned);
+  SizeClass(HeterotrophData&, const std::vector<double>, const std::vector<double>,
+      const double, const double, const unsigned, const unsigned);
 
   std::vector<Heterotroph> update(Nutrient&);
 
@@ -32,24 +33,27 @@ class SizeClass {
   void metabolisation(Nutrient&);
   void starvation(Nutrient&);
 
+  void calculateFeedingProbability();
   void sizeClassSubset(std::function<void(unsigned)>);
   void starve(Nutrient&, const unsigned);
 
-  HeterotrophProcessor heterotrophProcessor_;
-
   HeterotrophData& heterotrophData_;
+  const std::vector<double> sizeClassPreferences_;
+  const std::vector<double> sizeClassVolumes_;
   const double sizeClassMidPoint_;
   const double sizeClassSubsetFraction_;
   const unsigned maxPopulation_;
+
+  const unsigned numberOfSizeClasses_;
+  const unsigned autotrophSizeClassIndex_;
+
   RandomSimple random_;
+  HeterotrophProcessor heterotrophProcessor_;
 
   std::vector<Heterotroph> heterotrophs_;
   //std::vector<Heterotroph>::iterator pointer_;
   std::vector<unsigned> alive_;
   std::queue<unsigned> dead_;
-
-  std::vector<double> preferenceVector;
-
 };
 
 #endif // SIZECLASS_H

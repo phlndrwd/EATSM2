@@ -95,19 +95,19 @@ class Parameters {
   double getLinearFeedingDenominator(const unsigned);
   double getHalfSaturationConstant(const unsigned);
 
-  const std::vector<double>& getSizeClassBoundaries();
-  const std::vector<double>& getSizeClassMidPoints();
+  const std::vector<double> getSizeClassBoundaries();
+  const std::vector<double> getSizeClassMidPoints();
 
-  const std::vector<double>& getLinearFeedingDenominators();
-  const std::vector<double>& getHalfSaturationConstants();
+  const std::vector<double> getLinearFeedingDenominators();
+  const std::vector<double> getHalfSaturationConstants();
 
-  const std::vector<unsigned>& getMaximumSizeClassPopulations();
+  const std::vector<unsigned> getMaximumSizeClassPopulations();
 
-  const std::vector<double>& getInterSizeClassPreferenceVector(const unsigned) const;
-  const std::vector<double>& getInterSizeClassVolumeVector(const unsigned) const;
+  const std::vector<double> getInterSizeClassPreferenceVector(const unsigned) const;
+  const std::vector<double> getInterSizeClassVolumeVector(const unsigned) const;
 
-  const std::vector<std::vector<double>>& getInterSizeClassPreferenceMatrix() const;
-  const std::vector<std::vector<double>>& getInterSizeClassVolumeMatrix() const;
+  const std::vector<std::vector<double>> getInterSizeClassPreferenceMatrix() const;
+  const std::vector<std::vector<double>> getInterSizeClassVolumeMatrix() const;
 
  private:
   Parameters();

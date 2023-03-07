@@ -265,23 +265,23 @@ double Parameters::getSizeClassMidPoint(const unsigned index) {
   return sizeClassMidPoints_[index];
 }
 
-const std::vector<double>& Parameters::getSizeClassBoundaries() {
+const std::vector<double> Parameters::getSizeClassBoundaries() {
   return sizeClassBoundaries_;
 }
 
-const std::vector<double>& Parameters::getSizeClassMidPoints() {
+const std::vector<double> Parameters::getSizeClassMidPoints() {
   return sizeClassMidPoints_;
 }
 
-const std::vector<double>& Parameters::getLinearFeedingDenominators() {
+const std::vector<double> Parameters::getLinearFeedingDenominators() {
   return linearFeedingDenominators_;
 }
 
-const std::vector<double>& Parameters::getHalfSaturationConstants() {
+const std::vector<double> Parameters::getHalfSaturationConstants() {
   return halfSaturationConstants_;
 }
 
-const std::vector<unsigned>& Parameters::getMaximumSizeClassPopulations() {
+const std::vector<unsigned> Parameters::getMaximumSizeClassPopulations() {
   return maximumSizeClassPopulations_;
 }
 
@@ -309,19 +309,19 @@ double Parameters::getHalfSaturationConstant(const unsigned sizeClassIndex) {
   return halfSaturationConstants_[sizeClassIndex];
 }
 
-const std::vector<double>& Parameters::getInterSizeClassPreferenceVector(const unsigned index) const {
+const std::vector<double> Parameters::getInterSizeClassPreferenceVector(const unsigned index) const {
   return interSizeClassPreferenceMatrix_[index];
 }
 
-const std::vector<double>& Parameters::getInterSizeClassVolumeVector(const unsigned index) const {
+const std::vector<double> Parameters::getInterSizeClassVolumeVector(const unsigned index) const {
   return interSizeClassVolumeMatrix_[index];
 }
 
-const std::vector<std::vector<double>>& Parameters::getInterSizeClassPreferenceMatrix() const {
+const std::vector<std::vector<double>> Parameters::getInterSizeClassPreferenceMatrix() const {
   return interSizeClassPreferenceMatrix_;
 }
 
-const std::vector<std::vector<double>>& Parameters::getInterSizeClassVolumeMatrix() const { return interSizeClassVolumeMatrix_; }
+const std::vector<std::vector<double>> Parameters::getInterSizeClassVolumeMatrix() const { return interSizeClassVolumeMatrix_; }
 
 void Parameters::setRandomSeed(const unsigned randomNumberSeed) {
   randomSeed_ = randomNumberSeed;
