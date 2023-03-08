@@ -32,8 +32,9 @@ Parameters::~Parameters() {
 }
 
 Parameters* Parameters::Get() {
-  if (this_ == nullptr) this_ = new Parameters();
-
+  if (this_ == nullptr) {
+    this_ = new Parameters();
+  }
   return this_;
 }
 

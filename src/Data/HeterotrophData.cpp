@@ -4,11 +4,11 @@
 #include "Heterotroph.h"
 #include "Parameters.h"
 
-HeterotrophData::HeterotrophData()
-    : sizeClassMidPointsFloat_(Parameters::Get()->getSizeClassMidPoints().begin(),
-                               Parameters::Get()->getSizeClassMidPoints().end()),
-      sizeClassBoundariesFloat_(Parameters::Get()->getSizeClassBoundaries().begin(),
-                                Parameters::Get()->getSizeClassBoundaries().end()),
+HeterotrophData::HeterotrophData() :
+//      sizeClassMidPointsFloat_(Parameters::Get()->getSizeClassMidPoints().begin(),
+//                               Parameters::Get()->getSizeClassMidPoints().end()),
+//      sizeClassBoundariesFloat_(Parameters::Get()->getSizeClassBoundaries().begin(),
+//                                Parameters::Get()->getSizeClassBoundaries().end()),
       minimumHeterotrophicVolume_(Parameters::Get()->getMinimumHeterotrophicVolume()),
       smallestIndividualVolume_(Parameters::Get()->getSmallestIndividualVolume()),
       numberOfSizeClasses_(Parameters::Get()->getNumberOfSizeClasses()) {

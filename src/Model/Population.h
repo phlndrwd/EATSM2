@@ -25,6 +25,8 @@ class Population {
   Nutrient& nutrient_;
   Autotrophs& autotrophs_;
 
+  const unsigned numberOfSizeClasses_;
+
   std::vector<SizeClass> sizeClasses_;
   HeterotrophProcessor heterotrophProcessor_;
 

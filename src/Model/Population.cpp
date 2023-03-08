@@ -4,19 +4,21 @@
 #include <iostream>
 #include <climits>
 
-#include "InitialState.h"
 #include "Parameters.h"
 
 Population::Population(Nutrient& nutrient, Autotrophs& autotrophs, const unsigned numberOfSizeClasses) :
     nutrient_(nutrient),
     autotrophs_(autotrophs),
+    numberOfSizeClasses_(numberOfSizeClasses),
+    heterotrophData_(),
     random_(Parameters::Get()->getRandomSeed()) {
-  for(unsigned index = 0; index < numberOfSizeClasses; ++index) {
+  for(unsigned index = 0; index < numberOfSizeClasses_; ++index) {
     sizeClasses_.push_back(SizeClass(heterotrophData_,
                                      Parameters::Get()->getInterSizeClassPreferenceVector(index),
                                      Parameters::Get()->getInterSizeClassVolumeVector(index),
                                      Parameters::Get()->getSizeClassMidPoint(index),
                                      Parameters::Get()->getSizeClassSubsetFraction(),
+                                     index,
                                      Parameters::Get()->getMaximumSizeClassPopulation(index),
                                      random_.getUniformInt(1, UINT_MAX)));
   }
@@ -58,14 +60,21 @@ void Population::createInitialPopulation() {
 }
 
 void Population::calculateFeedingProbabilities() {
+  std::vector<size_t> populationSizes(numberOfSizeClasses_, 0);
+  auto popSizesIt = populationSizes.begin();
   std::for_each(std::begin(sizeClasses_), std::end(sizeClasses_),
-  [&](SizeClass& predatorSizeClass)
-  {
-
+  [&](SizeClass& sizeClass) {
+    *popSizesIt = sizeClass.getPopulationSize();
+    ++popSizesIt;
+  });
+  std::for_each(std::begin(sizeClasses_), std::end(sizeClasses_),
+  [&](SizeClass& sizeClass) {
+     sizeClass.calculateFeedingProbability(populationSizes);
   });
 }
 
 void Population::update() {
+  calculateFeedingProbabilities();
   std::for_each(std::begin(sizeClasses_), std::end(sizeClasses_),
   [&](SizeClass& sizeClass) {
     std::vector<Heterotroph> heterotrophsToMove = sizeClass.update(nutrient_);

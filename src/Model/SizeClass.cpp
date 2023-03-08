@@ -12,6 +12,7 @@ SizeClass::SizeClass(HeterotrophData& heterotrophData,
                      const std::vector<double> sizeClassVolumes,
                      const double sizeClassMidPoint,
                      const double sizeClassSubsetFraction,
+                     const unsigned index,
                      const unsigned maxPopulation,
                      const unsigned randomSeed) :
     heterotrophData_(heterotrophData),
@@ -19,10 +20,10 @@ SizeClass::SizeClass(HeterotrophData& heterotrophData,
     sizeClassVolumes_(sizeClassVolumes),
     sizeClassMidPoint_(sizeClassMidPoint),
     sizeClassSubsetFraction_(sizeClassSubsetFraction),
+    index_(index),
     maxPopulation_(maxPopulation),
-    random_(randomSeed),
-    numberOfSizeClasses_(100),
-    autotrophSizeClassIndex_(Parameters::Get()->getAutotrophSizeClassIndex()) {
+    autotrophSizeClassIndex_(Parameters::Get()->getAutotrophSizeClassIndex()),
+    random_(randomSeed) {
   heterotrophs_.reserve(maxPopulation_);
   alive_.reserve(maxPopulation_);
 }
@@ -61,53 +62,27 @@ void SizeClass::starvation(Nutrient& nutrient) {
   });
 }
 
-void SizeClass::calculateFeedingProbability() {
-    if(alive_.size() != 0) {
-      double effectivePreyVolume = 0;
-      double highestEffectiveSizeClassVolume = 0;
-      unsigned coupledSizeClassIndex = 0;
-      for(unsigned preyIndex = 0; preyIndex < numberOfSizeClasses_; ++preyIndex) {
-        double effectiveSizeClassVolume = 0;
+void SizeClass::calculateFeedingProbability(std::vector<size_t>& populationSizes) {
+  if(alive_.size() != 0) {
+    double effectivePreyVolume = 0;
+    double highestEffectiveSizeClassVolume = 0;
+    unsigned coupledSizeClassIndex = 0;
+    unsigned preyIndex = 0;
+    auto sizeClassVolumesIt = sizeClassVolumes_.begin();
+    std::for_each(begin(populationSizes), end(populationSizes),
+    [&](size_t populationSize) {
+      size_t actualPopulationSize = preyIndex != index_ ? populationSize : populationSize - 1;
+      double effectiveSizeClassVolume = *sizeClassVolumesIt * actualPopulationSize;
 
-
+      if (effectiveSizeClassVolume > highestEffectiveSizeClassVolume) {
+        highestEffectiveSizeClassVolume = effectiveSizeClassVolume;
+        coupledSizeClassIndex = preyIndex;
       }
-    }
 
-
-//    fedCount_[predatorIndex] = 0;
-//    if (getSizeClassPopulation(predatorIndex) > 0) {
-//      double effectivePreyVolume = 0;
-//      double highestEffectiveSizeClassVolume = 0;
-//      unsigned coupledSizeClassIndex = 0;
-
-//      for (unsigned preyIndex = 0; preyIndex < numberOfSizeClasses_; ++preyIndex) {
-//        double effectiveSizeClassVolume = 0;
-//        // Add the result of the autotroph volume - no frequency coefficient.
-//        if (preyIndex == autotrophSizeClassIndex_)
-//          effectiveSizeClassVolume =
-//              interSizeClassPreferenceMatrix_[predatorIndex][preyIndex] * autotrophs_.getVolume();
-//        // Add the result of the heterotrophs.
-//        std::size_t preySizeClassPopulation = getSizeClassPopulation(preyIndex);
-//        if (preySizeClassPopulation > 0) {
-//          if (preyIndex != predatorIndex)
-//            effectiveSizeClassVolume += interSizeClassVolumeMatrix_[predatorIndex][preyIndex] * preySizeClassPopulation;
-//          else
-//            effectiveSizeClassVolume +=
-//                interSizeClassVolumeMatrix_[predatorIndex][preyIndex] * (preySizeClassPopulation - 1);
-//        }
-//        if (effectiveSizeClassVolume > highestEffectiveSizeClassVolume) {
-//          highestEffectiveSizeClassVolume = effectiveSizeClassVolume;
-//          coupledSizeClassIndex = preyIndex;
-//        }
-//        heterotrophData_.setEffectiveSizeClassVolume(predatorIndex, preyIndex, effectiveSizeClassVolume);
-//        effectivePreyVolume += effectiveSizeClassVolume;
-//      }
-//      heterotrophData_.setEffectivePreyVolume(predatorIndex, effectivePreyVolume);
-//      heterotrophData_.setFeedingProbability(
-//          predatorIndex, heterotrophProcessor_.calculateFeedingProbability(predatorIndex, effectivePreyVolume));
-//      heterotrophData_.setCoupledSizeClassIndex(predatorIndex, coupledSizeClassIndex);
-//    }
-//  }
+      effectivePreyVolume += effectiveSizeClassVolume;
+      ++preyIndex;
+    });
+  }
 }
 
 void SizeClass::sizeClassSubset(std::function<void(unsigned)> func) {
