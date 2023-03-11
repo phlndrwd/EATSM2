@@ -1,4 +1,4 @@
-#include "Population.h"
+#include "Heterotrophs.h"
 
 #include <algorithm>
 #include <iostream>
@@ -6,7 +6,7 @@
 
 #include "Parameters.h"
 
-Population::Population(Nutrient& nutrient, Autotrophs& autotrophs, const unsigned numberOfSizeClasses) :
+Heterotrophs::Heterotrophs(Nutrient& nutrient, Autotrophs& autotrophs, const unsigned numberOfSizeClasses) :
     nutrient_(nutrient),
     autotrophs_(autotrophs),
     numberOfSizeClasses_(numberOfSizeClasses),
@@ -27,7 +27,7 @@ Population::Population(Nutrient& nutrient, Autotrophs& autotrophs, const unsigne
   createInitialPopulation();
 }
 
-void Population::createInitialPopulation() {
+void Heterotrophs::createInitialPopulation() {
  //if (InitialState::Get()->isInitialised() == false)
  {
     double secondaryProducerVolume = Parameters::Get()->getSmallestIndividualVolume() * Parameters::Get()->getPreferredPreyVolumeRatio();
@@ -61,7 +61,7 @@ void Population::createInitialPopulation() {
   //  }
 }
 
-void Population::calculateFeedingProbabilities() {
+void Heterotrophs::calculateFeedingProbabilities() {
   std::vector<size_t> populationSizes(numberOfSizeClasses_, 0);
   auto popSizesIt = populationSizes.begin();
   std::for_each(std::begin(sizeClasses_), std::end(sizeClasses_),
@@ -75,7 +75,7 @@ void Population::calculateFeedingProbabilities() {
   });
 }
 
-void Population::update() {
+void Heterotrophs::update() {
   calculateFeedingProbabilities();
   std::for_each(std::begin(sizeClasses_), std::end(sizeClasses_),
   [&](SizeClass& sizeClass) {
@@ -88,6 +88,6 @@ void Population::update() {
   });
 }
 
-bool Population::recordData() {
+bool Heterotrophs::recordData() {
   return true;
 }

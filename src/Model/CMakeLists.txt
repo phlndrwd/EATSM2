@@ -5,12 +5,12 @@ list(APPEND EATSM2_SOURCES
   ${CMAKE_CURRENT_LIST_DIR}/Environment.h
   ${CMAKE_CURRENT_LIST_DIR}/Heterotroph.cpp
   ${CMAKE_CURRENT_LIST_DIR}/Heterotroph.h
+  ${CMAKE_CURRENT_LIST_DIR}/Heterotrophs.cpp
+  ${CMAKE_CURRENT_LIST_DIR}/Heterotrophs.h
   ${CMAKE_CURRENT_LIST_DIR}/HeterotrophProcessor.cpp
   ${CMAKE_CURRENT_LIST_DIR}/HeterotrophProcessor.h
   ${CMAKE_CURRENT_LIST_DIR}/Nutrient.cpp
   ${CMAKE_CURRENT_LIST_DIR}/Nutrient.h
-  ${CMAKE_CURRENT_LIST_DIR}/Population.cpp
-  ${CMAKE_CURRENT_LIST_DIR}/Population.h
   ${CMAKE_CURRENT_LIST_DIR}/SizeClass.cpp
   ${CMAKE_CURRENT_LIST_DIR}/SizeClass.h
   ${CMAKE_CURRENT_LIST_DIR}/TimeStep.cpp

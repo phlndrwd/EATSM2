@@ -9,10 +9,10 @@
 #include "RandomSimple.h"
 #include "SizeClass.h"
 
-class Population {
+class Heterotrophs {
  public:
-  Population() = delete;
-  Population(Nutrient&, Autotrophs&, const unsigned);
+  Heterotrophs() = delete;
+  Heterotrophs(Nutrient&, Autotrophs&, const unsigned);
 
   void update();
   bool recordData();
