@@ -10,18 +10,20 @@ Population::Population(Nutrient& nutrient, Autotrophs& autotrophs, const unsigne
     nutrient_(nutrient),
     autotrophs_(autotrophs),
     numberOfSizeClasses_(numberOfSizeClasses),
-    heterotrophData_(),
-    random_(Parameters::Get()->getRandomSeed()) {
-  for(unsigned index = 0; index < numberOfSizeClasses_; ++index) {
-    sizeClasses_.push_back(SizeClass(heterotrophData_,
-                                     Parameters::Get()->getInterSizeClassPreferenceVector(index),
-                                     Parameters::Get()->getInterSizeClassVolumeVector(index),
-                                     Parameters::Get()->getSizeClassMidPoint(index),
-                                     Parameters::Get()->getSizeClassSubsetFraction(),
-                                     index,
-                                     Parameters::Get()->getMaximumSizeClassPopulation(index),
-                                     random_.getUniformInt(1, UINT_MAX)));
-  }
+    random_(Parameters::Get()->getRandomSeed()),
+    sizeClasses_(numberOfSizeClasses_, SizeClass(1, random_.getUniformInt(1, UINT_MAX))) {
+
+  //sizeClasses_.resize(numberOfSizeClasses_);
+//  unsigned index = 0;
+//  std::for_each(std::begin(sizeClasses_), std::end(sizeClasses_),
+//  [&](SizeClass& sizeClass) {
+//    sizeClass = SizeClass(heterotrophData_, index, random_.getUniformInt(1, UINT_MAX));
+//    index++;
+//  });
+
+//  for(unsigned index = 0; index < numberOfSizeClasses_; ++index) {
+//    sizeClasses_.push_back(SizeClass(heterotrophData_, index, random_.getUniformInt(1, UINT_MAX)));
+//  }
   createInitialPopulation();
 }
 

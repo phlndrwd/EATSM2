@@ -7,21 +7,14 @@
 
 #include <Parameters.h>
 
-SizeClass::SizeClass(HeterotrophData& heterotrophData,
-                     const std::vector<double> sizeClassPreferences,
-                     const std::vector<double> sizeClassVolumes,
-                     const double sizeClassMidPoint,
-                     const double sizeClassSubsetFraction,
-                     const unsigned index,
-                     const unsigned maxPopulation,
+SizeClass::SizeClass(const unsigned index,
                      const unsigned randomSeed) :
-    heterotrophData_(heterotrophData),
-    sizeClassPreferences_(sizeClassPreferences),
-    sizeClassVolumes_(sizeClassVolumes),
-    sizeClassMidPoint_(sizeClassMidPoint),
-    sizeClassSubsetFraction_(sizeClassSubsetFraction),
     index_(index),
-    maxPopulation_(maxPopulation),
+    sizeClassPreferences_(Parameters::Get()->getInterSizeClassPreferenceVector(index_)),
+    sizeClassVolumes_(Parameters::Get()->getInterSizeClassVolumeVector(index_)),
+    sizeClassMidPoint_(Parameters::Get()->getSizeClassMidPoint(index_)),
+    sizeClassSubsetFraction_(Parameters::Get()->getSizeClassSubsetFraction()),
+    maxPopulation_(Parameters::Get()->getMaximumSizeClassPopulation(index_)),
     autotrophSizeClassIndex_(Parameters::Get()->getAutotrophSizeClassIndex()),
     random_(randomSeed) {
   heterotrophs_.reserve(maxPopulation_);
@@ -98,7 +91,7 @@ void SizeClass::sizeClassSubset(std::function<void(unsigned)> func) {
 void SizeClass::starve(Nutrient& nutrient, const unsigned index) {
   Heterotroph& heterotroph = removeHeterotroph(index);
   nutrient.addToVolume(heterotroph.getVolumeActual());
-  heterotrophData_.incrementStarvedFrequencies(heterotroph.getSizeClassIndex());
+  //heterotrophData_.incrementStarvedFrequencies(heterotroph.getSizeClassIndex());
 }
 
 size_t SizeClass::getPopulationSize() {

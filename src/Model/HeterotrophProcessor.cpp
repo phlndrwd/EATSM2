@@ -31,8 +31,7 @@ double HeterotrophProcessor::calculateMetabolicDeduction(const Heterotroph& hete
 }
 
 double HeterotrophProcessor::calculatePreferenceForPrey(const double grazerVolume, const double preyVolume) const {
-  return std::exp(-std::pow((std::log((preferredPreyVolumeRatio_ * preyVolume) / grazerVolume)), 2) /
-                  preferenceDenominator_);
+  return std::exp(-std::pow((std::log((preferredPreyVolumeRatio_ * preyVolume) / grazerVolume)), 2) / preferenceDenominator_);
 }
 
 double HeterotrophProcessor::calculateFeedingProbability(const unsigned predatorIndex,

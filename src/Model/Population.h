@@ -6,7 +6,6 @@
 #include "Autotrophs.h"
 #include "Nutrient.h"
 #include "HeterotrophProcessor.h"
-#include "HeterotrophData.h"
 #include "RandomSimple.h"
 #include "SizeClass.h"
 
@@ -27,11 +26,9 @@ class Population {
 
   const unsigned numberOfSizeClasses_;
 
+  RandomSimple random_;
   std::vector<SizeClass> sizeClasses_;
   HeterotrophProcessor heterotrophProcessor_;
-
-  HeterotrophData heterotrophData_;
-  RandomSimple random_;
 };
 
 #endif

@@ -2,7 +2,6 @@
 #define ENVIRONMENT
 
 #include "Autotrophs.h"
-#include "Heterotrophs.h"
 #include "Nutrient.h"
 #include "Population.h"
 

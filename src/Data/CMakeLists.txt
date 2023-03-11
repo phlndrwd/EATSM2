@@ -1,6 +1,4 @@
 list(APPEND EATSM2_SOURCES
-  ${CMAKE_CURRENT_LIST_DIR}/HeterotrophData.cpp
-  ${CMAKE_CURRENT_LIST_DIR}/HeterotrophData.h
   ${CMAKE_CURRENT_LIST_DIR}/MatrixDatum.cpp
   ${CMAKE_CURRENT_LIST_DIR}/MatrixDatum.h
   ${CMAKE_CURRENT_LIST_DIR}/VectorDatum.cpp
