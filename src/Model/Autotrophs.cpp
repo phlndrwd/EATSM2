@@ -3,17 +3,12 @@
 #include <iostream>
 
 #include "DataRecorder.h"
-#include "InitialState.h"
 #include "Nutrient.h"
 #include "Parameters.h"
 
 Autotrophs::Autotrophs(Nutrient& nutrient) :
     nutrient_(nutrient) {
-  if (InitialState::Get()->isInitialised() == true)
-    volume_ = InitialState::Get()->getAutotrophVolume();
-  else
-    volume_ = Parameters::Get()->getInitialAutotrophVolume();
-
+  volume_ = Parameters::Get()->getInitialAutotrophVolume();
   std::cout << "Autotroph pool created." << std::endl;
 }
 

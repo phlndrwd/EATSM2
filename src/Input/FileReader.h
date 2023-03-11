@@ -9,7 +9,7 @@ class FileReader {
   FileReader();
   ~FileReader();
 
-  void readInputFiles(std::string&, std::string&);
+  void readInputFile();
 
  private:
   bool readTextFile(const std::string&, bool copyToOutput = true);

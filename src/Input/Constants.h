@@ -53,10 +53,6 @@ enum eMovementDirection {
   eMoveDown
 };
 
-const unsigned kStateLineNutrientVol = 0;
-const unsigned kStateLineAutotrophVol = 1;
-const unsigned kStateLineFirstHeterotroph = 2;
-
 const std::string kConfigurationDirectory = "./input/";
 const std::string kOutputDirectoryName = "output";
 

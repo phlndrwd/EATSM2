@@ -4,7 +4,6 @@
 #include <iostream>
 
 #include "DataRecorder.h"
-#include "InitialState.h"
 #include "Parameters.h"
 #include "Strings.h"
 
@@ -12,23 +11,14 @@ FileReader::FileReader() {}
 
 FileReader::~FileReader() {}
 
-void FileReader::readInputFiles(std::string& parametersFile, std::string& stateFile) {
+void FileReader::readInputFile() {
   bool success = false;
 
-  if (parametersFile == "") parametersFile = constants::kConfigurationDirectory + constants::kInputParametersFileName;
+  std::string parametersFile = constants::kConfigurationDirectory + constants::kInputParametersFileName;
   if (readTextFile(parametersFile))
     if (Parameters::Get()->initialise(rawTextData_))
       if (readTextFile(constants::kConfigurationDirectory + constants::kOutputParametersFileName))
         success = DataRecorder::get()->initialise(rawTextData_);
-
-  // State file is specified, this overrides the option to avoid a restart.
-  if (success == true && (Parameters::Get()->getReadModelState() == true || stateFile != "")) {
-    Parameters::Get()->setReadModelState(true);  // For cases when a state file is specified, but the option not
-                                                 // set.
-    success = false;
-    if (stateFile == "") stateFile = constants::kConfigurationDirectory + constants::kInitialStateFileName;
-    if (readTextFile(stateFile, false) == true) success = InitialState::Get()->Initialise(rawTextData_);
-  }
 
   if (success) {
     std::cout << "Files read successfully..." << std::endl;

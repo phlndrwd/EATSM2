@@ -3,14 +3,9 @@
 #include <iostream>
 
 #include "DataRecorder.h"
-#include "InitialState.h"
 
 Nutrient::Nutrient() {
-  if (InitialState::Get()->isInitialised() == true)
-    volume_ = InitialState::Get()->getNutrientVolume();
-  else
-    volume_ = 0;
-
+  volume_ = 0;
   std::cout << "Nutrient pool created." << std::endl;
 }
 
