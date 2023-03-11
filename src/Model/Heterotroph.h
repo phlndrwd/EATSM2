@@ -9,14 +9,15 @@ class RandomSimple;
 class Heterotroph {
  public:
   Heterotroph() = delete;
-  Heterotroph(const Traits&, const double);
+  Heterotroph(const Traits&, const double, const unsigned);
   Heterotroph(const Traits&, const double, const double, const double, const double, const unsigned);
-  Heterotroph(const Traits&, const double, const double, const unsigned);
+
   Heterotroph(const Heterotroph&);
   Heterotroph(const Heterotroph&&) noexcept;
-  ~Heterotroph();
+
   Heterotroph& operator=(const Heterotroph&);
   Heterotroph& operator=(const Heterotroph&&);
+
   Heterotroph* getChild(RandomSimple&, const HeterotrophProcessor&);
 
   double consumePreyVolume(const double);
@@ -46,21 +47,18 @@ class Heterotroph {
 
  private:
   Traits traits_;
-
-  double assimilationEfficiency_;
-
   double volumeHeritable_;
+  unsigned sizeClassIndex_;
+
+  double volumeActual_;
   double volumeMinimum_;
   double volumeReproduction_;
 
-  double volumeActual_;
-  double trophicLevel_;
-
+  double assimilationEfficiency_;
   double starvationMultiplier_;
 
-  unsigned sizeClassIndex_;
+  double trophicLevel_;
   unsigned age_;
-
   bool hasFed_;
   bool isDead_;
 };

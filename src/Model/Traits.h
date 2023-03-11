@@ -11,7 +11,6 @@ class Traits {
  public:
   Traits() = delete;
   Traits(const std::vector<double>&, const std::vector<bool>&);
-  ~Traits();
 
   Traits(const Traits&);
   Traits(Traits&&) noexcept;

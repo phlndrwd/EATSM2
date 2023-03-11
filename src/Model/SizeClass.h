@@ -5,6 +5,7 @@
 #include <queue>
 #include <vector>
 
+#include "Autotrophs.h"
 #include "Heterotroph.h"
 #include "HeterotrophProcessor.h"
 #include "Nutrient.h"
@@ -13,9 +14,10 @@
 class SizeClass {
  public:
   SizeClass() = delete;
-  SizeClass(const unsigned, const unsigned);
+  SizeClass(Nutrient&, Autotrophs&, const unsigned, const unsigned, bool);
 
-  std::vector<Heterotroph> update(Nutrient&);
+  void populate();
+  std::vector<Heterotroph> update();
   void calculateFeedingProbability(std::vector<size_t>&);
 
   size_t getPopulationSize();
@@ -29,12 +31,14 @@ class SizeClass {
 
  private:
   void feeding();
-  void metabolisation(Nutrient&);
-  void starvation(Nutrient&);
+  void metabolisation();
+  void starvation();
 
   void sizeClassSubset(std::function<void(unsigned)>);
-  void starve(Nutrient&, const unsigned);
+  void starve(const unsigned);
 
+  Nutrient& nutrient_;
+  Autotrophs& autotrophs_;
   const unsigned index_;
 
   const std::vector<double> sizeClassPreferences_;

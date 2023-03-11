@@ -12,8 +12,6 @@ Traits::Traits(const std::vector<double>& values, const std::vector<bool>& areTr
   }
 }
 
-Traits::~Traits() {}
-
 Traits::Traits(const Traits& traits) {
   if (this != &traits) {
     mutationProbability_ = traits.mutationProbability_;

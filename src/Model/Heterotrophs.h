@@ -15,10 +15,8 @@ class Heterotrophs {
   Heterotrophs(Nutrient&, Autotrophs&, const unsigned);
 
   void update();
-  bool recordData();
 
  private:
-  void createInitialPopulation();
   void calculateFeedingProbabilities();
 
   Nutrient& nutrient_;

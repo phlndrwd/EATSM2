@@ -17,11 +17,11 @@ void Environment::update() {
 }
 
 bool Environment::recordData() {
-  bool isAlive = population_.recordData();
+  //bool isAlive = population_.recordData();
   autotrophs_.recordData();
   nutrient_.recordData();
 
-  return isAlive;
+  return true;
 }
 
 Nutrient& Environment::getNutrient() {
