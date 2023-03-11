@@ -47,7 +47,10 @@ void SizeClass::populate() {
   nutrient_.addToVolume(realInitialPopulationSize - initialPopulationSize);
 
   double traitValue = heterotrophProcessor_.volumeToTraitValue(sizeClassMidPoint_);
+  unsigned heterotrophIndex = 0;
   std::generate_n(std::back_inserter(heterotrophs_), initialPopulationSize, [&] {
+    alive_.push_back(heterotrophIndex);
+    ++heterotrophIndex;
     return heterotrophGenerator(traitValue, sizeClassMidPoint_, index_);
   });
   std::cout << "Size class with index " << index_ << " initialised with " << initialPopulationSize <<
@@ -64,12 +67,14 @@ std::vector<Heterotroph> SizeClass::update() {
 }
 
 void SizeClass::feeding() {
-//  sizeClassSubset([&](unsigned randomIndex) {
-//    Heterotroph& heterotroph = heterotrophs_[randomIndex];
-//    if (random_.getUniform() <= heterotrophProcessor_.calculateStarvationProbability(heterotroph)) {
-//      starve(randomIndex);
-//    }
-//  });
+  sizeClassSubset([&](unsigned randomIndex) {
+    Heterotroph& predator = heterotrophs_[randomIndex];
+    if(coupledSizeClassIndex_ != autotrophSizeClassIndex_) {
+      //feedFromHeterotrophs
+    } else {
+      //feedFromAutotrophs
+    }
+  });
 
 
 
@@ -129,7 +134,12 @@ void SizeClass::calculateFeedingProbability(std::vector<size_t>& populationSizes
       size_t effectivePopulationSize = preyIndex != index_ ? populationSize : populationSize - 1;
       double effectiveSizeClassVolume = *sizeClassVolumesIt * effectivePopulationSize;
       if(preyIndex == autotrophSizeClassIndex_) {
-        effectiveSizeClassVolume += *sizeClassPreferencesIt * autotrophs_.getVolume();
+        double effectiveAutotrophVolume = *sizeClassPreferencesIt * autotrophs_.getVolume();
+
+        effectiveSizeClassVolume += effectiveAutotrophVolume;
+
+        double probability = effectiveAutotrophVolume / effectiveSizeClassVolume;
+        int a = 1;
       }
       if (effectiveSizeClassVolume > highestEffectiveSizeClassVolume) {
         highestEffectiveSizeClassVolume = effectiveSizeClassVolume;
