@@ -45,7 +45,6 @@ class SizeClass {
   const std::vector<double> sizeClassVolumes_;
   const double sizeClassMidPoint_;
   const double sizeClassSubsetFraction_;
-
   const unsigned maxPopulation_;
   const unsigned autotrophSizeClassIndex_;
 
@@ -55,6 +54,10 @@ class SizeClass {
   std::vector<Heterotroph> heterotrophs_;
   std::vector<unsigned> alive_;
   std::queue<unsigned> dead_;
+
+  double effectivePreyVolume_;
+  double feedingProbabilty_;
+  unsigned coupledSizeClassIndex_;
 };
 
 #endif // SIZECLASS_H

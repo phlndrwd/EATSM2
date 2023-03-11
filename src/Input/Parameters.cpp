@@ -122,8 +122,7 @@ void Parameters::calculateParameters() {
     sizeClassMidPoints_[sizeClassIndex] = std::pow(10, sizeClassMidPointExponent);
 
     remainingVolumes_[sizeClassIndex] = totalVolume_ - sizeClassMidPoints_[sizeClassIndex];
-    linearFeedingDenominators_[sizeClassIndex] =
-        (2 * halfSaturationConstantFraction_) * remainingVolumes_[sizeClassIndex];
+    linearFeedingDenominators_[sizeClassIndex] = (2 * halfSaturationConstantFraction_) * remainingVolumes_[sizeClassIndex];
     halfSaturationConstants_[sizeClassIndex] = halfSaturationConstantFraction_ * remainingVolumes_[sizeClassIndex];
     maximumSizeClassPopulations_[sizeClassIndex] = std::ceil(totalVolume_ / sizeClassMidPoints_[sizeClassIndex]);
   }
