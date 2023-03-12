@@ -68,6 +68,8 @@ std::vector<structs::MovingHeterotroph> SizeClass::update() {
 void SizeClass::feeding() {
   sizeClassSubset([&](unsigned randomIndex) {
     Heterotroph& predator = heterotrophs_[randomIndex];
+
+    // PJU FIX - Turn this into a probabilistic selection
     if(coupledSizeClassIndex_ != autotrophSizeClassIndex_) {
       //feedFromHeterotrophs
     } else {
