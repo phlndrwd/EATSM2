@@ -46,7 +46,9 @@ double HeterotrophProcessor::calculateStarvationProbability(const Heterotroph& h
 
 unsigned HeterotrophProcessor::findIndividualSizeClassIndex(const Heterotroph& heterotroph,
                                                             unsigned directionToMove) const {
-  unsigned currentSizeClass = heterotroph.getSizeClassIndex();
+
+  // PJU FIX
+  unsigned currentSizeClass = 0;  // heterotroph.getSizeClassIndex();
   unsigned newSizeClassIndex = currentSizeClass;
   double volume = heterotroph.getVolumeActual();
 
@@ -72,8 +74,9 @@ unsigned HeterotrophProcessor::findIndividualSizeClassIndex(const Heterotroph& h
 bool HeterotrophProcessor::updateSizeClassIndex(Heterotroph& heterotroph) const {
   unsigned directionToMove = directionIndividualShouldMoveSizeClasses(heterotroph);
   if (directionToMove != constants::eNoMovement) {
-    unsigned newSizeClassIndex = findIndividualSizeClassIndex(heterotroph, directionToMove);
-    heterotroph.setSizeClassIndex(newSizeClassIndex);
+    // PJU FIX
+    // unsigned newSizeClassIndex = findIndividualSizeClassIndex(heterotroph, directionToMove);
+    // heterotroph.setSizeClassIndex(newSizeClassIndex);
     return true;
   }
   return false;
@@ -94,7 +97,8 @@ unsigned HeterotrophProcessor::findSizeClassIndexFromVolume(const double volume)
 unsigned HeterotrophProcessor::directionIndividualShouldMoveSizeClasses(const Heterotroph& heterotroph) const {
   unsigned directionToMove = constants::eNoMovement;
 
-  unsigned sizeClassIndex = heterotroph.getSizeClassIndex();
+  // PJU FIX
+  unsigned sizeClassIndex = 0;  // heterotroph.getSizeClassIndex();
   double volumeActual = heterotroph.getVolumeActual();
 
   if (volumeActual < sizeClassBoundaries_[sizeClassIndex])

@@ -9,8 +9,8 @@ class RandomSimple;
 class Heterotroph {
  public:
   Heterotroph() = delete;
-  Heterotroph(const Traits&, const double, const unsigned);
-  Heterotroph(const Traits&, const double, const double, const double, const double, const unsigned);
+  Heterotroph(const Traits&, const double);
+  Heterotroph(const Traits&, const double, const double, const double, const double);
 
   Heterotroph(const Heterotroph&);
   Heterotroph(const Heterotroph&&) noexcept;
@@ -25,7 +25,6 @@ class Heterotroph {
 
   Traits& getHeritableTraits();
   double getTrophicLevel() const;
-  unsigned getSizeClassIndex() const;
   unsigned getAge() const;
 
   bool hasFed() const;
@@ -39,7 +38,6 @@ class Heterotroph {
   double getStarvationMultiplier() const;
 
   void setTrophicLevel(const double);
-  void setSizeClassIndex(const unsigned);
 
   void setAge(const unsigned);
   void setHasFed(const bool);
@@ -48,7 +46,6 @@ class Heterotroph {
  private:
   Traits traits_;
   double volumeHeritable_;
-  unsigned sizeClassIndex_;
 
   double volumeActual_;
   double volumeMinimum_;

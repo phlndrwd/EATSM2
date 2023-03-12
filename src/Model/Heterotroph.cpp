@@ -5,10 +5,10 @@
 #include "RandomSimple.h"
 
 // For model initialisation.
-Heterotroph::Heterotroph(const Traits& heritableTraits, const double volumeHeritable, const unsigned sizeClassIndex) :
+Heterotroph::Heterotroph(const Traits& heritableTraits,
+                         const double volumeHeritable) :
     traits_(heritableTraits.getValues(), heritableTraits.areTraitsMutant()),
     volumeHeritable_(volumeHeritable),
-    sizeClassIndex_(sizeClassIndex),
     volumeActual_(volumeHeritable_),
     volumeMinimum_(volumeHeritable_ * constants::kMinimumFractionalVolume),
     volumeReproduction_(constants::kReproductionFactor * volumeHeritable_),
@@ -21,16 +21,17 @@ Heterotroph::Heterotroph(const Traits& heritableTraits, const double volumeHerit
 }
 
 // For reproduction.
-Heterotroph::Heterotroph(const Traits& heritableTraits, const double volumeHeritable,
-                         const double volumeActual, const double volumeMinimum, const double trophicLevel,
-                         const unsigned sizeClassIndex) :
+Heterotroph::Heterotroph(const Traits& heritableTraits,
+                         const double volumeHeritable,
+                         const double volumeActual,
+                         const double volumeMinimum,
+                         const double trophicLevel) :
     traits_(heritableTraits),
     assimilationEfficiency_(Parameters::Get()->getAssimilationEfficiency()) {
   volumeHeritable_ = volumeHeritable;
   volumeActual_ = volumeActual;
   volumeMinimum_ = volumeMinimum;
   trophicLevel_ = trophicLevel;
-  sizeClassIndex_ = sizeClassIndex;
 
   volumeReproduction_ = constants::kReproductionFactor * volumeHeritable_;
 
@@ -53,7 +54,6 @@ Heterotroph::Heterotroph(const Heterotroph& heterotroph) :
 
   starvationMultiplier_ = heterotroph.starvationMultiplier_;
 
-  sizeClassIndex_ = heterotroph.sizeClassIndex_;
   age_ = heterotroph.age_;
 
   hasFed_ = heterotroph.hasFed_;
@@ -72,7 +72,6 @@ Heterotroph::Heterotroph(const Heterotroph&& heterotroph) noexcept :
 
   starvationMultiplier_ = std::move(heterotroph.starvationMultiplier_);
 
-  sizeClassIndex_ = std::move(heterotroph.sizeClassIndex_);
   age_ = std::move(heterotroph.age_);
 
   hasFed_ = std::move(heterotroph.hasFed_);
@@ -92,7 +91,6 @@ Heterotroph& Heterotroph::operator=(const Heterotroph& heterotroph) {
 
     starvationMultiplier_ = heterotroph.starvationMultiplier_;
 
-    sizeClassIndex_ = heterotroph.sizeClassIndex_;
     age_ = heterotroph.age_;
 
     hasFed_ = heterotroph.hasFed_;
@@ -115,7 +113,6 @@ Heterotroph& Heterotroph::operator=(const Heterotroph&& heterotroph) {
 
     starvationMultiplier_ = std::move(heterotroph.starvationMultiplier_);
 
-    sizeClassIndex_ = std::move(heterotroph.sizeClassIndex_);
     age_ = std::move(heterotroph.age_);
 
     hasFed_ = std::move(heterotroph.hasFed_);
@@ -146,7 +143,7 @@ Heterotroph* Heterotroph::getChild(RandomSimple& random, const HeterotrophProces
   }
   volumeActual_ = volumeActual_ - childVolumeActual;
 
-  return new Heterotroph(childTraits, childVolumeHeritable, childVolumeActual, childVolumeMinimum, trophicLevel_, sizeClassIndex_);
+  return new Heterotroph(childTraits, childVolumeHeritable, childVolumeActual, childVolumeMinimum, trophicLevel_);
 }
 
 double Heterotroph::consumePreyVolume(const double preyVolume) {
@@ -171,10 +168,6 @@ Traits& Heterotroph::getHeritableTraits() {
 
 double Heterotroph::getTrophicLevel() const {
   return trophicLevel_;
-}
-
-unsigned Heterotroph::getSizeClassIndex() const {
-  return sizeClassIndex_;
 }
 
 unsigned Heterotroph::getAge() const {
@@ -211,10 +204,6 @@ double Heterotroph::getStarvationMultiplier() const {
 
 void Heterotroph::setTrophicLevel(const double trophicLevel) {
   trophicLevel_ = trophicLevel;
-}
-
-void Heterotroph::setSizeClassIndex(const unsigned sizeClassIndex) {
-  sizeClassIndex_ = sizeClassIndex;
 }
 
 void Heterotroph::setAge(const unsigned age) {

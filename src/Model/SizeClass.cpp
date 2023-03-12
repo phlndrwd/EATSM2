@@ -8,12 +8,11 @@
 #include <Parameters.h>
 namespace {
 Heterotroph heterotrophGenerator(double traitValue,
-                                 double volume,
-                                 unsigned sizeClassIndex) {
+                                 double volume) {
   std::vector<double> traitValues{traitValue};
   std::vector<bool> areTraitsMutant{false};
   Traits traits(traitValues, areTraitsMutant);
-  Heterotroph heterotroph(std::move(traits), volume, sizeClassIndex);
+  Heterotroph heterotroph(std::move(traits), volume);
   return heterotroph;
 }
 }  // anonymous namespace
@@ -51,7 +50,7 @@ void SizeClass::populate() {
   std::generate_n(std::back_inserter(heterotrophs_), initialPopulationSize, [&] {
     alive_.push_back(heterotrophIndex);
     ++heterotrophIndex;
-    return heterotrophGenerator(traitValue, sizeClassMidPoint_, index_);
+    return heterotrophGenerator(traitValue, sizeClassMidPoint_);
   });
   std::cout << "Size class with index " << index_ << " initialised with " << initialPopulationSize <<
                " individuals." << std::endl;

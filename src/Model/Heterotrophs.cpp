@@ -56,7 +56,10 @@ void Heterotrophs::update() {
     std::vector<Heterotroph> heterotrophsToMove = sizeClass.update();
     for (const auto& heterotroph : heterotrophsToMove) {
       std::vector<SizeClass>::iterator sizeClassIt = sizeClasses_.begin();
-      std::advance(sizeClassIt, heterotroph.getSizeClassIndex());
+
+      // PJU FIX - Determine SizeClassIndex here.
+
+      //std::advance(sizeClassIt, heterotroph.getSizeClassIndex());
       sizeClassIt->addHeterotroph(heterotroph);
     }
   });
