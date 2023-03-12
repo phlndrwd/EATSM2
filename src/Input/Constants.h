@@ -4,55 +4,6 @@
 #include <string>
 
 namespace constants {
-
-// Input data file enums
-enum eInputParameters {
-  eRandomSeed,
-  eRunTimeInSeconds,
-  eSamplingRate,
-  eNumberOfSizeClasses,
-  eReadModelState,
-  eWriteModelState,
-  eUseLinearFeeding,
-  eInitialAutotrophicVolume,
-  eInitialHeterotrophicVolume,
-  eMinimumHeterotrophicVolume,
-  eSmallestIndividualVolume,
-  eLargestIndividualVolume,
-  eSizeClassSubsetFraction,
-  eHalfSaturationConstantFraction,
-  ePreferredPreyVolumeRatio,
-  ePreferenceFunctionWidth,
-  eAssimilationEfficiency,
-  eFractionalMetabolicExpense,
-  eMetabolicIndex,
-  eMutationProbability,
-  eMutationStandardDeviation,
-  eNumberOfParamters
-};
-
-enum eInputParametersMetadata {
-  eParameterName,
-  eParameterValue
-};
-
-enum eOutputControlParameters {
-  eDatumName,
-  eDatumType
-};
-
-enum eHeritableTraitIndices {
-  eVolume
-};
-
-// Model enums
-
-enum eMovementDirection {
-  eNoMovement,
-  eMoveUp,
-  eMoveDown
-};
-
 const std::string kConfigurationDirectory = "./input/";
 const std::string kOutputDirectoryName = "output";
 

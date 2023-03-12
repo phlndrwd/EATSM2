@@ -3,7 +3,7 @@
 
 #include <vector>
 
-#include "Constants.h"
+#include "Enums.h"
 
 class RandomSimple;
 
@@ -22,10 +22,10 @@ class Traits {
   const std::vector<double>& getValues() const;
   const std::vector<bool>& areTraitsMutant() const;
 
-  const double& getValue(const constants::eHeritableTraitIndices) const;
+  const double& getValue(const enums::eTraitIndices) const;
   bool isTraitMutant(const unsigned) const;
 
-  void setValue(const constants::eHeritableTraitIndices, const double);
+  void setValue(const enums::eTraitIndices, const double);
 
  private:
   double mutationProbability_;

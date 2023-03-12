@@ -86,10 +86,10 @@ bool Traits::isTraitMutant(const unsigned traitIndex) const {
   return areMutantTraits_[traitIndex];
 }
 
-const double& Traits::getValue(const constants::eHeritableTraitIndices trait) const {
+const double& Traits::getValue(const enums::eTraitIndices trait) const {
   return values_[trait];
 }
 
-void Traits::setValue(const constants::eHeritableTraitIndices trait, const double traitValue) {
+void Traits::setValue(const enums::eTraitIndices trait, const double traitValue) {
   values_[trait] = traitValue;
 }

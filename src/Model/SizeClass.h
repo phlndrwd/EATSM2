@@ -10,14 +10,15 @@
 #include "HeterotrophProcessor.h"
 #include "Nutrient.h"
 #include "RandomSimple.h"
+#include "Structs.h"
 
 class SizeClass {
  public:
   SizeClass() = delete;
-  SizeClass(Nutrient&, Autotrophs&, const unsigned, const unsigned, bool);
+  SizeClass(Nutrient&, Autotrophs&, const double, const unsigned, const unsigned);
 
-  void populate();
-  std::vector<Heterotroph> update();
+  void populate(const double);
+  std::vector<structs::MovingHeterotroph> update();
   void calculateFeedingProbability(std::vector<size_t>&);
 
   size_t getPopulationSize();

@@ -5,7 +5,7 @@
 #include <string>
 #include <vector>
 
-#include "Constants.h"
+#include "Enums.h"
 
 class Parameters {
  public:
@@ -158,7 +158,7 @@ class Parameters {
   std::vector<std::vector<double>> interSizeClassPreferenceMatrix_;
   std::vector<std::vector<double>> interSizeClassVolumeMatrix_;
 
-  std::array<bool, constants::eMutationStandardDeviation + 1> parametersInitialised_;
+  std::array<bool, enums::eNumberOfParamters> parametersInitialised_;
 
   double smallestVolumeExponent_;
   double largestVolumeExponent_;

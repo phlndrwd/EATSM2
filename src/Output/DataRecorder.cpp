@@ -3,6 +3,7 @@
 #include "Constants.h"
 #include "MatrixDatum.h"
 #include "Strings.h"
+#include "Enums.h"
 #include "VectorDatum.h"
 
 DataRecorder* DataRecorder::this_ = nullptr;
@@ -28,9 +29,9 @@ DataRecorder::~DataRecorder() {
 bool DataRecorder::initialise(const std::vector<std::vector<std::string>>& rawOutputParameterData) {
   if (rawOutputParameterData.size() > 0) {
     for (unsigned rowIndex = 0; rowIndex < rawOutputParameterData.size(); ++rowIndex) {
-      std::string name = Strings::removeWhiteSpace(rawOutputParameterData[rowIndex][constants::eDatumName]);
+      std::string name = Strings::removeWhiteSpace(rawOutputParameterData[rowIndex][enums::eDatumName]);
       std::string type =
-          Strings::removeWhiteSpace(Strings::toLowercase(rawOutputParameterData[rowIndex][constants::eDatumType]));
+          Strings::removeWhiteSpace(Strings::toLowercase(rawOutputParameterData[rowIndex][enums::eDatumType]));
 
       std::vector<std::string> datumMetadata;
       datumMetadata.push_back(name);
@@ -94,7 +95,7 @@ VectorDatum* DataRecorder::getVectorDatumFromName(const std::string& name) {
     vectorDatum = iter->second;
   } else {
     for (unsigned datumIndex = 0; datumIndex < vectorDatumMetadata_.size(); ++datumIndex) {
-      std::string datumName = vectorDatumMetadata_[datumIndex][constants::eDatumName];
+      std::string datumName = vectorDatumMetadata_[datumIndex][enums::eDatumName];
 
       if (datumName == name) {
         vectorDatum = new VectorDatum(datumName);
@@ -114,7 +115,7 @@ MatrixDatum* DataRecorder::getMatrixDatumFromName(const std::string& name) {
     matrixDatum = iter->second;
   } else {
     for (unsigned datumIndex = 0; datumIndex < matrixDatumMetadata_.size(); ++datumIndex) {
-      std::string datumName = matrixDatumMetadata_[datumIndex][constants::eDatumName];
+      std::string datumName = matrixDatumMetadata_[datumIndex][enums::eDatumName];
 
       if (datumName == name) {
         matrixDatum = new MatrixDatum(datumName);

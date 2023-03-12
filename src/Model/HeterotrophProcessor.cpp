@@ -6,6 +6,7 @@
 #include "Heterotroph.h"
 #include "Parameters.h"
 #include "RandomSimple.h"
+#include "Enums.h"
 
 HeterotrophProcessor::HeterotrophProcessor()
     : sizeClassBoundaries_(Parameters::Get()->getSizeClassBoundaries()),
@@ -52,14 +53,14 @@ unsigned HeterotrophProcessor::findIndividualSizeClassIndex(const Heterotroph& h
   unsigned newSizeClassIndex = currentSizeClass;
   double volume = heterotroph.getVolumeActual();
 
-  if (directionToMove == constants::eMoveUp) {
+  if (directionToMove == enums::eMoveUp) {
     for (unsigned index = currentSizeClass; index < numberOfSizeClasses_; ++index) {
       if (volume < sizeClassBoundaries_[index]) {
         newSizeClassIndex = index - 1;
         break;
       }
     }
-  } else if (directionToMove == constants::eMoveDown) {
+  } else if (directionToMove == enums::eMoveDown) {
     for (int index = currentSizeClass; index >= 0; --index) {
       if (volume >= sizeClassBoundaries_[index]) {
         newSizeClassIndex = (unsigned)index;
@@ -73,7 +74,7 @@ unsigned HeterotrophProcessor::findIndividualSizeClassIndex(const Heterotroph& h
 
 bool HeterotrophProcessor::updateSizeClassIndex(Heterotroph& heterotroph) const {
   unsigned directionToMove = directionIndividualShouldMoveSizeClasses(heterotroph);
-  if (directionToMove != constants::eNoMovement) {
+  if (directionToMove != enums::eNoMovement) {
     // PJU FIX
     // unsigned newSizeClassIndex = findIndividualSizeClassIndex(heterotroph, directionToMove);
     // heterotroph.setSizeClassIndex(newSizeClassIndex);
@@ -95,16 +96,16 @@ unsigned HeterotrophProcessor::findSizeClassIndexFromVolume(const double volume)
 }
 
 unsigned HeterotrophProcessor::directionIndividualShouldMoveSizeClasses(const Heterotroph& heterotroph) const {
-  unsigned directionToMove = constants::eNoMovement;
+  unsigned directionToMove = enums::eNoMovement;
 
   // PJU FIX
   unsigned sizeClassIndex = 0;  // heterotroph.getSizeClassIndex();
   double volumeActual = heterotroph.getVolumeActual();
 
   if (volumeActual < sizeClassBoundaries_[sizeClassIndex])
-    directionToMove = constants::eMoveDown;
+    directionToMove = enums::eMoveDown;
   else if (volumeActual >= sizeClassBoundaries_[sizeClassIndex + 1])
-    directionToMove = constants::eMoveUp;
+    directionToMove = enums::eMoveUp;
 
   return directionToMove;
 }
@@ -166,8 +167,8 @@ double HeterotrophProcessor::calculateBetaExponentialStarvation(const double vol
   else if (volumeActual >= volumeHeritable)
     return 0;
   else
-    return (1 - (1 + ((volumeHeritable - volumeMinimum) - (volumeActual - volumeMinimum)) * starvationMultiplier) *
-                    ((volumeActual - volumeMinimum) * starvationMultiplier));
+    return (1 - (1 + ((volumeHeritable - volumeMinimum) - (volumeActual - volumeMinimum)) *
+           starvationMultiplier) * ((volumeActual - volumeMinimum) * starvationMultiplier));
 }
 
 double HeterotrophProcessor::traitValueToVolume(const double traitValue) const {

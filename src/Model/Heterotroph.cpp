@@ -1,5 +1,6 @@
 #include "Heterotroph.h"
 
+#include "Constants.h"
 #include "HeterotrophProcessor.h"
 #include "Parameters.h"
 #include "RandomSimple.h"
@@ -128,12 +129,12 @@ Heterotroph* Heterotroph::getChild(RandomSimple& random, const HeterotrophProces
   double childVolumeActual = 0;
   double childVolumeMinimum = 0;
 
-  if (childTraits.isTraitMutant(constants::eVolume) == false) {
+  if (childTraits.isTraitMutant(enums::eVolume) == false) {
     childVolumeActual = volumeActual_ * constants::kReproductionMultiplier;
     childVolumeHeritable = volumeHeritable_;
     childVolumeMinimum = volumeMinimum_;
   } else {
-    childVolumeHeritable = heterotrophProcessor.traitValueToVolume(childTraits.getValue(constants::eVolume));
+    childVolumeHeritable = heterotrophProcessor.traitValueToVolume(childTraits.getValue(enums::eVolume));
     childVolumeMinimum = childVolumeHeritable * constants::kMinimumFractionalVolume;
 
     if (childVolumeHeritable < volumeActual_)

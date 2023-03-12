@@ -3,6 +3,7 @@
 #include <fstream>
 #include <iostream>
 
+#include "Constants.h"
 #include "DataRecorder.h"
 #include "Parameters.h"
 #include "Strings.h"

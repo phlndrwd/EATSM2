@@ -3,8 +3,8 @@
 
 #include <vector>
 
-class Heterotroph;
-class RandomSimple;
+#include "Heterotroph.h"
+#include "RandomSimple.h"
 
 class HeterotrophProcessor {
  public:

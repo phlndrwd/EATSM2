@@ -5,7 +5,8 @@
 #include <iostream>
 #include <stdexcept>
 
-#include <Parameters.h>
+#include "Parameters.h"
+
 namespace {
 Heterotroph heterotrophGenerator(double traitValue,
                                  double volume) {
@@ -19,9 +20,9 @@ Heterotroph heterotrophGenerator(double traitValue,
 
 SizeClass::SizeClass(Nutrient& nutrient,
                      Autotrophs& autotrophs,
+                     const double volumeToInitialise,
                      const unsigned index,
-                     const unsigned randomSeed,
-                     bool runPopulate) :
+                     const unsigned randomSeed) :
     nutrient_(nutrient),
     autotrophs_(autotrophs),
     index_(index),
@@ -34,35 +35,34 @@ SizeClass::SizeClass(Nutrient& nutrient,
     random_(randomSeed) {
   heterotrophs_.reserve(maxPopulation_);
   alive_.reserve(maxPopulation_);
-  if(runPopulate == true) {
-    populate();
+  populate(volumeToInitialise);
+}
+
+void SizeClass::populate(const double volumeToInitialise) {
+  if(volumeToInitialise > 0) {
+    double realInitialPopulationSize = volumeToInitialise / sizeClassMidPoint_;
+    unsigned initialPopulationSize = std::abs(realInitialPopulationSize);
+    nutrient_.addToVolume(realInitialPopulationSize - initialPopulationSize);
+
+    double traitValue = heterotrophProcessor_.volumeToTraitValue(sizeClassMidPoint_);
+    unsigned heterotrophIndex = 0;
+    std::generate_n(std::back_inserter(heterotrophs_), initialPopulationSize, [&] {
+      alive_.push_back(heterotrophIndex);
+      ++heterotrophIndex;
+      return heterotrophGenerator(traitValue, sizeClassMidPoint_);
+    });
+    std::cout << "Size class with index " << index_ << " initialised with " << initialPopulationSize <<
+                 " heterotrophs." << std::endl;
   }
 }
 
-void SizeClass::populate() {
-  double initialHeterotrophVolume = Parameters::Get()->getInitialHeterotrophVolume();
-  double realInitialPopulationSize = initialHeterotrophVolume / sizeClassMidPoint_;
-  unsigned initialPopulationSize = std::abs(realInitialPopulationSize);
-  nutrient_.addToVolume(realInitialPopulationSize - initialPopulationSize);
-
-  double traitValue = heterotrophProcessor_.volumeToTraitValue(sizeClassMidPoint_);
-  unsigned heterotrophIndex = 0;
-  std::generate_n(std::back_inserter(heterotrophs_), initialPopulationSize, [&] {
-    alive_.push_back(heterotrophIndex);
-    ++heterotrophIndex;
-    return heterotrophGenerator(traitValue, sizeClassMidPoint_);
-  });
-  std::cout << "Size class with index " << index_ << " initialised with " << initialPopulationSize <<
-               " individuals." << std::endl;
-}
-
-std::vector<Heterotroph> SizeClass::update() {
-  std::vector<Heterotroph> heterotrophsToMove;
+std::vector<structs::MovingHeterotroph> SizeClass::update() {
+  std::vector<structs::MovingHeterotroph> movingHeterotrophs;
   feeding();
   metabolisation();
   starvation();
 
-  return heterotrophsToMove;
+  return movingHeterotrophs;
 }
 
 void SizeClass::feeding() {
