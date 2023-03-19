@@ -38,6 +38,11 @@ enum eOutputControlParameters {
   eDatumType
 };
 
+enum eFeedingStrategy {
+  eHerbivore,
+  eCarnivore
+};
+
 enum eTraitIndices {
   eVolume
 };

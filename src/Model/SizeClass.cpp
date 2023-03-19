@@ -126,31 +126,47 @@ void SizeClass::calculateFeedingProbability(std::vector<size_t>& populationSizes
     feedingProbabilty_ = 0;
     coupledSizeClassIndex_ = 0;
 
-    double highestEffectiveSizeClassVolume = 0;
+    std::vector<double> effectiveSizeClassVolumes(populationSizes.size(), 0);
+    double effectiveAutotrophVolume;
     unsigned preyIndex = 0;
     auto sizeClassVolumesIt = sizeClassVolumes_.begin();
     auto sizeClassPreferencesIt = sizeClassPreferences_.begin();
+    auto effectiveSizeClassVolumesIt = effectiveSizeClassVolumes.begin();
+    // Calculate effective prey volumes
     std::for_each(begin(populationSizes), end(populationSizes),
     [&](size_t populationSize) {
       size_t effectivePopulationSize = preyIndex != index_ ? populationSize : populationSize - 1;
-      double effectiveSizeClassVolume = *sizeClassVolumesIt * effectivePopulationSize;
+
+      *effectiveSizeClassVolumesIt = *sizeClassVolumesIt * effectivePopulationSize;
       if(preyIndex == autotrophSizeClassIndex_) {
-        double effectiveAutotrophVolume = *sizeClassPreferencesIt * autotrophs_.getVolume();
-
-        effectiveSizeClassVolume += effectiveAutotrophVolume;
-
-        double probability = effectiveAutotrophVolume / effectiveSizeClassVolume;
-        int a = 1;
+        effectiveAutotrophVolume = *sizeClassPreferencesIt * autotrophs_.getVolume();
+        *effectiveSizeClassVolumesIt += effectiveAutotrophVolume;
       }
-      if (effectiveSizeClassVolume > highestEffectiveSizeClassVolume) {
-        highestEffectiveSizeClassVolume = effectiveSizeClassVolume;
-        coupledSizeClassIndex_ = preyIndex;
-      }
-      effectivePreyVolume_ += effectiveSizeClassVolume;
+      effectivePreyVolume_ += *effectiveSizeClassVolumesIt;
+
+      ++effectiveSizeClassVolumesIt;
       ++sizeClassPreferencesIt;
       ++sizeClassVolumesIt;
       ++preyIndex;
     });
+    // Probabilistically determine coupled size class index
+    double randEffectivePreyValue = random_.getUniform() * effectivePreyVolume_;
+    double effectivePreySum = 0;
+    for(unsigned index = 0; index < effectiveSizeClassVolumes.size(); ++index) {
+      effectivePreySum += effectiveSizeClassVolumes[index];
+      if(effectivePreySum >= randEffectivePreyValue) {
+        coupledSizeClassIndex_ = index;
+        break;
+      }
+    }
+    // Determine feeding strategy
+    feedingStrategy_ = enums::eCarnivore;
+    if(coupledSizeClassIndex_ == autotrophSizeClassIndex_) {
+      double probHerbivory = effectiveAutotrophVolume / effectivePreyVolume_;
+      if(random_.getUniform() <= probHerbivory) {
+        feedingStrategy_ = enums::eHerbivore;
+      }
+    }
     feedingProbabilty_ = heterotrophProcessor_.calculateFeedingProbability(index_, effectivePreyVolume_);
   }
 }

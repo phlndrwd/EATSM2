@@ -59,6 +59,7 @@ class SizeClass {
   double effectivePreyVolume_;
   double feedingProbabilty_;
   unsigned coupledSizeClassIndex_;
+  enums::eFeedingStrategy feedingStrategy_;
 };
 
 #endif // SIZECLASS_H
