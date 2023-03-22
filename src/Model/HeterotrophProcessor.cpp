@@ -19,13 +19,7 @@ HeterotrophProcessor::HeterotrophProcessor()
       numberOfSizeClasses_(Parameters::Get()->getNumberOfSizeClasses()),
       largestVolumeExponent_(Parameters::Get()->getLargestVolumeExponent()),
       smallestVolumeExponent_(Parameters::Get()->getSmallestVolumeExponent()),
-      preferenceDenominator_(2 * std::pow(preferenceFunctionWidth_, 2)) {
-  // Set function option once for the duration of the model execution
-  if (Parameters::Get()->getUseLinearFeeding() == true)
-    fStarvationProbability = &HeterotrophProcessor::calculateFeedingProbabilityLinear;
-  else
-    fStarvationProbability = &HeterotrophProcessor::calculateFeedingProbabilityNonLinear;
-}
+      preferenceDenominator_(2 * std::pow(preferenceFunctionWidth_, 2)) {}
 
 double HeterotrophProcessor::calculateMetabolicDeduction(const Heterotroph& heterotroph) const {
   return fractionalMetabolicExpense_ * std::pow(heterotroph.getVolumeActual(), metabolicIndex_);
@@ -37,7 +31,7 @@ double HeterotrophProcessor::calculatePreferenceForPrey(const double grazerVolum
 
 double HeterotrophProcessor::calculateFeedingProbability(const unsigned predatorIndex,
                                                          const double effectivePreyVolume) {
-  return (this->*fStarvationProbability)(predatorIndex, effectivePreyVolume);
+  return calculateFeedingProbabilityNonLinear(predatorIndex, effectivePreyVolume);
 }
 
 double HeterotrophProcessor::calculateStarvationProbability(const Heterotroph& heterotroph) const {

@@ -1,6 +1,7 @@
 #ifndef HETEROTROPHPROCESSOR
 #define HETEROTROPHPROCESSOR
 
+#include <functional>
 #include <vector>
 
 #include "Heterotroph.h"
@@ -15,8 +16,6 @@ class HeterotrophProcessor {
   unsigned directionIndividualShouldMoveSizeClasses(const Heterotroph&) const;
   unsigned findIndividualSizeClassIndex(const Heterotroph&, unsigned) const;
   double calculateStarvationProbability(const Heterotroph&) const;
-
-
 
   double calculatePreferenceForPrey(const double, const double) const;
   double calculateFeedingProbability(const unsigned, const double);
@@ -40,9 +39,6 @@ class HeterotrophProcessor {
 
   double calculateLinearStarvation(const double, const double, const double, const double) const;
   double calculateBetaExponentialStarvation(const double, const double, const double, const double) const;
-
-  typedef double (HeterotrophProcessor::*function)(const unsigned, const double);
-  double (HeterotrophProcessor::*fStarvationProbability)(const unsigned, const double);
 
   const std::vector<double> sizeClassBoundaries_;
   const std::vector<double> linearFeedingDenominators_;
