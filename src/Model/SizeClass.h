@@ -36,6 +36,9 @@ class SizeClass {
   void starvation();
 
   void sizeClassSubset(std::function<void(unsigned)>);
+  void calcEffectiveSizeClassVolumes(std::vector<size_t>&, std::vector<double>&);
+  unsigned calcCoupledSizeClassIndex(std::vector<double>&);
+  void calcFeedingStrategy();
   void starve(const unsigned);
 
   Nutrient& nutrient_;
@@ -57,6 +60,7 @@ class SizeClass {
   std::queue<unsigned> dead_;
 
   double effectivePreyVolume_;
+  double effectiveAutotrophVolume_;
   double feedingProbabilty_;
   unsigned coupledSizeClassIndex_;
   enums::eFeedingStrategy feedingStrategy_;

@@ -122,51 +122,10 @@ void SizeClass::starvation() {
 
 void SizeClass::calculateFeedingProbability(std::vector<size_t>& populationSizes) {
   if(alive_.size() != 0) {
-    effectivePreyVolume_ = 0;
-    feedingProbabilty_ = 0;
-    coupledSizeClassIndex_ = 0;
-
     std::vector<double> effectiveSizeClassVolumes(populationSizes.size(), 0);
-    double effectiveAutotrophVolume;
-    unsigned preyIndex = 0;
-    auto sizeClassVolumesIt = sizeClassVolumes_.begin();
-    auto sizeClassPreferencesIt = sizeClassPreferences_.begin();
-    auto effectiveSizeClassVolumesIt = effectiveSizeClassVolumes.begin();
-    // Calculate effective prey volumes
-    std::for_each(begin(populationSizes), end(populationSizes),
-    [&](size_t populationSize) {
-      size_t effectivePopulationSize = preyIndex != index_ ? populationSize : populationSize - 1;
-
-      *effectiveSizeClassVolumesIt = *sizeClassVolumesIt * effectivePopulationSize;
-      if(preyIndex == autotrophSizeClassIndex_) {
-        effectiveAutotrophVolume = *sizeClassPreferencesIt * autotrophs_.getVolume();
-        *effectiveSizeClassVolumesIt += effectiveAutotrophVolume;
-      }
-      effectivePreyVolume_ += *effectiveSizeClassVolumesIt;
-
-      ++effectiveSizeClassVolumesIt;
-      ++sizeClassPreferencesIt;
-      ++sizeClassVolumesIt;
-      ++preyIndex;
-    });
-    // Probabilistically determine coupled size class index
-    double randEffectivePreyValue = random_.getUniform() * effectivePreyVolume_;
-    double effectivePreySum = 0;
-    for(unsigned index = 0; index < effectiveSizeClassVolumes.size(); ++index) {
-      effectivePreySum += effectiveSizeClassVolumes[index];
-      if(effectivePreySum >= randEffectivePreyValue) {
-        coupledSizeClassIndex_ = index;
-        break;
-      }
-    }
-    // Determine feeding strategy
-    feedingStrategy_ = enums::eCarnivore;
-    if(coupledSizeClassIndex_ == autotrophSizeClassIndex_) {
-      double probHerbivory = effectiveAutotrophVolume / effectivePreyVolume_;
-      if(random_.getUniform() <= probHerbivory) {
-        feedingStrategy_ = enums::eHerbivore;
-      }
-    }
+    calcEffectiveSizeClassVolumes(populationSizes, effectiveSizeClassVolumes);
+    coupledSizeClassIndex_ = calcCoupledSizeClassIndex(effectiveSizeClassVolumes);
+    calcFeedingStrategy();
     feedingProbabilty_ = heterotrophProcessor_.calculateFeedingProbability(index_, effectivePreyVolume_);
   }
 }
@@ -177,6 +136,58 @@ void SizeClass::sizeClassSubset(std::function<void(unsigned)> func) {
     unsigned sizeClassSubset = heterotrophProcessor_.roundWithProbability(random_, numberAlive * sizeClassSubsetFraction_);
     for (auto _ = sizeClassSubset; _--;) {
       func(getRandomHeterotrophIndex());
+    }
+  }
+}
+
+void SizeClass::calcEffectiveSizeClassVolumes(std::vector<size_t>& populationSizes,
+                                                   std::vector<double>& effectiveSizeClassVolumes) {
+  effectivePreyVolume_ = 0;
+  feedingProbabilty_ = 0;
+  coupledSizeClassIndex_ = 0;
+
+  unsigned preyIndex = 0;
+  auto sizeClassVolumesIt = sizeClassVolumes_.begin();
+  auto sizeClassPreferencesIt = sizeClassPreferences_.begin();
+  auto effectiveSizeClassVolumesIt = effectiveSizeClassVolumes.begin();
+  // Calculate effective prey volumes
+  std::for_each(begin(populationSizes), end(populationSizes),
+  [&](size_t populationSize) {
+    size_t effectivePopulationSize = preyIndex != index_ ? populationSize : populationSize - 1;
+
+    *effectiveSizeClassVolumesIt = *sizeClassVolumesIt * effectivePopulationSize;
+    if(preyIndex == autotrophSizeClassIndex_) {
+      effectiveAutotrophVolume_ = *sizeClassPreferencesIt * autotrophs_.getVolume();
+      *effectiveSizeClassVolumesIt += effectiveAutotrophVolume_;
+    }
+    effectivePreyVolume_ += *effectiveSizeClassVolumesIt;
+
+    ++effectiveSizeClassVolumesIt;
+    ++sizeClassPreferencesIt;
+    ++sizeClassVolumesIt;
+    ++preyIndex;
+  });
+}
+
+unsigned SizeClass::calcCoupledSizeClassIndex(std::vector<double>& effectiveSizeClassVolumes) {
+  double randEffectivePreyValue = random_.getUniform() * effectivePreyVolume_;
+  double effectivePreySum = 0;
+  unsigned numberOfSizeClasses = effectiveSizeClassVolumes.size();
+  for(unsigned index = 0; index < numberOfSizeClasses; ++index) {
+    effectivePreySum += effectiveSizeClassVolumes[index];
+    if(effectivePreySum >= randEffectivePreyValue) {
+      return index;
+    }
+  }
+  return numberOfSizeClasses;
+}
+
+void SizeClass::calcFeedingStrategy() {
+  feedingStrategy_ = enums::eCarnivore;
+  if(coupledSizeClassIndex_ == autotrophSizeClassIndex_) {
+    double probHerbivory = effectiveAutotrophVolume_ / effectivePreyVolume_;
+    if(random_.getUniform() <= probHerbivory) {
+      feedingStrategy_ = enums::eHerbivore;
     }
   }
 }

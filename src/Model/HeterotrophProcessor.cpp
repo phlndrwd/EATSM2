@@ -184,8 +184,9 @@ int HeterotrophProcessor::roundWithProbability(RandomSimple& random, const doubl
   int flooredValue = static_cast<int>(::floor(value));
   double probability = value - flooredValue;
 
-  if (random.getUniform() < probability)
+  if (random.getUniform() < probability) {
     return flooredValue + 1;
-  else
+  } else {
     return flooredValue;
+  }
 }
