@@ -40,6 +40,8 @@ class HeterotrophProcessor {
   double calculateLinearStarvation(const double, const double, const double, const double) const;
   double calculateBetaExponentialStarvation(const double, const double, const double, const double) const;
 
+  std::function<double(const unsigned, const double)> starvationProbabilityFunc_;
+
   const std::vector<double> sizeClassBoundaries_;
   const std::vector<double> linearFeedingDenominators_;
   const std::vector<double> halfSaturationConstants_;
