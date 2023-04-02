@@ -19,20 +19,7 @@ HeterotrophProcessor::HeterotrophProcessor()
       numberOfSizeClasses_(Parameters::Get()->getNumberOfSizeClasses()),
       largestVolumeExponent_(Parameters::Get()->getLargestVolumeExponent()),
       smallestVolumeExponent_(Parameters::Get()->getSmallestVolumeExponent()),
-      preferenceDenominator_(2 * std::pow(preferenceFunctionWidth_, 2)) {
-
-  if(Parameters::Get()->getUseLinearFeeding() == true) {
-    starvationProbabilityFunc_ = std::bind(&HeterotrophProcessor::calculateFeedingProbabilityLinear,
-                                            this,
-                                            std::placeholders::_1,
-                                            std::placeholders::_2);
-  } else {
-    starvationProbabilityFunc_ = std::bind(&HeterotrophProcessor::calculateFeedingProbabilityNonLinear,
-                                           this,
-                                           std::placeholders::_1,
-                                           std::placeholders::_2);
-  }
-}
+      preferenceDenominator_(2 * std::pow(preferenceFunctionWidth_, 2)) {}
 
 double HeterotrophProcessor::calculateMetabolicDeduction(const Heterotroph& heterotroph) const {
   return fractionalMetabolicExpense_ * std::pow(heterotroph.getVolumeActual(), metabolicIndex_);
@@ -42,13 +29,13 @@ double HeterotrophProcessor::calculatePreferenceForPrey(const double grazerVolum
   return std::exp(-std::pow((std::log((preferredPreyVolumeRatio_ * preyVolume) / grazerVolume)), 2) / preferenceDenominator_);
 }
 
-double HeterotrophProcessor::calculateFeedingProbability(const unsigned predatorIndex,
+double HeterotrophProcessor::calcFeedingProbability(const unsigned predatorIndex,
                                                          const double effectivePreyVolume) {
-  return starvationProbabilityFunc_(predatorIndex, effectivePreyVolume);
+  return calcFeedingProbabilityNonLinear(predatorIndex, effectivePreyVolume);
 }
 
 double HeterotrophProcessor::calculateStarvationProbability(const Heterotroph& heterotroph) const {
-  return calculateLinearStarvation(heterotroph.getVolumeActual(), heterotroph.getVolumeHeritable(),
+  return calcLinearStarvation(heterotroph.getVolumeActual(), heterotroph.getVolumeHeritable(),
                                    heterotroph.getVolumeMinimum(), heterotroph.getStarvationMultiplier());
 }
 
@@ -143,20 +130,20 @@ void HeterotrophProcessor::updateCarnivoreTrophicIndex(Heterotroph* predator,
   predator->setTrophicLevel(predatorTrophicLevel);
 }
 
-double HeterotrophProcessor::calculateFeedingProbabilityLinear(const unsigned predatorIndex,
-                                                               const double effectivePreyVolume) {
+double HeterotrophProcessor::calcFeedingProbabilityLinear(const unsigned predatorIndex,
+                                                          const double effectivePreyVolume) {
   return std::min(effectivePreyVolume / linearFeedingDenominators_[predatorIndex], 1.0);
 }
 
-double HeterotrophProcessor::calculateFeedingProbabilityNonLinear(const unsigned predatorIndex,
-                                                                  const double effectivePreyVolume) {
+double HeterotrophProcessor::calcFeedingProbabilityNonLinear(const unsigned predatorIndex,
+                                                             const double effectivePreyVolume) {
   return (effectivePreyVolume / (halfSaturationConstants_[predatorIndex] + effectivePreyVolume));
 }
 
-double HeterotrophProcessor::calculateLinearStarvation(const double volumeActual,
-                                                       const double volumeHeritable,
-                                                       const double volumeMinimum,
-                                                       const double starvationMultiplier) const {
+double HeterotrophProcessor::calcLinearStarvation(const double volumeActual,
+                                                  const double volumeHeritable,
+                                                  const double volumeMinimum,
+                                                  const double starvationMultiplier) const {
   if (volumeActual <= volumeMinimum)
     return 1;
   else if (volumeActual >= volumeHeritable)
@@ -165,10 +152,10 @@ double HeterotrophProcessor::calculateLinearStarvation(const double volumeActual
     return (1 + ((volumeMinimum - volumeActual) * starvationMultiplier));
 }
 
-double HeterotrophProcessor::calculateBetaExponentialStarvation(const double volumeActual,
-                                                                const double volumeHeritable,
-                                                                const double volumeMinimum,
-                                                                const double starvationMultiplier) const {
+double HeterotrophProcessor::calcBetaExponentialStarvation(const double volumeActual,
+                                                           const double volumeHeritable,
+                                                           const double volumeMinimum,
+                                                           const double starvationMultiplier) const {
   if (volumeActual <= volumeMinimum)
     return 1;
   else if (volumeActual >= volumeHeritable)

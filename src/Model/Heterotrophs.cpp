@@ -36,25 +36,11 @@ Heterotrophs::Heterotrophs(Nutrient& nutrient,
   } );
 }
 
-void Heterotrophs::calculateFeedingProbabilities() {
-  std::vector<size_t> populationSizes(numberOfSizeClasses_, 0);
-  auto popSizesIt = populationSizes.begin();
-  std::for_each(std::begin(sizeClasses_), std::end(sizeClasses_),
-  [&](SizeClass& sizeClass) {
-    *popSizesIt = sizeClass.getPopulationSize();
-    ++popSizesIt;
-  });
-  std::for_each(std::begin(sizeClasses_), std::end(sizeClasses_),
-  [&](SizeClass& sizeClass) {
-     sizeClass.calculateFeedingProbability(populationSizes);
-  });
-}
-
 void Heterotrophs::update() {
-  calculateFeedingProbabilities();
+  std::vector<size_t> populationSizes = getSizeClassPopulationSizes();
   std::for_each(std::begin(sizeClasses_), std::end(sizeClasses_),
   [&](SizeClass& sizeClass) {
-    std::vector<structs::MovingHeterotroph> movingHeterotrophs = sizeClass.update();
+    std::vector<structs::MovingHeterotroph> movingHeterotrophs = sizeClass.update(populationSizes);
     for (const auto& movingHeterotroph : movingHeterotrophs) {
       std::vector<SizeClass>::iterator sizeClassIt = sizeClasses_.begin();
 
@@ -64,4 +50,15 @@ void Heterotrophs::update() {
       sizeClassIt->addHeterotroph(movingHeterotroph.heterotroph);
     }
   });
+}
+
+std::vector<size_t> Heterotrophs::getSizeClassPopulationSizes() {
+  std::vector<size_t> populationSizes(numberOfSizeClasses_, 0);
+  auto popSizesIt = populationSizes.begin();
+  std::for_each(std::begin(sizeClasses_), std::end(sizeClasses_),
+  [&](SizeClass& sizeClass) {
+    *popSizesIt = sizeClass.getPopulationSize();
+    ++popSizesIt;
+  });
+  return populationSizes;
 }

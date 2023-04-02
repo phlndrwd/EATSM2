@@ -18,7 +18,7 @@ class HeterotrophProcessor {
   double calculateStarvationProbability(const Heterotroph&) const;
 
   double calculatePreferenceForPrey(const double, const double) const;
-  double calculateFeedingProbability(const unsigned, const double);
+  double calcFeedingProbability(const unsigned, const double);
 
   unsigned findSizeClassIndexFromVolume(const double) const;
 
@@ -34,11 +34,11 @@ class HeterotrophProcessor {
   int roundWithProbability(RandomSimple&, const double) const;
 
  private:
-  double calculateFeedingProbabilityLinear(const unsigned, const double);
-  double calculateFeedingProbabilityNonLinear(const unsigned, const double);
+  double calcFeedingProbabilityLinear(const unsigned, const double);
+  double calcFeedingProbabilityNonLinear(const unsigned, const double);
 
-  double calculateLinearStarvation(const double, const double, const double, const double) const;
-  double calculateBetaExponentialStarvation(const double, const double, const double, const double) const;
+  double calcLinearStarvation(const double, const double, const double, const double) const;
+  double calcBetaExponentialStarvation(const double, const double, const double, const double) const;
 
   std::function<double(const unsigned, const double)> starvationProbabilityFunc_;
 

@@ -56,43 +56,26 @@ void SizeClass::populate(const double volumeToInitialise) {
   }
 }
 
-std::vector<structs::MovingHeterotroph> SizeClass::update() {
+std::vector<structs::MovingHeterotroph> SizeClass::update(std::vector<size_t>& populationSizes) {
   std::vector<structs::MovingHeterotroph> movingHeterotrophs;
-  feeding();
+  feeding(populationSizes);
   metabolisation();
   starvation();
 
   return movingHeterotrophs;
 }
 
-void SizeClass::feeding() {
+void SizeClass::feeding(std::vector<size_t>& populationSizes) {
+  calcFeedingProbability(populationSizes);
   sizeClassSubset([&](unsigned randomIndex) {
     Heterotroph& predator = heterotrophs_[randomIndex];
 
-    // PJU FIX - Turn this into a probabilistic selection
-    if(coupledSizeClassIndex_ != autotrophSizeClassIndex_) {
-      //feedFromHeterotrophs
-    } else {
-      //feedFromAutotrophs
+    if(feedingStrategy_ == enums::eCarnivore) {
+      feedFromHeterotrophs(predator);
+    } else if(feedingStrategy_ == enums::eHerbivore){
+      feedFromAutotrophs(predator);
     }
   });
-
-
-
-//  if( sizeClassPopulation > 0 ) {
-//      unsigned sizeClassPopulationSubset = mHeterotrophProcessor.RoundWithProbability( mRandom, sizeClassPopulation * mSizeClassSubsetFraction );
-
-//    for( unsigned potentialEncounterIndex = 0; potentialEncounterIndex < sizeClassPopulationSubset; ++potentialEncounterIndex ) {
-//      if( mRandom.GetUniform( ) <= mHeterotrophData.GetFeedingProbability( predatorIndex ) ) {
-//        Types::HeterotrophPointer predator = GetRandomPredatorFromSizeClass( predatorIndex );
-//        if( predator != nullptr ) {
-//            unsigned coupledIndex = mHeterotrophData.GetCoupledSizeClassIndex( predatorIndex );
-//            if( coupledIndex == mAutotrophSizeClassIndex ) FeedFromAutotrophs( predator );
-//            else FeedFromHeterotrophs( predator, coupledIndex );
-//        }
-//      }
-//    }
-//  }
 }
 
 void SizeClass::metabolisation() {
@@ -120,13 +103,13 @@ void SizeClass::starvation() {
   });
 }
 
-void SizeClass::calculateFeedingProbability(std::vector<size_t>& populationSizes) {
+void SizeClass::calcFeedingProbability(std::vector<size_t>& populationSizes) {
   if(alive_.size() != 0) {
     std::vector<double> effectiveSizeClassVolumes(populationSizes.size(), 0);
     calcEffectiveSizeClassVolumes(populationSizes, effectiveSizeClassVolumes);
-    coupledSizeClassIndex_ = calcCoupledSizeClassIndex(effectiveSizeClassVolumes);
+    calcCoupledSizeClassIndex(effectiveSizeClassVolumes);
     calcFeedingStrategy();
-    feedingProbabilty_ = heterotrophProcessor_.calculateFeedingProbability(index_, effectivePreyVolume_);
+    feedingProbabilty_ = heterotrophProcessor_.calcFeedingProbability(index_, effectivePreyVolume_);
   }
 }
 
@@ -141,7 +124,7 @@ void SizeClass::sizeClassSubset(std::function<void(unsigned)> func) {
 }
 
 void SizeClass::calcEffectiveSizeClassVolumes(std::vector<size_t>& populationSizes,
-                                                   std::vector<double>& effectiveSizeClassVolumes) {
+                                              std::vector<double>& effectiveSizeClassVolumes) {
   effectivePreyVolume_ = 0;
   feedingProbabilty_ = 0;
   coupledSizeClassIndex_ = 0;
@@ -169,17 +152,18 @@ void SizeClass::calcEffectiveSizeClassVolumes(std::vector<size_t>& populationSiz
   });
 }
 
-unsigned SizeClass::calcCoupledSizeClassIndex(std::vector<double>& effectiveSizeClassVolumes) {
+void SizeClass::calcCoupledSizeClassIndex(std::vector<double>& effectiveSizeClassVolumes) {
   double randEffectivePreyValue = random_.getUniform() * effectivePreyVolume_;
   double effectivePreySum = 0;
   unsigned numberOfSizeClasses = effectiveSizeClassVolumes.size();
   for(unsigned index = 0; index < numberOfSizeClasses; ++index) {
     effectivePreySum += effectiveSizeClassVolumes[index];
     if(effectivePreySum >= randEffectivePreyValue) {
-      return index;
+      coupledSizeClassIndex_ = index;
+      break;
     }
   }
-  return numberOfSizeClasses;
+  coupledSizeClassIndex_ = numberOfSizeClasses;
 }
 
 void SizeClass::calcFeedingStrategy() {
@@ -190,6 +174,34 @@ void SizeClass::calcFeedingStrategy() {
       feedingStrategy_ = enums::eHerbivore;
     }
   }
+}
+
+void SizeClass::feedFromHeterotrophs(Heterotroph& predator) {
+//  Types::HeterotrophPointer prey = GetRandomPreyFromSizeClass(coupledIndex, predator);
+//  if(prey != nullptr) {
+//    double preyVolume = prey->GetVolumeActual();
+//    mHeterotrophData.IncrementCarnivoreFrequencies(predator, prey);
+
+//    double waste = predator->ConsumePreyVolume(preyVolume);
+//    ++mFedCount[predator->GetSizeClassIndex()];
+
+//    mHeterotrophProcessor.UpdateCarnivoreTrophicIndex(predator, prey);
+//    mNutrient.AddToVolume(waste);
+//    Kill(prey);
+//  }
+}
+
+void SizeClass::feedFromAutotrophs(Heterotroph& grazer) {
+//  if(mAutotrophs.GetVolume( ) > mSmallestIndividualVolume) {
+//    mAutotrophs.SubtractFromVolume(mSmallestIndividualVolume);
+//    mHeterotrophData.IncrementVegetarianFrequencies(grazer);
+
+//    double waste = grazer->ConsumePreyVolume(mSmallestIndividualVolume);
+//    ++mFedCount[grazer->GetSizeClassIndex()];
+
+//    mHeterotrophProcessor.UpdateHerbivoreTrophicIndex(grazer);
+//    mNutrient.AddToVolume(waste);
+//  }
 }
 
 void SizeClass::starve(const unsigned index) {

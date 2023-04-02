@@ -17,7 +17,7 @@ class Heterotrophs {
   void update();
 
  private:
-  void calculateFeedingProbabilities();
+  std::vector<size_t> getSizeClassPopulationSizes();
 
   Nutrient& nutrient_;
   Autotrophs& autotrophs_;

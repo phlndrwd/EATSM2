@@ -18,8 +18,7 @@ class SizeClass {
   SizeClass(Nutrient&, Autotrophs&, const double, const unsigned, const unsigned);
 
   void populate(const double);
-  std::vector<structs::MovingHeterotroph> update();
-  void calculateFeedingProbability(std::vector<size_t>&);
+  std::vector<structs::MovingHeterotroph> update(std::vector<size_t>&);
 
   size_t getPopulationSize();
   unsigned getRandomHeterotrophIndex();
@@ -31,14 +30,19 @@ class SizeClass {
   void addHeterotroph(Heterotroph);
 
  private:
-  void feeding();
+  void feeding(std::vector<size_t>&);
   void metabolisation();
   void starvation();
 
   void sizeClassSubset(std::function<void(unsigned)>);
+
+  void calcFeedingProbability(std::vector<size_t>&);
   void calcEffectiveSizeClassVolumes(std::vector<size_t>&, std::vector<double>&);
-  unsigned calcCoupledSizeClassIndex(std::vector<double>&);
+  void calcCoupledSizeClassIndex(std::vector<double>&);
   void calcFeedingStrategy();
+  void feedFromAutotrophs(Heterotroph&);
+  void feedFromHeterotrophs(Heterotroph&);
+
   void starve(const unsigned);
 
   Nutrient& nutrient_;
