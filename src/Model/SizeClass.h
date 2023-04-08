@@ -15,10 +15,10 @@
 class SizeClass {
  public:
   SizeClass() = delete;
-  SizeClass(Nutrient&, Autotrophs&, const double, const unsigned, const unsigned);
+  SizeClass(std::vector<SizeClass>&, Nutrient&, Autotrophs&, const double, const unsigned, const unsigned);
 
   void populate(const double);
-  std::vector<structs::MovingHeterotroph> update(std::vector<size_t>&);
+  std::vector<structs::MovingHeterotroph> update();
 
   size_t getPopulationSize();
   unsigned getRandomHeterotrophIndex();
@@ -30,21 +30,24 @@ class SizeClass {
   void addHeterotroph(Heterotroph);
 
  private:
-  void feeding(std::vector<size_t>&);
+  void feeding();
   void metabolisation();
   void starvation();
 
   void sizeClassSubset(std::function<void(unsigned)>);
 
+  std::vector<size_t> getPopulationSizes();
   void calcFeedingProbability(std::vector<size_t>&);
   void calcEffectiveSizeClassVolumes(std::vector<size_t>&, std::vector<double>&);
-  void calcCoupledSizeClassIndex(std::vector<double>&);
+  void setCoupledSizeClass(std::vector<double>&);
   void calcFeedingStrategy();
+
   void feedFromAutotrophs(Heterotroph&);
   void feedFromHeterotrophs(Heterotroph&);
 
   void starve(const unsigned);
 
+  std::vector<SizeClass>& sizeClasses_;
   Nutrient& nutrient_;
   Autotrophs& autotrophs_;
   const unsigned index_;
@@ -66,7 +69,8 @@ class SizeClass {
   double effectivePreyVolume_;
   double effectiveAutotrophVolume_;
   double feedingProbabilty_;
-  unsigned coupledSizeClassIndex_;
+  std::vector<SizeClass>::iterator autotrophSizeClassIt_;
+  std::vector<SizeClass>::iterator coupledSizeClassIt_;
   enums::eFeedingStrategy feedingStrategy_;
 };
 
