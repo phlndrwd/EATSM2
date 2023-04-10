@@ -56,6 +56,7 @@ class SizeClass {
   const std::vector<double> sizeClassVolumes_;
   const double sizeClassMidPoint_;
   const double sizeClassSubsetFraction_;
+  const unsigned numberOfSizeClasses_;
   const unsigned maxPopulation_;
   const unsigned autotrophSizeClassIndex_;
 

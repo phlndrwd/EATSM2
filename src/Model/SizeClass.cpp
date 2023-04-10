@@ -32,6 +32,7 @@ SizeClass::SizeClass(std::vector<SizeClass>& sizeClasses,
     sizeClassVolumes_(Parameters::Get()->getInterSizeClassVolumeVector(index_)),
     sizeClassMidPoint_(Parameters::Get()->getSizeClassMidPoint(index_)),
     sizeClassSubsetFraction_(Parameters::Get()->getSizeClassSubsetFraction()),
+    numberOfSizeClasses_(Parameters::Get()->getNumberOfSizeClasses()),
     maxPopulation_(Parameters::Get()->getMaximumSizeClassPopulation(index_)),
     autotrophSizeClassIndex_(Parameters::Get()->getAutotrophSizeClassIndex()),
     random_(randomSeed) {
@@ -108,7 +109,7 @@ void SizeClass::starvation() {
 }
 
 std::vector<size_t> SizeClass::getPopulationSizes() {
-  std::vector<size_t> populationSizes(sizeClasses_.size(), 0);
+  std::vector<size_t> populationSizes(numberOfSizeClasses_, 0);
   auto popSizesIt = populationSizes.begin();
   std::for_each(std::begin(sizeClasses_), std::end(sizeClasses_),
   [&](SizeClass& sizeClass) {
@@ -123,7 +124,7 @@ std::vector<size_t> SizeClass::getPopulationSizes() {
 
 void SizeClass::calcFeedingProbability(std::vector<size_t>& populationSizes) {
   if(alive_.size() != 0) {
-    std::vector<double> effectiveSizeClassVolumes(sizeClasses_.size(), 0);
+    std::vector<double> effectiveSizeClassVolumes(numberOfSizeClasses_, 0);
     calcEffectiveSizeClassVolumes(populationSizes, effectiveSizeClassVolumes);
     setCoupledSizeClass(effectiveSizeClassVolumes);
     calcFeedingStrategy();
@@ -169,23 +170,23 @@ void SizeClass::calcEffectiveSizeClassVolumes(std::vector<size_t>& populationSiz
 
 void SizeClass::setCoupledSizeClass(std::vector<double>& effectiveSizeClassVolumes) {
   coupledSizeClassIt_ = sizeClasses_.begin();
+  // Default to largest populated size class
+  std::advance(coupledSizeClassIt_, numberOfSizeClasses_ - 1);
   double randEffectivePreyValue = random_.getUniform() * effectivePreyVolume_;
   double effectivePreySum = 0;
   unsigned index = 0;
-  auto effectiveSizeClassVolumesIt = std::find_if(begin(effectiveSizeClassVolumes), end(effectiveSizeClassVolumes),
+  // Return from find_if is not used - used here to mimic break statement in classic for
+  std::find_if(begin(effectiveSizeClassVolumes), end(effectiveSizeClassVolumes),
     [&](double effectiveSizeClassVolume) {
     effectivePreySum += effectiveSizeClassVolume;
     if(effectivePreySum >= randEffectivePreyValue) {
-      std::advance(coupledSizeClassIt_, index);
+      std::advance(coupledSizeClassIt_, -(numberOfSizeClasses_ - 1) + index);
       return true;
     } else {
       ++index;
       return false;
     }
   });
-  if(effectiveSizeClassVolumesIt == end(effectiveSizeClassVolumes)) {
-    std::advance(coupledSizeClassIt_, sizeClasses_.size());
-  }
 }
 
 void SizeClass::calcFeedingStrategy() {
