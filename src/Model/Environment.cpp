@@ -6,19 +6,16 @@
 
 Environment::Environment() :
     nutrient_(),
-    autotrophs_(nutrient_),
-    population_(nutrient_, autotrophs_, Parameters::Get()->getNumberOfSizeClasses()) {
+    heterotrophs_(nutrient_, Parameters::Get()->getNumberOfSizeClasses()) {
   std::cout << "Environment created." << std::endl << std::endl;
 }
 
 void Environment::update() {
-  autotrophs_.update();
-  population_.update();
+  heterotrophs_.update();
 }
 
 bool Environment::recordData() {
   //bool isAlive = population_.recordData();
-  autotrophs_.recordData();
   nutrient_.recordData();
 
   return true;
@@ -28,15 +25,6 @@ Nutrient& Environment::getNutrient() {
   return nutrient_;
 }
 
-Autotrophs& Environment::getAutotrophs() {
-  return autotrophs_;
-}
-
 const Nutrient& Environment::getNutrient() const {
   return nutrient_;
 }
-
-const Autotrophs& Environment::getAutotrophs() const {
-  return autotrophs_;
-}
-

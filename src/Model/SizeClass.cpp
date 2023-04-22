@@ -20,13 +20,12 @@ Heterotroph heterotrophGenerator(double traitValue,
 
 SizeClass::SizeClass(std::vector<SizeClass>& sizeClasses,
                      Nutrient& nutrient,
-                     Autotrophs& autotrophs,
-                     const double volumeToInitialise,
+                     const double initialAutotrophVolume,
+                     const double initialHeterotrophVolume,
                      const unsigned index,
                      const unsigned randomSeed) :
     sizeClasses_(sizeClasses),
     nutrient_(nutrient),
-    autotrophs_(autotrophs),
     index_(index),
     sizeClassPreferences_(Parameters::Get()->getInterSizeClassPreferenceVector(index_)),
     sizeClassVolumes_(Parameters::Get()->getInterSizeClassVolumeVector(index_)),
@@ -34,11 +33,11 @@ SizeClass::SizeClass(std::vector<SizeClass>& sizeClasses,
     sizeClassSubsetFraction_(Parameters::Get()->getSizeClassSubsetFraction()),
     numberOfSizeClasses_(Parameters::Get()->getNumberOfSizeClasses()),
     maxPopulation_(Parameters::Get()->getMaximumSizeClassPopulation(index_)),
-    autotrophSizeClassIndex_(Parameters::Get()->getAutotrophSizeClassIndex()),
+    autotrophs_(nutrient, initialAutotrophVolume),
     random_(randomSeed) {
   heterotrophs_.reserve(maxPopulation_);
   alive_.reserve(maxPopulation_);
-  populate(volumeToInitialise);
+  populate(initialHeterotrophVolume);
   std::advance(autotrophSizeClassIt_, Parameters::Get()->getAutotrophSizeClassIndex());
 }
 
@@ -147,7 +146,6 @@ void SizeClass::calcEffectiveSizeClassVolumes(std::vector<size_t>& populationSiz
   effectivePreyVolume_ = 0;
   feedingProbabilty_ = 0;
 
-  unsigned preyIndex = 0;
   auto sizeClassVolumesIt = sizeClassVolumes_.begin();
   auto sizeClassPreferencesIt = sizeClassPreferences_.begin();
   auto effectiveSizeClassVolumesIt = effectiveSizeClassVolumes.begin();
@@ -155,16 +153,14 @@ void SizeClass::calcEffectiveSizeClassVolumes(std::vector<size_t>& populationSiz
   std::for_each(begin(populationSizes), end(populationSizes),
   [&](size_t populationSize) {
     *effectiveSizeClassVolumesIt = *sizeClassVolumesIt * populationSize;
-    if(preyIndex == autotrophSizeClassIndex_) {
-      effectiveAutotrophVolume_ = *sizeClassPreferencesIt * autotrophs_.getVolume();
-      *effectiveSizeClassVolumesIt += effectiveAutotrophVolume_;
-    }
+    effectiveAutotrophVolume_ = *sizeClassPreferencesIt * autotrophs_.getVolume();
+
+    *effectiveSizeClassVolumesIt += effectiveAutotrophVolume_;
     effectivePreyVolume_ += *effectiveSizeClassVolumesIt;
 
     ++effectiveSizeClassVolumesIt;
     ++sizeClassPreferencesIt;
     ++sizeClassVolumesIt;
-    ++preyIndex;
   });
 }
 

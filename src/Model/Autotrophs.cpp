@@ -4,12 +4,10 @@
 
 #include "DataRecorder.h"
 #include "Nutrient.h"
-#include "Parameters.h"
 
-Autotrophs::Autotrophs(Nutrient& nutrient) :
-    nutrient_(nutrient) {
-  volume_ = Parameters::Get()->getInitialAutotrophVolume();
-  std::cout << "Autotroph pool created." << std::endl;
+Autotrophs::Autotrophs(Nutrient& nutrient, const double initialVolume) :
+    nutrient_(nutrient), volume_(initialVolume) {
+  //std::cout << "Autotroph pool created." << std::endl;
 }
 
 void Autotrophs::update() {

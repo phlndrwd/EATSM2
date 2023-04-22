@@ -12,14 +12,12 @@
 class Heterotrophs {
  public:
   Heterotrophs() = delete;
-  Heterotrophs(Nutrient&, Autotrophs&, const unsigned);
+  explicit Heterotrophs(Nutrient&, const unsigned);
 
   void update();
 
  private:
   Nutrient& nutrient_;
-  Autotrophs& autotrophs_;
-
   const unsigned numberOfSizeClasses_;
 
   RandomSimple random_;

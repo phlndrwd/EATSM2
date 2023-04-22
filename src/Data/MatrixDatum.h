@@ -6,7 +6,7 @@
 
 class MatrixDatum {
  public:
-  MatrixDatum(const std::string&);
+  explicit MatrixDatum(const std::string&);
   ~MatrixDatum();
 
   void setGroupSize(const unsigned&);

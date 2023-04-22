@@ -6,7 +6,7 @@
 
 class VectorDatum {
  public:
-  VectorDatum(const std::string&);
+  explicit VectorDatum(const std::string&);
   ~VectorDatum();
 
   float getDataAtIndex(const unsigned&) const;

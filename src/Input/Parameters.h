@@ -111,6 +111,7 @@ class Parameters {
 
  private:
   Parameters();
+
   void calculateParameters();
   bool isInitialised();
 

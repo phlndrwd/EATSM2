@@ -168,7 +168,6 @@ bool FileWriter::writeStateFile(Environment& environment) {
       modelStateFileStream << constants::kModelStateFileName << std::endl;
       // Model variables
       modelStateFileStream << environment.getNutrient().getVolume() << std::endl;
-      modelStateFileStream << environment.getAutotrophs().getVolume() << std::endl;
 
 //      for (unsigned sizeClassIndex = 0; sizeClassIndex < Parameters::Get()->getNumberOfSizeClasses();
 //           ++sizeClassIndex) {

@@ -10,7 +10,7 @@ class RandomSimple;
 class Traits {
  public:
   Traits() = delete;
-  Traits(const std::vector<double>&, const std::vector<bool>&);
+  explicit Traits(const std::vector<double>&, const std::vector<bool>&);
 
   Traits(const Traits&);
   Traits(Traits&&) noexcept;

@@ -6,7 +6,7 @@ class Nutrient;
 class Autotrophs {
  public:
   Autotrophs() = delete;
-  Autotrophs(Nutrient&);
+  explicit Autotrophs(Nutrient&, const double);
 
   void update();
   void addToVolume(const double);

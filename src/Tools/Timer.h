@@ -6,7 +6,7 @@
 
 class Timer {
  public:
-  Timer(bool goNow = true);
+  explicit Timer(bool goNow = true);
   ~Timer();
 
   void go();

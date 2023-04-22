@@ -9,31 +9,31 @@
 namespace {
 SizeClass sizeClassGenerator(std::vector<SizeClass>& sizeClasses,
                              Nutrient& nutrient,
-                             Autotrophs& autotrophs,
                              RandomSimple& random,
-                             const double volumeToInitialise,
+                             const double initialAutotrophVolume,
+                             const double initialHeterotrophVolume,
                              unsigned& index) {
-  SizeClass sizeClass(sizeClasses, nutrient, autotrophs, volumeToInitialise, index, random.getUniformInt(1, UINT_MAX));
+  SizeClass sizeClass(sizeClasses, nutrient, initialAutotrophVolume, initialHeterotrophVolume, index, random.getUniformInt(1, UINT_MAX));
   ++index;
   return sizeClass;
 }
 }  // anonymous namespace
 
 Heterotrophs::Heterotrophs(Nutrient& nutrient,
-                           Autotrophs& autotrophs,
                            const unsigned numberOfSizeClasses) :
     nutrient_(nutrient),
-    autotrophs_(autotrophs),
     numberOfSizeClasses_(numberOfSizeClasses),
     random_(Parameters::Get()->getRandomSeed()) {
-
-  double initialIdealVolume = Parameters::Get()->getSmallestIndividualVolume() *
+  unsigned autotrophIndex = Parameters::Get()->getAutotrophSizeClassIndex();
+  double idealInitialVolume = Parameters::Get()->getSmallestIndividualVolume() *
                               Parameters::Get()->getPreferredPreyVolumeRatio();
-  unsigned indexToPopulate = heterotrophProcessor_.findSizeClassIndexFromVolume(initialIdealVolume);
+  unsigned heterotrophIndex = heterotrophProcessor_.findSizeClassIndexFromVolume(idealInitialVolume);
   unsigned index = 0;
   std::generate_n(std::back_inserter(sizeClasses_), numberOfSizeClasses_, [&] {
-    double volumeToInitialse = indexToPopulate != index ? 0 : Parameters::Get()->getInitialHeterotrophVolume();
-    return sizeClassGenerator(sizeClasses_, nutrient_, autotrophs_, random_, volumeToInitialse, index);
+    double initialAutotrophVolume = autotrophIndex != index ? 0 : Parameters::Get()->getInitialAutotrophVolume();
+    double initialHeterotrophVolume = heterotrophIndex != index ? 0 : Parameters::Get()->getInitialHeterotrophVolume();
+    std::cout << "Size class " << index << ", initialAutotrophVolume " << initialAutotrophVolume << ", initialHeterotrophVolume " << initialHeterotrophVolume << std::endl;
+    return sizeClassGenerator(sizeClasses_, nutrient_, random_, initialAutotrophVolume, initialHeterotrophVolume, index);
   });
 }
 

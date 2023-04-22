@@ -15,7 +15,7 @@
 class SizeClass {
  public:
   SizeClass() = delete;
-  SizeClass(std::vector<SizeClass>&, Nutrient&, Autotrophs&, const double, const unsigned, const unsigned);
+  explicit SizeClass(std::vector<SizeClass>&, Nutrient&, const double, const double, const unsigned, const unsigned);
 
   void populate(const double);
   std::vector<structs::MovingHeterotroph> update();
@@ -49,8 +49,7 @@ class SizeClass {
 
   std::vector<SizeClass>& sizeClasses_;
   Nutrient& nutrient_;
-  Autotrophs& autotrophs_;
-  const unsigned index_;
+  const unsigned index_;  // index_ is being deprecated.
 
   const std::vector<double> sizeClassPreferences_;
   const std::vector<double> sizeClassVolumes_;
@@ -58,10 +57,10 @@ class SizeClass {
   const double sizeClassSubsetFraction_;
   const unsigned numberOfSizeClasses_;
   const unsigned maxPopulation_;
-  const unsigned autotrophSizeClassIndex_;
 
-  RandomSimple random_;
+  Autotrophs autotrophs_;
   HeterotrophProcessor heterotrophProcessor_;
+  RandomSimple random_;
 
   std::vector<Heterotroph> heterotrophs_;
   std::vector<unsigned> alive_;
