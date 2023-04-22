@@ -26,8 +26,6 @@ FileWriter::FileWriter() {
   }
 }
 
-FileWriter::~FileWriter() {}
-
 void FileWriter::initialiseOutputDirectory() {
   // output/
   outputPath_ = constants::kOutputDirectoryName;

@@ -15,10 +15,10 @@
 class SizeClass {
  public:
   SizeClass() = delete;
-  explicit SizeClass(std::vector<SizeClass>&, Nutrient&, const double, const double, const unsigned, const unsigned);
+  explicit SizeClass(Nutrient&, const double, const double, const unsigned, const unsigned);
 
   void populate(const double);
-  std::vector<structs::MovingHeterotroph> update();
+  std::vector<structs::MovingHeterotroph> update(std::vector<SizeClass>&);
 
   size_t getPopulationSize();
   unsigned getRandomHeterotrophIndex();
@@ -26,28 +26,29 @@ class SizeClass {
   Heterotroph& getHeterotroph(const unsigned);
   const Heterotroph& getHeterotroph(const unsigned) const;
   Heterotroph& removeHeterotroph(const unsigned);
+  Autotrophs& getAutotrophs();
 
   void addHeterotroph(Heterotroph);
 
  private:
-  void feeding();
+  void feeding(std::vector<SizeClass>& sizeClasses);
   void metabolisation();
   void starvation();
 
   void sizeClassSubset(std::function<void(unsigned)>);
 
-  std::vector<size_t> getPopulationSizes();
-  void calcFeedingProbability(std::vector<size_t>&);
-  void calcEffectiveSizeClassVolumes(std::vector<size_t>&, std::vector<double>&);
-  void setCoupledSizeClass(std::vector<double>&);
+  std::vector<size_t> getPopulationSizes(std::vector<SizeClass>&);
+  std::vector<SizeClass>::iterator calcFeedingProbability(std::vector<SizeClass>&);
+  void calcEffectiveSizeClassVolumes(std::vector<SizeClass>&, std::vector<double>&);
+  std::vector<SizeClass>::iterator setCoupledSizeClass(const std::vector<double>&,
+                                                       std::vector<SizeClass>& sizeClasses);
   void calcFeedingStrategy();
 
   void feedFromAutotrophs(Heterotroph&);
-  void feedFromHeterotrophs(Heterotroph&);
+  void feedFromHeterotrophs(Heterotroph&, std::vector<SizeClass>::iterator&);
 
   void starve(const unsigned);
 
-  std::vector<SizeClass>& sizeClasses_;
   Nutrient& nutrient_;
   const unsigned index_;  // index_ is being deprecated.
 
@@ -69,8 +70,7 @@ class SizeClass {
   double effectivePreyVolume_;
   double effectiveAutotrophVolume_;
   double feedingProbabilty_;
-  std::vector<SizeClass>::iterator autotrophSizeClassIt_;
-  std::vector<SizeClass>::iterator coupledSizeClassIt_;
+
   enums::eFeedingStrategy feedingStrategy_;
 };
 

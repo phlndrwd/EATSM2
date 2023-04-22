@@ -18,13 +18,11 @@ Heterotroph heterotrophGenerator(double traitValue,
 }
 }  // anonymous namespace
 
-SizeClass::SizeClass(std::vector<SizeClass>& sizeClasses,
-                     Nutrient& nutrient,
+SizeClass::SizeClass(Nutrient& nutrient,
                      const double initialAutotrophVolume,
                      const double initialHeterotrophVolume,
                      const unsigned index,
                      const unsigned randomSeed) :
-    sizeClasses_(sizeClasses),
     nutrient_(nutrient),
     index_(index),
     sizeClassPreferences_(Parameters::Get()->getInterSizeClassPreferenceVector(index_)),
@@ -38,7 +36,7 @@ SizeClass::SizeClass(std::vector<SizeClass>& sizeClasses,
   heterotrophs_.reserve(maxPopulation_);
   alive_.reserve(maxPopulation_);
   populate(initialHeterotrophVolume);
-  std::advance(autotrophSizeClassIt_, Parameters::Get()->getAutotrophSizeClassIndex());
+  //std::advance(autotrophSizeClassIt_, Parameters::Get()->getAutotrophSizeClassIndex());
 }
 
 void SizeClass::populate(const double volumeToInitialise) {
@@ -59,23 +57,22 @@ void SizeClass::populate(const double volumeToInitialise) {
   }
 }
 
-std::vector<structs::MovingHeterotroph> SizeClass::update() {
+std::vector<structs::MovingHeterotroph> SizeClass::update(std::vector<SizeClass>& sizeClasses) {
   std::vector<structs::MovingHeterotroph> movingHeterotrophs;
-  feeding();
+  feeding(sizeClasses);
   metabolisation();
   starvation();
 
   return movingHeterotrophs;
 }
 
-void SizeClass::feeding() {
-  std::vector<size_t> populationSizes = getPopulationSizes();
-  calcFeedingProbability(populationSizes);
+void SizeClass::feeding(std::vector<SizeClass>& sizeClasses) {
+  std::vector<SizeClass>::iterator coupledSizeClassIt = calcFeedingProbability(sizeClasses);
   sizeClassSubset([&](unsigned randomIndex) {
     Heterotroph& predator = heterotrophs_[randomIndex];
 
     if(feedingStrategy_ == enums::eCarnivore) {
-      feedFromHeterotrophs(predator);
+      feedFromHeterotrophs(predator, coupledSizeClassIt);
     } else if(feedingStrategy_ == enums::eHerbivore){
       feedFromAutotrophs(predator);
     }
@@ -107,28 +104,38 @@ void SizeClass::starvation() {
   });
 }
 
-std::vector<size_t> SizeClass::getPopulationSizes() {
+std::vector<size_t> SizeClass::getPopulationSizes(std::vector<SizeClass>& sizeClasses) {
   std::vector<size_t> populationSizes(numberOfSizeClasses_, 0);
-  auto popSizesIt = populationSizes.begin();
-  std::for_each(std::begin(sizeClasses_), std::end(sizeClasses_),
-  [&](SizeClass& sizeClass) {
-    *popSizesIt = sizeClass.getPopulationSize();
-    if(this == &sizeClass) {
-      *popSizesIt--;
+//  auto popSizesIt = populationSizes.begin();
+//  std::for_each(std::begin(sizeClasses), std::end(sizeClasses),
+//  [&](SizeClass& sizeClass) {
+//    *popSizesIt = sizeClass.getPopulationSize();
+//    std::cout << "*popSizesIt " << *popSizesIt << std::endl;
+//    if(this == &sizeClass) {
+//      *popSizesIt--;
+//    }
+//    std::advance(popSizesIt, 1);
+//  });
+
+  for(unsigned i = 0; i < numberOfSizeClasses_; ++i) {
+    populationSizes[i] = sizeClasses[i].getPopulationSize();
+    if(this == &sizeClasses[i]) {
+      populationSizes[i]--;
     }
-    ++popSizesIt;
-  });
+  }
   return populationSizes;
 }
 
-void SizeClass::calcFeedingProbability(std::vector<size_t>& populationSizes) {
+std::vector<SizeClass>::iterator SizeClass::calcFeedingProbability(std::vector<SizeClass>& sizeClasses) {
+  std::vector<SizeClass>::iterator coupledSizeClassIt = sizeClasses.begin();
   if(alive_.size() != 0) {
     std::vector<double> effectiveSizeClassVolumes(numberOfSizeClasses_, 0);
-    calcEffectiveSizeClassVolumes(populationSizes, effectiveSizeClassVolumes);
-    setCoupledSizeClass(effectiveSizeClassVolumes);
+    calcEffectiveSizeClassVolumes(sizeClasses, effectiveSizeClassVolumes);
+    coupledSizeClassIt = setCoupledSizeClass(effectiveSizeClassVolumes, sizeClasses);
     calcFeedingStrategy();
     feedingProbabilty_ = heterotrophProcessor_.calcFeedingProbability(index_, effectivePreyVolume_);
   }
+  return coupledSizeClassIt;
 }
 
 void SizeClass::sizeClassSubset(std::function<void(unsigned)> func) {
@@ -141,33 +148,45 @@ void SizeClass::sizeClassSubset(std::function<void(unsigned)> func) {
   }
 }
 
-void SizeClass::calcEffectiveSizeClassVolumes(std::vector<size_t>& populationSizes,
+void SizeClass::calcEffectiveSizeClassVolumes(std::vector<SizeClass>& sizeClasses,
                                               std::vector<double>& effectiveSizeClassVolumes) {
   effectivePreyVolume_ = 0;
+  effectiveAutotrophVolume_ = 0;
   feedingProbabilty_ = 0;
 
-  auto sizeClassVolumesIt = sizeClassVolumes_.begin();
-  auto sizeClassPreferencesIt = sizeClassPreferences_.begin();
-  auto effectiveSizeClassVolumesIt = effectiveSizeClassVolumes.begin();
-  // Calculate effective prey volumes
-  std::for_each(begin(populationSizes), end(populationSizes),
-  [&](size_t populationSize) {
-    *effectiveSizeClassVolumesIt = *sizeClassVolumesIt * populationSize;
-    effectiveAutotrophVolume_ = *sizeClassPreferencesIt * autotrophs_.getVolume();
+  std::vector<size_t> populationSizes = getPopulationSizes(sizeClasses);
+//  auto sizeClassVolumesIt = sizeClassVolumes_.begin();
+//  auto sizeClassPreferencesIt = sizeClassPreferences_.begin();
+//  auto effectiveSizeClassVolumesIt = effectiveSizeClassVolumes.begin();
+//  // Calculate effective prey volumes
+//  std::for_each(begin(populationSizes), end(populationSizes),
+//  [&](size_t populationSize) {
 
-    *effectiveSizeClassVolumesIt += effectiveAutotrophVolume_;
-    effectivePreyVolume_ += *effectiveSizeClassVolumesIt;
+//    *effectiveSizeClassVolumesIt = *sizeClassVolumesIt * populationSize;
+//    effectiveAutotrophVolume_ = *sizeClassPreferencesIt * autotrophs_.getVolume();
 
-    ++effectiveSizeClassVolumesIt;
-    ++sizeClassPreferencesIt;
-    ++sizeClassVolumesIt;
-  });
+//    *effectiveSizeClassVolumesIt += effectiveAutotrophVolume_;
+//    effectivePreyVolume_ += *effectiveSizeClassVolumesIt;
+
+//    std::advance(effectiveSizeClassVolumesIt, 1);
+//    std::advance(sizeClassPreferencesIt, 1);
+//    std::advance(sizeClassVolumesIt, 1);
+//  });
+
+  for(unsigned i = 0; i < numberOfSizeClasses_; ++i) {
+    double effectiveSizeClassAutotrophVolume = sizeClassPreferences_[i] * sizeClasses[i].getAutotrophs().getVolume();
+    effectiveAutotrophVolume_ += effectiveSizeClassAutotrophVolume;
+    effectiveSizeClassVolumes[i] = (sizeClassVolumes_[i] * populationSizes[i]) + effectiveSizeClassAutotrophVolume;
+
+    effectivePreyVolume_ += effectiveSizeClassVolumes[i];
+  }
 }
 
-void SizeClass::setCoupledSizeClass(std::vector<double>& effectiveSizeClassVolumes) {
-  coupledSizeClassIt_ = sizeClasses_.begin();
+
+  std::vector<SizeClass>::iterator SizeClass::setCoupledSizeClass(const std::vector<double>& effectiveSizeClassVolumes,
+                                                                  std::vector<SizeClass>& sizeClasses) {
   // Default to largest populated size class
-  std::advance(coupledSizeClassIt_, numberOfSizeClasses_ - 1);
+  std::vector<SizeClass>::iterator coupledSizeClassIt = std::prev(sizeClasses.end());
   double randEffectivePreyValue = random_.getUniform() * effectivePreyVolume_;
   double effectivePreySum = 0;
   unsigned index = 0;
@@ -176,26 +195,31 @@ void SizeClass::setCoupledSizeClass(std::vector<double>& effectiveSizeClassVolum
     [&](double effectiveSizeClassVolume) {
     effectivePreySum += effectiveSizeClassVolume;
     if(effectivePreySum >= randEffectivePreyValue) {
-      std::advance(coupledSizeClassIt_, -(numberOfSizeClasses_ - 1) + index);
+      std::advance(coupledSizeClassIt, -(numberOfSizeClasses_ - 1) + index);
       return true;
     } else {
       ++index;
       return false;
     }
   });
+  return coupledSizeClassIt;
 }
 
 void SizeClass::calcFeedingStrategy() {
   feedingStrategy_ = enums::eCarnivore;
-  if(&(*coupledSizeClassIt_) == &(*autotrophSizeClassIt_)) {
-    double probHerbivory = effectiveAutotrophVolume_ / effectivePreyVolume_;
-    if(random_.getUniform() <= probHerbivory) {
-      feedingStrategy_ = enums::eHerbivore;
-    }
+  double probHerbivory = effectiveAutotrophVolume_ / effectivePreyVolume_;
+  if(random_.getUniform() <= probHerbivory) {
+    feedingStrategy_ = enums::eHerbivore;
   }
 }
 
-void SizeClass::feedFromHeterotrophs(Heterotroph& predator) {
+void SizeClass::feedFromHeterotrophs(Heterotroph& predator, std::vector<SizeClass>::iterator& coupledSizeClassIt) {
+    if(coupledSizeClassIt->getPopulationSize() != 0) {
+      Heterotroph& prey = coupledSizeClassIt->getRandomHeterotroph();
+      while(&predator == &prey) { // Predators cannot eat themselves
+        prey = coupledSizeClassIt->getRandomHeterotroph();
+      }
+    }
 //  Types::HeterotrophPointer prey = GetRandomPreyFromSizeClass(coupledIndex, predator);
 //  if(prey != nullptr) {
 //    double preyVolume = prey->GetVolumeActual();
@@ -275,6 +299,10 @@ Heterotroph& SizeClass::removeHeterotroph(const unsigned index) {
   } else {
     throw std::runtime_error("Size class is empty...");
   }
+}
+
+Autotrophs& SizeClass::getAutotrophs() {
+  return autotrophs_;
 }
 
 void SizeClass::addHeterotroph(Heterotroph heterotroph) {

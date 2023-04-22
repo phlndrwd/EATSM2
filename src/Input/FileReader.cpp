@@ -10,8 +10,6 @@
 
 FileReader::FileReader() {}
 
-FileReader::~FileReader() {}
-
 void FileReader::readInputFile() {
   bool success = false;
 

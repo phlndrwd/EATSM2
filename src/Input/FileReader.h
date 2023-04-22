@@ -7,7 +7,6 @@
 class FileReader {
  public:
   FileReader();
-  ~FileReader();
 
   void readInputFile();
 

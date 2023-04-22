@@ -8,7 +8,6 @@ class Environment;
 class FileWriter {
  public:
   FileWriter();
-  ~FileWriter();
 
   void writeOutputData(Environment&);
 

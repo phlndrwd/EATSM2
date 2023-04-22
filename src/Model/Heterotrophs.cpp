@@ -7,13 +7,12 @@
 #include "Parameters.h"
 
 namespace {
-SizeClass sizeClassGenerator(std::vector<SizeClass>& sizeClasses,
-                             Nutrient& nutrient,
+SizeClass sizeClassGenerator(Nutrient& nutrient,
                              RandomSimple& random,
                              const double initialAutotrophVolume,
                              const double initialHeterotrophVolume,
                              unsigned& index) {
-  SizeClass sizeClass(sizeClasses, nutrient, initialAutotrophVolume, initialHeterotrophVolume, index, random.getUniformInt(1, UINT_MAX));
+  SizeClass sizeClass(nutrient, initialAutotrophVolume, initialHeterotrophVolume, index, random.getUniformInt(1, UINT_MAX));
   ++index;
   return sizeClass;
 }
@@ -32,15 +31,14 @@ Heterotrophs::Heterotrophs(Nutrient& nutrient,
   std::generate_n(std::back_inserter(sizeClasses_), numberOfSizeClasses_, [&] {
     double initialAutotrophVolume = autotrophIndex != index ? 0 : Parameters::Get()->getInitialAutotrophVolume();
     double initialHeterotrophVolume = heterotrophIndex != index ? 0 : Parameters::Get()->getInitialHeterotrophVolume();
-    std::cout << "Size class " << index << ", initialAutotrophVolume " << initialAutotrophVolume << ", initialHeterotrophVolume " << initialHeterotrophVolume << std::endl;
-    return sizeClassGenerator(sizeClasses_, nutrient_, random_, initialAutotrophVolume, initialHeterotrophVolume, index);
+    return sizeClassGenerator(nutrient_, random_, initialAutotrophVolume, initialHeterotrophVolume, index);
   });
 }
 
 void Heterotrophs::update() {
   std::for_each(std::begin(sizeClasses_), std::end(sizeClasses_),
   [&](SizeClass& sizeClass) {
-    std::vector<structs::MovingHeterotroph> movingHeterotrophs = sizeClass.update();
+    std::vector<structs::MovingHeterotroph> movingHeterotrophs = sizeClass.update(sizeClasses_);
     for (const auto& movingHeterotroph : movingHeterotrophs) {
       std::vector<SizeClass>::iterator sizeClassIt = sizeClasses_.begin();
 
