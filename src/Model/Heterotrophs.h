@@ -1,9 +1,9 @@
 #ifndef POPULATION
 #define POPULATION
 
+#include <memory>
 #include <vector>
 
-#include "Autotrophs.h"
 #include "Nutrient.h"
 #include "HeterotrophProcessor.h"
 #include "RandomSimple.h"
@@ -21,7 +21,7 @@ class Heterotrophs {
   const unsigned numberOfSizeClasses_;
 
   RandomSimple random_;
-  std::vector<SizeClass> sizeClasses_;
+  std::vector<std::unique_ptr<SizeClass>> sizeClasses_;
   HeterotrophProcessor heterotrophProcessor_;
 };
 

@@ -31,21 +31,21 @@ Heterotrophs::Heterotrophs(Nutrient& nutrient,
   std::generate_n(std::back_inserter(sizeClasses_), numberOfSizeClasses_, [&] {
     double initialAutotrophVolume = autotrophIndex != index ? 0 : Parameters::Get()->getInitialAutotrophVolume();
     double initialHeterotrophVolume = heterotrophIndex != index ? 0 : Parameters::Get()->getInitialHeterotrophVolume();
-    return sizeClassGenerator(nutrient_, random_, initialAutotrophVolume, initialHeterotrophVolume, index);
+    return std::make_unique<SizeClass>(sizeClassGenerator(nutrient_, random_, initialAutotrophVolume, initialHeterotrophVolume, index));
   });
 }
 
 void Heterotrophs::update() {
   std::for_each(std::begin(sizeClasses_), std::end(sizeClasses_),
-  [&](SizeClass& sizeClass) {
-    std::vector<structs::MovingHeterotroph> movingHeterotrophs = sizeClass.update(sizeClasses_);
+  [&](std::unique_ptr<SizeClass>& sizeClass) {
+    std::vector<structs::MovingHeterotroph> movingHeterotrophs = sizeClass.get()->update(sizeClasses_);
     for (const auto& movingHeterotroph : movingHeterotrophs) {
-      std::vector<SizeClass>::iterator sizeClassIt = sizeClasses_.begin();
+      std::vector<std::unique_ptr<SizeClass>>::iterator sizeClassIt = sizeClasses_.begin();
 
       // PJU FIX - Determine SizeClassIndex here.
 
       //std::advance(sizeClassIt, heterotroph.getSizeClassIndex());
-      sizeClassIt->addHeterotroph(movingHeterotroph.heterotroph);
+      sizeClassIt->get()->addHeterotroph(movingHeterotroph.heterotroph);
     }
   });
 }

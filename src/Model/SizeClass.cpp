@@ -36,7 +36,6 @@ SizeClass::SizeClass(Nutrient& nutrient,
   heterotrophs_.reserve(maxPopulation_);
   alive_.reserve(maxPopulation_);
   populate(initialHeterotrophVolume);
-  //std::advance(autotrophSizeClassIt_, Parameters::Get()->getAutotrophSizeClassIndex());
 }
 
 void SizeClass::populate(const double volumeToInitialise) {
@@ -57,7 +56,7 @@ void SizeClass::populate(const double volumeToInitialise) {
   }
 }
 
-std::vector<structs::MovingHeterotroph> SizeClass::update(std::vector<SizeClass>& sizeClasses) {
+std::vector<structs::MovingHeterotroph> SizeClass::update(std::vector<std::unique_ptr<SizeClass>>& sizeClasses) {
   std::vector<structs::MovingHeterotroph> movingHeterotrophs;
   feeding(sizeClasses);
   metabolisation();
@@ -66,8 +65,8 @@ std::vector<structs::MovingHeterotroph> SizeClass::update(std::vector<SizeClass>
   return movingHeterotrophs;
 }
 
-void SizeClass::feeding(std::vector<SizeClass>& sizeClasses) {
-  std::vector<SizeClass>::iterator coupledSizeClassIt = calcFeedingProbability(sizeClasses);
+void SizeClass::feeding(std::vector<std::unique_ptr<SizeClass>>& sizeClasses) {
+  std::vector<std::unique_ptr<SizeClass>>::iterator coupledSizeClassIt = calcFeedingProbability(sizeClasses);
   sizeClassSubset([&](unsigned randomIndex) {
     Heterotroph& predator = heterotrophs_[randomIndex];
 
@@ -104,30 +103,31 @@ void SizeClass::starvation() {
   });
 }
 
-std::vector<size_t> SizeClass::getPopulationSizes(std::vector<SizeClass>& sizeClasses) {
+std::vector<size_t> SizeClass::getPopulationSizes(std::vector<std::unique_ptr<SizeClass>>& sizeClasses) {
   std::vector<size_t> populationSizes(numberOfSizeClasses_, 0);
-//  auto popSizesIt = populationSizes.begin();
-//  std::for_each(std::begin(sizeClasses), std::end(sizeClasses),
-//  [&](SizeClass& sizeClass) {
-//    *popSizesIt = sizeClass.getPopulationSize();
-//    std::cout << "*popSizesIt " << *popSizesIt << std::endl;
-//    if(this == &sizeClass) {
-//      *popSizesIt--;
-//    }
-//    std::advance(popSizesIt, 1);
-//  });
-
-  for(unsigned i = 0; i < numberOfSizeClasses_; ++i) {
-    populationSizes[i] = sizeClasses[i].getPopulationSize();
-    if(this == &sizeClasses[i]) {
-      populationSizes[i]--;
+  auto popSizesIt = populationSizes.begin();
+  std::for_each(std::begin(sizeClasses), std::end(sizeClasses),
+  [&](std::unique_ptr<SizeClass>& sizeClass) {
+    *popSizesIt = sizeClass->getPopulationSize();
+    //std::cout << "*popSizesIt " << *popSizesIt << std::endl;
+    if(this == sizeClass.get()) {
+      *popSizesIt--;
     }
-  }
+    std::next(popSizesIt);
+  });
+
+//  for(unsigned i = 0; i < numberOfSizeClasses_; ++i) {
+//    populationSizes[i] = sizeClasses[i].getPopulationSize();
+//    if(this == sizeClasses[i]) {
+//      populationSizes[i]--;
+//    }
+//  }
+
   return populationSizes;
 }
 
-std::vector<SizeClass>::iterator SizeClass::calcFeedingProbability(std::vector<SizeClass>& sizeClasses) {
-  std::vector<SizeClass>::iterator coupledSizeClassIt = sizeClasses.begin();
+std::vector<std::unique_ptr<SizeClass>>::iterator SizeClass::calcFeedingProbability(std::vector<std::unique_ptr<SizeClass>>& sizeClasses) {
+  std::vector<std::unique_ptr<SizeClass>>::iterator coupledSizeClassIt = sizeClasses.begin();
   if(alive_.size() != 0) {
     std::vector<double> effectiveSizeClassVolumes(numberOfSizeClasses_, 0);
     calcEffectiveSizeClassVolumes(sizeClasses, effectiveSizeClassVolumes);
@@ -148,16 +148,17 @@ void SizeClass::sizeClassSubset(std::function<void(unsigned)> func) {
   }
 }
 
-void SizeClass::calcEffectiveSizeClassVolumes(std::vector<SizeClass>& sizeClasses,
+void SizeClass::calcEffectiveSizeClassVolumes(std::vector<std::unique_ptr<SizeClass>>& sizeClasses,
                                               std::vector<double>& effectiveSizeClassVolumes) {
   effectivePreyVolume_ = 0;
   effectiveAutotrophVolume_ = 0;
   feedingProbabilty_ = 0;
 
   std::vector<size_t> populationSizes = getPopulationSizes(sizeClasses);
+
 //  auto sizeClassVolumesIt = sizeClassVolumes_.begin();
 //  auto sizeClassPreferencesIt = sizeClassPreferences_.begin();
-//  auto effectiveSizeClassVolumesIt = effectiveSizeClassVolumes.begin();
+//  std::vector<double>::iterator effectiveSizeClassVolumesIt = effectiveSizeClassVolumes.begin();
 //  // Calculate effective prey volumes
 //  std::for_each(begin(populationSizes), end(populationSizes),
 //  [&](size_t populationSize) {
@@ -168,13 +169,17 @@ void SizeClass::calcEffectiveSizeClassVolumes(std::vector<SizeClass>& sizeClasse
 //    *effectiveSizeClassVolumesIt += effectiveAutotrophVolume_;
 //    effectivePreyVolume_ += *effectiveSizeClassVolumesIt;
 
-//    std::advance(effectiveSizeClassVolumesIt, 1);
-//    std::advance(sizeClassPreferencesIt, 1);
-//    std::advance(sizeClassVolumesIt, 1);
+//    std::next(effectiveSizeClassVolumesIt);
+//    std::next(sizeClassPreferencesIt);
+//    std::next(sizeClassVolumesIt);
+////    std::advance(effectiveSizeClassVolumesIt, 1);
+////    std::advance(sizeClassPreferencesIt, 1);
+////    std::advance(sizeClassVolumesIt, 1);
 //  });
 
   for(unsigned i = 0; i < numberOfSizeClasses_; ++i) {
-    double effectiveSizeClassAutotrophVolume = sizeClassPreferences_[i] * sizeClasses[i].getAutotrophs().getVolume();
+    //std::vector<SizeClass> szClsRef = *sizeClasses;
+    double effectiveSizeClassAutotrophVolume = sizeClassPreferences_[i] * sizeClasses[i]->getAutotrophs().getVolume();
     effectiveAutotrophVolume_ += effectiveSizeClassAutotrophVolume;
     effectiveSizeClassVolumes[i] = (sizeClassVolumes_[i] * populationSizes[i]) + effectiveSizeClassAutotrophVolume;
 
@@ -183,10 +188,10 @@ void SizeClass::calcEffectiveSizeClassVolumes(std::vector<SizeClass>& sizeClasse
 }
 
 
-  std::vector<SizeClass>::iterator SizeClass::setCoupledSizeClass(const std::vector<double>& effectiveSizeClassVolumes,
-                                                                  std::vector<SizeClass>& sizeClasses) {
+  std::vector<std::unique_ptr<SizeClass>>::iterator SizeClass::setCoupledSizeClass(const std::vector<double>& effectiveSizeClassVolumes,
+                                                                  std::vector<std::unique_ptr<SizeClass>>& sizeClasses) {
   // Default to largest populated size class
-  std::vector<SizeClass>::iterator coupledSizeClassIt = std::prev(sizeClasses.end());
+  std::vector<std::unique_ptr<SizeClass>>::iterator coupledSizeClassIt = std::prev(sizeClasses.end());
   double randEffectivePreyValue = random_.getUniform() * effectivePreyVolume_;
   double effectivePreySum = 0;
   unsigned index = 0;
@@ -195,7 +200,8 @@ void SizeClass::calcEffectiveSizeClassVolumes(std::vector<SizeClass>& sizeClasse
     [&](double effectiveSizeClassVolume) {
     effectivePreySum += effectiveSizeClassVolume;
     if(effectivePreySum >= randEffectivePreyValue) {
-      std::advance(coupledSizeClassIt, -(numberOfSizeClasses_ - 1) + index);
+      int sizeClassIndex = -(numberOfSizeClasses_ - 1) + index;
+      std::advance(coupledSizeClassIt, sizeClassIndex);
       return true;
     } else {
       ++index;
@@ -213,11 +219,11 @@ void SizeClass::calcFeedingStrategy() {
   }
 }
 
-void SizeClass::feedFromHeterotrophs(Heterotroph& predator, std::vector<SizeClass>::iterator& coupledSizeClassIt) {
-    if(coupledSizeClassIt->getPopulationSize() != 0) {
-      Heterotroph& prey = coupledSizeClassIt->getRandomHeterotroph();
+void SizeClass::feedFromHeterotrophs(Heterotroph& predator, std::vector<std::unique_ptr<SizeClass>>::iterator coupledSizeClassIt) {
+    if(coupledSizeClassIt->get()->getPopulationSize() != 0) {
+      Heterotroph& prey = coupledSizeClassIt->get()->getRandomHeterotroph();
       while(&predator == &prey) { // Predators cannot eat themselves
-        prey = coupledSizeClassIt->getRandomHeterotroph();
+        prey = coupledSizeClassIt->get()->getRandomHeterotroph();
       }
     }
 //  Types::HeterotrophPointer prey = GetRandomPreyFromSizeClass(coupledIndex, predator);
@@ -307,7 +313,7 @@ Autotrophs& SizeClass::getAutotrophs() {
 
 void SizeClass::addHeterotroph(Heterotroph heterotroph) {
   if(alive_.size() != maxPopulation_) {
-    unsigned index;
+    int index;
     std::vector<Heterotroph>::iterator heterotrophsIt;
     if(dead_.size() != 0) {
       index = dead_.front();
