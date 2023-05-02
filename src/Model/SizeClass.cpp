@@ -105,24 +105,17 @@ void SizeClass::starvation() {
 
 std::vector<size_t> SizeClass::getPopulationSizes(std::vector<std::unique_ptr<SizeClass>>& sizeClasses) {
   std::vector<size_t> populationSizes(numberOfSizeClasses_, 0);
-//  auto popSizesIt = populationSizes.begin();
-//  std::for_each(std::begin(sizeClasses), std::end(sizeClasses),
-//  [&](std::unique_ptr<SizeClass>& sizeClass) {
-//    *popSizesIt = sizeClass->getPopulationSize();
-//    //std::cout << "*popSizesIt " << *popSizesIt << std::endl;
-//    if(this == sizeClass.get()) {
-//      *popSizesIt--;
-//    }
-//    std::next(popSizesIt);
-//  });
 
-  for(unsigned i = 0; i < numberOfSizeClasses_; ++i) {
-    populationSizes[i] = sizeClasses[i]->getPopulationSize();
-    if(this == sizeClasses[i].get()) {
-      populationSizes[i]--;
+  auto popSizesIt = populationSizes.begin();
+  std::for_each(std::begin(sizeClasses), std::end(sizeClasses),
+  [&](std::unique_ptr<SizeClass>& sizeClass) {
+    size_t popSize = sizeClass->getPopulationSize();
+    if(this == sizeClass.get()) {
+      popSize--;
     }
-  }
-
+    *popSizesIt = popSize;
+    std::advance(popSizesIt, 1);
+  });
   return populationSizes;
 }
 
