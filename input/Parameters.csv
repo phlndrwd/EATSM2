@@ -1,6 +1,6 @@
 Name,Value
 RandomSeed,0
-RunTimeInSeconds,60
+RunTimeInSeconds,30
 SamplingRate,100
 NumberOfSizeClasses,100
 ReadModelState,0
