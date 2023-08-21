@@ -6,7 +6,7 @@
 
 Environment::Environment() :
     nutrient_(),
-    heterotrophs_(nutrient_, Parameters::Get()->getNumberOfSizeClasses()) {
+    heterotrophs_(nutrient_) {
   std::cout << "Environment created." << std::endl << std::endl;
 }
 

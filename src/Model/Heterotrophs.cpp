@@ -18,11 +18,11 @@ SizeClass sizeClassGenerator(Nutrient& nutrient,
 }
 }  // anonymous namespace
 
-Heterotrophs::Heterotrophs(Nutrient& nutrient,
-                           const unsigned numberOfSizeClasses) :
+Heterotrophs::Heterotrophs(Nutrient& nutrient) :
     nutrient_(nutrient),
-    numberOfSizeClasses_(numberOfSizeClasses),
-    random_(Parameters::Get()->getRandomSeed()) {
+    numberOfSizeClasses_(Parameters::Get()->getNumberOfSizeClasses()),
+    random_(Parameters::Get()->getRandomSeed()),  // Is this the first time random is used?
+    encounterAlgorithm_(random_.getUniformInt(1, UINT_MAX)) {
   unsigned autotrophIndex = Parameters::Get()->getAutotrophSizeClassIndex();
   double idealInitialVolume = Parameters::Get()->getSmallestIndividualVolume() *
                               Parameters::Get()->getPreferredPreyVolumeRatio();
@@ -38,7 +38,9 @@ Heterotrophs::Heterotrophs(Nutrient& nutrient,
 void Heterotrophs::update() {
   std::for_each(std::begin(sizeClasses_), std::end(sizeClasses_),
   [&](SizeClass& sizeClass) {
-    std::vector<structs::MovingHeterotroph> movingHeterotrophs = sizeClass.update(sizeClasses_);
+    std::vector<structs::MovingHeterotroph> movingHeterotrophs;
+    encounterAlgorithm_.update(sizeClasses_, sizeClass, movingHeterotrophs);
+    sizeClass.update(movingHeterotrophs);
     for (const auto& movingHeterotroph : movingHeterotrophs) {
       std::vector<SizeClass>::iterator sizeClassIt = sizeClasses_.begin();
 
