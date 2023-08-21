@@ -8,16 +8,16 @@
 #include "RandomSimple.h"
 #include "Enums.h"
 
-HeterotrophProcessor::HeterotrophProcessor()
-    : sizeClassBoundaries_(Parameters::Get()->getSizeClassBoundaries()),
-      preferredPreyVolumeRatio_(Parameters::Get()->getPreferredPreyVolumeRatio()),
-      preferenceFunctionWidth_(Parameters::Get()->getPreferenceFunctionWidth()),
-      fractionalMetabolicExpense_(Parameters::Get()->getFractionalMetabolicExpense()),
-      metabolicIndex_(Parameters::Get()->getMetabolicIndex()),
-      numberOfSizeClasses_(Parameters::Get()->getNumberOfSizeClasses()),
-      largestVolumeExponent_(Parameters::Get()->getLargestVolumeExponent()),
-      smallestVolumeExponent_(Parameters::Get()->getSmallestVolumeExponent()),
-      preferenceDenominator_(2 * std::pow(preferenceFunctionWidth_, 2)) {}
+HeterotrophProcessor::HeterotrophProcessor() :
+    sizeClassBoundaries_(Parameters::Get()->getSizeClassBoundaries()),
+    preferredPreyVolumeRatio_(Parameters::Get()->getPreferredPreyVolumeRatio()),
+    preferenceFunctionWidth_(Parameters::Get()->getPreferenceFunctionWidth()),
+    fractionalMetabolicExpense_(Parameters::Get()->getFractionalMetabolicExpense()),
+    metabolicIndex_(Parameters::Get()->getMetabolicIndex()),
+    numberOfSizeClasses_(Parameters::Get()->getNumberOfSizeClasses()),
+    largestVolumeExponent_(Parameters::Get()->getLargestVolumeExponent()),
+    smallestVolumeExponent_(Parameters::Get()->getSmallestVolumeExponent()),
+    preferenceDenominator_(2 * std::pow(preferenceFunctionWidth_, 2)) {}
 
 double HeterotrophProcessor::calculateMetabolicDeduction(const Heterotroph& heterotroph) const {
   return fractionalMetabolicExpense_ * std::pow(heterotroph.getVolumeActual(), metabolicIndex_);
@@ -75,17 +75,17 @@ bool HeterotrophProcessor::updateSizeClassIndex(Heterotroph& heterotroph) const 
   return false;
 }
 
-unsigned HeterotrophProcessor::findSizeClassIndexFromVolume(const double volume) const {
-  unsigned sizeClassIndex = 0;
+//unsigned HeterotrophProcessor::findSizeClassIndexFromVolume(const double volume) const {
+//  unsigned sizeClassIndex = 0;
 
-  for (unsigned index = 1; index <= numberOfSizeClasses_; ++index) {
-    if (volume < sizeClassBoundaries_[index]) {
-      sizeClassIndex = index - 1;
-      break;
-    }
-  }
-  return sizeClassIndex;
-}
+//  for (unsigned index = 1; index <= numberOfSizeClasses_; ++index) {
+//    if (volume < sizeClassBoundaries_[index]) {
+//      sizeClassIndex = index - 1;
+//      break;
+//    }
+//  }
+//  return sizeClassIndex;
+//}
 
 unsigned HeterotrophProcessor::directionIndividualShouldMoveSizeClasses(const Heterotroph& heterotroph) const {
   unsigned directionToMove = enums::eNoMovement;

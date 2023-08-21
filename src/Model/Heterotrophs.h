@@ -6,7 +6,6 @@
 
 #include "EncounterAlgorithm.h"
 #include "Nutrient.h"
-#include "HeterotrophProcessor.h"
 #include "RandomSimple.h"
 #include "SizeClass.h"
 
@@ -18,13 +17,16 @@ class Heterotrophs {
   void update();
 
  private:
+  unsigned findSizeClassIndexFromVolume(const double) const;
+
   Nutrient& nutrient_;
+
+  const std::vector<double> sizeClassBoundaries_;
   const unsigned numberOfSizeClasses_;
 
   RandomSimple random_;
   EncounterAlgorithm encounterAlgorithm_;
   std::vector<SizeClass> sizeClasses_;
-  HeterotrophProcessor heterotrophProcessor_;
 };
 
 #endif

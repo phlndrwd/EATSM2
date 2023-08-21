@@ -128,8 +128,8 @@ void Parameters::calculateParameters() {
   double sizeClassBoundaryExponent = smallestVolumeExponent_ + (numberOfSizeClasses_ * sizeClassExponentIncrement);
   sizeClassBoundaries_[numberOfSizeClasses_] = std::pow(10, sizeClassBoundaryExponent);
 
-  HeterotrophProcessor heterotrophProcessor;
-  autotrophSizeClassIndex_ = heterotrophProcessor.findSizeClassIndexFromVolume(smallestIndividualVolume_);
+  //HeterotrophProcessor heterotrophProcessor;
+  autotrophSizeClassIndex_ = 0;//heterotrophProcessor.findSizeClassIndexFromVolume(smallestIndividualVolume_);
 
   interSizeClassPreferenceMatrix_.resize(numberOfSizeClasses_);
   interSizeClassVolumeMatrix_.resize(numberOfSizeClasses_);
@@ -141,8 +141,8 @@ void Parameters::calculateParameters() {
     for (unsigned referenceIndex = 0; referenceIndex < numberOfSizeClasses_; ++referenceIndex) {
       double referenceVolumeMean = sizeClassMidPoints_[referenceIndex];
 
-      double preferenceForReferenceSizeClass =
-          heterotrophProcessor.calculatePreferenceForPrey(subjectVolumeMean, referenceVolumeMean);
+      double preferenceForReferenceSizeClass = 0;
+          //heterotrophProcessor.calculatePreferenceForPrey(subjectVolumeMean, referenceVolumeMean);
 
       preferenceSum += preferenceForReferenceSizeClass;
 

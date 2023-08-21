@@ -20,7 +20,7 @@ class HeterotrophProcessor {
   double calculatePreferenceForPrey(const double, const double) const;
   //  double calcFeedingProbability(const unsigned, const double);
 
-  unsigned findSizeClassIndexFromVolume(const double) const;
+  // unsigned findSizeClassIndexFromVolume(const double) const;
 
   void updateHerbivoreTrophicIndex(Heterotroph*);
   void updateCarnivoreTrophicIndex(Heterotroph*, const Heterotroph*);

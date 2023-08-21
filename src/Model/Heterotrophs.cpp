@@ -20,13 +20,14 @@ SizeClass sizeClassGenerator(Nutrient& nutrient,
 
 Heterotrophs::Heterotrophs(Nutrient& nutrient) :
     nutrient_(nutrient),
+    sizeClassBoundaries_(Parameters::Get()->getSizeClassBoundaries()),
     numberOfSizeClasses_(Parameters::Get()->getNumberOfSizeClasses()),
     random_(Parameters::Get()->getRandomSeed()),  // Is this the first time random is used?
     encounterAlgorithm_(random_.getUniformInt(1, UINT_MAX)) {
   unsigned autotrophIndex = Parameters::Get()->getAutotrophSizeClassIndex();
   double idealInitialVolume = Parameters::Get()->getSmallestIndividualVolume() *
                               Parameters::Get()->getPreferredPreyVolumeRatio();
-  unsigned heterotrophIndex = heterotrophProcessor_.findSizeClassIndexFromVolume(idealInitialVolume);
+  unsigned heterotrophIndex = findSizeClassIndexFromVolume(idealInitialVolume);
   unsigned index = 0;
   std::generate_n(std::back_inserter(sizeClasses_), numberOfSizeClasses_, [&] {
     double initialAutotrophVolume = autotrophIndex != index ? 0 : Parameters::Get()->getInitialAutotrophVolume();
@@ -50,4 +51,16 @@ void Heterotrophs::update() {
       sizeClassIt->addHeterotroph(movingHeterotroph.heterotroph);
     }
   });
+}
+
+unsigned Heterotrophs::findSizeClassIndexFromVolume(const double volume) const {
+  unsigned sizeClassIndex = 0;
+
+  for (unsigned index = 1; index <= numberOfSizeClasses_; ++index) {
+    if (volume < sizeClassBoundaries_[index]) {
+      sizeClassIndex = index - 1;
+      break;
+    }
+  }
+  return sizeClassIndex;
 }
