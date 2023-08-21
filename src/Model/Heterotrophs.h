@@ -21,7 +21,7 @@ class Heterotrophs {
   const unsigned numberOfSizeClasses_;
 
   RandomSimple random_;
-  std::vector<std::unique_ptr<SizeClass>> sizeClasses_;
+  std::vector<SizeClass> sizeClasses_;
   HeterotrophProcessor heterotrophProcessor_;
 };
 
