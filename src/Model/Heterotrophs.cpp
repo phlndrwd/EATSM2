@@ -40,15 +40,14 @@ void Heterotrophs::update() {
   std::for_each(std::begin(sizeClasses_), std::end(sizeClasses_),
   [&](SizeClass& sizeClass) {
     std::vector<structs::MovingHeterotroph> movingHeterotrophs;
-    encounterAlgorithm_.update(sizeClasses_, sizeClass, movingHeterotrophs);
+    encounterAlgorithm_.update(sizeClasses_, sizeClass);
     sizeClass.update(movingHeterotrophs);
+
     for (const auto& movingHeterotroph : movingHeterotrophs) {
-      std::vector<SizeClass>::iterator sizeClassIt = sizeClasses_.begin();
-
       // PJU FIX - Determine SizeClassIndex here.
-
+      std::vector<SizeClass>::iterator sizeClassIt = sizeClasses_.begin();
       //std::advance(sizeClassIt, heterotroph.getSizeClassIndex());
-      sizeClassIt->addHeterotroph(movingHeterotroph.heterotroph);
+      //sizeClassIt->addHeterotroph(movingHeterotroph.heterotroph_);
     }
   });
 }

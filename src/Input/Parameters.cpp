@@ -320,7 +320,9 @@ const std::vector<std::vector<double>> Parameters::getInterSizeClassPreferenceMa
   return interSizeClassPreferenceMatrix_;
 }
 
-const std::vector<std::vector<double>> Parameters::getInterSizeClassVolumeMatrix() const { return interSizeClassVolumeMatrix_; }
+const std::vector<std::vector<double>> Parameters::getInterSizeClassVolumeMatrix() const {
+  return interSizeClassVolumeMatrix_;
+}
 
 void Parameters::setRandomSeed(const unsigned randomNumberSeed) {
   randomSeed_ = randomNumberSeed;

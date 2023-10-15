@@ -25,9 +25,9 @@ SizeClass::SizeClass(Nutrient& nutrient,
                      const unsigned randomSeed) :
     nutrient_(nutrient),
     index_(index),
-    sizeClassPreferences_(Parameters::Get()->getInterSizeClassPreferenceVector(index_)),
-    sizeClassVolumes_(Parameters::Get()->getInterSizeClassVolumeVector(index_)),
+    sizeClassUpper_(Parameters::Get()->getSizeClassMidPoint(index_ + 1)),
     sizeClassMidPoint_(Parameters::Get()->getSizeClassMidPoint(index_)),
+    sizeClassLower_(Parameters::Get()->getSizeClassMidPoint(index_)),
     sizeClassSubsetFraction_(Parameters::Get()->getSizeClassSubsetFraction()),
     maxPopulation_(Parameters::Get()->getMaximumSizeClassPopulation(index_)),
     autotrophs_(nutrient, initialAutotrophVolume),
@@ -58,17 +58,19 @@ void SizeClass::populate(const double volumeToInitialise) {
 void SizeClass::update(std::vector<structs::MovingHeterotroph>& movingHeterotrophs) {
   metabolisation();
   starvation();
+  reproduction(); // Not implemented
+  move(movingHeterotrophs);
 }
 
 void SizeClass::metabolisation() {
   std::for_each(std::begin(alive_), std::end(alive_), [&](unsigned index) {
-    heterotrophs_[index];
 
-    double metabolicDeduction = heterotrophProcessor_.calculateMetabolicDeduction(heterotrophs_[index]);
+    Heterotroph& heterotroph = heterotrophs_[index];
+    double metabolicDeduction = heterotrophProcessor_.calculateMetabolicDeduction(heterotroph);
 
-    if ((heterotrophs_[index].getVolumeActual() - metabolicDeduction) > 0) {
-      heterotrophs_[index].setHasFed(false);  // Reset for the next time step
-      double waste = heterotrophs_[index].metabolise(metabolicDeduction);
+    if ((heterotroph.getVolumeActual() - metabolicDeduction) > 0) {
+      heterotroph.setHasFed(false);  // Reset for the next time step
+      double waste = heterotroph.metabolise(metabolicDeduction);
       nutrient_.addToVolume(waste);
     } else {
       starve(index);
@@ -85,6 +87,22 @@ void SizeClass::starvation() {
   });
 }
 
+void SizeClass::reproduction() {
+
+}
+
+void SizeClass::move(std::vector<structs::MovingHeterotroph>& movingHeterotrophs) {
+  std::for_each(std::begin(alive_), std::end(alive_), [&](unsigned index) {
+    Heterotroph& heterotroph = heterotrophs_[index];
+    if(heterotroph.getVolumeActual() < sizeClassLower_) {
+
+      movingHeterotrophs.push_back(structs::MovingHeterotroph(heterotroph, enums::eMoveDown));
+    } else if(heterotroph.getVolumeActual() >= sizeClassUpper_) {
+      movingHeterotrophs.push_back(structs::MovingHeterotroph(heterotroph, enums::eMoveUp));
+    }
+  });
+}
+
 void SizeClass::sizeClassSubset(std::function<void(unsigned)> func) {
   std::size_t numberAlive = alive_.size();
   if (numberAlive != 0) {
@@ -96,8 +114,9 @@ void SizeClass::sizeClassSubset(std::function<void(unsigned)> func) {
 }
 
 void SizeClass::starve(const unsigned index) {
-  Heterotroph& heterotroph = removeHeterotroph(index);
+  Heterotroph& heterotroph = heterotrophs_[index];
   nutrient_.addToVolume(heterotroph.getVolumeActual());
+  removeHeterotroph(index);
   //heterotrophData_.incrementStarvedFrequencies(heterotroph.getSizeClassIndex());
 }
 
@@ -132,21 +151,25 @@ Heterotroph& SizeClass::getHeterotroph(const unsigned index) {
 }
 
 const Heterotroph& SizeClass::getHeterotroph(const unsigned index) const {
-    if(alive_.size() != 0) {
+  if(alive_.size() != 0) {
     return heterotrophs_[index];
   } else {
     throw std::runtime_error("Size class is empty...");
   }
 }
 
-Heterotroph& SizeClass::removeHeterotroph(const unsigned index) {
+void SizeClass::removeHeterotroph(const unsigned index) {
   if(alive_.size() != 0) {
     alive_.erase(std::find(std::begin(alive_), std::end(alive_), index));
     dead_.push(index);
-    return heterotrophs_[index];
   } else {
     throw std::runtime_error("Size class is empty...");
   }
+}
+
+
+void SizeClass::removeHeterotroph(Heterotroph&) {
+
 }
 
 Autotrophs& SizeClass::getAutotrophs() {
@@ -171,14 +194,6 @@ void SizeClass::addHeterotroph(Heterotroph heterotroph) {
   } else {
     throw std::runtime_error("Size class is full...");
   }
-}
-
-const std::vector<double>& SizeClass::getSizeClassPreferences() const {
-  return sizeClassPreferences_;
-}
-
-const std::vector<double>& SizeClass::getSizeClassVolumes() const {
-  return sizeClassVolumes_;
 }
 
 unsigned SizeClass::getIndex() const {

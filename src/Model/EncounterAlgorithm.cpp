@@ -4,13 +4,14 @@
 
 EncounterAlgorithm::EncounterAlgorithm(const unsigned randomSeed) :
     random_(randomSeed),
-    numberOfSizeClasses_(Parameters::Get()->getNumberOfSizeClasses()),
+    interSizeClassPreferences_(Parameters::Get()->getInterSizeClassPreferenceMatrix()),
+    interSizeClassVolumes_(Parameters::Get()->getInterSizeClassVolumeMatrix()),
     linearFeedingDenominators_(Parameters::Get()->getLinearFeedingDenominators()),
-    halfSaturationConstants_(Parameters::Get()->getHalfSaturationConstants()) {}
+    halfSaturationConstants_(Parameters::Get()->getHalfSaturationConstants()),
+    numberOfSizeClasses_(Parameters::Get()->getNumberOfSizeClasses()){}
 
 void EncounterAlgorithm::update(std::vector<SizeClass>& sizeClasses,
-                                SizeClass& sizeClass,
-                                std::vector<structs::MovingHeterotroph>& movingHeterotrophs) {
+                                SizeClass& sizeClass) {
   std::vector<SizeClass>::iterator coupledSizeClassIt = calcFeedingProbability(sizeClasses, sizeClass);
   sizeClass.sizeClassSubset([&](unsigned randomIndex) {
     Heterotroph& predator = sizeClass.getHeterotroph(randomIndex);
@@ -46,8 +47,8 @@ void EncounterAlgorithm::calcEffectiveSizeClassVolumes(std::vector<SizeClass>& s
 
   std::vector<size_t> populationSizes = getPopulationSizes(sizeClasses, sizeClass);
 
-  auto sizeClassVolumesIt = sizeClass.getSizeClassVolumes().begin();
-  auto sizeClassPreferencesIt = sizeClass.getSizeClassPreferences().begin();
+  auto sizeClassVolumesIt = interSizeClassVolumes_[sizeClass.getIndex()].begin();
+  auto sizeClassPreferencesIt = interSizeClassPreferences_[sizeClass.getIndex()].begin();
   std::vector<double>::iterator effectiveSizeClassVolumesIt = effectiveSizeClassVolumes.begin();
   // Calculate effective prey volumes
   std::for_each(begin(populationSizes), end(populationSizes),

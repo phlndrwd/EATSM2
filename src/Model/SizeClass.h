@@ -28,28 +28,27 @@ class SizeClass {
   Heterotroph& getRandomHeterotroph();
   Heterotroph& getHeterotroph(const unsigned);
   const Heterotroph& getHeterotroph(const unsigned) const;
-  Heterotroph& removeHeterotroph(const unsigned);
+  void removeHeterotroph(const unsigned);
+  void removeHeterotroph(Heterotroph&);
   Autotrophs& getAutotrophs();
 
   void addHeterotroph(Heterotroph);
-
-  const std::vector<double>& getSizeClassPreferences() const;
-  const std::vector<double>& getSizeClassVolumes() const;
   unsigned getIndex() const;
 
  private:
-
   void metabolisation();
   void starvation();
+  void reproduction();
+  void move(std::vector<structs::MovingHeterotroph>&);
 
   void starve(const unsigned);
 
   Nutrient& nutrient_;
-  const unsigned index_;  // index_ is being deprecated.
+  const unsigned index_;  // Should index_ be deprecated?
 
-  const std::vector<double> sizeClassPreferences_;
-  const std::vector<double> sizeClassVolumes_;
+  const double sizeClassUpper_;
   const double sizeClassMidPoint_;
+  const double sizeClassLower_;
   const double sizeClassSubsetFraction_;
   const unsigned maxPopulation_;
 

@@ -11,7 +11,7 @@ class EncounterAlgorithm {
  public:
   EncounterAlgorithm(const unsigned);
 
-  void update(std::vector<SizeClass>&, SizeClass&, std::vector<structs::MovingHeterotroph>&);
+  void update(std::vector<SizeClass>&, SizeClass&);
 
  private:
   std::vector<SizeClass>::iterator calcFeedingProbability(std::vector<SizeClass>&, SizeClass&);
@@ -27,10 +27,11 @@ class EncounterAlgorithm {
   void feedFromHeterotrophs(Heterotroph&, std::vector<SizeClass>::iterator);
 
   RandomSimple random_;
-
-  const unsigned numberOfSizeClasses_;
+  const std::vector<std::vector<double>> interSizeClassPreferences_;
+  const std::vector<std::vector<double>> interSizeClassVolumes_;
   const std::vector<double> linearFeedingDenominators_;
   const std::vector<double> halfSaturationConstants_;
+  const unsigned numberOfSizeClasses_;
 
   enums::eFeedingStrategy feedingStrategy_;
 
