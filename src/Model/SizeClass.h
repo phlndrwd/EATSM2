@@ -29,7 +29,6 @@ class SizeClass {
   Heterotroph& getHeterotroph(const unsigned);
   const Heterotroph& getHeterotroph(const unsigned) const;
   void removeHeterotroph(const unsigned);
-  void removeHeterotroph(Heterotroph&);
   Autotrophs& getAutotrophs();
 
   void addHeterotroph(Heterotroph);
@@ -50,6 +49,8 @@ class SizeClass {
   const double sizeClassMidPoint_;
   const double sizeClassLower_;
   const double sizeClassSubsetFraction_;
+
+  const unsigned numberOfSizeClasses_;
   const unsigned maxPopulation_;
 
   Autotrophs autotrophs_;

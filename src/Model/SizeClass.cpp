@@ -25,10 +25,11 @@ SizeClass::SizeClass(Nutrient& nutrient,
                      const unsigned randomSeed) :
     nutrient_(nutrient),
     index_(index),
-    sizeClassUpper_(Parameters::Get()->getSizeClassMidPoint(index_ + 1)),
+    sizeClassUpper_(Parameters::Get()->getSizeClassBoundary(index_ + 1)),
     sizeClassMidPoint_(Parameters::Get()->getSizeClassMidPoint(index_)),
-    sizeClassLower_(Parameters::Get()->getSizeClassMidPoint(index_)),
+    sizeClassLower_(Parameters::Get()->getSizeClassBoundary(index_)),
     sizeClassSubsetFraction_(Parameters::Get()->getSizeClassSubsetFraction()),
+    numberOfSizeClasses_(Parameters::Get()->getNumberOfSizeClasses()),
     maxPopulation_(Parameters::Get()->getMaximumSizeClassPopulation(index_)),
     autotrophs_(nutrient, initialAutotrophVolume),
     random_(randomSeed) {
@@ -94,10 +95,11 @@ void SizeClass::reproduction() {
 void SizeClass::move(std::vector<structs::MovingHeterotroph>& movingHeterotrophs) {
   std::for_each(std::begin(alive_), std::end(alive_), [&](unsigned index) {
     Heterotroph& heterotroph = heterotrophs_[index];
-    if(heterotroph.getVolumeActual() < sizeClassLower_) {
-
+    if(heterotroph.getVolumeActual() < sizeClassLower_ && index > 0) {  // Zero is smallest
+      removeHeterotroph(index);
       movingHeterotrophs.push_back(structs::MovingHeterotroph(heterotroph, enums::eMoveDown));
-    } else if(heterotroph.getVolumeActual() >= sizeClassUpper_) {
+    } else if(heterotroph.getVolumeActual() >= sizeClassUpper_ && index < numberOfSizeClasses_ - 1) {  // Max is high
+      removeHeterotroph(index);
       movingHeterotrophs.push_back(structs::MovingHeterotroph(heterotroph, enums::eMoveUp));
     }
   });
@@ -165,11 +167,6 @@ void SizeClass::removeHeterotroph(const unsigned index) {
   } else {
     throw std::runtime_error("Size class is empty...");
   }
-}
-
-
-void SizeClass::removeHeterotroph(Heterotroph&) {
-
 }
 
 Autotrophs& SizeClass::getAutotrophs() {
