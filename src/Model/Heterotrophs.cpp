@@ -37,15 +37,31 @@ Heterotrophs::Heterotrophs(Nutrient& nutrient) :
 }
 
 void Heterotrophs::update() {
-  std::for_each(std::begin(sizeClasses_), std::end(sizeClasses_),
-  [&](SizeClass& sizeClass) {
+  std::for_each(std::begin(sizeClasses_), std::end(sizeClasses_), [&](SizeClass& sizeClass) {
     std::vector<structs::MovingHeterotroph> movingHeterotrophs;
     encounterAlgorithm_.update(sizeClasses_, sizeClass);
     sizeClass.update(movingHeterotrophs);
 
     for (const auto& movingHeterotroph : movingHeterotrophs) {
       // PJU FIX - Determine SizeClassIndex here.
-      std::vector<SizeClass>::iterator sizeClassIt = sizeClasses_.begin();
+
+      if (movingHeterotroph.direction_ == enums::eMoveDown) {
+        // Search down from current sizeClass
+        auto sizeClassDownIt = sizeClasses_.rbegin();
+        std::advance(sizeClassDownIt, numberOfSizeClasses_ + sizeClass.getIndex() + 1);
+        std::for_each(sizeClassDownIt, sizeClasses_.rend(), [&](SizeClass& nextSizeClass){
+          //
+        });
+
+      } else if(movingHeterotroph.direction_ == enums::eMoveUp) {
+        // Search up from current sizeClass
+        auto sizeClassUpIt = sizeClasses_.begin();
+        std::advance(sizeClassUpIt, sizeClass.getIndex());
+        std::for_each(sizeClassUpIt, sizeClasses_.end(), [&](SizeClass& nextSizeClass){
+          //
+        });
+      }
+
       //std::advance(sizeClassIt, heterotroph.getSizeClassIndex());
       //sizeClassIt->addHeterotroph(movingHeterotroph.heterotroph_);
     }

@@ -41,7 +41,6 @@ int main() {
         DataRecorder::get()->addDataTo("TimeSampling", timer.split());
         isAlive = environment.recordData();
       }
-
       // Text output at the completion of each ten percent of the run
       if (timer.elapsed() >= (unsigned)cumulativeTenthsOfRunTime) {
         cumulativeTenthsOfRunTime = cumulativeTenthsOfRunTime + oneTenthOfRunTimeInSeconds;
@@ -49,14 +48,11 @@ int main() {
                   << constants::kWhiteSpaceCharacter << timer.remainingString() << " remaining at "
                   << Date::getDateAndTimeString() << "..." << std::endl;
       }
-
       timeStep.incrementTimeStep();
       //std::cout << "timer.Elapsed( )> " << timer.Elapsed( ) << ",
       // runTimeInSeconds> " << runTimeInSeconds << ", isAlive> " << isAlive <<
       // std::endl;
     } while (timer.elapsed() < runTimeInSeconds && isAlive == true);
-
-
     std::cout << "Total run time " << timer.stop() << "s" << std::endl;
   return 0;
 }
