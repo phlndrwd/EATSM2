@@ -53,13 +53,28 @@ void Heterotrophs::update() {
           //
         });
 
+
+
+
       } else if(movingHeterotroph.direction_ == enums::eMoveUp) {
-        // Search up from current sizeClass
-        auto sizeClassUpIt = sizeClasses_.begin();
-        std::advance(sizeClassUpIt, sizeClass.getIndex());
-        std::for_each(sizeClassUpIt, sizeClasses_.end(), [&](SizeClass& nextSizeClass){
-          //
+        Heterotroph& heterotroph = movingHeterotroph.heterotroph_;
+        std::vector<SizeClass>::iterator destSizeClass =
+        std::find_if(sizeClasses_.begin(), sizeClasses_.end(), [&](SizeClass& nextSizeClass) {
+          if(heterotroph.getVolumeActual() >= sizeClassBoundaries_[nextSizeClass.getIndex()]) {
+            return true;
+          } else {
+            return false;
+          }
         });
+        destSizeClass = std::prev(destSizeClass);
+        destSizeClass->addHeterotroph(heterotroph);
+
+        //// Search up from current sizeClass
+        //auto sizeClassUpIt = sizeClasses_.begin();
+        //std::advance(sizeClassUpIt, sizeClass.getIndex());
+        //std::for_each(sizeClassUpIt, sizeClasses_.end(), [&](SizeClass& nextSizeClass){
+        //  //
+        //});
       }
 
       //std::advance(sizeClassIt, heterotroph.getSizeClassIndex());

@@ -95,10 +95,10 @@ void SizeClass::reproduction() {
 void SizeClass::move(std::vector<structs::MovingHeterotroph>& movingHeterotrophs) {
   std::for_each(std::begin(alive_), std::end(alive_), [&](unsigned index) {
     Heterotroph& heterotroph = heterotrophs_[index];
-    if(heterotroph.getVolumeActual() < sizeClassLower_ && index > 0) {  // Zero is smallest
+    if(heterotroph.getVolumeActual() < sizeClassLower_ && index_ > 0) {  // Zero is smallest
       removeHeterotroph(index);
       movingHeterotrophs.push_back(structs::MovingHeterotroph(heterotroph, enums::eMoveDown));
-    } else if(heterotroph.getVolumeActual() >= sizeClassUpper_ && index < numberOfSizeClasses_ - 1) {  // Max is high
+    } else if(heterotroph.getVolumeActual() >= sizeClassUpper_ && index_ < numberOfSizeClasses_ - 1) {  // Max is high
       removeHeterotroph(index);
       movingHeterotrophs.push_back(structs::MovingHeterotroph(heterotroph, enums::eMoveUp));
     }
