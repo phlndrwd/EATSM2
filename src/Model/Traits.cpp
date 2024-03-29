@@ -58,12 +58,12 @@ Traits& Traits::operator=(Traits&& traits) noexcept {
 }
 
 const Traits Traits::getChildTraits(RandomSimple& random) {
-  std::std::size_t numberOfGenes = values_.size();
+  std::size_t numberOfGenes = values_.size();
   std::vector<double> childValues = values_;
   std::vector<bool> areTraitsMutations(numberOfGenes, false);
 
   if (mutationProbability_ > 0) {
-    for (std::std::size_t i = 0; i < numberOfGenes; ++i) {
+    for (std::size_t i = 0; i < numberOfGenes; ++i) {
       if (random.getUniform() <= mutationProbability_) {
         areTraitsMutations[i] = true;
 

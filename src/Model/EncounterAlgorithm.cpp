@@ -54,14 +54,17 @@ void EncounterAlgorithm::calcEffectiveSizeClassVolumes(std::vector<SizeClass>& s
   effectiveAutotrophVolume_ = 0;
   feedingProbabilty_ = 0;
 
-  std::vector<std::size_t> populationSizes = getPopulationSizes(sizeClasses, sizeClass);
-
+  // PJU FIX - These may be modified when work is complete on the Parameters class.
   auto sizeClassVolumesIt = interSizeClassVolumes_[sizeClass.getIndex()].begin();
   auto sizeClassPreferencesIt = interSizeClassPreferences_[sizeClass.getIndex()].begin();
   std::vector<double>::iterator effectiveSizeClassVolumesIt = effectiveSizeClassVolumes.begin();
-  // Calculate effective prey volumes
-  std::for_each(begin(populationSizes), end(populationSizes),
-  [&](std::size_t populationSize) {
+
+  std::for_each(std::begin(sizeClasses), std::end(sizeClasses),
+  [&](SizeClass& otherSizeClass) {
+    std::size_t populationSize = otherSizeClass.getPopulationSize();
+    if (&otherSizeClass == &sizeClass) {
+      populationSize--;  // Reduce population size for a single individual in this size class.
+    }
     *effectiveSizeClassVolumesIt = *sizeClassVolumesIt * populationSize;
     effectiveAutotrophVolume_ = *sizeClassPreferencesIt * sizeClass.getAutotrophs().getVolume();
 
@@ -71,23 +74,8 @@ void EncounterAlgorithm::calcEffectiveSizeClassVolumes(std::vector<SizeClass>& s
     std::advance(effectiveSizeClassVolumesIt, 1);
     std::advance(sizeClassPreferencesIt, 1);
     std::advance(sizeClassVolumesIt, 1);
-  });
-}
 
-std::vector<std::size_t> EncounterAlgorithm::getPopulationSizes(std::vector<SizeClass>& sizeClasses, SizeClass& sizeClass) {
-  std::vector<std::size_t> populationSizes(numberOfSizeClasses_, 0);
-
-  auto popSizesIt = populationSizes.begin();
-  std::for_each(std::begin(sizeClasses), std::end(sizeClasses),
-  [&](SizeClass& otherSizeClass) {
-    std::size_t popSize = otherSizeClass.getPopulationSize();
-    if (&otherSizeClass == &sizeClass) {
-      popSize--;
-    }
-    *popSizesIt = popSize;
-    std::advance(popSizesIt, 1);
   });
-  return populationSizes;
 }
 
 std::vector<SizeClass>::iterator EncounterAlgorithm::setCoupledSizeClass(const std::vector<double>& effectiveSizeClassVolumes,

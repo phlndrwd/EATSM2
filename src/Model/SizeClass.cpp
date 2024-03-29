@@ -114,7 +114,7 @@ void SizeClass::move(std::vector<structs::MovingHeterotroph>& movingHeterotrophs
 }
 
 void SizeClass::sizeClassSubset(std::function<void(unsigned)> func) {
-  std::std::size_t numberAlive = alive_.size();
+  std::size_t numberAlive = alive_.size();
   if (numberAlive != 0) {
     unsigned sizeClassSubset = heterotrophProcessor_.roundWithProbability(random_, numberAlive * sizeClassSubsetFraction_);
     for (auto _ = sizeClassSubset; _--;) {
