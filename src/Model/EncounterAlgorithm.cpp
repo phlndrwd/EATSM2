@@ -1,3 +1,12 @@
+/******************************************************************************
+* Evolutionary Adaptive Trophic Structure Model 2 (EATSM2)                    *
+*                                                                             *
+* (C) Copyright 2024, Phil Underwood. All rights reserved.                    *
+*                                                                             *
+* This software is licensed under the terms of the 3-Clause BSD License       *
+* which can be obtained from https://opensource.org/license/bsd-3-clause/.    *
+******************************************************************************/
+
 #include "EncounterAlgorithm.h"
 
 #include "Parameters.h"
@@ -32,7 +41,7 @@ std::vector<SizeClass>::iterator EncounterAlgorithm::calcFeedingProbability(std:
     calcEffectiveSizeClassVolumes(sizeClasses, sizeClass, effectiveSizeClassVolumes);
     coupledSizeClassIt = setCoupledSizeClass(effectiveSizeClassVolumes, sizeClasses);
     calcFeedingStrategy();
-    feedingProbabilty_ = functionalResponseNonLinear(sizeClass.getIndex(), effectivePreyVolume_);  // Introduce option switch?
+    feedingProbabilty_ = functionalResponseNonLinear(sizeClass.getIndex(), effectivePreyVolume_);  // PJU FIX - Introduce option switch?
   }
   return coupledSizeClassIt;
 }
@@ -53,7 +62,6 @@ void EncounterAlgorithm::calcEffectiveSizeClassVolumes(std::vector<SizeClass>& s
   // Calculate effective prey volumes
   std::for_each(begin(populationSizes), end(populationSizes),
   [&](size_t populationSize) {
-
     *effectiveSizeClassVolumesIt = *sizeClassVolumesIt * populationSize;
     effectiveAutotrophVolume_ = *sizeClassPreferencesIt * sizeClass.getAutotrophs().getVolume();
 

@@ -1,9 +1,19 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Evolutionary Adaptive Trophic Structure Model (EATSM)                       %
+%                                                                             %
+% (C) Copyright 2024, Phil Underwood. All rights reserved.                    %
+%                                                                             %
+% This software is licensed under the terms of the 3-Clause BSD License       %
+% which can be obtained from https://opensource.org/license/bsd-3-clause/.    %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 tic
 clear
 
 %% User Defined Parameters
-optionCurrentDataSet            = '2023-01-30_18-03-26';
-optionOutputDirectory           = '/home/philju/Development/In Progress/EATSM/EATSM2/build/Release/output/0.0.1/';
+optionCurrentDataSet            = '2021-03-19_07-51-26';
+%optionOutputDirectory           = '/home/philju/Work/Writing/EATSM/Experiments/SpeedMutationTest/0.5.3/02/';
+optionOutputDirectory           = '/home/philju/Development/In Progress/EATSM/EATSM/output/0.5.4/';
 
 optionOutputVariablesFile      = 'Variables';
 optionFileExtension             = '.csv';
