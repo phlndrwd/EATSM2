@@ -47,6 +47,7 @@ Life::Life(Nutrient& nutrient) :
 void Life::update() {
   std::for_each(std::begin(sizeClasses_), std::end(sizeClasses_), [&](SizeClass& sizeClass) {
 
+    // This call replaces Heterotrophs.Feeding in EATSM1.
     encounterAlgorithm_.update(sizeClasses_, sizeClass);  // PJU FIX - Finish feeding functions here
 
     std::vector<structs::MovingHeterotroph> movingHeterotrophs;

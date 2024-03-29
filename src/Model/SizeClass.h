@@ -31,7 +31,7 @@ class SizeClass {
 
   void sizeClassSubset(std::function<void(unsigned)>);
 
-  size_t getPopulationSize();
+  std::size_t getPopulationSize();
   unsigned getRandomHeterotrophIndex();
   Heterotroph& getRandomHeterotroph();
   Heterotroph& getHeterotroph(const unsigned);

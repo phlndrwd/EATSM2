@@ -24,7 +24,7 @@ class EncounterAlgorithm {
  private:
   std::vector<SizeClass>::iterator calcFeedingProbability(std::vector<SizeClass>&, SizeClass&);
   void calcEffectiveSizeClassVolumes(std::vector<SizeClass>&, SizeClass&, std::vector<double>&);
-  std::vector<size_t> getPopulationSizes(std::vector<SizeClass>&, SizeClass& sizeClass);
+  std::vector<std::size_t> getPopulationSizes(std::vector<SizeClass>&, SizeClass& sizeClass);
   std::vector<SizeClass>::iterator setCoupledSizeClass(const std::vector<double>&, std::vector<SizeClass>&);
   void calcFeedingStrategy();
 

@@ -178,7 +178,7 @@ bool FileWriter::writeStateFile(Environment& environment) {
 
 //      for (unsigned sizeClassIndex = 0; sizeClassIndex < Parameters::Get()->getNumberOfSizeClasses();
 //           ++sizeClassIndex) {
-//        for (std::size_t individualIndex = 0;
+//        for (std::std::size_t individualIndex = 0;
 //             individualIndex < environment.getHeterotrophs().getSizeClassPopulation(sizeClassIndex);
 //             ++individualIndex) {
 //          Heterotroph* individual = environment.getHeterotrophs().getIndividual(sizeClassIndex, individualIndex);

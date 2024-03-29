@@ -9,6 +9,8 @@
 
 #include "EncounterAlgorithm.h"
 
+#include <iterator>
+
 #include "Parameters.h"
 
 EncounterAlgorithm::EncounterAlgorithm(const unsigned randomSeed) :
@@ -19,8 +21,7 @@ EncounterAlgorithm::EncounterAlgorithm(const unsigned randomSeed) :
     halfSaturationConstants_(Parameters::Get()->getHalfSaturationConstants()),
     numberOfSizeClasses_(Parameters::Get()->getNumberOfSizeClasses()){}
 
-void EncounterAlgorithm::update(std::vector<SizeClass>& sizeClasses,
-                                SizeClass& sizeClass) {
+void EncounterAlgorithm::update(std::vector<SizeClass>& sizeClasses, SizeClass& sizeClass) {
   std::vector<SizeClass>::iterator coupledSizeClassIt = calcFeedingProbability(sizeClasses, sizeClass);
   sizeClass.sizeClassSubset([&](unsigned randomIndex) {
     Heterotroph& predator = sizeClass.getHeterotroph(randomIndex);
@@ -46,7 +47,6 @@ std::vector<SizeClass>::iterator EncounterAlgorithm::calcFeedingProbability(std:
   return coupledSizeClassIt;
 }
 
-
 void EncounterAlgorithm::calcEffectiveSizeClassVolumes(std::vector<SizeClass>& sizeClasses,
                                                        SizeClass& sizeClass,
                                                        std::vector<double>& effectiveSizeClassVolumes) {
@@ -54,33 +54,33 @@ void EncounterAlgorithm::calcEffectiveSizeClassVolumes(std::vector<SizeClass>& s
   effectiveAutotrophVolume_ = 0;
   feedingProbabilty_ = 0;
 
-  std::vector<size_t> populationSizes = getPopulationSizes(sizeClasses, sizeClass);
+  std::vector<std::size_t> populationSizes = getPopulationSizes(sizeClasses, sizeClass);
 
   auto sizeClassVolumesIt = interSizeClassVolumes_[sizeClass.getIndex()].begin();
   auto sizeClassPreferencesIt = interSizeClassPreferences_[sizeClass.getIndex()].begin();
   std::vector<double>::iterator effectiveSizeClassVolumesIt = effectiveSizeClassVolumes.begin();
   // Calculate effective prey volumes
   std::for_each(begin(populationSizes), end(populationSizes),
-  [&](size_t populationSize) {
+  [&](std::size_t populationSize) {
     *effectiveSizeClassVolumesIt = *sizeClassVolumesIt * populationSize;
     effectiveAutotrophVolume_ = *sizeClassPreferencesIt * sizeClass.getAutotrophs().getVolume();
 
     *effectiveSizeClassVolumesIt += effectiveAutotrophVolume_;
     effectivePreyVolume_ += *effectiveSizeClassVolumesIt;
 
-    std::next(effectiveSizeClassVolumesIt);
-    std::next(sizeClassPreferencesIt);
-    std::next(sizeClassVolumesIt);
+    std::advance(effectiveSizeClassVolumesIt, 1);
+    std::advance(sizeClassPreferencesIt, 1);
+    std::advance(sizeClassVolumesIt, 1);
   });
 }
 
-std::vector<size_t> EncounterAlgorithm::getPopulationSizes(std::vector<SizeClass>& sizeClasses, SizeClass& sizeClass) {
-  std::vector<size_t> populationSizes(numberOfSizeClasses_, 0);
+std::vector<std::size_t> EncounterAlgorithm::getPopulationSizes(std::vector<SizeClass>& sizeClasses, SizeClass& sizeClass) {
+  std::vector<std::size_t> populationSizes(numberOfSizeClasses_, 0);
 
   auto popSizesIt = populationSizes.begin();
   std::for_each(std::begin(sizeClasses), std::end(sizeClasses),
   [&](SizeClass& otherSizeClass) {
-    size_t popSize = otherSizeClass.getPopulationSize();
+    std::size_t popSize = otherSizeClass.getPopulationSize();
     if (&otherSizeClass == &sizeClass) {
       popSize--;
     }

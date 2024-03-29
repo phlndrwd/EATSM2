@@ -15,7 +15,7 @@
 Traits::Traits(const std::vector<double>& values, const std::vector<bool>& areTraitsMutations) :
     mutationProbability_(Parameters::Get()->getMutationProbability()),
     mutationStandardDeviation_(Parameters::Get()->getMutationStandardDeviation()) {
-  for (size_t i = 0; i < values.size(); ++i) {
+  for (std::size_t i = 0; i < values.size(); ++i) {
     values_.push_back(values[i]);
     areMutantTraits_.push_back(areTraitsMutations[i]);
   }
@@ -58,12 +58,12 @@ Traits& Traits::operator=(Traits&& traits) noexcept {
 }
 
 const Traits Traits::getChildTraits(RandomSimple& random) {
-  std::size_t numberOfGenes = values_.size();
+  std::std::size_t numberOfGenes = values_.size();
   std::vector<double> childValues = values_;
   std::vector<bool> areTraitsMutations(numberOfGenes, false);
 
   if (mutationProbability_ > 0) {
-    for (std::size_t i = 0; i < numberOfGenes; ++i) {
+    for (std::std::size_t i = 0; i < numberOfGenes; ++i) {
       if (random.getUniform() <= mutationProbability_) {
         areTraitsMutations[i] = true;
 
