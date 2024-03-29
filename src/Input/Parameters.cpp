@@ -11,7 +11,6 @@
 
 #include <cmath>
 
-#include "HeterotrophProcessor.h"
 #include "Strings.h"
 
 Parameters* Parameters::this_ = nullptr;

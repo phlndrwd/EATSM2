@@ -11,8 +11,6 @@
 
 #include<iostream>
 
-#include "Parameters.h"
-
 Environment::Environment(): nutrient_(), life_(nutrient_) {
   std::cout << "Environment created." << std::endl << std::endl;
 }

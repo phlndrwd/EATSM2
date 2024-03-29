@@ -10,7 +10,6 @@
 #include "HeterotrophProcessor.h"
 
 #include <cmath>
-#include <iostream>
 
 #include "Heterotroph.h"
 #include "Parameters.h"
