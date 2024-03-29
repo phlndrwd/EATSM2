@@ -1,5 +1,6 @@
 #include "Date.h"
 
+#include <ctime>
 #include <sys/time.h>  // For struct timeval
 
 #include "Constants.h"
@@ -13,7 +14,7 @@ std::string Date::getDateAndTimeString(const std::string format, unsigned addedS
   struct tm *timeinfo;
   timeinfo = localtime(&rawtime);
 
-  strftime(dateTimeChar, constants::kDateTimeBufferSize, format.c_str(), timeinfo);
+  std::strftime(dateTimeChar, constants::kDateTimeBufferSize, format.c_str(), timeinfo);
   std::string dateTime(dateTimeChar);
 
   return dateTime;

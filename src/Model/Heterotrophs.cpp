@@ -38,9 +38,11 @@ Heterotrophs::Heterotrophs(Nutrient& nutrient) :
 
 void Heterotrophs::update() {
   std::for_each(std::begin(sizeClasses_), std::end(sizeClasses_), [&](SizeClass& sizeClass) {
+
+    encounterAlgorithm_.update(sizeClasses_, sizeClass);  // PJU FIX - Finish feeding functions here
+
     std::vector<structs::MovingHeterotroph> movingHeterotrophs;
-    encounterAlgorithm_.update(sizeClasses_, sizeClass);
-    sizeClass.update(movingHeterotrophs);
+    sizeClass.update(movingHeterotrophs);  // PJU FIX - Correcrly populate movingHeterotrophs
 
     for (const auto& movingHeterotroph : movingHeterotrophs) {
       // PJU FIX - Determine SizeClassIndex here.

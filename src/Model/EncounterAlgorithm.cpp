@@ -63,9 +63,6 @@ void EncounterAlgorithm::calcEffectiveSizeClassVolumes(std::vector<SizeClass>& s
     std::next(effectiveSizeClassVolumesIt);
     std::next(sizeClassPreferencesIt);
     std::next(sizeClassVolumesIt);
-//    std::advance(effectiveSizeClassVolumesIt, 1);
-//    std::advance(sizeClassPreferencesIt, 1);
-//    std::advance(sizeClassVolumesIt, 1);
   });
 }
 
