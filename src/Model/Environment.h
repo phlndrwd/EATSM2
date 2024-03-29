@@ -1,8 +1,8 @@
 #ifndef ENVIRONMENT
 #define ENVIRONMENT
 
+#include "Life.h"
 #include "Nutrient.h"
-#include "Heterotrophs.h"
 
 class Environment {
  public:
@@ -17,7 +17,7 @@ class Environment {
 
  private:
   Nutrient nutrient_;
-  Heterotrophs heterotrophs_;
+  Life life_;
 };
 
 #endif

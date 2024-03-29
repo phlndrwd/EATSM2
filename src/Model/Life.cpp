@@ -1,7 +1,6 @@
-#include "Heterotrophs.h"
+#include "Life.h"
 
 #include <algorithm>
-#include <iostream>
 #include <climits>
 
 #include "Parameters.h"
@@ -18,7 +17,7 @@ SizeClass sizeClassGenerator(Nutrient& nutrient,
 }
 }  // anonymous namespace
 
-Heterotrophs::Heterotrophs(Nutrient& nutrient) :
+Life::Life(Nutrient& nutrient) :
     nutrient_(nutrient),
     sizeClassBoundaries_(Parameters::Get()->getSizeClassBoundaries()),
     numberOfSizeClasses_(Parameters::Get()->getNumberOfSizeClasses()),
@@ -36,7 +35,7 @@ Heterotrophs::Heterotrophs(Nutrient& nutrient) :
   });
 }
 
-void Heterotrophs::update() {
+void Life::update() {
   std::for_each(std::begin(sizeClasses_), std::end(sizeClasses_), [&](SizeClass& sizeClass) {
 
     encounterAlgorithm_.update(sizeClasses_, sizeClass);  // PJU FIX - Finish feeding functions here
@@ -58,11 +57,11 @@ void Heterotrophs::update() {
 
 
 
-      } else if(movingHeterotroph.direction_ == enums::eMoveUp) {
+      } else if (movingHeterotroph.direction_ == enums::eMoveUp) {
         Heterotroph& heterotroph = movingHeterotroph.heterotroph_;
         std::vector<SizeClass>::iterator destSizeClass =
-        std::find_if(sizeClasses_.begin(), sizeClasses_.end(), [&](SizeClass& nextSizeClass) {
-          if(heterotroph.getVolumeActual() >= sizeClassBoundaries_[nextSizeClass.getIndex()]) {
+        std::find_if (sizeClasses_.begin(), sizeClasses_.end(), [&](SizeClass& nextSizeClass) {
+          if (heterotroph.getVolumeActual() >= sizeClassBoundaries_[nextSizeClass.getIndex()]) {
             return true;
           } else {
             return false;
@@ -85,7 +84,7 @@ void Heterotrophs::update() {
   });
 }
 
-unsigned Heterotrophs::findSizeClassIndexFromVolume(const double volume) const {
+unsigned Life::findSizeClassIndexFromVolume(const double volume) const {
   unsigned sizeClassIndex = 0;
 
   for (unsigned index = 1; index <= numberOfSizeClasses_; ++index) {

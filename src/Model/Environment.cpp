@@ -4,14 +4,12 @@
 
 #include "Parameters.h"
 
-Environment::Environment() :
-    nutrient_(),
-    heterotrophs_(nutrient_) {
+Environment::Environment(): nutrient_(), life_(nutrient_) {
   std::cout << "Environment created." << std::endl << std::endl;
 }
 
 void Environment::update() {
-  heterotrophs_.update();
+  life_.update();
 }
 
 bool Environment::recordData() {

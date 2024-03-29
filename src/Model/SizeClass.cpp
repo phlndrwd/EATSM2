@@ -39,7 +39,7 @@ SizeClass::SizeClass(Nutrient& nutrient,
 }
 
 void SizeClass::populate(const double volumeToInitialise) {
-  if(volumeToInitialise > 0) {
+  if (volumeToInitialise > 0) {
     double realInitialPopulationSize = volumeToInitialise / sizeClassMidPoint_;
     unsigned initialPopulationSize = std::abs(realInitialPopulationSize);
     nutrient_.addToVolume(realInitialPopulationSize - initialPopulationSize);
@@ -95,10 +95,10 @@ void SizeClass::reproduction() {
 void SizeClass::move(std::vector<structs::MovingHeterotroph>& movingHeterotrophs) {
   std::for_each(std::begin(alive_), std::end(alive_), [&](unsigned index) {
     Heterotroph& heterotroph = heterotrophs_[index];
-    if(heterotroph.getVolumeActual() < sizeClassLower_ && index_ > 0) {  // Zero is smallest
+    if (heterotroph.getVolumeActual() < sizeClassLower_ && index_ > 0) {  // Zero is smallest
       removeHeterotroph(index);
       movingHeterotrophs.push_back(structs::MovingHeterotroph(heterotroph, enums::eMoveDown));
-    } else if(heterotroph.getVolumeActual() >= sizeClassUpper_ && index_ < numberOfSizeClasses_ - 1) {  // Max is high
+    } else if (heterotroph.getVolumeActual() >= sizeClassUpper_ && index_ < numberOfSizeClasses_ - 1) {  // Max is high
       removeHeterotroph(index);
       movingHeterotrophs.push_back(structs::MovingHeterotroph(heterotroph, enums::eMoveUp));
     }
@@ -127,7 +127,7 @@ size_t SizeClass::getPopulationSize() {
 }
 
 unsigned SizeClass::getRandomHeterotrophIndex() {
-  if(alive_.size() != 0) {
+  if (alive_.size() != 0) {
     unsigned randomIndex = random_.getUniformInt(alive_.size());
     return alive_[randomIndex];
   } else {
@@ -136,7 +136,7 @@ unsigned SizeClass::getRandomHeterotrophIndex() {
 }
 
 Heterotroph& SizeClass::getRandomHeterotroph() {
-  if(alive_.size() != 0) {
+  if (alive_.size() != 0) {
     unsigned randomIndex = random_.getUniformInt(alive_.size());
     return heterotrophs_[alive_[randomIndex]];
   } else {
@@ -145,7 +145,7 @@ Heterotroph& SizeClass::getRandomHeterotroph() {
 }
 
 Heterotroph& SizeClass::getHeterotroph(const unsigned index) {
-  if(alive_.size() != 0) {
+  if (alive_.size() != 0) {
     return heterotrophs_[index];
   } else {
     throw std::runtime_error("Size class is empty...");
@@ -153,7 +153,7 @@ Heterotroph& SizeClass::getHeterotroph(const unsigned index) {
 }
 
 const Heterotroph& SizeClass::getHeterotroph(const unsigned index) const {
-  if(alive_.size() != 0) {
+  if (alive_.size() != 0) {
     return heterotrophs_[index];
   } else {
     throw std::runtime_error("Size class is empty...");
@@ -161,7 +161,7 @@ const Heterotroph& SizeClass::getHeterotroph(const unsigned index) const {
 }
 
 void SizeClass::removeHeterotroph(const unsigned index) {
-  if(alive_.size() != 0) {
+  if (alive_.size() != 0) {
     alive_.erase(std::find(std::begin(alive_), std::end(alive_), index));
     dead_.push(index);
   } else {
@@ -174,10 +174,10 @@ Autotrophs& SizeClass::getAutotrophs() {
 }
 
 void SizeClass::addHeterotroph(Heterotroph heterotroph) {
-  if(alive_.size() != maxPopulation_) {
+  if (alive_.size() != maxPopulation_) {
     int index;
     std::vector<Heterotroph>::iterator heterotrophsIt;
-    if(dead_.size() != 0) {
+    if (dead_.size() != 0) {
       index = dead_.front();
       dead_.pop();
       heterotrophsIt = heterotrophs_.begin();

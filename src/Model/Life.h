@@ -1,7 +1,6 @@
 #ifndef POPULATION
 #define POPULATION
 
-#include <memory>
 #include <vector>
 
 #include "EncounterAlgorithm.h"
@@ -9,10 +8,10 @@
 #include "RandomSimple.h"
 #include "SizeClass.h"
 
-class Heterotrophs {
+class Life {
  public:
-  Heterotrophs() = delete;
-  explicit Heterotrophs(Nutrient&);
+  Life() = delete;
+   explicit Life(Nutrient&);
 
   void update();
 
