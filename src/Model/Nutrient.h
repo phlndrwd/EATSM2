@@ -7,8 +7,8 @@
 * which can be obtained from https://opensource.org/license/bsd-3-clause/.    *
 ******************************************************************************/
 
-#ifndef NUTRIENT
-#define NUTRIENT
+#ifndef NUTRIENT_H
+#define NUTRIENT_H
 
 class Nutrient {
  public:

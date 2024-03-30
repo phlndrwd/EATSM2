@@ -7,8 +7,8 @@
 * which can be obtained from https://opensource.org/license/bsd-3-clause/.    *
 ******************************************************************************/
 
-#ifndef POPULATION
-#define POPULATION
+#ifndef LIFE_H
+#define LIFE_H
 
 #include <vector>
 

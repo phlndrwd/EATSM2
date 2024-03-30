@@ -59,8 +59,7 @@ void EncounterAlgorithm::calcEffectiveSizeClassVolumes(std::vector<SizeClass>& s
   auto sizeClassPreferencesIt = interSizeClassPreferences_[sizeClass.getIndex()].begin();
   std::vector<double>::iterator effectiveSizeClassVolumesIt = effectiveSizeClassVolumes.begin();
 
-  std::for_each(std::begin(sizeClasses), std::end(sizeClasses),
-  [&](SizeClass& otherSizeClass) {
+  std::for_each(std::begin(sizeClasses), std::end(sizeClasses), [&](SizeClass& otherSizeClass) {
     std::size_t populationSize = otherSizeClass.getPopulationSize();
     if (&otherSizeClass == &sizeClass) {
       populationSize--;  // Reduce population size for a single individual in this size class.
@@ -78,19 +77,21 @@ void EncounterAlgorithm::calcEffectiveSizeClassVolumes(std::vector<SizeClass>& s
   });
 }
 
-std::vector<SizeClass>::iterator EncounterAlgorithm::setCoupledSizeClass(const std::vector<double>& effectiveSizeClassVolumes,
+std::vector<SizeClass>::iterator EncounterAlgorithm::setCoupledSizeClass(
+                                                                const std::vector<double>& effectiveSizeClassVolumes,
                                                                 std::vector<SizeClass>& sizeClasses) {
-  // Default to largest populated size class
+  // Default to largest populated size class to prevent un-earned predation from taking place
   std::vector<SizeClass>::iterator coupledSizeClassIt = std::prev(sizeClasses.end());
+  // Add noise to the threshold to permit a mixed strategy (mixotroph)
   double randEffectivePreyValue = random_.getUniform() * effectivePreyVolume_;
   double effectivePreySum = 0;
-  unsigned index = 0;
+  int index = 0;
   // Return from find_if is not used - used here to mimic break statement in classic for
   std::find_if (begin(effectiveSizeClassVolumes), end(effectiveSizeClassVolumes),
-    [&](double effectiveSizeClassVolume) {
+                                                  [&](double effectiveSizeClassVolume) {
     effectivePreySum += effectiveSizeClassVolume;
     if (effectivePreySum >= randEffectivePreyValue) {
-      int sizeClassIndex = -(numberOfSizeClasses_ - 1) + index;
+      int sizeClassIndex = -numberOfSizeClasses_ + index;  // Calculate appropriate index reduction from end
       std::advance(coupledSizeClassIt, sizeClassIndex);
       return true;
     } else {
@@ -103,9 +104,11 @@ std::vector<SizeClass>::iterator EncounterAlgorithm::setCoupledSizeClass(const s
 
 void EncounterAlgorithm::calcFeedingStrategy() {
   feedingStrategy_ = enums::eCarnivore;
-  double probHerbivory = effectiveAutotrophVolume_ / effectivePreyVolume_;
-  if (random_.getUniform() <= probHerbivory) {
-    feedingStrategy_ = enums::eHerbivore;
+  if (effectiveAutotrophVolume_ > 0) {
+    double probHerbivory = effectiveAutotrophVolume_ / effectivePreyVolume_;
+    if (random_.getUniform() <= probHerbivory) {
+      feedingStrategy_ = enums::eHerbivore;
+    }
   }
 }
 

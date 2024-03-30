@@ -7,8 +7,8 @@
 * which can be obtained from https://opensource.org/license/bsd-3-clause/.    *
 ******************************************************************************/
 
-#ifndef TRAITS
-#define TRAITS
+#ifndef TRAITS_H
+#define TRAITS_H
 
 #include <vector>
 

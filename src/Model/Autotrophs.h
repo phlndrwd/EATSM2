@@ -7,8 +7,8 @@
 * which can be obtained from https://opensource.org/license/bsd-3-clause/.    *
 ******************************************************************************/
 
-#ifndef AUTOTROPHS
-#define AUTOTROPHS
+#ifndef AUTOTROPHS_H
+#define AUTOTROPHS_H
 
 class Nutrient;
 

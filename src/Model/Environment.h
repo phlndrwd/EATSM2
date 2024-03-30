@@ -7,8 +7,8 @@
 * which can be obtained from https://opensource.org/license/bsd-3-clause/.    *
 ******************************************************************************/
 
-#ifndef ENVIRONMENT
-#define ENVIRONMENT
+#ifndef ENVIRONMENT_H
+#define ENVIRONMENT_H
 
 #include "Life.h"
 #include "Nutrient.h"

@@ -7,12 +7,12 @@
 * which can be obtained from https://opensource.org/license/bsd-3-clause/.    *
 ******************************************************************************/
 
-#ifndef HETEROTROPH
-#define HETEROTROPH
+#ifndef HETEROTROPH_H
+#define HETEROTROPH_H
 
 #include "Traits.h"
 
-class HeterotrophProcessor;
+class EcologicalFunctions;
 class RandomSimple;
 
 class Heterotroph {
@@ -27,7 +27,7 @@ class Heterotroph {
   Heterotroph& operator=(const Heterotroph&);
   Heterotroph& operator=(const Heterotroph&&);
 
-  Heterotroph* getChild(RandomSimple&, const HeterotrophProcessor&);
+  Heterotroph* getChild(RandomSimple&, const EcologicalFunctions&);
 
   double consumePreyVolume(const double);
   double metabolise(const double);

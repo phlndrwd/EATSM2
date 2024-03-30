@@ -16,7 +16,7 @@
 
 #include "Autotrophs.h"
 #include "Heterotroph.h"
-#include "HeterotrophProcessor.h"
+#include "EcologicalFunctions.h"
 #include "Nutrient.h"
 #include "RandomSimple.h"
 #include "Structs.h"
@@ -62,7 +62,7 @@ class SizeClass {
   const unsigned maxPopulation_;
 
   Autotrophs autotrophs_;
-  HeterotrophProcessor heterotrophProcessor_;
+  EcologicalFunctions heterotrophProcessor_;
   RandomSimple random_;
 
   std::vector<Heterotroph> heterotrophs_;

@@ -7,8 +7,8 @@
 * which can be obtained from https://opensource.org/license/bsd-3-clause/.    *
 ******************************************************************************/
 
-#ifndef ENCOUNTERALGORITHM
-#define ENCOUNTERALGORITHM
+#ifndef ENCOUNTERALGORITHM_H
+#define ENCOUNTERALGORITHM_H
 
 #include "Enums.h"
 #include "SizeClass.h"

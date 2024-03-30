@@ -7,8 +7,8 @@
 * which can be obtained from https://opensource.org/license/bsd-3-clause/.    *
 ******************************************************************************/
 
-#ifndef TIMESTEP
-#define TIMESTEP
+#ifndef TIMESTEP_H
+#define TIMESTEP_H
 
 class TimeStep {
  public:

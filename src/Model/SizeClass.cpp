@@ -10,6 +10,7 @@
 #include "SizeClass.h"
 
 #include <algorithm>
+#include <cmath>
 #include <iostream>
 #include <stdexcept>
 
@@ -23,6 +24,17 @@ Heterotroph heterotrophGenerator(double traitValue,
   Traits traits(traitValues, areTraitsMutant);
   Heterotroph heterotroph(std::move(traits), volume);
   return heterotroph;
+}
+
+int roundWithProbability(RandomSimple& random, const double value) {
+  int flooredValue = static_cast<int>(std::floor(value));
+  double probability = value - flooredValue;
+
+  if (random.getUniform() < probability) {
+    return flooredValue + 1;
+  } else {
+    return flooredValue;
+  }
 }
 }  // anonymous namespace
 
@@ -116,7 +128,7 @@ void SizeClass::move(std::vector<structs::MovingHeterotroph>& movingHeterotrophs
 void SizeClass::sizeClassSubset(std::function<void(unsigned)> func) {
   std::size_t numberAlive = alive_.size();
   if (numberAlive != 0) {
-    unsigned sizeClassSubset = heterotrophProcessor_.roundWithProbability(random_, numberAlive * sizeClassSubsetFraction_);
+    unsigned sizeClassSubset = roundWithProbability(random_, numberAlive * sizeClassSubsetFraction_);
     for (auto _ = sizeClassSubset; _--;) {
       func(getRandomHeterotrophIndex());
     }

@@ -7,8 +7,8 @@
 * which can be obtained from https://opensource.org/license/bsd-3-clause/.    *
 ******************************************************************************/
 
-#ifndef HETEROTROPHPROCESSOR
-#define HETEROTROPHPROCESSOR
+#ifndef ECOLOGICALFUNCTIONS_H
+#define ECOLOGICALFUNCTIONS_H
 
 #include <functional>
 #include <vector>
@@ -16,9 +16,9 @@
 #include "Heterotroph.h"
 #include "RandomSimple.h"
 
-class HeterotrophProcessor {
+class EcologicalFunctions {
  public:
-  HeterotrophProcessor();
+  EcologicalFunctions();
 
   double calculateMetabolicDeduction(const Heterotroph&) const;
   bool updateSizeClassIndex(Heterotroph&) const;
@@ -39,8 +39,6 @@ class HeterotrophProcessor {
 
   double traitValueToVolume(const double) const;
   double volumeToTraitValue(const double) const;
-
-  int roundWithProbability(RandomSimple&, const double) const;
 
  private:
   //  double calcFeedingProbabilityLinear(const unsigned, const double);

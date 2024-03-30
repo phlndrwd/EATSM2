@@ -10,7 +10,7 @@
 #include "Heterotroph.h"
 
 #include "Constants.h"
-#include "HeterotrophProcessor.h"
+#include "EcologicalFunctions.h"
 #include "Parameters.h"
 #include "RandomSimple.h"
 
@@ -131,7 +131,7 @@ Heterotroph& Heterotroph::operator=(const Heterotroph&& heterotroph) {
   return *this;
 }
 
-Heterotroph* Heterotroph::getChild(RandomSimple& random, const HeterotrophProcessor& heterotrophProcessor) {
+Heterotroph* Heterotroph::getChild(RandomSimple& random, const EcologicalFunctions& heterotrophProcessor) {
   Traits childTraits = traits_.getChildTraits(random);
 
   double childVolumeHeritable = 0;
