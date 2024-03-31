@@ -73,38 +73,38 @@ EcologicalData::EcologicalData(Parameters& params): params_(params) {
   }
 }
 
-std::vector<std::vector<double>> EcologicalData::getInterSizeClassPreferences() const {
+const std::vector<std::vector<double>>& EcologicalData::getInterSizeClassPreferences() const {
   return interSizeClassPreferences_;
 }
 
-std::vector<std::vector<double>> EcologicalData::getInterSizeClassVolumes() const {
+const std::vector<std::vector<double>>& EcologicalData::getInterSizeClassVolumes() const {
   return interSizeClassVolumes_;
 }
 
-std::vector<unsigned> EcologicalData::getMaximumSizeClassPopulations() const {
+const std::vector<unsigned>& EcologicalData::getMaximumSizeClassPopulations() const {
   return maximumSizeClassPopulations_;
 }
 
-std::vector<double> EcologicalData::getSizeClassBoundaries() const {
+const std::vector<double>& EcologicalData::getSizeClassBoundaries() const {
   return sizeClassBoundaries_;
 }
 
-std::vector<double> EcologicalData::getSizeClassMidPoints() const {
+const std::vector<double>& EcologicalData::getSizeClassMidPoints() const {
   return sizeClassMidPoints_;
 }
 
-std::vector<double> EcologicalData::getLinearFeedingDenominators() const {
+const std::vector<double>& EcologicalData::getLinearFeedingDenominators() const {
   return linearFeedingDenominators_;
 }
 
-std::vector<double> EcologicalData::getHalfSaturationConstants() const {
+const std::vector<double>& EcologicalData::getHalfSaturationConstants() const {
   return halfSaturationConstants_;
 }
 
-double EcologicalData::getSmallestVolumeExponent() const {
+const double& EcologicalData::getSmallestVolumeExponent() const {
   return smallestVolumeExponent_;
 }
 
-double EcologicalData::getLargestVolumeExponent() const {
+const double& EcologicalData::getLargestVolumeExponent() const {
   return largestVolumeExponent_;
 }

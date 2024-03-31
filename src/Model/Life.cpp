@@ -95,7 +95,7 @@ void Life::update() {
   });
 }
 
-unsigned Life::findSizeClassIndexFromVolume(const double volume) const {
+unsigned Life::findSizeClassIndexFromVolume(const double& volume) const {
   unsigned sizeClassIndex = 0;
 
   for (unsigned index = 1; index <= numberOfSizeClasses_; ++index) {

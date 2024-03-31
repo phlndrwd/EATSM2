@@ -19,7 +19,7 @@ class RandomSimple;
 class Traits {
  public:
   Traits() = delete;
-  explicit Traits(const std::vector<double>&, const std::vector<unsigned char>&, double, double);
+  explicit Traits(const std::vector<double>&, const std::vector<unsigned char>&, const double&, const double&);
 
   Traits(const Traits&);
   Traits(Traits&&) noexcept;

@@ -28,7 +28,7 @@ class Life {
   void update();
 
  private:
-  unsigned findSizeClassIndexFromVolume(const double) const;
+  unsigned findSizeClassIndexFromVolume(const double&) const;
 
   Nutrient& nutrient_;
   Parameters& params_;

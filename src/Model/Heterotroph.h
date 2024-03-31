@@ -19,8 +19,8 @@ class Heterotroph {
  public:
   Heterotroph() = delete;
   explicit Heterotroph(std::vector<double>&, std::vector<unsigned char>&,
-                       const double, const double, const double, const double);
-  explicit Heterotroph(const Traits&, const double, const double, const double, const double, const double);
+                       const double&, const double&, const double&, const double&);
+  explicit Heterotroph(const Traits&, const double&, const double&, const double&, const double&, const double&);
 
   Heterotroph(const Heterotroph&);
   Heterotroph(const Heterotroph&&) noexcept;

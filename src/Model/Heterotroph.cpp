@@ -16,15 +16,15 @@
 
 // For model initialisation.
 Heterotroph::Heterotroph(std::vector<double>& traitValues, std::vector<unsigned char>& areTraitsMutant,
-			 const double mutationProbability, const double mutationStandardDeviation,
-			 const double volumeHeritable, const double assimilationEfficiency) :
-    traits_(traitValues, areTraitsMutant, mutationProbability, mutationStandardDeviation),
-    volumeHeritable_(volumeHeritable),
-    volumeActual_(volumeHeritable_),
-    volumeMinimum_(volumeHeritable_ * constants::kMinimumFractionalVolume),
-    volumeReproduction_(constants::kReproductionFactor * volumeHeritable_),
-    assimilationEfficiency_(assimilationEfficiency),
-    starvationMultiplier_(1 / (volumeHeritable_ - volumeMinimum_)) {
+			 const double& mutationProbability, const double& mutationStandardDeviation,
+			 const double& volumeHeritable, const double& assimilationEfficiency):
+	traits_(traitValues, areTraitsMutant, mutationProbability, mutationStandardDeviation),
+	volumeHeritable_(volumeHeritable),
+	volumeActual_(volumeHeritable_),
+	volumeMinimum_(volumeHeritable_ * constants::kMinimumFractionalVolume),
+	volumeReproduction_(constants::kReproductionFactor * volumeHeritable_),
+	assimilationEfficiency_(assimilationEfficiency),
+	starvationMultiplier_(1 / (volumeHeritable_ - volumeMinimum_)) {
   age_ = 0;
   trophicLevel_ = 0;
   hasFed_ = false;
@@ -32,12 +32,8 @@ Heterotroph::Heterotroph(std::vector<double>& traitValues, std::vector<unsigned 
 }
 
 // For reproduction.
-Heterotroph::Heterotroph(const Traits& heritableTraits,
-                         const double volumeHeritable,
-                         const double volumeActual,
-                         const double volumeMinimum,
-                         const double trophicLevel,
-                         const double assimilationEfficiency) :
+Heterotroph::Heterotroph(const Traits& heritableTraits, const double& volumeHeritable, const double& volumeActual,
+                         const double& volumeMinimum, const double& trophicLevel, const double& assimilationEfficiency):
         traits_(heritableTraits),
         volumeHeritable_(volumeHeritable),
         volumeActual_(volumeActual),

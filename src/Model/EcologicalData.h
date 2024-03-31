@@ -18,19 +18,19 @@ class EcologicalData {
 public:
   EcologicalData(Parameters&);
 
-  std::vector<std::vector<double>> getInterSizeClassPreferences() const;
-  std::vector<std::vector<double>> getInterSizeClassVolumes() const;
+  const std::vector<std::vector<double>>& getInterSizeClassPreferences() const;
+  const std::vector<std::vector<double>>& getInterSizeClassVolumes() const;
 
-  std::vector<unsigned> getMaximumSizeClassPopulations() const;
+  const std::vector<unsigned>& getMaximumSizeClassPopulations() const;
 
-  std::vector<double> getSizeClassBoundaries() const;
-  std::vector<double> getSizeClassMidPoints() const;
+  const std::vector<double>& getSizeClassBoundaries() const;
+  const std::vector<double>& getSizeClassMidPoints() const;
 
-  std::vector<double> getLinearFeedingDenominators() const;
-  std::vector<double> getHalfSaturationConstants() const;
+  const std::vector<double>& getLinearFeedingDenominators() const;
+  const std::vector<double>& getHalfSaturationConstants() const;
 
-  double getSmallestVolumeExponent() const;
-  double getLargestVolumeExponent() const;
+  const double& getSmallestVolumeExponent() const;
+  const double& getLargestVolumeExponent() const;
 
 private:
   Parameters& params_;

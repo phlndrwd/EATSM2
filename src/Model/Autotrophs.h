@@ -15,11 +15,11 @@ class Nutrient;
 class Autotrophs {
  public:
   Autotrophs() = delete;
-  explicit Autotrophs(Nutrient&, const double);
+  explicit Autotrophs(Nutrient&, const double&);
 
   void update();
-  void addToVolume(const double);
-  void subtractFromVolume(const double);
+  void addToVolume(const double&);
+  void subtractFromVolume(const double&);
   void recordData();
 
   double& getVolume();

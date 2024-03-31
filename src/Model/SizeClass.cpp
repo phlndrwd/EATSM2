@@ -35,25 +35,20 @@ int roundWithProbability(RandomSimple& random, const double value) {
 }
 }  // anonymous namespace
 
-SizeClass::SizeClass(Nutrient& nutrient,
-		     Parameters& params,
-		     EcologicalData& data,
-		     EcologicalFunctions& functions,
-                     const double initialAutotrophVolume,
-                     const double initialHeterotrophVolume,
-                     const unsigned index,
-                     const unsigned randomSeed):
-    nutrient_(nutrient),
-    functions_(functions),
-    index_(index),
-    sizeClassUpper_(data.getSizeClassBoundaries()[index_ + 1]),
-    sizeClassMidPoint_(data.getSizeClassMidPoints()[index_]),
-    sizeClassLower_(data.getSizeClassBoundaries()[index_]),
-    sizeClassSubsetFraction_(params.getSizeClassSubsetFraction()),
-    numberOfSizeClasses_(params.getNumberOfSizeClasses()),
-    maxPopulation_(data.getMaximumSizeClassPopulations()[index_]),
-    autotrophs_(nutrient, initialAutotrophVolume),
-    random_(randomSeed) {
+SizeClass::SizeClass(Nutrient& nutrient, Parameters& params, EcologicalData& data, EcologicalFunctions& functions,
+		     const double& initialAutotrophVolume, const double& initialHeterotrophVolume,
+		     const unsigned& index, const unsigned& randomSeed):
+	nutrient_(nutrient),
+	functions_(functions),
+	index_(index),
+	sizeClassUpper_(data.getSizeClassBoundaries()[index_ + 1]),
+	sizeClassMidPoint_(data.getSizeClassMidPoints()[index_]),
+	sizeClassLower_(data.getSizeClassBoundaries()[index_]),
+	sizeClassSubsetFraction_(params.getSizeClassSubsetFraction()),
+	numberOfSizeClasses_(params.getNumberOfSizeClasses()),
+	maxPopulation_(data.getMaximumSizeClassPopulations()[index_]),
+	autotrophs_(nutrient, initialAutotrophVolume),
+	random_(randomSeed) {
   heterotrophs_.reserve(maxPopulation_);
   alive_.reserve(maxPopulation_);
   populate(initialHeterotrophVolume, params.getAssimilationEfficiency(),

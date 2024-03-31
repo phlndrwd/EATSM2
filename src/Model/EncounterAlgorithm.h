@@ -20,7 +20,7 @@
 
 class EncounterAlgorithm {
  public:
-  EncounterAlgorithm(EcologicalData&, EcologicalFunctions&, Parameters&, const unsigned);
+  EncounterAlgorithm(EcologicalData&, EcologicalFunctions&, Parameters&, const unsigned&);
 
   void update(std::vector<SizeClass>&, SizeClass&);
 

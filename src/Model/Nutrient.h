@@ -18,8 +18,8 @@ class Nutrient {
 
   const double& getVolume() const;
 
-  void addToVolume(const double);
-  void subtractFromVolume(const double);
+  void addToVolume(const double&);
+  void subtractFromVolume(const double&);
 
  private:
   double volume_;

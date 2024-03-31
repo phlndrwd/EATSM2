@@ -13,7 +13,7 @@
 #include "RandomSimple.h"
 
 Traits::Traits(const std::vector<double>& values, const std::vector<unsigned char>& areMutantTraits,
-               double mutationProbability_, double mutationStandardDeviation_):
+               const double& mutationProbability_, const double& mutationStandardDeviation_):
     mutationProbability_(mutationProbability_),
     mutationStandardDeviation_(mutationStandardDeviation_) {
   values_.insert(values_.end(), values.begin(), values.end());

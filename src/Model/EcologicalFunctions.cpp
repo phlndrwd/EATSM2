@@ -31,11 +31,11 @@ EcologicalFunctions::EcologicalFunctions(EcologicalData& data, Parameters& param
     numberOfSizeClasses_(params.getNumberOfSizeClasses()),
     preferenceDenominator_(2 * std::pow(preferenceFunctionWidth_, 2)) {}
 
-double EcologicalFunctions::functionalResponseLinear(const unsigned predatorIndex, const double effectivePreyVolume) const {
+double EcologicalFunctions::functionalResponseLinear(const unsigned& predatorIndex, const double& effectivePreyVolume) const {
   return std::min(effectivePreyVolume / linearFeedingDenominators_[predatorIndex], 1.0);
 }
 
-double EcologicalFunctions::functionalResponseNonLinear(const unsigned predatorIndex, const double effectivePreyVolume) const {
+double EcologicalFunctions::functionalResponseNonLinear(const unsigned& predatorIndex, const double& effectivePreyVolume) const {
   return (effectivePreyVolume / (halfSaturationConstants_[predatorIndex] + effectivePreyVolume));
 }
 
@@ -44,7 +44,7 @@ double EcologicalFunctions::calculateMetabolicDeduction(const Heterotroph& heter
   return fractionalMetabolicExpense_ * std::pow(heterotroph.getVolumeActual(), metabolicIndex_);
 }
 
-double EcologicalFunctions::calculatePreferenceForPrey(const double grazerVolume, const double preyVolume) const {
+double EcologicalFunctions::calculatePreferenceForPrey(const double& grazerVolume, const double& preyVolume) const {
   return std::exp(-std::pow((std::log((preferredPreyVolumeRatio_ * preyVolume) / grazerVolume)), 2) / preferenceDenominator_);
 }
 
@@ -54,9 +54,8 @@ double EcologicalFunctions::calculateStarvationProbability(const Heterotroph& he
 }
 
 unsigned EcologicalFunctions::findIndividualSizeClassIndex(const Heterotroph& heterotroph,
-                                                            unsigned directionToMove) const {
-  // PJU FIX
-  unsigned currentSizeClass = 0;  // heterotroph.getSizeClassIndex();
+                                                            unsigned& directionToMove) const {
+  unsigned currentSizeClass = 0; // PJU FIX - heterotroph.getSizeClassIndex();
   unsigned newSizeClassIndex = currentSizeClass;
   double volume = heterotroph.getVolumeActual();
 
@@ -141,10 +140,10 @@ void EcologicalFunctions::updateCarnivoreTrophicIndex(Heterotroph* predator,
 //  return (effectivePreyVolume / (halfSaturationConstants_[predatorIndex] + effectivePreyVolume));
 //}
 
-double EcologicalFunctions::calcLinearStarvation(const double volumeActual,
-                                                  const double volumeHeritable,
-                                                  const double volumeMinimum,
-                                                  const double starvationMultiplier) const {
+double EcologicalFunctions::calcLinearStarvation(const double& volumeActual,
+                                                 const double& volumeHeritable,
+                                                 const double& volumeMinimum,
+                                                 const double& starvationMultiplier) const {
   if (volumeActual <= volumeMinimum)
     return 1;
   else if (volumeActual >= volumeHeritable)
@@ -153,10 +152,10 @@ double EcologicalFunctions::calcLinearStarvation(const double volumeActual,
     return (1 + ((volumeMinimum - volumeActual) * starvationMultiplier));
 }
 
-double EcologicalFunctions::calcBetaExponentialStarvation(const double volumeActual,
-                                                           const double volumeHeritable,
-                                                           const double volumeMinimum,
-                                                           const double starvationMultiplier) const {
+double EcologicalFunctions::calcBetaExponentialStarvation(const double& volumeActual,
+                                                          const double& volumeHeritable,
+                                                          const double& volumeMinimum,
+                                                          const double& starvationMultiplier) const {
   if (volumeActual <= volumeMinimum)
     return 1;
   else if (volumeActual >= volumeHeritable)
@@ -166,11 +165,11 @@ double EcologicalFunctions::calcBetaExponentialStarvation(const double volumeAct
            starvationMultiplier) * ((volumeActual - volumeMinimum) * starvationMultiplier));
 }
 
-double EcologicalFunctions::traitValueToVolume(const double traitValue) const {
+double EcologicalFunctions::traitValueToVolume(const double& traitValue) const {
   double volumeExponent = traitValue * (largestVolumeExponent_ - smallestVolumeExponent_) + smallestVolumeExponent_;
   return std::pow(10, volumeExponent);
 }
 
-double EcologicalFunctions::volumeToTraitValue(const double volume) const {
+double EcologicalFunctions::volumeToTraitValue(const double& volume) const {
   return (std::log10(volume) - smallestVolumeExponent_) / (largestVolumeExponent_ - smallestVolumeExponent_);
 }

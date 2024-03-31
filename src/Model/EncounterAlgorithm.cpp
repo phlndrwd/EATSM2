@@ -14,7 +14,7 @@
 #include "Parameters.h"
 
 EncounterAlgorithm::EncounterAlgorithm(EcologicalData& data, EcologicalFunctions& functions,
-                                       Parameters& params, const unsigned randomSeed):
+                                       Parameters& params, const unsigned& randomSeed):
     data_(data),
     functions_(functions),
     params_(params),

@@ -12,7 +12,7 @@
 #include "DataRecorder.h"
 #include "Nutrient.h"
 
-Autotrophs::Autotrophs(Nutrient& nutrient, const double initialVolume) :
+Autotrophs::Autotrophs(Nutrient& nutrient, const double& initialVolume) :
     nutrient_(nutrient), volume_(initialVolume) {
   //std::cout << "Autotroph pool created." << std::endl;
 }
@@ -23,12 +23,12 @@ void Autotrophs::update() {
   nutrient_.subtractFromVolume(growthVolume);
 }
 
-void Autotrophs::addToVolume(const double volume) {
+void Autotrophs::addToVolume(const double& volume) {
   volume_ += volume;
   toFlux_ += volume;
 }
 
-void Autotrophs::subtractFromVolume(const double volume) {
+void Autotrophs::subtractFromVolume(const double& volume) {
   volume_ -= volume;
 }
 

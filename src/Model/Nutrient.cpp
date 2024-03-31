@@ -28,9 +28,9 @@ const double& Nutrient::getVolume() const {
   return volume_;
 }
 
-void Nutrient::addToVolume(const double volume) {
+void Nutrient::addToVolume(const double& volume) {
   volume_ += volume;
   toFlux_ += volume;
 }
 
-void Nutrient::subtractFromVolume(const double volume) { volume_ -= volume; }
+void Nutrient::subtractFromVolume(const double& volume) { volume_ -= volume; }

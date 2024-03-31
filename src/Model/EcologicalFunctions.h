@@ -21,16 +21,16 @@ class EcologicalFunctions {
  public:
   EcologicalFunctions(EcologicalData&, Parameters&);
 
-  double functionalResponseLinear(const unsigned, const double) const;
-  double functionalResponseNonLinear(const unsigned, const double) const;
+  double functionalResponseLinear(const unsigned&, const double&) const;
+  double functionalResponseNonLinear(const unsigned&, const double&) const;
 
   double calculateMetabolicDeduction(const Heterotroph&) const;
   bool updateSizeClassIndex(Heterotroph&) const;
   unsigned directionIndividualShouldMoveSizeClasses(const Heterotroph&) const;
-  unsigned findIndividualSizeClassIndex(const Heterotroph&, unsigned) const;
+  unsigned findIndividualSizeClassIndex(const Heterotroph&, unsigned&) const;
   double calculateStarvationProbability(const Heterotroph&) const;
 
-  double calculatePreferenceForPrey(const double, const double) const;
+  double calculatePreferenceForPrey(const double&, const double&) const;
   //  double calcFeedingProbability(const unsigned, const double);
 
   // unsigned findSizeClassIndexFromVolume(const double) const;
@@ -38,15 +38,15 @@ class EcologicalFunctions {
   void updateHerbivoreTrophicIndex(Heterotroph*);
   void updateCarnivoreTrophicIndex(Heterotroph*, const Heterotroph*);
 
-  double calculateHerbivoreTrophicIndex(const double) const;
-  double calculateCarnivoreTrophicIndex(const double, const double) const;
+  double calculateHerbivoreTrophicIndex(const double&) const;
+  double calculateCarnivoreTrophicIndex(const double&, const double&) const;
 
-  double traitValueToVolume(const double) const;
-  double volumeToTraitValue(const double) const;
+  double traitValueToVolume(const double&) const;
+  double volumeToTraitValue(const double&) const;
 
  private:
-  double calcLinearStarvation(const double, const double, const double, const double) const;
-  double calcBetaExponentialStarvation(const double, const double, const double, const double) const;
+  double calcLinearStarvation(const double&, const double&, const double&, const double&) const;
+  double calcBetaExponentialStarvation(const double&, const double&, const double&, const double&) const;
 
   EcologicalData& data_;
   Parameters& params_;

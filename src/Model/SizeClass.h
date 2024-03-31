@@ -26,7 +26,7 @@ class SizeClass {
  public:
   SizeClass() = delete;
   explicit SizeClass(Nutrient&, Parameters&, EcologicalData&, EcologicalFunctions&,
-                     const double, const double, const unsigned, const unsigned);
+                     const double&, const double&, const unsigned&, const unsigned&);
 
   void populate(const double, const double, const double, const double);
   void update(std::vector<structs::MovingHeterotroph>&);
