@@ -8,7 +8,6 @@
 ******************************************************************************/
 
 #include "TimeStep.h"
-#include "Parameters.h"
 
 TimeStep::TimeStep(const unsigned& samplingRate) :
     samplingRate_(samplingRate) {

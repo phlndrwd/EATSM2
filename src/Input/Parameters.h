@@ -52,34 +52,34 @@ class Parameters {
   const double& getMutationProbability() const;
   const double& getMutationStandardDeviation() const;
 
-  void setRandomSeed(const unsigned);
-  void setRunTimeInSeconds(const unsigned);
-  void setSamplingRate(const unsigned);
-  void setNumberOfSizeClasses(const unsigned);
+  void setRandomSeed(const unsigned&);
+  void setRunTimeInSeconds(const unsigned&);
+  void setSamplingRate(const unsigned&);
+  void setNumberOfSizeClasses(const unsigned&);
 
-  void setReadModelState(const bool);
-  void setWriteModelState(const bool);
-  void setUseLinearFeeding(const bool);
+  void setReadModelState(const bool&);
+  void setWriteModelState(const bool&);
+  void setUseLinearFeeding(const bool&);
 
-  void setInitialAutotrophicVolume(const double);
-  void setInitialHeterotrophicVolume(const double);
-  void setMinimumHeterotrophicVolume(const double);
+  void setInitialAutotrophicVolume(const double&);
+  void setInitialHeterotrophicVolume(const double&);
+  void setMinimumHeterotrophicVolume(const double&);
 
-  void setSmallestIndividualVolume(const double);
-  void setLargestIndividualVolume(const double);
+  void setSmallestIndividualVolume(const double&);
+  void setLargestIndividualVolume(const double&);
 
-  void setPreferredPreyVolumeRatio(const unsigned);
-  void setPreferenceFunctionWidth(const double);
+  void setPreferredPreyVolumeRatio(const unsigned&);
+  void setPreferenceFunctionWidth(const double&);
 
-  void setSizeClassSubsetFraction(const double);
-  void setHalfSaturationConstantFraction(const double);
+  void setSizeClassSubsetFraction(const double&);
+  void setHalfSaturationConstantFraction(const double&);
 
-  void setAssimilationEfficiency(const double);
-  void setFractionalMetabolicExpense(const double);
-  void setMetabolicIndex(const double);
+  void setAssimilationEfficiency(const double&);
+  void setFractionalMetabolicExpense(const double&);
+  void setMetabolicIndex(const double&);
 
-  void setMutationProbability(const double);
-  void setMutationStandardDeviation(const double);
+  void setMutationProbability(const double&);
+  void setMutationStandardDeviation(const double&);
 
  private:
   bool isInitialised();

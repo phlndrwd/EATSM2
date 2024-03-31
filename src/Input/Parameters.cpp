@@ -168,107 +168,107 @@ const double& Parameters::getMutationStandardDeviation() const {
   return mutationStandardDeviation_;
 }
 
-void Parameters::setRandomSeed(const unsigned randomNumberSeed) {
+void Parameters::setRandomSeed(const unsigned& randomNumberSeed) {
   randomSeed_ = randomNumberSeed;
   parametersInitialised_[enums::eRandomSeed] = true;
 }
 
-void Parameters::setRunTimeInSeconds(const unsigned runTimeInSeconds) {
+void Parameters::setRunTimeInSeconds(const unsigned& runTimeInSeconds) {
   runTimeInSeconds_ = runTimeInSeconds;
   parametersInitialised_[enums::eRunTimeInSeconds] = true;
 }
 
-void Parameters::setSamplingRate(const unsigned samplingRate) {
+void Parameters::setSamplingRate(const unsigned& samplingRate) {
   samplingRate_ = samplingRate;
   parametersInitialised_[enums::eSamplingRate] = true;
 }
 
-void Parameters::setNumberOfSizeClasses(const unsigned numberOfSizeClasses) {
+void Parameters::setNumberOfSizeClasses(const unsigned& numberOfSizeClasses) {
   numberOfSizeClasses_ = numberOfSizeClasses;
   parametersInitialised_[enums::eNumberOfSizeClasses] = true;
 }
 
-void Parameters::setReadModelState(const bool createNewPopulation) {
+void Parameters::setReadModelState(const bool& createNewPopulation) {
   readModelState_ = createNewPopulation;
   parametersInitialised_[enums::eReadModelState] = true;
 }
 
-void Parameters::setWriteModelState(const bool writeModelState) {
+void Parameters::setWriteModelState(const bool& writeModelState) {
   writeModelState_ = writeModelState;
   parametersInitialised_[enums::eWriteModelState] = true;
 }
 
-void Parameters::setUseLinearFeeding(const bool useLinearFeeding) {
+void Parameters::setUseLinearFeeding(const bool& useLinearFeeding) {
   useLinearFeeding_ = useLinearFeeding;
   parametersInitialised_[enums::eUseLinearFeeding] = true;
 }
 
-void Parameters::setInitialAutotrophicVolume(const double initialAutotrophicVolume) {
+void Parameters::setInitialAutotrophicVolume(const double& initialAutotrophicVolume) {
   initialAutotrophicVolume_ = initialAutotrophicVolume;
   parametersInitialised_[enums::eInitialAutotrophicVolume] = true;
 }
 
-void Parameters::setInitialHeterotrophicVolume(const double initialHeterotrophicVolume) {
+void Parameters::setInitialHeterotrophicVolume(const double& initialHeterotrophicVolume) {
   initialHeterotrophicVolume_ = initialHeterotrophicVolume;
   parametersInitialised_[enums::eInitialHeterotrophicVolume] = true;
 }
 
-void Parameters::setMinimumHeterotrophicVolume(const double minimumHeterotrophicVolume) {
+void Parameters::setMinimumHeterotrophicVolume(const double& minimumHeterotrophicVolume) {
   minimumHeterotrophicVolume_ = minimumHeterotrophicVolume;
   parametersInitialised_[enums::eMinimumHeterotrophicVolume] = true;
 }
 
-void Parameters::setSmallestIndividualVolume(double smallestIndividualVolume) {
+void Parameters::setSmallestIndividualVolume(const double& smallestIndividualVolume) {
   smallestIndividualVolume_ = smallestIndividualVolume;
   parametersInitialised_[enums::eSmallestIndividualVolume] = true;
 }
 
-void Parameters::setLargestIndividualVolume(double largestIndividualVolume) {
+void Parameters::setLargestIndividualVolume(const double& largestIndividualVolume) {
   largestIndividualVolume_ = largestIndividualVolume;
   parametersInitialised_[enums::eLargestIndividualVolume] = true;
 }
 
-void Parameters::setPreferredPreyVolumeRatio(const unsigned preferredPreyVolumeRatio) {
+void Parameters::setPreferredPreyVolumeRatio(const unsigned& preferredPreyVolumeRatio) {
   preferredPreyVolumeRatio_ = preferredPreyVolumeRatio;
   parametersInitialised_[enums::ePreferredPreyVolumeRatio] = true;
 }
 
-void Parameters::setPreferenceFunctionWidth(const double preferenceFunctionWidth) {
+void Parameters::setPreferenceFunctionWidth(const double& preferenceFunctionWidth) {
   preferenceFunctionWidth_ = preferenceFunctionWidth;
   parametersInitialised_[enums::ePreferenceFunctionWidth] = true;
 }
 
-void Parameters::setSizeClassSubsetFraction(const double sizeClassSubsetFraction) {
+void Parameters::setSizeClassSubsetFraction(const double& sizeClassSubsetFraction) {
   sizeClassSubsetFraction_ = sizeClassSubsetFraction;
   parametersInitialised_[enums::eSizeClassSubsetFraction] = true;
 }
 
-void Parameters::setHalfSaturationConstantFraction(const double halfSaturationConstantFraction) {
+void Parameters::setHalfSaturationConstantFraction(const double& halfSaturationConstantFraction) {
   halfSaturationConstantFraction_ = halfSaturationConstantFraction;
   parametersInitialised_[enums::eHalfSaturationConstantFraction] = true;
 }
 
-void Parameters::setAssimilationEfficiency(const double assimilationEfficiency) {
+void Parameters::setAssimilationEfficiency(const double& assimilationEfficiency) {
   assimilationEfficiency_ = assimilationEfficiency;
   parametersInitialised_[enums::eAssimilationEfficiency] = true;
 }
 
-void Parameters::setFractionalMetabolicExpense(const double fractionalMetabolicExpense) {
+void Parameters::setFractionalMetabolicExpense(const double& fractionalMetabolicExpense) {
   fractionalMetabolicExpense_ = fractionalMetabolicExpense;
   parametersInitialised_[enums::eFractionalMetabolicExpense] = true;
 }
 
-void Parameters::setMetabolicIndex(const double metabolicIndex) {
+void Parameters::setMetabolicIndex(const double& metabolicIndex) {
   metabolicIndex_ = metabolicIndex;
   parametersInitialised_[enums::eMetabolicIndex] = true;
 }
 
-void Parameters::setMutationProbability(const double mutationProbability) {
+void Parameters::setMutationProbability(const double& mutationProbability) {
   mutationProbability_ = mutationProbability;
   parametersInitialised_[enums::eMutationProbability] = true;
 }
 
-void Parameters::setMutationStandardDeviation(const double mutationStandardDeviation) {
+void Parameters::setMutationStandardDeviation(const double& mutationStandardDeviation) {
   mutationStandardDeviation_ = mutationStandardDeviation;
   parametersInitialised_[enums::eMutationStandardDeviation] = true;
 }
