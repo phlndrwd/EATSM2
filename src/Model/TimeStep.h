@@ -12,7 +12,7 @@
 
 class TimeStep {
  public:
-  TimeStep(unsigned&);
+  TimeStep(const unsigned&);
 
   const unsigned& getTimeStep() const;
 

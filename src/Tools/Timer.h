@@ -15,7 +15,7 @@
 
 class Timer {
  public:
-  explicit Timer(unsigned&, bool startNow = true);
+  explicit Timer(const unsigned&, bool startNow = true);
   ~Timer();
 
   void start();

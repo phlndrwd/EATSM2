@@ -23,37 +23,35 @@ class Parameters {
 
   bool initialise(const std::vector<std::vector<std::string>>&);
 
-  // Getters
-  unsigned& getRunTimeInSeconds();
-  unsigned getRandomSeed();
-  unsigned& getSamplingRate();
-  unsigned getNumberOfSizeClasses();
+  const unsigned& getRunTimeInSeconds() const;
+  const unsigned& getRandomSeed() const;
+  const unsigned& getSamplingRate() const;
+  const unsigned& getNumberOfSizeClasses() const;
 
-  bool getReadModelState();
-  bool getWriteModelState();
-  bool getUseLinearFeeding();
+  const bool& getReadModelState() const;
+  const bool& getWriteModelState() const;
+  const bool& getUseLinearFeeding() const;
 
-  double getInitialAutotrophVolume();
-  double getInitialHeterotrophVolume();
-  double getMinimumHeterotrophicVolume();
+  const double& getInitialAutotrophVolume() const;
+  const double& getInitialHeterotrophVolume() const;
+  const double& getMinimumHeterotrophicVolume() const;
 
-  double getSmallestIndividualVolume();
-  double getLargestIndividualVolume();
+  const double& getSmallestIndividualVolume() const;
+  const double& getLargestIndividualVolume() const;
 
-  unsigned getPreferredPreyVolumeRatio();
-  double getPreferenceFunctionWidth();
+  const unsigned& getPreferredPreyVolumeRatio() const;
+  const double& getPreferenceFunctionWidth() const;
 
-  double getSizeClassSubsetFraction();
-  double getHalfSaturationConstantFraction();
+  const double& getSizeClassSubsetFraction() const;
+  const double& getHalfSaturationConstantFraction() const;
 
-  double getAssimilationEfficiency();
-  double getFractionalMetabolicExpense();
-  double getMetabolicIndex();
+  const double& getAssimilationEfficiency() const;
+  const double& getFractionalMetabolicExpense() const;
+  const double& getMetabolicIndex() const;
 
-  double getMutationProbability();
-  double getMutationStandardDeviation();
+  const double& getMutationProbability() const;
+  const double& getMutationStandardDeviation() const;
 
-  // Setters
   void setRandomSeed(const unsigned);
   void setRunTimeInSeconds(const unsigned);
   void setSamplingRate(const unsigned);
@@ -86,7 +84,6 @@ class Parameters {
  private:
   bool isInitialised();
 
-  // User defined constants
   unsigned randomSeed_;
   unsigned runTimeInSeconds_;
   unsigned samplingRate_;

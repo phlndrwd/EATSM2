@@ -84,87 +84,87 @@ bool Parameters::isInitialised() {
   return isInitialised;
 }
 
-unsigned& Parameters::getRunTimeInSeconds() {
+const unsigned& Parameters::getRunTimeInSeconds() const {
   return runTimeInSeconds_;
 }
 
-unsigned Parameters::getRandomSeed() {
+const unsigned& Parameters::getRandomSeed() const {
   return randomSeed_;
 }
 
-unsigned& Parameters::getSamplingRate() {
+const unsigned& Parameters::getSamplingRate() const {
   return samplingRate_;
 }
 
-unsigned Parameters::getNumberOfSizeClasses() {
+const unsigned& Parameters::getNumberOfSizeClasses() const {
   return numberOfSizeClasses_;
 }
 
-bool Parameters::getReadModelState() {
+const bool& Parameters::getReadModelState() const {
   return readModelState_;
 }
 
-bool Parameters::getWriteModelState() {
+const bool& Parameters::getWriteModelState() const {
   return writeModelState_;
 }
 
-bool Parameters::getUseLinearFeeding() {
+const bool& Parameters::getUseLinearFeeding() const {
   return useLinearFeeding_;
 }
 
-double Parameters::getInitialAutotrophVolume() {
+const double& Parameters::getInitialAutotrophVolume() const {
   return initialAutotrophicVolume_;
 }
 
-double Parameters::getInitialHeterotrophVolume() {
+const double& Parameters::getInitialHeterotrophVolume() const {
   return initialHeterotrophicVolume_;
 }
 
-double Parameters::getMinimumHeterotrophicVolume() {
+const double& Parameters::getMinimumHeterotrophicVolume() const {
   return minimumHeterotrophicVolume_;
 }
 
-double Parameters::getSmallestIndividualVolume() {
+const double& Parameters::getSmallestIndividualVolume() const {
   return smallestIndividualVolume_;
 }
 
-double Parameters::getLargestIndividualVolume() {
+const double& Parameters::getLargestIndividualVolume() const {
   return largestIndividualVolume_;
 }
 
-unsigned Parameters::getPreferredPreyVolumeRatio() {
+const unsigned& Parameters::getPreferredPreyVolumeRatio() const {
   return preferredPreyVolumeRatio_;
 }
 
-double Parameters::getPreferenceFunctionWidth() {
+const double& Parameters::getPreferenceFunctionWidth() const {
   return preferenceFunctionWidth_;
 }
 
-double Parameters::getSizeClassSubsetFraction() {
+const double& Parameters::getSizeClassSubsetFraction() const {
   return sizeClassSubsetFraction_;
 }
 
-double Parameters::getHalfSaturationConstantFraction() {
+const double& Parameters::getHalfSaturationConstantFraction() const {
   return halfSaturationConstantFraction_;
 }
 
-double Parameters::getAssimilationEfficiency() {
+const double& Parameters::getAssimilationEfficiency() const {
   return assimilationEfficiency_;
 }
 
-double Parameters::getFractionalMetabolicExpense() {
+const double& Parameters::getFractionalMetabolicExpense() const {
   return fractionalMetabolicExpense_;
 }
 
-double Parameters::getMetabolicIndex() {
+const double& Parameters::getMetabolicIndex() const {
   return metabolicIndex_;
 }
 
-double Parameters::getMutationProbability() {
+const double& Parameters::getMutationProbability() const {
   return mutationProbability_;
 }
 
-double Parameters::getMutationStandardDeviation() {
+const double& Parameters::getMutationStandardDeviation() const {
   return mutationStandardDeviation_;
 }
 

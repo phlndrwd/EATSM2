@@ -11,7 +11,7 @@
 
 #include "Constants.h"
 
-Timer::Timer(unsigned& runTimeInSeconds, bool startNow) : runTimeInSeconds_(runTimeInSeconds) {
+Timer::Timer(const unsigned& runTimeInSeconds, bool startNow) : runTimeInSeconds_(runTimeInSeconds) {
   if (startNow == true) {
     start();
   }
