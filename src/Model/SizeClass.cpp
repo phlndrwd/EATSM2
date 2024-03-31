@@ -14,15 +14,12 @@
 #include <iostream>
 #include <stdexcept>
 
-#include "Parameters.h"
-
 namespace {
-Heterotroph heterotrophGenerator(double traitValue,
-                                 double volume) {
+Heterotroph heterotrophGenerator(double traitValue, double volume, double assimilationEfficiency,
+                                 const double mutationProbability, const double mutationStandardDeviation) {
   std::vector<double> traitValues{traitValue};
-  std::vector<bool> areTraitsMutant{false};
-  Traits traits(traitValues, areTraitsMutant);
-  Heterotroph heterotroph(std::move(traits), volume);
+  std::vector<unsigned char> areTraitsMutant{0};
+  Heterotroph heterotroph(traitValues, areTraitsMutant, mutationProbability, mutationStandardDeviation, volume, assimilationEfficiency);
   return heterotroph;
 }
 
@@ -39,6 +36,7 @@ int roundWithProbability(RandomSimple& random, const double value) {
 }  // anonymous namespace
 
 SizeClass::SizeClass(Nutrient& nutrient,
+		     Parameters& params,
 		     EcologicalData& data,
 		     EcologicalFunctions& functions,
                      const double initialAutotrophVolume,
@@ -51,17 +49,19 @@ SizeClass::SizeClass(Nutrient& nutrient,
     sizeClassUpper_(data.getSizeClassBoundaries()[index_ + 1]),
     sizeClassMidPoint_(data.getSizeClassMidPoints()[index_]),
     sizeClassLower_(data.getSizeClassBoundaries()[index_]),
-    sizeClassSubsetFraction_(Parameters::Get()->getSizeClassSubsetFraction()),
-    numberOfSizeClasses_(Parameters::Get()->getNumberOfSizeClasses()),
+    sizeClassSubsetFraction_(params.getSizeClassSubsetFraction()),
+    numberOfSizeClasses_(params.getNumberOfSizeClasses()),
     maxPopulation_(data.getMaximumSizeClassPopulations()[index_]),
     autotrophs_(nutrient, initialAutotrophVolume),
     random_(randomSeed) {
   heterotrophs_.reserve(maxPopulation_);
   alive_.reserve(maxPopulation_);
-  populate(initialHeterotrophVolume);
+  populate(initialHeterotrophVolume, params.getAssimilationEfficiency(),
+           params.getMutationProbability(), params.getMutationStandardDeviation());
 }
 
-void SizeClass::populate(const double volumeToInitialise) {
+void SizeClass::populate(const double volumeToInitialise, const double assimilationEfficiency,
+                         const double mutationProbability, const double mutationStandardDeviation) {
   if (volumeToInitialise > 0) {
     double realInitialPopulationSize = volumeToInitialise / sizeClassMidPoint_;
     unsigned initialPopulationSize = std::abs(realInitialPopulationSize);
@@ -72,7 +72,7 @@ void SizeClass::populate(const double volumeToInitialise) {
     std::generate_n(std::back_inserter(heterotrophs_), initialPopulationSize, [&] {
       alive_.push_back(heterotrophIndex);
       ++heterotrophIndex;
-      return heterotrophGenerator(traitValue, sizeClassMidPoint_);
+      return heterotrophGenerator(traitValue, sizeClassMidPoint_, assimilationEfficiency, mutationProbability, mutationStandardDeviation);
     });
     std::cout << "Size class with index " << index_ << " initialised with " << initialPopulationSize <<
                  " heterotrophs." << std::endl;
@@ -88,7 +88,6 @@ void SizeClass::update(std::vector<structs::MovingHeterotroph>& movingHeterotrop
 
 void SizeClass::metabolisation() {
   std::for_each(std::begin(alive_), std::end(alive_), [&](unsigned index) {
-
     Heterotroph& heterotroph = heterotrophs_[index];
     double metabolicDeduction = functions_.calculateMetabolicDeduction(heterotroph);
 

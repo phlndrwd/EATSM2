@@ -10,24 +10,11 @@
 #include "Parameters.h"
 #include "Strings.h"
 
-Parameters* Parameters::this_ = nullptr;
-
 Parameters::Parameters() {
   parametersInitialised_ = {false};
 }
 
-Parameters::~Parameters() {
-  if (this_ != nullptr) {
-    delete this_;
-  }
-}
-
-Parameters* Parameters::Get() {
-  if (this_ == nullptr) {
-    this_ = new Parameters();
-  }
-  return this_;
-}
+Parameters::~Parameters() {}
 
 bool Parameters::initialise(const std::vector<std::vector<std::string>>& rawInputParameterData) {
   if (rawInputParameterData.size() > 0) {
@@ -97,7 +84,7 @@ bool Parameters::isInitialised() {
   return isInitialised;
 }
 
-unsigned Parameters::getRunTimeInSeconds() {
+unsigned& Parameters::getRunTimeInSeconds() {
   return runTimeInSeconds_;
 }
 
@@ -105,7 +92,7 @@ unsigned Parameters::getRandomSeed() {
   return randomSeed_;
 }
 
-unsigned Parameters::getSamplingRate() {
+unsigned& Parameters::getSamplingRate() {
   return samplingRate_;
 }
 

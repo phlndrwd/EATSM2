@@ -14,17 +14,16 @@
 
 #include "Constants.h"
 #include "DataRecorder.h"
-#include "Parameters.h"
 #include "Strings.h"
 
 FileReader::FileReader() {}
 
-void FileReader::readInputFile() {
+void FileReader::setParameters(Parameters& params) {
   bool success = false;
 
   std::string parametersFile = constants::kConfigurationDirectory + constants::kInputParametersFileName;
   if (readTextFile(parametersFile))
-    if (Parameters::Get()->initialise(rawTextData_))
+    if (params.initialise(rawTextData_))
       if (readTextFile(constants::kConfigurationDirectory + constants::kOutputParametersFileName))
         success = DataRecorder::get()->initialise(rawTextData_);
 

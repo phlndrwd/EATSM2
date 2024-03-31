@@ -15,10 +15,10 @@
 
 class Timer {
  public:
-  explicit Timer(bool goNow = true);
+  explicit Timer(unsigned&, bool startNow = true);
   ~Timer();
 
-  void go();
+  void start();
   double split();
   double elapsed();
   double stop();

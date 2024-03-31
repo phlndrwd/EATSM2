@@ -15,10 +15,10 @@
 #include "Parameters.h"
 
 namespace {
-SizeClass sizeClassGenerator(Nutrient& nutrient, EcologicalData& data, EcologicalFunctions& functions,
+SizeClass sizeClassGenerator(Nutrient& nutrient, Parameters& params, EcologicalData& data, EcologicalFunctions& functions,
 			     RandomSimple& random, const double initialAutotrophVolume,
 			     const double initialHeterotrophVolume, unsigned& index) {
-  SizeClass sizeClass(nutrient, data, functions, initialAutotrophVolume,
+  SizeClass sizeClass(nutrient, params, data, functions, initialAutotrophVolume,
                       initialHeterotrophVolume, index, random.getUniformInt(1, UINT_MAX));
   ++index;
   return sizeClass;
@@ -34,14 +34,13 @@ Life::Life(Nutrient& nutrient, Parameters& params) :
     algorithm_(data_, functions_, params_, random_.getUniformInt(1, UINT_MAX)),
     numberOfSizeClasses_(params_.getNumberOfSizeClasses()) {
   unsigned autotrophIndex = 0;  // Hard-coded value
-  double idealInitialVolume = Parameters::Get()->getSmallestIndividualVolume() *
-                              Parameters::Get()->getPreferredPreyVolumeRatio();
+  double idealInitialVolume = params.getSmallestIndividualVolume() * params.getPreferredPreyVolumeRatio();
   unsigned heterotrophIndex = findSizeClassIndexFromVolume(idealInitialVolume);
   unsigned index = 0;
   std::generate_n(std::back_inserter(sizeClasses_), numberOfSizeClasses_, [&] {
-    double initialAutotrophVolume = autotrophIndex != index ? 0 : Parameters::Get()->getInitialAutotrophVolume();
-    double initialHeterotrophVolume = heterotrophIndex != index ? 0 : Parameters::Get()->getInitialHeterotrophVolume();
-    return sizeClassGenerator(nutrient_, data_, functions_, random_,
+    double initialAutotrophVolume = autotrophIndex != index ? 0 : params.getInitialAutotrophVolume();
+    double initialHeterotrophVolume = heterotrophIndex != index ? 0 : params.getInitialHeterotrophVolume();
+    return sizeClassGenerator(nutrient_, params_, data_, functions_, random_,
                               initialAutotrophVolume, initialHeterotrophVolume, index);
   });
 }

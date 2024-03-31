@@ -13,11 +13,13 @@
 #include <string>
 #include <vector>
 
+#include "Parameters.h"
+
 class FileReader {
  public:
   FileReader();
 
-  void readInputFile();
+  void setParameters(Parameters&);
 
  private:
   bool readTextFile(const std::string&, bool copyToOutput = true);

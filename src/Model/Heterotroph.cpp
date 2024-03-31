@@ -15,14 +15,15 @@
 #include "RandomSimple.h"
 
 // For model initialisation.
-Heterotroph::Heterotroph(const Traits& heritableTraits,
-                         const double volumeHeritable) :
-    traits_(heritableTraits.getValues(), heritableTraits.areTraitsMutant()),
+Heterotroph::Heterotroph(std::vector<double>& traitValues, std::vector<unsigned char>& areTraitsMutant,
+			 const double mutationProbability, const double mutationStandardDeviation,
+			 const double volumeHeritable, const double assimilationEfficiency) :
+    traits_(traitValues, areTraitsMutant, mutationProbability, mutationStandardDeviation),
     volumeHeritable_(volumeHeritable),
     volumeActual_(volumeHeritable_),
     volumeMinimum_(volumeHeritable_ * constants::kMinimumFractionalVolume),
     volumeReproduction_(constants::kReproductionFactor * volumeHeritable_),
-    assimilationEfficiency_(Parameters::Get()->getAssimilationEfficiency()),
+    assimilationEfficiency_(assimilationEfficiency),
     starvationMultiplier_(1 / (volumeHeritable_ - volumeMinimum_)) {
   age_ = 0;
   trophicLevel_ = 0;
@@ -35,18 +36,16 @@ Heterotroph::Heterotroph(const Traits& heritableTraits,
                          const double volumeHeritable,
                          const double volumeActual,
                          const double volumeMinimum,
-                         const double trophicLevel) :
-    traits_(heritableTraits),
-    assimilationEfficiency_(Parameters::Get()->getAssimilationEfficiency()) {
-  volumeHeritable_ = volumeHeritable;
-  volumeActual_ = volumeActual;
-  volumeMinimum_ = volumeMinimum;
-  trophicLevel_ = trophicLevel;
-
+                         const double trophicLevel,
+                         const double assimilationEfficiency) :
+        traits_(heritableTraits),
+        volumeHeritable_(volumeHeritable),
+        volumeActual_(volumeActual),
+        volumeMinimum_(volumeMinimum),
+        assimilationEfficiency_(assimilationEfficiency),
+        trophicLevel_(trophicLevel) {
   volumeReproduction_ = constants::kReproductionFactor * volumeHeritable_;
-
   starvationMultiplier_ = 1 / (volumeHeritable_ - volumeMinimum_);
-
   age_ = 0;
   hasFed_ = false;
   isDead_ = false;
@@ -153,7 +152,7 @@ Heterotroph* Heterotroph::getChild(RandomSimple& random, const EcologicalFunctio
   }
   volumeActual_ = volumeActual_ - childVolumeActual;
 
-  return new Heterotroph(childTraits, childVolumeHeritable, childVolumeActual, childVolumeMinimum, trophicLevel_);
+  return new Heterotroph(childTraits, childVolumeHeritable, childVolumeActual, childVolumeMinimum, trophicLevel_, assimilationEfficiency_);
 }
 
 double Heterotroph::consumePreyVolume(const double preyVolume) {

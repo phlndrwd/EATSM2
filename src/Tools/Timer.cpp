@@ -10,15 +10,16 @@
 #include "Timer.h"
 
 #include "Constants.h"
-#include "Parameters.h"
 
-Timer::Timer(bool goNow) : runTimeInSeconds_(Parameters::Get()->getRunTimeInSeconds()) {
-  if (goNow == true) go();
+Timer::Timer(unsigned& runTimeInSeconds, bool startNow) : runTimeInSeconds_(runTimeInSeconds) {
+  if (startNow == true) {
+    start();
+  }
 }
 
 Timer::~Timer() {}
 
-void Timer::go() {
+void Timer::start() {
   startTime_ = std::chrono::high_resolution_clock::now();
   splitTime_ = startTime_;
 }

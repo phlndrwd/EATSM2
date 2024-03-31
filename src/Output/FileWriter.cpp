@@ -98,7 +98,7 @@ void FileWriter::writeOutputData(Environment& environment) {
   bool success = false;
 
   if (writeVectorDatums())
-    if (writeMatrixDatums()) success = writeStateFile(environment);
+    success = writeMatrixDatums();
 
   if (success)
     std::cout << "Output data written to \"" << outputPath_ << "\"." << std::endl;
@@ -155,41 +155,6 @@ bool FileWriter::writeMatrixDatums() {
       } else
         return false;
     }
-  }
-  return true;
-}
-
-bool FileWriter::writeStateFile(Environment& environment) {
-  if (Parameters::Get()->getWriteModelState() == true) {
-    std::string fileName = outputPath_;
-    fileName.append(constants::kModelStateFileName);
-
-    std::ofstream modelStateFileStream;
-    modelStateFileStream.open(fileName.c_str(), std::ios::out);
-
-    modelStateFileStream.flags(std::ios::scientific);
-    modelStateFileStream.precision(std::numeric_limits<double>::digits10);
-
-    if (modelStateFileStream.is_open() == true) {
-      // Header (for consistency with general file reading function)
-      modelStateFileStream << constants::kModelStateFileName << std::endl;
-      // Model variables
-      modelStateFileStream << environment.getNutrient().getVolume() << std::endl;
-
-//      for (unsigned sizeClassIndex = 0; sizeClassIndex < Parameters::Get()->getNumberOfSizeClasses();
-//           ++sizeClassIndex) {
-//        for (std::std::size_t individualIndex = 0;
-//             individualIndex < environment.getHeterotrophs().getSizeClassPopulation(sizeClassIndex);
-//             ++individualIndex) {
-//          Heterotroph* individual = environment.getHeterotrophs().getIndividual(sizeClassIndex, individualIndex);
-//          modelStateFileStream << individual->getHeritableTraits().getValue(constants::eVolume)
-//                               << constants::kDataDelimiterValue << individual->getVolumeActual()
-//                               << constants::kDataDelimiterValue << individual->getSizeClassIndex() << std::endl;
-//        }
-//      }
-      modelStateFileStream.close();
-    } else
-      return false;
   }
   return true;
 }

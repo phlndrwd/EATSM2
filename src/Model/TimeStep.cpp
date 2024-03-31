@@ -10,8 +10,8 @@
 #include "TimeStep.h"
 #include "Parameters.h"
 
-TimeStep::TimeStep() :
-    samplingRate_(Parameters::Get()->getSamplingRate()) {
+TimeStep::TimeStep(unsigned& samplingRate) :
+    samplingRate_(samplingRate) {
   timeStep_ = 0;
 }
 

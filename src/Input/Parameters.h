@@ -18,16 +18,15 @@
 
 class Parameters {
  public:
+  Parameters();
   ~Parameters();
-
-  static Parameters* Get();
 
   bool initialise(const std::vector<std::vector<std::string>>&);
 
   // Getters
-  unsigned getRunTimeInSeconds();
+  unsigned& getRunTimeInSeconds();
   unsigned getRandomSeed();
-  unsigned getSamplingRate();
+  unsigned& getSamplingRate();
   unsigned getNumberOfSizeClasses();
 
   bool getReadModelState();
@@ -85,11 +84,7 @@ class Parameters {
   void setMutationStandardDeviation(const double);
 
  private:
-  Parameters();
-
   bool isInitialised();
-
-  static Parameters* this_;
 
   // User defined constants
   unsigned randomSeed_;

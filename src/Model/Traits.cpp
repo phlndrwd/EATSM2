@@ -12,13 +12,12 @@
 #include "Parameters.h"
 #include "RandomSimple.h"
 
-Traits::Traits(const std::vector<double>& values, const std::vector<bool>& areTraitsMutations) :
-    mutationProbability_(Parameters::Get()->getMutationProbability()),
-    mutationStandardDeviation_(Parameters::Get()->getMutationStandardDeviation()) {
-  for (std::size_t i = 0; i < values.size(); ++i) {
-    values_.push_back(values[i]);
-    areMutantTraits_.push_back(areTraitsMutations[i]);
-  }
+Traits::Traits(const std::vector<double>& values, const std::vector<unsigned char>& areMutantTraits,
+               double mutationProbability_, double mutationStandardDeviation_):
+    mutationProbability_(mutationProbability_),
+    mutationStandardDeviation_(mutationStandardDeviation_) {
+  values_.insert(values_.end(), values.begin(), values.end());
+  areMutantTraits_.insert(areMutantTraits_.end(), areMutantTraits.begin(), areMutantTraits.end());
 }
 
 Traits::Traits(const Traits& traits) {
@@ -60,7 +59,7 @@ Traits& Traits::operator=(Traits&& traits) noexcept {
 const Traits Traits::getChildTraits(RandomSimple& random) {
   std::size_t numberOfGenes = values_.size();
   std::vector<double> childValues = values_;
-  std::vector<bool> areTraitsMutations(numberOfGenes, false);
+  std::vector<unsigned char> areTraitsMutations(numberOfGenes, 0);
 
   if (mutationProbability_ > 0) {
     for (std::size_t i = 0; i < numberOfGenes; ++i) {
@@ -80,10 +79,10 @@ const Traits Traits::getChildTraits(RandomSimple& random) {
       }
     }
   }
-  return Traits(childValues, areTraitsMutations);
+  return Traits(childValues, areTraitsMutations, mutationProbability_, mutationStandardDeviation_);
 }
 
-const std::vector<bool>& Traits::areTraitsMutant() const {
+const std::vector<unsigned char>& Traits::areTraitsMutant() const {
   return areMutantTraits_;
 }
 
@@ -92,7 +91,7 @@ const std::vector<double>& Traits::getValues() const {
 }
 
 bool Traits::isTraitMutant(const unsigned traitIndex) const {
-  return areMutantTraits_[traitIndex];
+  return areMutantTraits_[traitIndex] != 0;
 }
 
 const double& Traits::getValue(const enums::eTraitIndices trait) const {

@@ -18,16 +18,17 @@
 #include "Heterotroph.h"
 #include "EcologicalFunctions.h"
 #include "Nutrient.h"
+#include "Parameters.h"
 #include "RandomSimple.h"
 #include "Structs.h"
 
 class SizeClass {
  public:
   SizeClass() = delete;
-  explicit SizeClass(Nutrient&, EcologicalData&, EcologicalFunctions&,
+  explicit SizeClass(Nutrient&, Parameters&, EcologicalData&, EcologicalFunctions&,
                      const double, const double, const unsigned, const unsigned);
 
-  void populate(const double);
+  void populate(const double, const double, const double, const double);
   void update(std::vector<structs::MovingHeterotroph>&);
 
   void sizeClassSubset(std::function<void(unsigned)>);

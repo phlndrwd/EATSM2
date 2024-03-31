@@ -19,7 +19,7 @@ class RandomSimple;
 class Traits {
  public:
   Traits() = delete;
-  explicit Traits(const std::vector<double>&, const std::vector<bool>&);
+  explicit Traits(const std::vector<double>&, const std::vector<unsigned char>&, double, double);
 
   Traits(const Traits&);
   Traits(Traits&&) noexcept;
@@ -29,7 +29,7 @@ class Traits {
 
   const Traits getChildTraits(RandomSimple&);
   const std::vector<double>& getValues() const;
-  const std::vector<bool>& areTraitsMutant() const;
+  const std::vector<unsigned char>& areTraitsMutant() const;
 
   const double& getValue(const enums::eTraitIndices) const;
   bool isTraitMutant(const unsigned) const;
@@ -41,7 +41,7 @@ class Traits {
   double mutationStandardDeviation_;
 
   std::vector<double> values_;
-  std::vector<bool> areMutantTraits_;
+  std::vector<unsigned char> areMutantTraits_;
 };
 
 #endif

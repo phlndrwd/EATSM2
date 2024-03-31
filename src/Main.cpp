@@ -21,48 +21,49 @@
 #include "Timer.h"
 
 int main() {
-    std::cout << constants::kSystemName + " " + constants::kSystemVersion + " starting on "
-              << Date::getDateAndTimeString() << "..." << std::endl
-              << std::endl;
-    FileReader fileReader;
-    fileReader.readInputFile();
-    Timer timer = Timer(true);
-    FileWriter fileWriter;  // Created here to initialise output directory
+  std::cout << constants::kSystemName + " " + constants::kSystemVersion + " starting on "
+            << Date::getDateAndTimeString() << "..." << std::endl
+            << std::endl;
+  Parameters params;
+  FileReader fileReader;
+  fileReader.setParameters(params);
+  Timer timer(params.getRunTimeInSeconds(), true);
+  FileWriter fileWriter;  // Created here to initialise output directory
 
-    unsigned runTimeInSeconds = Parameters::Get()->getRunTimeInSeconds();
-    double oneTenthOfRunTimeInSeconds = runTimeInSeconds / 10.0;
-    double cumulativeTenthsOfRunTime = 0;
-    bool isAlive = true;
+  unsigned runTimeInSeconds = params.getRunTimeInSeconds();
+  double oneTenthOfRunTimeInSeconds = runTimeInSeconds / 10.0;
+  double cumulativeTenthsOfRunTime = 0;
+  bool isAlive = true;
 
-    Environment environment(*Parameters::Get());
-    TimeStep timeStep;
+  Environment environment(params);
+  TimeStep timeStep(params.getSamplingRate());
 
-    std::cout << "Model run due to complete on "
-              << Date::getDateAndTimeString(constants::kCompleteDateFormat, runTimeInSeconds) << std::endl
-              << std::endl;
-    std::cout << "Starting main time loop..." << std::endl;
-    do {
-      // Update before data collection; calculates essential variables for
-      // encounter rates.
-      environment.update();
-      // Data collection
-      if (timeStep.doRecordData() == true) {
-        DataRecorder::get()->addDataTo("AxisTimeSteps", timeStep.getTimeStep());
-        DataRecorder::get()->addDataTo("TimeSampling", timer.split());
-        isAlive = environment.recordData();
-      }
-      // Text output at the completion of each ten percent of the run
-      if (timer.elapsed() >= (unsigned)cumulativeTenthsOfRunTime) {
-        cumulativeTenthsOfRunTime = cumulativeTenthsOfRunTime + oneTenthOfRunTimeInSeconds;
-        std::cout << "t = " << timeStep.getTimeStep() << constants::kDataDelimiterValue
-                  << constants::kWhiteSpaceCharacter << timer.remainingString() << " remaining at "
-                  << Date::getDateAndTimeString() << "..." << std::endl;
-      }
-      timeStep.incrementTimeStep();
-      //std::cout << "timer.Elapsed( )> " << timer.Elapsed( ) << ",
-      // runTimeInSeconds> " << runTimeInSeconds << ", isAlive> " << isAlive <<
-      // std::endl;
-    } while (timer.elapsed() < runTimeInSeconds && isAlive == true);
-    std::cout << "Total run time " << timer.stop() << "s" << std::endl;
+  std::cout << "Model run due to complete on "
+            << Date::getDateAndTimeString(constants::kCompleteDateFormat, runTimeInSeconds) << std::endl
+            << std::endl;
+  std::cout << "Starting main time loop..." << std::endl;
+  do {
+    // Update before data collection; calculates essential variables for
+    // encounter rates.
+    environment.update();
+    // Data collection
+    if (timeStep.doRecordData() == true) {
+      DataRecorder::get()->addDataTo("AxisTimeSteps", timeStep.getTimeStep());
+      DataRecorder::get()->addDataTo("TimeSampling", timer.split());
+      isAlive = environment.recordData();
+    }
+    // Text output at the completion of each ten percent of the run
+    if (timer.elapsed() >= (unsigned)cumulativeTenthsOfRunTime) {
+      cumulativeTenthsOfRunTime = cumulativeTenthsOfRunTime + oneTenthOfRunTimeInSeconds;
+      std::cout << "t = " << timeStep.getTimeStep() << constants::kDataDelimiterValue
+                << constants::kWhiteSpaceCharacter << timer.remainingString() << " remaining at "
+                << Date::getDateAndTimeString() << "..." << std::endl;
+    }
+    timeStep.incrementTimeStep();
+    //std::cout << "timer.Elapsed( )> " << timer.Elapsed( ) << ",
+    // runTimeInSeconds> " << runTimeInSeconds << ", isAlive> " << isAlive <<
+    // std::endl;
+  } while (timer.elapsed() < runTimeInSeconds && isAlive == true);
+  std::cout << "Total run time " << timer.stop() << "s" << std::endl;
   return 0;
 }

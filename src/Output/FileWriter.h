@@ -26,7 +26,6 @@ class FileWriter {
 
   bool writeVectorDatums();
   bool writeMatrixDatums();
-  bool writeStateFile(Environment&);
 
   std::string outputPath_;
   std::string dataSetDirectoryName_;
