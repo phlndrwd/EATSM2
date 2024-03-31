@@ -39,18 +39,21 @@ int roundWithProbability(RandomSimple& random, const double value) {
 }  // anonymous namespace
 
 SizeClass::SizeClass(Nutrient& nutrient,
+		     EcologicalData& data,
+		     EcologicalFunctions& functions,
                      const double initialAutotrophVolume,
                      const double initialHeterotrophVolume,
                      const unsigned index,
-                     const unsigned randomSeed) :
+                     const unsigned randomSeed):
     nutrient_(nutrient),
+    functions_(functions),
     index_(index),
-    sizeClassUpper_(Parameters::Get()->getSizeClassBoundary(index_ + 1)),
-    sizeClassMidPoint_(Parameters::Get()->getSizeClassMidPoint(index_)),
-    sizeClassLower_(Parameters::Get()->getSizeClassBoundary(index_)),
+    sizeClassUpper_(data.getSizeClassBoundaries()[index_ + 1]),
+    sizeClassMidPoint_(data.getSizeClassMidPoints()[index_]),
+    sizeClassLower_(data.getSizeClassBoundaries()[index_]),
     sizeClassSubsetFraction_(Parameters::Get()->getSizeClassSubsetFraction()),
     numberOfSizeClasses_(Parameters::Get()->getNumberOfSizeClasses()),
-    maxPopulation_(Parameters::Get()->getMaximumSizeClassPopulation(index_)),
+    maxPopulation_(data.getMaximumSizeClassPopulations()[index_]),
     autotrophs_(nutrient, initialAutotrophVolume),
     random_(randomSeed) {
   heterotrophs_.reserve(maxPopulation_);
@@ -64,7 +67,7 @@ void SizeClass::populate(const double volumeToInitialise) {
     unsigned initialPopulationSize = std::abs(realInitialPopulationSize);
     nutrient_.addToVolume(realInitialPopulationSize - initialPopulationSize);
 
-    double traitValue = heterotrophProcessor_.volumeToTraitValue(sizeClassMidPoint_);
+    double traitValue = functions_.volumeToTraitValue(sizeClassMidPoint_);
     unsigned heterotrophIndex = 0;
     std::generate_n(std::back_inserter(heterotrophs_), initialPopulationSize, [&] {
       alive_.push_back(heterotrophIndex);
@@ -87,7 +90,7 @@ void SizeClass::metabolisation() {
   std::for_each(std::begin(alive_), std::end(alive_), [&](unsigned index) {
 
     Heterotroph& heterotroph = heterotrophs_[index];
-    double metabolicDeduction = heterotrophProcessor_.calculateMetabolicDeduction(heterotroph);
+    double metabolicDeduction = functions_.calculateMetabolicDeduction(heterotroph);
 
     if ((heterotroph.getVolumeActual() - metabolicDeduction) > 0) {
       heterotroph.setHasFed(false);  // Reset for the next time step
@@ -102,7 +105,7 @@ void SizeClass::metabolisation() {
 void SizeClass::starvation() {
   sizeClassSubset([&](unsigned randomIndex) {
     Heterotroph& heterotroph = heterotrophs_[randomIndex];
-    if (random_.getUniform() <= heterotrophProcessor_.calculateStarvationProbability(heterotroph)) {
+    if (random_.getUniform() <= functions_.calculateStarvationProbability(heterotroph)) {
       starve(randomIndex);
     }
   });

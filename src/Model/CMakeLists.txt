@@ -10,6 +10,8 @@
 list(APPEND EATSM2_SOURCES
   ${CMAKE_CURRENT_LIST_DIR}/Autotrophs.cpp
   ${CMAKE_CURRENT_LIST_DIR}/Autotrophs.h
+  ${CMAKE_CURRENT_LIST_DIR}/EcologicalData.cpp
+  ${CMAKE_CURRENT_LIST_DIR}/EcologicalData.h
   ${CMAKE_CURRENT_LIST_DIR}/EcologicalFunctions.cpp
   ${CMAKE_CURRENT_LIST_DIR}/EcologicalFunctions.h
   ${CMAKE_CURRENT_LIST_DIR}/EncounterAlgorithm.cpp

@@ -13,12 +13,16 @@
 #include <functional>
 #include <vector>
 
+#include "EcologicalData.h"
 #include "Heterotroph.h"
-#include "RandomSimple.h"
+#include "Parameters.h"
 
 class EcologicalFunctions {
  public:
-  EcologicalFunctions();
+  EcologicalFunctions(EcologicalData&, Parameters&);
+
+  double functionalResponseLinear(const unsigned, const double) const;
+  double functionalResponseNonLinear(const unsigned, const double) const;
 
   double calculateMetabolicDeduction(const Heterotroph&) const;
   bool updateSizeClassIndex(Heterotroph&) const;
@@ -41,26 +45,26 @@ class EcologicalFunctions {
   double volumeToTraitValue(const double) const;
 
  private:
-  //  double calcFeedingProbabilityLinear(const unsigned, const double);
-  //  double calcFeedingProbabilityNonLinear(const unsigned, const double);
-
   double calcLinearStarvation(const double, const double, const double, const double) const;
   double calcBetaExponentialStarvation(const double, const double, const double, const double) const;
+
+  EcologicalData& data_;
+  Parameters& params_;
 
   std::function<double(const unsigned, const double)> starvationProbabilityFunc_;
 
   const std::vector<double> sizeClassBoundaries_;
-  //  const std::vector<double> linearFeedingDenominators_;
-  //  const std::vector<double> halfSaturationConstants_;
+  const std::vector<double> linearFeedingDenominators_;
+  const std::vector<double> halfSaturationConstants_;
+
+  const double largestVolumeExponent_;
+  const double smallestVolumeExponent_;
 
   const double preferredPreyVolumeRatio_;
   const double preferenceFunctionWidth_;
   const double fractionalMetabolicExpense_;
   const double metabolicIndex_;
   const double numberOfSizeClasses_;
-
-  const double largestVolumeExponent_;
-  const double smallestVolumeExponent_;
 
   const double preferenceDenominator_;
 };

@@ -24,7 +24,8 @@
 class SizeClass {
  public:
   SizeClass() = delete;
-  explicit SizeClass(Nutrient&, const double, const double, const unsigned, const unsigned);
+  explicit SizeClass(Nutrient&, EcologicalData&, EcologicalFunctions&,
+                     const double, const double, const unsigned, const unsigned);
 
   void populate(const double);
   void update(std::vector<structs::MovingHeterotroph>&);
@@ -51,7 +52,8 @@ class SizeClass {
   void starve(const unsigned);
 
   Nutrient& nutrient_;
-  const unsigned index_;  // Should index_ be deprecated?
+  EcologicalFunctions& functions_;
+  const unsigned index_;  // PJU FIX - Should index_ be deprecated?
 
   const double sizeClassUpper_;
   const double sizeClassMidPoint_;
@@ -62,12 +64,12 @@ class SizeClass {
   const unsigned maxPopulation_;
 
   Autotrophs autotrophs_;
-  EcologicalFunctions heterotrophProcessor_;
   RandomSimple random_;
 
   std::vector<Heterotroph> heterotrophs_;
   std::vector<unsigned> alive_;
   std::queue<unsigned> dead_;
+
 };
 
 #endif // SIZECLASS_H

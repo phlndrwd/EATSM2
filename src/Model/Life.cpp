@@ -15,24 +15,25 @@
 #include "Parameters.h"
 
 namespace {
-SizeClass sizeClassGenerator(Nutrient& nutrient,
-                             RandomSimple& random,
-                             const double initialAutotrophVolume,
-                             const double initialHeterotrophVolume,
-                             unsigned& index) {
-  SizeClass sizeClass(nutrient, initialAutotrophVolume, initialHeterotrophVolume, index, random.getUniformInt(1, UINT_MAX));
+SizeClass sizeClassGenerator(Nutrient& nutrient, EcologicalData& data, EcologicalFunctions& functions,
+			     RandomSimple& random, const double initialAutotrophVolume,
+			     const double initialHeterotrophVolume, unsigned& index) {
+  SizeClass sizeClass(nutrient, data, functions, initialAutotrophVolume,
+                      initialHeterotrophVolume, index, random.getUniformInt(1, UINT_MAX));
   ++index;
   return sizeClass;
 }
 }  // anonymous namespace
 
-Life::Life(Nutrient& nutrient) :
+Life::Life(Nutrient& nutrient, Parameters& params) :
     nutrient_(nutrient),
-    sizeClassBoundaries_(Parameters::Get()->getSizeClassBoundaries()),
-    numberOfSizeClasses_(Parameters::Get()->getNumberOfSizeClasses()),
-    random_(Parameters::Get()->getRandomSeed()),  // Is this the first time random is used?
-    encounterAlgorithm_(random_.getUniformInt(1, UINT_MAX)) {
-  unsigned autotrophIndex = Parameters::Get()->getAutotrophSizeClassIndex();
+    params_(params),
+    data_(params_),
+    functions_(data_, params_),
+    random_(params.getRandomSeed()),  // Is this the first time random is used?
+    algorithm_(data_, functions_, params_, random_.getUniformInt(1, UINT_MAX)),
+    numberOfSizeClasses_(params_.getNumberOfSizeClasses()) {
+  unsigned autotrophIndex = 0;  // Hard-coded value
   double idealInitialVolume = Parameters::Get()->getSmallestIndividualVolume() *
                               Parameters::Get()->getPreferredPreyVolumeRatio();
   unsigned heterotrophIndex = findSizeClassIndexFromVolume(idealInitialVolume);
@@ -40,7 +41,8 @@ Life::Life(Nutrient& nutrient) :
   std::generate_n(std::back_inserter(sizeClasses_), numberOfSizeClasses_, [&] {
     double initialAutotrophVolume = autotrophIndex != index ? 0 : Parameters::Get()->getInitialAutotrophVolume();
     double initialHeterotrophVolume = heterotrophIndex != index ? 0 : Parameters::Get()->getInitialHeterotrophVolume();
-    return sizeClassGenerator(nutrient_, random_, initialAutotrophVolume, initialHeterotrophVolume, index);
+    return sizeClassGenerator(nutrient_, data_, functions_, random_,
+                              initialAutotrophVolume, initialHeterotrophVolume, index);
   });
 }
 
@@ -48,7 +50,7 @@ void Life::update() {
   std::for_each(std::begin(sizeClasses_), std::end(sizeClasses_), [&](SizeClass& sizeClass) {
 
     // This call replaces Heterotrophs.Feeding in EATSM1.
-    encounterAlgorithm_.update(sizeClasses_, sizeClass);  // PJU FIX - Finish feeding functions here
+    algorithm_.update(sizeClasses_, sizeClass);  // PJU FIX - Finish feeding functions here
 
     std::vector<structs::MovingHeterotroph> movingHeterotrophs;
     sizeClass.update(movingHeterotrophs);  // PJU FIX - Correcrly populate movingHeterotrophs
@@ -71,7 +73,7 @@ void Life::update() {
         Heterotroph& heterotroph = movingHeterotroph.heterotroph_;
         std::vector<SizeClass>::iterator destSizeClass =
         std::find_if (sizeClasses_.begin(), sizeClasses_.end(), [&](SizeClass& nextSizeClass) {
-          if (heterotroph.getVolumeActual() >= sizeClassBoundaries_[nextSizeClass.getIndex()]) {
+          if (heterotroph.getVolumeActual() >= data_.getSizeClassBoundaries()[nextSizeClass.getIndex()]) {
             return true;
           } else {
             return false;
@@ -98,7 +100,7 @@ unsigned Life::findSizeClassIndexFromVolume(const double volume) const {
   unsigned sizeClassIndex = 0;
 
   for (unsigned index = 1; index <= numberOfSizeClasses_; ++index) {
-    if (volume < sizeClassBoundaries_[index]) {
+    if (volume < data_.getSizeClassBoundaries()[index]) {
       sizeClassIndex = index - 1;
       break;
     }

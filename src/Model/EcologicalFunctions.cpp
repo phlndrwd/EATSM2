@@ -16,16 +16,29 @@
 #include "RandomSimple.h"
 #include "Enums.h"
 
-EcologicalFunctions::EcologicalFunctions() :
-    sizeClassBoundaries_(Parameters::Get()->getSizeClassBoundaries()),
-    preferredPreyVolumeRatio_(Parameters::Get()->getPreferredPreyVolumeRatio()),
-    preferenceFunctionWidth_(Parameters::Get()->getPreferenceFunctionWidth()),
-    fractionalMetabolicExpense_(Parameters::Get()->getFractionalMetabolicExpense()),
-    metabolicIndex_(Parameters::Get()->getMetabolicIndex()),
-    numberOfSizeClasses_(Parameters::Get()->getNumberOfSizeClasses()),
-    largestVolumeExponent_(Parameters::Get()->getLargestVolumeExponent()),
-    smallestVolumeExponent_(Parameters::Get()->getSmallestVolumeExponent()),
+EcologicalFunctions::EcologicalFunctions(EcologicalData& data, Parameters& params) :
+    data_(data),
+    params_(params),
+    sizeClassBoundaries_(data.getSizeClassBoundaries()),
+    linearFeedingDenominators_(data.getLinearFeedingDenominators()),
+    halfSaturationConstants_(data.getHalfSaturationConstants()),
+    largestVolumeExponent_(data.getLargestVolumeExponent()),
+    smallestVolumeExponent_(data.getSmallestVolumeExponent()),
+    preferredPreyVolumeRatio_(params.getPreferredPreyVolumeRatio()),
+    preferenceFunctionWidth_(params.getPreferenceFunctionWidth()),
+    fractionalMetabolicExpense_(params.getFractionalMetabolicExpense()),
+    metabolicIndex_(params.getMetabolicIndex()),
+    numberOfSizeClasses_(params.getNumberOfSizeClasses()),
     preferenceDenominator_(2 * std::pow(preferenceFunctionWidth_, 2)) {}
+
+double EcologicalFunctions::functionalResponseLinear(const unsigned predatorIndex, const double effectivePreyVolume) const {
+  return std::min(effectivePreyVolume / linearFeedingDenominators_[predatorIndex], 1.0);
+}
+
+double EcologicalFunctions::functionalResponseNonLinear(const unsigned predatorIndex, const double effectivePreyVolume) const {
+  return (effectivePreyVolume / (halfSaturationConstants_[predatorIndex] + effectivePreyVolume));
+}
+
 
 double EcologicalFunctions::calculateMetabolicDeduction(const Heterotroph& heterotroph) const {
   return fractionalMetabolicExpense_ * std::pow(heterotroph.getVolumeActual(), metabolicIndex_);
@@ -35,11 +48,6 @@ double EcologicalFunctions::calculatePreferenceForPrey(const double grazerVolume
   return std::exp(-std::pow((std::log((preferredPreyVolumeRatio_ * preyVolume) / grazerVolume)), 2) / preferenceDenominator_);
 }
 
-//double EcologicalFunctions::calcFeedingProbability(const unsigned predatorIndex,
-//                                                    const double effectivePreyVolume) {
-//  return calcFeedingProbabilityNonLinear(predatorIndex, effectivePreyVolume);
-//}
-
 double EcologicalFunctions::calculateStarvationProbability(const Heterotroph& heterotroph) const {
   return calcLinearStarvation(heterotroph.getVolumeActual(), heterotroph.getVolumeHeritable(),
                                    heterotroph.getVolumeMinimum(), heterotroph.getStarvationMultiplier());
@@ -47,7 +55,6 @@ double EcologicalFunctions::calculateStarvationProbability(const Heterotroph& he
 
 unsigned EcologicalFunctions::findIndividualSizeClassIndex(const Heterotroph& heterotroph,
                                                             unsigned directionToMove) const {
-
   // PJU FIX
   unsigned currentSizeClass = 0;  // heterotroph.getSizeClassIndex();
   unsigned newSizeClassIndex = currentSizeClass;
@@ -82,18 +89,6 @@ bool EcologicalFunctions::updateSizeClassIndex(Heterotroph& heterotroph) const {
   }
   return false;
 }
-
-//unsigned EcologicalFunctions::findSizeClassIndexFromVolume(const double volume) const {
-//  unsigned sizeClassIndex = 0;
-
-//  for (unsigned index = 1; index <= numberOfSizeClasses_; ++index) {
-//    if (volume < sizeClassBoundaries_[index]) {
-//      sizeClassIndex = index - 1;
-//      break;
-//    }
-//  }
-//  return sizeClassIndex;
-//}
 
 unsigned EcologicalFunctions::directionIndividualShouldMoveSizeClasses(const Heterotroph& heterotroph) const {
   unsigned directionToMove = enums::eNoMovement;

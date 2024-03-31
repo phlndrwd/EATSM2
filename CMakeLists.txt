@@ -32,7 +32,9 @@ include(${CMAKE_SOURCE_DIR}/src/Tools/CMakeLists.txt)
 add_compile_options(-Wall -Wextra -Wpedantic -std=c++17)
 add_executable(EATSM2 ${EATSM2_SOURCES}
   src/Model/EncounterAlgorithm.h
-  src/Model/EncounterAlgorithm.cpp)
+  src/Model/EncounterAlgorithm.cpp
+  src/Model/EcologicalData.h
+  src/Model/EcologicalData.cpp)
 
 install(TARGETS EATSM2 LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR})
 

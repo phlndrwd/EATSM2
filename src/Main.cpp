@@ -34,7 +34,7 @@ int main() {
     double cumulativeTenthsOfRunTime = 0;
     bool isAlive = true;
 
-    Environment environment;
+    Environment environment(*Parameters::Get());
     TimeStep timeStep;
 
     std::cout << "Model run due to complete on "

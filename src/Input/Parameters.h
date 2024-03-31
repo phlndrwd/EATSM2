@@ -84,44 +84,9 @@ class Parameters {
   void setMutationProbability(const double);
   void setMutationStandardDeviation(const double);
 
-  // Calculated variables
-
-  double getSmallestVolumeExponent();
-  double getLargestVolumeExponent();
-
-  unsigned getAutotrophSizeClassIndex();
-
-  double getSizeClassBoundary(const unsigned);
-  double getSizeClassMidPoint(const unsigned);
-
-  double getInterSizeClassPreference(const unsigned, const unsigned);
-  double getInterSizeClassVolume(const unsigned, const unsigned);
-
-  double getTotalVolume();
-
-  unsigned getMaximumSizeClassPopulation(const unsigned);
-  double getRemainingVolume(const unsigned);
-  double getLinearFeedingDenominator(const unsigned);
-  double getHalfSaturationConstant(const unsigned);
-
-  const std::vector<double> getSizeClassBoundaries();
-  const std::vector<double> getSizeClassMidPoints();
-
-  const std::vector<double> getLinearFeedingDenominators();
-  const std::vector<double> getHalfSaturationConstants();
-
-  const std::vector<unsigned> getMaximumSizeClassPopulations();
-
-  const std::vector<double> getInterSizeClassPreferenceVector(const unsigned) const;
-  const std::vector<double> getInterSizeClassVolumeVector(const unsigned) const;
-
-  const std::vector<std::vector<double>> getInterSizeClassPreferenceMatrix() const;
-  const std::vector<std::vector<double>> getInterSizeClassVolumeMatrix() const;
-
  private:
   Parameters();
 
-  void calculateParameters();
   bool isInitialised();
 
   static Parameters* this_;
@@ -155,26 +120,7 @@ class Parameters {
   double mutationProbability_;
   double mutationStandardDeviation_;
 
-  // Calculated variables
-  std::vector<unsigned> maximumSizeClassPopulations_;
-
-  std::vector<double> remainingVolumes_;
-  std::vector<double> linearFeedingDenominators_;
-  std::vector<double> halfSaturationConstants_;
-
-  std::vector<double> sizeClassBoundaries_;
-  std::vector<double> sizeClassMidPoints_;
-
-  std::vector<std::vector<double>> interSizeClassPreferenceMatrix_;
-  std::vector<std::vector<double>> interSizeClassVolumeMatrix_;
-
   std::array<bool, enums::eNumberOfParamters> parametersInitialised_;
-
-  double smallestVolumeExponent_;
-  double largestVolumeExponent_;
-  double totalVolume_;
-
-  unsigned autotrophSizeClassIndex_;
 };
 
 #endif

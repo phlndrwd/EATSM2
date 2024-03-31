@@ -12,10 +12,11 @@
 
 #include "Life.h"
 #include "Nutrient.h"
+#include "Parameters.h"
 
 class Environment {
  public:
-  Environment();
+  Environment(Parameters&);
 
   void update();
   bool recordData();

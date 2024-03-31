@@ -10,14 +10,17 @@
 #ifndef ENCOUNTERALGORITHM_H
 #define ENCOUNTERALGORITHM_H
 
-#include "Enums.h"
-#include "SizeClass.h"
-
 #include <vector>
+
+#include "EcologicalData.h"
+#include "EcologicalFunctions.h"
+#include "Enums.h"
+#include "Parameters.h"
+#include "SizeClass.h"
 
 class EncounterAlgorithm {
  public:
-  EncounterAlgorithm(const unsigned);
+  EncounterAlgorithm(EcologicalData&, EcologicalFunctions&, Parameters&, const unsigned);
 
   void update(std::vector<SizeClass>&, SizeClass&);
 
@@ -27,17 +30,17 @@ class EncounterAlgorithm {
   std::vector<SizeClass>::iterator setCoupledSizeClass(const std::vector<double>&, std::vector<SizeClass>&);
   void calcFeedingStrategy();
 
-  double functionalResponseLinear(const unsigned, const double);
-  double functionalResponseNonLinear(const unsigned, const double);
-
   void feedFromAutotrophs(Heterotroph&);
   void feedFromHeterotrophs(Heterotroph&, std::vector<SizeClass>::iterator);
 
+  EcologicalData& data_;
+  EcologicalFunctions& functions_;
+  Parameters& params_;
+
   RandomSimple random_;
+
   const std::vector<std::vector<double>> interSizeClassPreferences_;
   const std::vector<std::vector<double>> interSizeClassVolumes_;
-  const std::vector<double> linearFeedingDenominators_;
-  const std::vector<double> halfSaturationConstants_;
   const unsigned numberOfSizeClasses_;
 
   enums::eFeedingStrategy feedingStrategy_;

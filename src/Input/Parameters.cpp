@@ -8,9 +8,6 @@
 ******************************************************************************/
 
 #include "Parameters.h"
-
-#include <cmath>
-
 #include "Strings.h"
 
 Parameters* Parameters::this_ = nullptr;
@@ -21,19 +18,6 @@ Parameters::Parameters() {
 
 Parameters::~Parameters() {
   if (this_ != nullptr) {
-    for (unsigned sizeClassIndex = 0; sizeClassIndex < numberOfSizeClasses_; ++sizeClassIndex) {
-      interSizeClassPreferenceMatrix_[sizeClassIndex].clear();
-      interSizeClassVolumeMatrix_[sizeClassIndex].clear();
-    }
-    interSizeClassPreferenceMatrix_.clear();
-    interSizeClassVolumeMatrix_.clear();
-
-    remainingVolumes_.clear();
-    linearFeedingDenominators_.clear();
-    halfSaturationConstants_.clear();
-    sizeClassBoundaries_.clear();
-    sizeClassMidPoints_.clear();
-
     delete this_;
   }
 }
@@ -99,68 +83,10 @@ bool Parameters::initialise(const std::vector<std::vector<std::string>>& rawInpu
       else if (parameterName == "mutationstandarddeviation")
         setMutationStandardDeviation(parameterValue);
     }
-    calculateParameters();
 
     return isInitialised();
   } else
     return false;
-}
-
-void Parameters::calculateParameters() {
-  maximumSizeClassPopulations_.resize(numberOfSizeClasses_, 0);
-  remainingVolumes_.resize(numberOfSizeClasses_);
-  linearFeedingDenominators_.resize(numberOfSizeClasses_);
-  halfSaturationConstants_.resize(numberOfSizeClasses_);
-  sizeClassMidPoints_.resize(numberOfSizeClasses_);
-  sizeClassBoundaries_.resize(numberOfSizeClasses_ + 1);
-
-  smallestVolumeExponent_ = std::log10(smallestIndividualVolume_);
-  largestVolumeExponent_ = std::log10(largestIndividualVolume_);
-
-  totalVolume_ = initialAutotrophicVolume_ + initialHeterotrophicVolume_;
-
-  double sizeClassExponentIncrement = (largestVolumeExponent_ - smallestVolumeExponent_) / numberOfSizeClasses_;
-
-  for (unsigned sizeClassIndex = 0; sizeClassIndex < numberOfSizeClasses_; ++sizeClassIndex) {
-    double sizeClassMidPointExponent = smallestVolumeExponent_ + ((sizeClassIndex + 0.5) * sizeClassExponentIncrement);
-    double sizeClassBoundaryExponent = smallestVolumeExponent_ + (sizeClassIndex * sizeClassExponentIncrement);
-
-    sizeClassBoundaries_[sizeClassIndex] = std::pow(10, sizeClassBoundaryExponent);
-    sizeClassMidPoints_[sizeClassIndex] = std::pow(10, sizeClassMidPointExponent);
-
-    remainingVolumes_[sizeClassIndex] = totalVolume_ - sizeClassMidPoints_[sizeClassIndex];
-    linearFeedingDenominators_[sizeClassIndex] = (2 * halfSaturationConstantFraction_) * remainingVolumes_[sizeClassIndex];
-    halfSaturationConstants_[sizeClassIndex] = halfSaturationConstantFraction_ * remainingVolumes_[sizeClassIndex];
-    maximumSizeClassPopulations_[sizeClassIndex] = std::ceil(totalVolume_ / sizeClassMidPoints_[sizeClassIndex]);
-  }
-  double sizeClassBoundaryExponent = smallestVolumeExponent_ + (numberOfSizeClasses_ * sizeClassExponentIncrement);
-  sizeClassBoundaries_[numberOfSizeClasses_] = std::pow(10, sizeClassBoundaryExponent);
-
-  //EcologicalFunctions heterotrophProcessor;
-  autotrophSizeClassIndex_ = 0;//heterotrophProcessor.findSizeClassIndexFromVolume(smallestIndividualVolume_);
-
-  interSizeClassPreferenceMatrix_.resize(numberOfSizeClasses_);
-  interSizeClassVolumeMatrix_.resize(numberOfSizeClasses_);
-
-  for (unsigned subjectIndex = 0; subjectIndex < numberOfSizeClasses_; ++subjectIndex) {
-    double subjectVolumeMean = sizeClassMidPoints_[subjectIndex];
-    double preferenceSum = 0;
-
-    for (unsigned referenceIndex = 0; referenceIndex < numberOfSizeClasses_; ++referenceIndex) {
-      double referenceVolumeMean = sizeClassMidPoints_[referenceIndex];
-
-      // PJU FIX - Calculate predator preference for prey.
-      double preferenceForReferenceSizeClass = 0;
-
-
-          //heterotrophProcessor.calculatePreferenceForPrey(subjectVolumeMean, referenceVolumeMean);
-
-      preferenceSum += preferenceForReferenceSizeClass;
-
-      interSizeClassPreferenceMatrix_[subjectIndex].push_back(preferenceForReferenceSizeClass);
-      interSizeClassVolumeMatrix_[subjectIndex].push_back(preferenceForReferenceSizeClass * referenceVolumeMean);
-    }
-  }
 }
 
 bool Parameters::isInitialised() {
@@ -253,86 +179,6 @@ double Parameters::getMutationProbability() {
 
 double Parameters::getMutationStandardDeviation() {
   return mutationStandardDeviation_;
-}
-
-unsigned Parameters::getAutotrophSizeClassIndex() {
-  return autotrophSizeClassIndex_;
-}
-
-double Parameters::getSmallestVolumeExponent() {
-  return smallestVolumeExponent_;
-}
-
-double Parameters::getLargestVolumeExponent() {
-  return largestVolumeExponent_;
-}
-
-double Parameters::getSizeClassBoundary(const unsigned index) {
-  return sizeClassBoundaries_[index];
-}
-
-double Parameters::getSizeClassMidPoint(const unsigned index) {
-  return sizeClassMidPoints_[index];
-}
-
-const std::vector<double> Parameters::getSizeClassBoundaries() {
-  return sizeClassBoundaries_;
-}
-
-const std::vector<double> Parameters::getSizeClassMidPoints() {
-  return sizeClassMidPoints_;
-}
-
-const std::vector<double> Parameters::getLinearFeedingDenominators() {
-  return linearFeedingDenominators_;
-}
-
-const std::vector<double> Parameters::getHalfSaturationConstants() {
-  return halfSaturationConstants_;
-}
-
-const std::vector<unsigned> Parameters::getMaximumSizeClassPopulations() {
-  return maximumSizeClassPopulations_;
-}
-
-double Parameters::getInterSizeClassPreference(const unsigned predatorIndex, const unsigned preyIndex) {
-  return interSizeClassPreferenceMatrix_[predatorIndex][preyIndex];
-}
-
-double Parameters::getInterSizeClassVolume(const unsigned predatorIndex, const unsigned preyIndex) {
-  return interSizeClassVolumeMatrix_[predatorIndex][preyIndex];
-}
-
-double Parameters::getTotalVolume() { return totalVolume_; }
-
-unsigned Parameters::getMaximumSizeClassPopulation(const unsigned sizeClassIndex) {
-  return maximumSizeClassPopulations_[sizeClassIndex];
-}
-
-double Parameters::getRemainingVolume(const unsigned sizeClassIndex) { return remainingVolumes_[sizeClassIndex]; }
-
-double Parameters::getLinearFeedingDenominator(const unsigned sizeClassIndex) {
-  return linearFeedingDenominators_[sizeClassIndex];
-}
-
-double Parameters::getHalfSaturationConstant(const unsigned sizeClassIndex) {
-  return halfSaturationConstants_[sizeClassIndex];
-}
-
-const std::vector<double> Parameters::getInterSizeClassPreferenceVector(const unsigned index) const {
-  return interSizeClassPreferenceMatrix_[index];
-}
-
-const std::vector<double> Parameters::getInterSizeClassVolumeVector(const unsigned index) const {
-  return interSizeClassVolumeMatrix_[index];
-}
-
-const std::vector<std::vector<double>> Parameters::getInterSizeClassPreferenceMatrix() const {
-  return interSizeClassPreferenceMatrix_;
-}
-
-const std::vector<std::vector<double>> Parameters::getInterSizeClassVolumeMatrix() const {
-  return interSizeClassVolumeMatrix_;
 }
 
 void Parameters::setRandomSeed(const unsigned randomNumberSeed) {

@@ -13,13 +13,16 @@
 
 #include "Parameters.h"
 
-EncounterAlgorithm::EncounterAlgorithm(const unsigned randomSeed) :
+EncounterAlgorithm::EncounterAlgorithm(EcologicalData& data, EcologicalFunctions& functions,
+                                       Parameters& params, const unsigned randomSeed):
+    data_(data),
+    functions_(functions),
+    params_(params),
     random_(randomSeed),
-    interSizeClassPreferences_(Parameters::Get()->getInterSizeClassPreferenceMatrix()),
-    interSizeClassVolumes_(Parameters::Get()->getInterSizeClassVolumeMatrix()),
-    linearFeedingDenominators_(Parameters::Get()->getLinearFeedingDenominators()),
-    halfSaturationConstants_(Parameters::Get()->getHalfSaturationConstants()),
-    numberOfSizeClasses_(Parameters::Get()->getNumberOfSizeClasses()){}
+    interSizeClassPreferences_(data_.getInterSizeClassPreferences()),
+    interSizeClassVolumes_(data_.getInterSizeClassVolumes()),
+    numberOfSizeClasses_(params_.getNumberOfSizeClasses()) {
+}
 
 void EncounterAlgorithm::update(std::vector<SizeClass>& sizeClasses, SizeClass& sizeClass) {
   std::vector<SizeClass>::iterator coupledSizeClassIt = calcFeedingProbability(sizeClasses, sizeClass);
@@ -42,7 +45,7 @@ std::vector<SizeClass>::iterator EncounterAlgorithm::calcFeedingProbability(std:
     calcEffectiveSizeClassVolumes(sizeClasses, sizeClass, effectiveSizeClassVolumes);
     coupledSizeClassIt = setCoupledSizeClass(effectiveSizeClassVolumes, sizeClasses);
     calcFeedingStrategy();
-    feedingProbabilty_ = functionalResponseNonLinear(sizeClass.getIndex(), effectivePreyVolume_);  // PJU FIX - Introduce option switch?
+    feedingProbabilty_ = functions_.functionalResponseNonLinear(sizeClass.getIndex(), effectivePreyVolume_);  // PJU FIX - Introduce option switch?
   }
   return coupledSizeClassIt;
 }
@@ -57,6 +60,7 @@ void EncounterAlgorithm::calcEffectiveSizeClassVolumes(std::vector<SizeClass>& s
   // PJU FIX - These may be modified when work is complete on the Parameters class.
   auto sizeClassVolumesIt = interSizeClassVolumes_[sizeClass.getIndex()].begin();
   auto sizeClassPreferencesIt = interSizeClassPreferences_[sizeClass.getIndex()].begin();
+
   std::vector<double>::iterator effectiveSizeClassVolumesIt = effectiveSizeClassVolumes.begin();
 
   std::for_each(std::begin(sizeClasses), std::end(sizeClasses), [&](SizeClass& otherSizeClass) {
@@ -110,16 +114,6 @@ void EncounterAlgorithm::calcFeedingStrategy() {
       feedingStrategy_ = enums::eHerbivore;
     }
   }
-}
-
-double EncounterAlgorithm::functionalResponseLinear(const unsigned predatorIndex,
-                                                          const double effectivePreyVolume) {
-  return std::min(effectivePreyVolume / linearFeedingDenominators_[predatorIndex], 1.0);
-}
-
-double EncounterAlgorithm::functionalResponseNonLinear(const unsigned predatorIndex,
-                                                       const double effectivePreyVolume) {
-  return (effectivePreyVolume / (halfSaturationConstants_[predatorIndex] + effectivePreyVolume));
 }
 
 void EncounterAlgorithm::feedFromHeterotrophs(Heterotroph& predator, std::vector<SizeClass>::iterator coupledSizeClassIt) {

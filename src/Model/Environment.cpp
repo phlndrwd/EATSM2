@@ -11,7 +11,7 @@
 
 #include<iostream>
 
-Environment::Environment(): nutrient_(), life_(nutrient_) {
+Environment::Environment(Parameters& params): nutrient_(), life_(nutrient_, params) {
   std::cout << "Environment created." << std::endl << std::endl;
 }
 
