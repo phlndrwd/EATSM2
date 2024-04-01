@@ -18,6 +18,11 @@
 #include "Parameters.h"
 #include "SizeClass.h"
 
+struct EffectivePrey {
+  double totalPreyVolume = 0;
+  double autotrophVolume = 0;
+};
+
 class EncounterAlgorithm {
  public:
   EncounterAlgorithm(EcologicalData&, EcologicalFunctions&, Parameters&, const unsigned&);
@@ -26,9 +31,10 @@ class EncounterAlgorithm {
 
  private:
   std::vector<SizeClass>::iterator calcFeedingProbability(std::vector<SizeClass>&, SizeClass&);
-  void calcEffectiveSizeClassVolumes(std::vector<SizeClass>&, SizeClass&, std::vector<double>&);
-  std::vector<SizeClass>::iterator setCoupledSizeClass(const std::vector<double>&, std::vector<SizeClass>&);
-  void calcFeedingStrategy();
+  EffectivePrey calcEffectiveSizeClassVolumes(std::vector<SizeClass>&, SizeClass&, std::vector<double>&);
+  std::vector<SizeClass>::iterator setCoupledSizeClass(const std::vector<double>&, std::vector<SizeClass>&,
+                                                       EffectivePrey&);
+  void calcFeedingStrategy(const unsigned&);
 
   void feedFromAutotrophs(Heterotroph&);
   void feedFromHeterotrophs(Heterotroph&, std::vector<SizeClass>::iterator);
@@ -44,9 +50,5 @@ class EncounterAlgorithm {
   const unsigned numberOfSizeClasses_;
 
   enums::eFeedingStrategy feedingStrategy_;
-
-  double effectivePreyVolume_;
-  double effectiveAutotrophVolume_;
-  double feedingProbabilty_;
 };
 #endif
