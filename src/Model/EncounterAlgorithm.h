@@ -31,12 +31,12 @@ class EncounterAlgorithm {
   void update(std::vector<SizeClass>&, SizeClass&);
 
  private:
-  double calcFeedingProbability(std::vector<SizeClass>&, SizeClass&, std::vector<SizeClass>::iterator&);
+  double calcFeedingProbability(std::vector<SizeClass>&, SizeClass&,
+                                std::vector<SizeClass>::iterator&, enums::eFeedingStrategy&);
   PreyVolumes calcEffectiveSizeClassVolumes(std::vector<SizeClass>&, SizeClass&, std::vector<double>&);
   std::vector<SizeClass>::iterator setCoupledSizeClass(const std::vector<double>&, std::vector<SizeClass>&,
-                                                       PreyVolumes&);
-
-  void feedFromAutotrophs(Heterotroph&);
+                                                       PreyVolumes&, enums::eFeedingStrategy&);
+  void feedFromAutotrophs(Heterotroph&, std::vector<SizeClass>::iterator);
   void feedFromHeterotrophs(Heterotroph&, std::vector<SizeClass>::iterator);
 
   EcologicalData& data_;
@@ -48,7 +48,5 @@ class EncounterAlgorithm {
   const std::vector<std::vector<double>> interSizeClassPreferences_;
   const std::vector<std::vector<double>> interSizeClassVolumes_;
   const unsigned numberOfSizeClasses_;
-
-  enums::eFeedingStrategy feedingStrategy_;
 };
 #endif

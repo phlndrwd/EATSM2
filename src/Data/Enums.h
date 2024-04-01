@@ -48,6 +48,7 @@ enum eOutputControlParameters {
 };
 
 enum eFeedingStrategy {
+  eNotEating,
   eHerbivore,
   eCarnivore
 };
