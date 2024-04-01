@@ -28,7 +28,7 @@ class Heterotroph {
   Heterotroph& operator=(const Heterotroph&);
   Heterotroph& operator=(const Heterotroph&&);
 
-  Heterotroph* getChild(RandomSimple&, const EcologicalFunctions&);
+  Heterotroph getChild(RandomSimple&, const EcologicalFunctions&);
 
   double consumePreyVolume(const double);
   double metabolise(const double);

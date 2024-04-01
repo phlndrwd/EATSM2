@@ -21,6 +21,9 @@ public:
   const std::vector<std::vector<double>>& getInterSizeClassPreferences() const;
   const std::vector<std::vector<double>>& getInterSizeClassVolumes() const;
 
+  std::vector<std::vector<double>>& getInterSizeClassPreferences();
+  std::vector<std::vector<double>>& getInterSizeClassVolumes();
+
   const std::vector<unsigned>& getMaximumSizeClassPopulations() const;
 
   const std::vector<double>& getSizeClassBoundaries() const;
@@ -33,6 +36,8 @@ public:
   const double& getLargestVolumeExponent() const;
 
 private:
+  void initialise();
+
   Parameters& params_;
 
   std::vector<std::vector<double>> interSizeClassPreferences_;

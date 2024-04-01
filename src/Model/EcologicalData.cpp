@@ -12,10 +12,13 @@
 #include <cmath>
 
 EcologicalData::EcologicalData(Parameters& params): params_(params) {
+  initialise();
+}
 
+void EcologicalData::initialise() {
   unsigned numberOfSizeClasses = params_.getNumberOfSizeClasses();
-  double totalVolume = params.getInitialAutotrophVolume() + params.getInitialHeterotrophVolume();
-  double halfSaturationConstantFraction = params.getHalfSaturationConstantFraction();
+  double totalVolume = params_.getInitialAutotrophVolume() + params_.getInitialHeterotrophVolume();
+  double halfSaturationConstantFraction = params_.getHalfSaturationConstantFraction();
 
   maximumSizeClassPopulations_.resize(numberOfSizeClasses, 0);
   remainingVolumes_.resize(numberOfSizeClasses);
@@ -23,8 +26,6 @@ EcologicalData::EcologicalData(Parameters& params): params_(params) {
   halfSaturationConstants_.resize(numberOfSizeClasses);
   sizeClassMidPoints_.resize(numberOfSizeClasses);
   sizeClassBoundaries_.resize(numberOfSizeClasses + 1);
-
-  //// Size class sizes ////////////////////////////////////////////////////////////////////////////////////////////////
 
   smallestVolumeExponent_ = std::log10(params_.getSmallestIndividualVolume());
   largestVolumeExponent_ = std::log10(params_.getLargestIndividualVolume());
@@ -44,40 +45,21 @@ EcologicalData::EcologicalData(Parameters& params): params_(params) {
   }
   double sizeClassBoundaryExponent = smallestVolumeExponent_ + (numberOfSizeClasses * sizeClassExponentIncrement);
   sizeClassBoundaries_[numberOfSizeClasses] = std::pow(10, sizeClassBoundaryExponent);
-
-  //autotrophSizeClassIndex_ = 0;
-
-
-  //// Inter-size class preferences ////////////////////////////////////////////////////////////////////////////////////
-  interSizeClassPreferences_.resize(numberOfSizeClasses);
-  interSizeClassVolumes_.resize(numberOfSizeClasses);
-
-  for (unsigned subjectIndex = 0; subjectIndex < numberOfSizeClasses; ++subjectIndex) {
-    double subjectVolumeMean = sizeClassMidPoints_[subjectIndex];
-    double preferenceSum = 0;
-
-    for (unsigned referenceIndex = 0; referenceIndex < numberOfSizeClasses; ++referenceIndex) {
-      double referenceVolumeMean = sizeClassMidPoints_[referenceIndex];
-
-      // PJU FIX - Calculate predator preference for prey.
-      double preferenceForReferenceSizeClass = 0;
-
-
-      //heterotrophProcessor.calculatePreferenceForPrey(subjectVolumeMean, referenceVolumeMean);
-
-      preferenceSum += preferenceForReferenceSizeClass;
-
-      interSizeClassPreferences_[subjectIndex].push_back(preferenceForReferenceSizeClass);
-      interSizeClassVolumes_[subjectIndex].push_back(preferenceForReferenceSizeClass * referenceVolumeMean);
-    }
-  }
 }
 
 const std::vector<std::vector<double>>& EcologicalData::getInterSizeClassPreferences() const {
   return interSizeClassPreferences_;
 }
 
+std::vector<std::vector<double>>& EcologicalData::getInterSizeClassPreferences() {
+  return interSizeClassPreferences_;
+}
+
 const std::vector<std::vector<double>>& EcologicalData::getInterSizeClassVolumes() const {
+  return interSizeClassVolumes_;
+}
+
+std::vector<std::vector<double>>& EcologicalData::getInterSizeClassVolumes() {
   return interSizeClassVolumes_;
 }
 

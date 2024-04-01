@@ -50,26 +50,25 @@ std::vector<SizeClass>::iterator EncounterAlgorithm::calcFeedingProbability(std:
   return coupledSizeClassIt;
 }
 
-void EncounterAlgorithm::calcEffectiveSizeClassVolumes(std::vector<SizeClass>& sizeClasses,
-                                                       SizeClass& sizeClass,
+void EncounterAlgorithm::calcEffectiveSizeClassVolumes(std::vector<SizeClass>& sizeClasses, SizeClass& thisSizeClass,
                                                        std::vector<double>& effectiveSizeClassVolumes) {
   effectivePreyVolume_ = 0;
   effectiveAutotrophVolume_ = 0;
   feedingProbabilty_ = 0;
 
   // PJU FIX - These may be modified when work is complete on the Parameters class.
-  auto sizeClassVolumesIt = interSizeClassVolumes_[sizeClass.getIndex()].begin();
-  auto sizeClassPreferencesIt = interSizeClassPreferences_[sizeClass.getIndex()].begin();
+  auto sizeClassVolumesIt = interSizeClassVolumes_[thisSizeClass.getIndex()].begin();
+  auto sizeClassPreferencesIt = interSizeClassPreferences_[thisSizeClass.getIndex()].begin();
 
   std::vector<double>::iterator effectiveSizeClassVolumesIt = effectiveSizeClassVolumes.begin();
 
   std::for_each(std::begin(sizeClasses), std::end(sizeClasses), [&](SizeClass& otherSizeClass) {
     std::size_t populationSize = otherSizeClass.getPopulationSize();
-    if (&otherSizeClass == &sizeClass) {
-      populationSize--;  // Reduce population size for a single individual in this size class.
+    if (&thisSizeClass == &otherSizeClass) {
+      populationSize--;  // Reduce population size for a single individual for this size class.
     }
     *effectiveSizeClassVolumesIt = *sizeClassVolumesIt * populationSize;
-    effectiveAutotrophVolume_ = *sizeClassPreferencesIt * sizeClass.getAutotrophs().getVolume();
+    effectiveAutotrophVolume_ = *sizeClassPreferencesIt * otherSizeClass.getAutotrophs().getVolume();
 
     *effectiveSizeClassVolumesIt += effectiveAutotrophVolume_;
     effectivePreyVolume_ += *effectiveSizeClassVolumesIt;
@@ -77,7 +76,6 @@ void EncounterAlgorithm::calcEffectiveSizeClassVolumes(std::vector<SizeClass>& s
     std::advance(effectiveSizeClassVolumesIt, 1);
     std::advance(sizeClassPreferencesIt, 1);
     std::advance(sizeClassVolumesIt, 1);
-
   });
 }
 

@@ -13,7 +13,6 @@
 
 #include "Heterotroph.h"
 #include "Parameters.h"
-#include "RandomSimple.h"
 #include "Enums.h"
 
 EcologicalFunctions::EcologicalFunctions(EcologicalData& data, Parameters& params) :
@@ -29,7 +28,33 @@ EcologicalFunctions::EcologicalFunctions(EcologicalData& data, Parameters& param
     fractionalMetabolicExpense_(params.getFractionalMetabolicExpense()),
     metabolicIndex_(params.getMetabolicIndex()),
     numberOfSizeClasses_(params.getNumberOfSizeClasses()),
-    preferenceDenominator_(2 * std::pow(preferenceFunctionWidth_, 2)) {}
+    preferenceDenominator_(2 * std::pow(preferenceFunctionWidth_, 2)) {
+  calcPreferenceMatrices();
+}
+
+void EcologicalFunctions::calcPreferenceMatrices() {
+  const std::vector<double>& sizeClassMidPoints = data_.getSizeClassMidPoints();
+  // Calculating here to avoid circular dependeny in EcologicalData
+  std::vector<std::vector<double>>& interSizeClassPreferences = data_.getInterSizeClassPreferences();
+  std::vector<std::vector<double>>& interSizeClassVolumes = data_.getInterSizeClassVolumes();
+
+  interSizeClassPreferences.resize(numberOfSizeClasses_);
+  interSizeClassVolumes.resize(numberOfSizeClasses_);
+
+  for (unsigned subjectIndex = 0; subjectIndex < numberOfSizeClasses_; ++subjectIndex) {
+    double subjectVolumeMean = sizeClassMidPoints[subjectIndex];
+    double preferenceSum = 0;
+
+    for (unsigned referenceIndex = 0; referenceIndex < numberOfSizeClasses_; ++referenceIndex) {
+      double referenceVolumeMean = sizeClassMidPoints[referenceIndex];
+      double preferenceForReferenceSizeClass = calculatePreferenceForPrey(subjectVolumeMean, referenceVolumeMean);
+
+      preferenceSum += preferenceForReferenceSizeClass;
+      interSizeClassPreferences[subjectIndex].push_back(preferenceForReferenceSizeClass);
+      interSizeClassVolumes[subjectIndex].push_back(preferenceForReferenceSizeClass * referenceVolumeMean);
+    }
+  }
+}
 
 double EcologicalFunctions::functionalResponseLinear(const unsigned& predatorIndex, const double& effectivePreyVolume) const {
   return std::min(effectivePreyVolume / linearFeedingDenominators_[predatorIndex], 1.0);

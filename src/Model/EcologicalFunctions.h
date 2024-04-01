@@ -45,6 +45,8 @@ class EcologicalFunctions {
   double volumeToTraitValue(const double&) const;
 
  private:
+  void calcPreferenceMatrices();
+
   double calcLinearStarvation(const double&, const double&, const double&, const double&) const;
   double calcBetaExponentialStarvation(const double&, const double&, const double&, const double&) const;
 

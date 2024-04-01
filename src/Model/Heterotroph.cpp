@@ -126,7 +126,7 @@ Heterotroph& Heterotroph::operator=(const Heterotroph&& heterotroph) {
   return *this;
 }
 
-Heterotroph* Heterotroph::getChild(RandomSimple& random, const EcologicalFunctions& heterotrophProcessor) {
+Heterotroph Heterotroph::getChild(RandomSimple& random, const EcologicalFunctions& functions) {
   Traits childTraits = traits_.getChildTraits(random);
 
   double childVolumeHeritable = 0;
@@ -138,17 +138,17 @@ Heterotroph* Heterotroph::getChild(RandomSimple& random, const EcologicalFunctio
     childVolumeHeritable = volumeHeritable_;
     childVolumeMinimum = volumeMinimum_;
   } else {
-    childVolumeHeritable = heterotrophProcessor.traitValueToVolume(childTraits.getValue(enums::eVolume));
+    childVolumeHeritable = functions.traitValueToVolume(childTraits.getValue(enums::eVolume));
     childVolumeMinimum = childVolumeHeritable * constants::kMinimumFractionalVolume;
-
-    if (childVolumeHeritable < volumeActual_)
+    if (childVolumeHeritable < volumeActual_) {
       childVolumeActual = childVolumeHeritable;
-    else
+    } else {
       childVolumeActual = volumeActual_ * constants::kReproductionMultiplier;
+    }
   }
   volumeActual_ = volumeActual_ - childVolumeActual;
 
-  return new Heterotroph(childTraits, childVolumeHeritable, childVolumeActual, childVolumeMinimum, trophicLevel_, assimilationEfficiency_);
+  return Heterotroph(std::move(childTraits), childVolumeHeritable, childVolumeActual, childVolumeMinimum, trophicLevel_, assimilationEfficiency_);
 }
 
 double Heterotroph::consumePreyVolume(const double preyVolume) {
