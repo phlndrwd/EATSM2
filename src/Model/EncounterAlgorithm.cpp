@@ -93,8 +93,8 @@ std::vector<SizeClass>::iterator EncounterAlgorithm::setCoupledSizeClass(
                                                   [&](double effectiveSizeClassVolume) {
     effectivePreySum += effectiveSizeClassVolume;
     if (effectivePreySum >= randEffectivePreyValue) {
-      int sizeClassIndex = -numberOfSizeClasses_ + index;  // Calculate appropriate index reduction from end
-      std::advance(coupledSizeClassIt, sizeClassIndex);
+      int sizeClassOffset = -numberOfSizeClasses_ + index + 1;  // Calculate appropriate index reduction from end
+      std::advance(coupledSizeClassIt, sizeClassOffset);
       return true;
     } else {
       ++index;
