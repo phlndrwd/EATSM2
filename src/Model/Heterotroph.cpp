@@ -21,8 +21,8 @@ Heterotroph::Heterotroph(std::vector<double>& traitValues, std::vector<unsigned 
 	traits_(traitValues, areTraitsMutant, mutationProbability, mutationStandardDeviation),
 	volumeHeritable_(volumeHeritable),
 	volumeActual_(volumeHeritable_),
-	volumeMinimum_(volumeHeritable_ * constants::kMinimumFractionalVolume),
-	volumeReproduction_(constants::kReproductionFactor * volumeHeritable_),
+	volumeMinimum_(volumeHeritable_ * consts::kMinimumFractionalVolume),
+	volumeReproduction_(consts::kReproductionFactor * volumeHeritable_),
 	assimilationEfficiency_(assimilationEfficiency),
 	starvationMultiplier_(1 / (volumeHeritable_ - volumeMinimum_)) {
   age_ = 0;
@@ -40,7 +40,7 @@ Heterotroph::Heterotroph(const Traits& heritableTraits, const double& volumeHeri
         volumeMinimum_(volumeMinimum),
         assimilationEfficiency_(assimilationEfficiency),
         trophicLevel_(trophicLevel) {
-  volumeReproduction_ = constants::kReproductionFactor * volumeHeritable_;
+  volumeReproduction_ = consts::kReproductionFactor * volumeHeritable_;
   starvationMultiplier_ = 1 / (volumeHeritable_ - volumeMinimum_);
   age_ = 0;
   hasFed_ = false;
@@ -134,16 +134,16 @@ Heterotroph Heterotroph::getChild(RandomSimple& random, const EcologicalFunction
   double childVolumeMinimum = 0;
 
   if (childTraits.isTraitMutant(enums::eVolume) == false) {
-    childVolumeActual = volumeActual_ * constants::kReproductionMultiplier;
+    childVolumeActual = volumeActual_ * consts::kReproductionMultiplier;
     childVolumeHeritable = volumeHeritable_;
     childVolumeMinimum = volumeMinimum_;
   } else {
     childVolumeHeritable = functions.traitValueToVolume(childTraits.getValue(enums::eVolume));
-    childVolumeMinimum = childVolumeHeritable * constants::kMinimumFractionalVolume;
+    childVolumeMinimum = childVolumeHeritable * consts::kMinimumFractionalVolume;
     if (childVolumeHeritable < volumeActual_) {
       childVolumeActual = childVolumeHeritable;
     } else {
-      childVolumeActual = volumeActual_ * constants::kReproductionMultiplier;
+      childVolumeActual = volumeActual_ * consts::kReproductionMultiplier;
     }
   }
   volumeActual_ = volumeActual_ - childVolumeActual;

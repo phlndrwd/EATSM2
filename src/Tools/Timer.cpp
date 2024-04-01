@@ -53,13 +53,15 @@ double Timer::stop() {
 }
 
 std::string Timer::remainingString() {
+  // PJU FIX - Under certain conditions (debugging) this function can output an impossibly high number.
+  //            Changing to ints does not fix this.
   unsigned secondsRemaining = runTimeInSeconds_ - elapsed();
-  unsigned minutesRemaining = secondsRemaining / constants::kSecondsInAMinute;
-  secondsRemaining = secondsRemaining - (minutesRemaining * constants::kSecondsInAMinute);
-  unsigned hoursRemaining = minutesRemaining / constants::kMinutesInAnHour;
-  minutesRemaining = minutesRemaining - (hoursRemaining * constants::kMinutesInAnHour);
-  unsigned daysRemaining = hoursRemaining / constants::kHoursInADay;
-  hoursRemaining = hoursRemaining - (daysRemaining * constants::kHoursInADay);
+  unsigned minutesRemaining = secondsRemaining / consts::kSecondsInAMinute;
+  secondsRemaining = secondsRemaining - (minutesRemaining * consts::kSecondsInAMinute);
+  unsigned hoursRemaining = minutesRemaining / consts::kMinutesInAnHour;
+  minutesRemaining = minutesRemaining - (hoursRemaining * consts::kMinutesInAnHour);
+  unsigned daysRemaining = hoursRemaining / consts::kHoursInADay;
+  hoursRemaining = hoursRemaining - (daysRemaining * consts::kHoursInADay);
 
   std::string str = "";
   if (daysRemaining > 0) str.append(std::to_string(daysRemaining)).append("d");

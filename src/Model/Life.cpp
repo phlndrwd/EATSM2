@@ -12,6 +12,7 @@
 #include <algorithm>
 #include <climits>
 
+#include "Constants.h"
 #include "Parameters.h"
 
 namespace {
@@ -33,7 +34,7 @@ Life::Life(Nutrient& nutrient, Parameters& params) :
     random_(params.getRandomSeed()),  // Is this the first time random is used?
     algorithm_(data_, functions_, params_, random_.getUniformInt(1, UINT_MAX)),
     numberOfSizeClasses_(params_.getNumberOfSizeClasses()) {
-  unsigned autotrophIndex = 0;  // Hard-coded value
+  unsigned autotrophIndex = consts::kAutotrophSizeIndex;
   double idealInitialVolume = params.getSmallestIndividualVolume() * params.getPreferredPreyVolumeRatio();
   unsigned heterotrophIndex = findSizeClassIndexFromVolume(idealInitialVolume);
   unsigned index = 0;
@@ -46,13 +47,13 @@ Life::Life(Nutrient& nutrient, Parameters& params) :
 }
 
 void Life::update() {
-  std::for_each(std::begin(sizeClasses_), std::end(sizeClasses_), [&](SizeClass& sizeClass) {
+  std::for_each(std::begin(sizeClasses_), std::end(sizeClasses_), [&](SizeClass& thisSizeClass) {
 
     // This call replaces Heterotrophs.Feeding in EATSM1.
-    algorithm_.update(sizeClasses_, sizeClass);  // PJU FIX - Finish feeding functions here
+    algorithm_.update(sizeClasses_, thisSizeClass);  // PJU FIX - Finish feeding functions here
 
     std::vector<structs::MovingHeterotroph> movingHeterotrophs;
-    sizeClass.update(movingHeterotrophs);  // PJU FIX - Correcrly populate movingHeterotrophs
+    thisSizeClass.update(movingHeterotrophs);  // PJU FIX - Correcrly populate movingHeterotrophs
 
     for (const auto& movingHeterotroph : movingHeterotrophs) {
       // PJU FIX - Determine SizeClassIndex here.
@@ -60,7 +61,7 @@ void Life::update() {
       if (movingHeterotroph.direction_ == enums::eMoveDown) {
         // Search down from current sizeClass
         auto sizeClassDownIt = sizeClasses_.rbegin();
-        std::advance(sizeClassDownIt, numberOfSizeClasses_ + sizeClass.getIndex() + 1);
+        std::advance(sizeClassDownIt, numberOfSizeClasses_ + thisSizeClass.getIndex() + 1);
         std::for_each(sizeClassDownIt, sizeClasses_.rend(), [&](SizeClass& nextSizeClass){
           //
         });

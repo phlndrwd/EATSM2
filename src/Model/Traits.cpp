@@ -64,7 +64,7 @@ const Traits Traits::getChildTraits(RandomSimple& random) {
   if (mutationProbability_ > 0) {
     for (std::size_t i = 0; i < numberOfGenes; ++i) {
       if (random.getUniform() <= mutationProbability_) {
-        areTraitsMutations[i] = true;
+        areTraitsMutations[i] = true;  // PJU FIX - What gets assigned here?
 
         double mutationValue = random.getNormal(0.0, mutationStandardDeviation_);
 

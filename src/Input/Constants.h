@@ -12,7 +12,7 @@
 
 #include <string>
 
-namespace constants {
+namespace consts {
 const std::string kConfigurationDirectory = "./input/";
 const std::string kOutputDirectoryName = "output";
 
@@ -31,6 +31,7 @@ const int kMissingValue = -9999;
 const unsigned kDateTimeBufferSize = 25;
 const unsigned kOutputFolderPermissions = 0777;
 
+const unsigned kAutotrophSizeIndex = 0;
 const unsigned kReproductionFactor = 2;
 const double kReproductionMultiplier = 1 / (double)kReproductionFactor;  // Equivalent to 1 / 2
 const double kMinimumFractionalVolume = 0.5;

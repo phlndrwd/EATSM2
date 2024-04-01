@@ -21,10 +21,10 @@ FileReader::FileReader() {}
 void FileReader::setParameters(Parameters& params) {
   bool success = false;
 
-  std::string parametersFile = constants::kConfigurationDirectory + constants::kInputParametersFileName;
+  std::string parametersFile = consts::kConfigurationDirectory + consts::kInputParametersFileName;
   if (readTextFile(parametersFile))
     if (params.initialise(rawTextData_))
-      if (readTextFile(constants::kConfigurationDirectory + constants::kOutputParametersFileName))
+      if (readTextFile(consts::kConfigurationDirectory + consts::kOutputParametersFileName))
         success = DataRecorder::get()->initialise(rawTextData_);
 
   if (success) {
@@ -46,11 +46,11 @@ bool FileReader::readTextFile(const std::string& filePath, bool copyToOutput) {
 
     while (std::getline(fileStream, readLine)) {
       if (readLine.length() > 0) {
-        if (readLine[0] != constants::kCommentCharacter) {
+        if (readLine[0] != consts::kCommentCharacter) {
           readLine =
-              Strings::removeWhiteSpace(Strings::truncateStringAtCharacter(readLine, constants::kCommentCharacter));
+              Strings::removeWhiteSpace(Strings::truncateStringAtCharacter(readLine, consts::kCommentCharacter));
           if (lineCount > 0) {
-            rawTextData_.push_back(Strings::stringToWords(readLine, constants::kDataDelimiterValue));
+            rawTextData_.push_back(Strings::stringToWords(readLine, consts::kDataDelimiterValue));
           }
           lineCount++;
         }

@@ -24,10 +24,10 @@ EncounterAlgorithm::EncounterAlgorithm(EcologicalData& data, EcologicalFunctions
     numberOfSizeClasses_(params_.getNumberOfSizeClasses()) {
 }
 
-void EncounterAlgorithm::update(std::vector<SizeClass>& sizeClasses, SizeClass& sizeClass) {
-  std::vector<SizeClass>::iterator coupledSizeClassIt = calcFeedingProbability(sizeClasses, sizeClass);
-  sizeClass.sizeClassSubset([&](unsigned randomIndex) {
-    Heterotroph& predator = sizeClass.getHeterotroph(randomIndex);
+void EncounterAlgorithm::update(std::vector<SizeClass>& sizeClasses, SizeClass& thisSizeClass) {
+  std::vector<SizeClass>::iterator coupledSizeClassIt = calcFeedingProbability(sizeClasses, thisSizeClass);
+  thisSizeClass.sizeClassSubset([&](unsigned randomIndex) {
+  Heterotroph& predator = thisSizeClass.getHeterotroph(randomIndex);
 
     if (feedingStrategy_ == enums::eCarnivore) {
       feedFromHeterotrophs(predator, coupledSizeClassIt);
@@ -38,14 +38,14 @@ void EncounterAlgorithm::update(std::vector<SizeClass>& sizeClasses, SizeClass& 
 }
 
 std::vector<SizeClass>::iterator EncounterAlgorithm::calcFeedingProbability(std::vector<SizeClass>& sizeClasses,
-                                                                            SizeClass& sizeClass) {
+                                                                            SizeClass& thisSizeClass) {
   std::vector<SizeClass>::iterator coupledSizeClassIt = sizeClasses.begin();
-  if (sizeClass.getPopulationSize() != 0) {
+  if (thisSizeClass.getPopulationSize() != 0) {
     std::vector<double> effectiveSizeClassVolumes(numberOfSizeClasses_, 0);
-    calcEffectiveSizeClassVolumes(sizeClasses, sizeClass, effectiveSizeClassVolumes);
+    calcEffectiveSizeClassVolumes(sizeClasses, thisSizeClass, effectiveSizeClassVolumes);
     coupledSizeClassIt = setCoupledSizeClass(effectiveSizeClassVolumes, sizeClasses);
     calcFeedingStrategy();
-    feedingProbabilty_ = functions_.functionalResponseNonLinear(sizeClass.getIndex(), effectivePreyVolume_);  // PJU FIX - Introduce option switch?
+    feedingProbabilty_ = functions_.functionalResponseNonLinear(thisSizeClass.getIndex(), effectivePreyVolume_);  // PJU FIX - Introduce option switch?
   }
   return coupledSizeClassIt;
 }
@@ -54,9 +54,7 @@ void EncounterAlgorithm::calcEffectiveSizeClassVolumes(std::vector<SizeClass>& s
                                                        std::vector<double>& effectiveSizeClassVolumes) {
   effectivePreyVolume_ = 0;
   effectiveAutotrophVolume_ = 0;
-  feedingProbabilty_ = 0;
 
-  // PJU FIX - These may be modified when work is complete on the Parameters class.
   auto sizeClassVolumesIt = interSizeClassVolumes_[thisSizeClass.getIndex()].begin();
   auto sizeClassPreferencesIt = interSizeClassPreferences_[thisSizeClass.getIndex()].begin();
 
@@ -89,8 +87,7 @@ std::vector<SizeClass>::iterator EncounterAlgorithm::setCoupledSizeClass(
   double effectivePreySum = 0;
   int index = 0;
   // Return from find_if is not used - used here to mimic break statement in classic for
-  std::find_if (begin(effectiveSizeClassVolumes), end(effectiveSizeClassVolumes),
-                                                  [&](double effectiveSizeClassVolume) {
+  std::find_if (begin(effectiveSizeClassVolumes), end(effectiveSizeClassVolumes), [&](double effectiveSizeClassVolume) {
     effectivePreySum += effectiveSizeClassVolume;
     if (effectivePreySum >= randEffectivePreyValue) {
       int sizeClassOffset = -numberOfSizeClasses_ + index + 1;  // Calculate appropriate index reduction from end

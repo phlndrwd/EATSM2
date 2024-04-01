@@ -47,7 +47,7 @@ void EcologicalFunctions::calcPreferenceMatrices() {
 
     for (unsigned referenceIndex = 0; referenceIndex < numberOfSizeClasses_; ++referenceIndex) {
       double referenceVolumeMean = sizeClassMidPoints[referenceIndex];
-      double preferenceForReferenceSizeClass = calculatePreferenceForPrey(subjectVolumeMean, referenceVolumeMean);
+      double preferenceForReferenceSizeClass = calcPreferenceForPrey(subjectVolumeMean, referenceVolumeMean);
 
       preferenceSum += preferenceForReferenceSizeClass;
       interSizeClassPreferences[subjectIndex].push_back(preferenceForReferenceSizeClass);
@@ -65,15 +65,15 @@ double EcologicalFunctions::functionalResponseNonLinear(const unsigned& predator
 }
 
 
-double EcologicalFunctions::calculateMetabolicDeduction(const Heterotroph& heterotroph) const {
+double EcologicalFunctions::calcMetabolicDeduction(const Heterotroph& heterotroph) const {
   return fractionalMetabolicExpense_ * std::pow(heterotroph.getVolumeActual(), metabolicIndex_);
 }
 
-double EcologicalFunctions::calculatePreferenceForPrey(const double& grazerVolume, const double& preyVolume) const {
+double EcologicalFunctions::calcPreferenceForPrey(const double& grazerVolume, const double& preyVolume) const {
   return std::exp(-std::pow((std::log((preferredPreyVolumeRatio_ * preyVolume) / grazerVolume)), 2) / preferenceDenominator_);
 }
 
-double EcologicalFunctions::calculateStarvationProbability(const Heterotroph& heterotroph) const {
+double EcologicalFunctions::calcStarvationProbability(const Heterotroph& heterotroph) const {
   return calcLinearStarvation(heterotroph.getVolumeActual(), heterotroph.getVolumeHeritable(),
                                    heterotroph.getVolumeMinimum(), heterotroph.getStarvationMultiplier());
 }

@@ -21,7 +21,7 @@
 #include "Timer.h"
 
 int main() {
-  std::cout << constants::kSystemName + " " + constants::kSystemVersion + " starting on "
+  std::cout << consts::kSystemName + " " + consts::kSystemVersion + " starting on "
             << Date::getDateAndTimeString() << "..." << std::endl
             << std::endl;
   Parameters params;
@@ -39,7 +39,7 @@ int main() {
   TimeStep timeStep(params.getSamplingRate());
 
   std::cout << "Model run due to complete on "
-            << Date::getDateAndTimeString(constants::kCompleteDateFormat, runTimeInSeconds) << std::endl
+            << Date::getDateAndTimeString(consts::kCompleteDateFormat, runTimeInSeconds) << std::endl
             << std::endl;
   std::cout << "Starting main time loop..." << std::endl;
   do {
@@ -55,8 +55,8 @@ int main() {
     // Text output at the completion of each ten percent of the run
     if (timer.elapsed() >= (unsigned)cumulativeTenthsOfRunTime) {
       cumulativeTenthsOfRunTime = cumulativeTenthsOfRunTime + oneTenthOfRunTimeInSeconds;
-      std::cout << "t = " << timeStep.getTimeStep() << constants::kDataDelimiterValue
-                << constants::kWhiteSpaceCharacter << timer.remainingString() << " remaining at "
+      std::cout << "t = " << timeStep.getTimeStep() << consts::kDataDelimiterValue
+                << consts::kWhiteSpaceCharacter << timer.remainingString() << " remaining at "
                 << Date::getDateAndTimeString() << "..." << std::endl;
     }
     timeStep.incrementTimeStep();

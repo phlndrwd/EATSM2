@@ -24,13 +24,13 @@ class EcologicalFunctions {
   double functionalResponseLinear(const unsigned&, const double&) const;
   double functionalResponseNonLinear(const unsigned&, const double&) const;
 
-  double calculateMetabolicDeduction(const Heterotroph&) const;
+  double calcMetabolicDeduction(const Heterotroph&) const;
   bool updateSizeClassIndex(Heterotroph&) const;
   unsigned directionIndividualShouldMoveSizeClasses(const Heterotroph&) const;
   unsigned findIndividualSizeClassIndex(const Heterotroph&, unsigned&) const;
-  double calculateStarvationProbability(const Heterotroph&) const;
+  double calcStarvationProbability(const Heterotroph&) const;
 
-  double calculatePreferenceForPrey(const double&, const double&) const;
+  double calcPreferenceForPrey(const double&, const double&) const;
   //  double calcFeedingProbability(const unsigned, const double);
 
   // unsigned findSizeClassIndexFromVolume(const double) const;
@@ -38,8 +38,8 @@ class EcologicalFunctions {
   void updateHerbivoreTrophicIndex(Heterotroph*);
   void updateCarnivoreTrophicIndex(Heterotroph*, const Heterotroph*);
 
-  double calculateHerbivoreTrophicIndex(const double&) const;
-  double calculateCarnivoreTrophicIndex(const double&, const double&) const;
+  double calcHerbivoreTrophicIndex(const double&) const;
+  double calcCarnivoreTrophicIndex(const double&, const double&) const;
 
   double traitValueToVolume(const double&) const;
   double volumeToTraitValue(const double&) const;

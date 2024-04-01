@@ -84,7 +84,7 @@ void SizeClass::update(std::vector<structs::MovingHeterotroph>& movingHeterotrop
 void SizeClass::metabolisation() {
   std::for_each(std::begin(alive_), std::end(alive_), [&](unsigned index) {
     Heterotroph& heterotroph = heterotrophs_[index];
-    double metabolicDeduction = functions_.calculateMetabolicDeduction(heterotroph);
+    double metabolicDeduction = functions_.calcMetabolicDeduction(heterotroph);
 
     if ((heterotroph.getVolumeActual() - metabolicDeduction) > 0) {
       heterotroph.setHasFed(false);  // Reset for the next time step
@@ -99,7 +99,7 @@ void SizeClass::metabolisation() {
 void SizeClass::starvation() {
   sizeClassSubset([&](unsigned randomIndex) {
     Heterotroph& heterotroph = heterotrophs_[randomIndex];
-    if (random_.getUniform() <= functions_.calculateStarvationProbability(heterotroph)) {
+    if (random_.getUniform() <= functions_.calcStarvationProbability(heterotroph)) {
       starve(randomIndex);
     }
   });

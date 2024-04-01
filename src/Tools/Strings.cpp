@@ -53,7 +53,7 @@ const std::string Strings::doubleToPrecisionString(const double& value, const un
 }
 
 int Strings::findFirstPositionOfCharacter(const std::string inString, const char character) {
-  int index = constants::kMissingValue;
+  int index = consts::kMissingValue;
 
   for (unsigned charIndex = 0; charIndex < inString.length(); charIndex++) {
     if (inString[charIndex] == character) {
@@ -68,7 +68,7 @@ std::string Strings::truncateStringAtCharacter(const std::string inString, const
   std::string outString = inString;
 
   int index = findFirstPositionOfCharacter(outString, character);
-  if (index != constants::kMissingValue) outString = outString.substr(0, index);
+  if (index != consts::kMissingValue) outString = outString.substr(0, index);
 
   return outString;
 }
@@ -89,5 +89,5 @@ std::string Strings::removeCharacter(const std::string inString, const char char
 }
 
 std::string Strings::removeWhiteSpace(const std::string inString) {
-  return removeCharacter(inString, constants::kWhiteSpaceCharacter);
+  return removeCharacter(inString, consts::kWhiteSpaceCharacter);
 }

@@ -46,9 +46,9 @@ bool DataRecorder::initialise(const std::vector<std::vector<std::string>>& rawOu
       datumMetadata.push_back(name);
       datumMetadata.push_back(type);
 
-      if (type == constants::kVectorDatumTypeName) {
+      if (type == consts::kVectorDatumTypeName) {
         vectorDatumMetadata_.push_back(datumMetadata);
-      } else if (type == constants::kMatrixDatumTypeName) {
+      } else if (type == consts::kMatrixDatumTypeName) {
         matrixDatumMetadata_.push_back(datumMetadata);
       }
     }

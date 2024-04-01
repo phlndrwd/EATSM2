@@ -37,20 +37,20 @@ FileWriter::FileWriter() {
 
 void FileWriter::initialiseOutputDirectory() {
   // output/
-  outputPath_ = constants::kOutputDirectoryName;
-  mkdir(outputPath_.c_str(), constants::kOutputFolderPermissions);
-  outputPath_.append(Strings::toString(constants::kFolderDelimiter));
+  outputPath_ = consts::kOutputDirectoryName;
+  mkdir(outputPath_.c_str(), consts::kOutputFolderPermissions);
+  outputPath_.append(Strings::toString(consts::kFolderDelimiter));
 
   // output/[version]/
-  outputPath_.append(constants::kSystemVersion);
-  mkdir(outputPath_.c_str(), constants::kOutputFolderPermissions);
-  outputPath_.append(Strings::toString(constants::kFolderDelimiter));
+  outputPath_.append(consts::kSystemVersion);
+  mkdir(outputPath_.c_str(), consts::kOutputFolderPermissions);
+  outputPath_.append(Strings::toString(consts::kFolderDelimiter));
 
   // output/[version]/[experiment]/[date and time]
-  dataSetDirectoryName_ = Date::getDateAndTimeString(constants::kDataSetNameFormat);
+  dataSetDirectoryName_ = Date::getDateAndTimeString(consts::kDataSetNameFormat);
 
   outputPath_.append(dataSetDirectoryName_);
-  int returnValue = mkdir(outputPath_.c_str(), constants::kOutputFolderPermissions);
+  int returnValue = mkdir(outputPath_.c_str(), consts::kOutputFolderPermissions);
 
   // The following code ensures the data are written into a unique subdirectory.
   if (returnValue == -1) {
@@ -60,12 +60,12 @@ void FileWriter::initialiseOutputDirectory() {
     int count = 1;
     while (returnValue == -1) {
       outputPath_.replace(stringLength, 1, Strings::toString(count));
-      returnValue = mkdir(outputPath_.c_str(), constants::kOutputFolderPermissions);
+      returnValue = mkdir(outputPath_.c_str(), consts::kOutputFolderPermissions);
       ++count;
     }
   }
 
-  outputPath_.append(Strings::toString(constants::kFolderDelimiter));
+  outputPath_.append(Strings::toString(consts::kFolderDelimiter));
   std::cout << "Output directory initialised at \"" << outputPath_ << "\"." << std::endl;
 }
 
@@ -77,7 +77,7 @@ bool FileWriter::writeInputFiles() {
 
     std::string outputFilePath = outputPath_;
     std::vector<std::string> inputFilePathComponents =
-        Strings::stringToWords(inputFilePaths[stringIndex], constants::kFolderDelimiter);
+        Strings::stringToWords(inputFilePaths[stringIndex], consts::kFolderDelimiter);
 
     std::string fileName = inputFilePathComponents[inputFilePathComponents.size() - 1];
     outputFilePath.append(fileName);
@@ -116,13 +116,13 @@ bool FileWriter::writeVectorDatums() {
     VectorDatum* vectorDatum = iter->second;
     unsigned datumSize = vectorDatum->getSize();
     if (datumSize > 0) {
-      fileName.insert(0, outputPath_).append(constants::kFileNameExtension);
+      fileName.insert(0, outputPath_).append(consts::kFileNameExtension);
       std::ofstream outputFileStream;
       outputFileStream.open(fileName.c_str(), std::ios::out);
 
       if (outputFileStream.is_open() == true) {
         for (unsigned dataIndex = 0; dataIndex < datumSize - 1; ++dataIndex) {
-          outputFileStream << vectorDatum->getDataAtIndex(dataIndex) << constants::kDataDelimiterValue;
+          outputFileStream << vectorDatum->getDataAtIndex(dataIndex) << consts::kDataDelimiterValue;
         }
         outputFileStream << vectorDatum->getDataAtIndex(vectorDatum->getSize() - 1);
         outputFileStream.close();
@@ -141,13 +141,13 @@ bool FileWriter::writeMatrixDatums() {
     MatrixDatum* matrixDatum = iter->second;
     unsigned rowSize = matrixDatum->getRows();
     if (rowSize > 0) {
-      fileName.insert(0, outputPath_).append(constants::kFileNameExtension);
+      fileName.insert(0, outputPath_).append(consts::kFileNameExtension);
       std::ofstream outputFileStream;
       outputFileStream.open(fileName.c_str(), std::ios::out);
       if (outputFileStream.is_open() == true) {
         for (unsigned rowIndex = 0; rowIndex < rowSize; ++rowIndex) {
           for (unsigned columnIndex = 0; columnIndex < matrixDatum->getColumns() - 1; ++columnIndex) {
-            outputFileStream << matrixDatum->getDataAtIndices(rowIndex, columnIndex) << constants::kDataDelimiterValue;
+            outputFileStream << matrixDatum->getDataAtIndices(rowIndex, columnIndex) << consts::kDataDelimiterValue;
           }
           outputFileStream << matrixDatum->getDataAtIndices(rowIndex, matrixDatum->getColumns() - 1) << std::endl;
         }
