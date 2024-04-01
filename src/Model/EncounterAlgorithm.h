@@ -18,9 +18,10 @@
 #include "Parameters.h"
 #include "SizeClass.h"
 
-struct EffectivePrey {
-  double totalPreyVolume = 0;
-  double autotrophVolume = 0;
+struct PreyVolumes {
+  PreyVolumes(): totalPrey(0), autotroph(0) {}
+  double totalPrey;
+  double autotroph;
 };
 
 class EncounterAlgorithm {
@@ -30,11 +31,10 @@ class EncounterAlgorithm {
   void update(std::vector<SizeClass>&, SizeClass&);
 
  private:
-  std::vector<SizeClass>::iterator calcFeedingProbability(std::vector<SizeClass>&, SizeClass&);
-  EffectivePrey calcEffectiveSizeClassVolumes(std::vector<SizeClass>&, SizeClass&, std::vector<double>&);
+  double calcFeedingProbability(std::vector<SizeClass>&, SizeClass&, std::vector<SizeClass>::iterator&);
+  PreyVolumes calcEffectiveSizeClassVolumes(std::vector<SizeClass>&, SizeClass&, std::vector<double>&);
   std::vector<SizeClass>::iterator setCoupledSizeClass(const std::vector<double>&, std::vector<SizeClass>&,
-                                                       EffectivePrey&);
-  void calcFeedingStrategy(const unsigned&);
+                                                       PreyVolumes&);
 
   void feedFromAutotrophs(Heterotroph&);
   void feedFromHeterotrophs(Heterotroph&, std::vector<SizeClass>::iterator);

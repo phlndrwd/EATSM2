@@ -26,33 +26,34 @@ EncounterAlgorithm::EncounterAlgorithm(EcologicalData& data, EcologicalFunctions
 }
 
 void EncounterAlgorithm::update(std::vector<SizeClass>& sizeClasses, SizeClass& thisSizeClass) {
-  std::vector<SizeClass>::iterator coupledSizeClassIt = calcFeedingProbability(sizeClasses, thisSizeClass);
+  std::vector<SizeClass>::iterator coupledSizeClassIt = sizeClasses.begin();
+  double feedingProbability = calcFeedingProbability(sizeClasses, thisSizeClass, coupledSizeClassIt);
   thisSizeClass.sizeClassSubset([&](unsigned randomIndex) {
     Heterotroph& predator = thisSizeClass.getHeterotroph(randomIndex);
-    if (feedingStrategy_ == enums::eCarnivore) {
-      feedFromHeterotrophs(predator, coupledSizeClassIt);
-    } else if (feedingStrategy_ == enums::eHerbivore){
+    if (feedingStrategy_ == enums::eHerbivore){
       feedFromAutotrophs(predator);
+    } else if (feedingStrategy_ == enums::eCarnivore) {
+      feedFromHeterotrophs(predator, coupledSizeClassIt);
     }
   });
 }
 
-std::vector<SizeClass>::iterator EncounterAlgorithm::calcFeedingProbability(std::vector<SizeClass>& sizeClasses,
-                                                                            SizeClass& thisSizeClass) {
-  std::vector<SizeClass>::iterator coupledSizeClassIt = sizeClasses.begin();
+double EncounterAlgorithm::calcFeedingProbability(std::vector<SizeClass>& sizeClasses, SizeClass& thisSizeClass,
+                                                  std::vector<SizeClass>::iterator& coupledSizeClassIt) {
+  double feedingProbability = 0;
   if (thisSizeClass.getPopulationSize() != 0) {
     std::vector<double> effectiveSizeClassVolumes(numberOfSizeClasses_, 0);
-    EffectivePrey preyVolumes = calcEffectiveSizeClassVolumes(sizeClasses, thisSizeClass, effectiveSizeClassVolumes);
+    PreyVolumes preyVolumes = calcEffectiveSizeClassVolumes(sizeClasses, thisSizeClass, effectiveSizeClassVolumes);
     coupledSizeClassIt = setCoupledSizeClass(effectiveSizeClassVolumes, sizeClasses, preyVolumes);
-
-    //feedingProbabilty_ = functions_.functionalResponseNonLinear(thisSizeClass.getIndex(), effectivePreyVolume_);  // PJU FIX - Introduce option switch?
+    // PJU FIX - Introduce option switch for functional response types?
+    feedingProbability = functions_.functionalResponseNonLinear(thisSizeClass.getIndex(), preyVolumes.totalPrey);
   }
-  return coupledSizeClassIt;
+  return feedingProbability;
 }
 
-EffectivePrey EncounterAlgorithm::calcEffectiveSizeClassVolumes(std::vector<SizeClass>& sizeClasses, SizeClass& thisSizeClass,
+PreyVolumes EncounterAlgorithm::calcEffectiveSizeClassVolumes(std::vector<SizeClass>& sizeClasses, SizeClass& thisSizeClass,
                                                        std::vector<double>& effectiveSizeClassVolumes) {
-  EffectivePrey preyVolumes;
+  PreyVolumes preyVolumes;
 
   auto sizeClassVolumesIt = interSizeClassVolumes_[thisSizeClass.getIndex()].begin();
   auto sizeClassPreferencesIt = interSizeClassPreferences_[thisSizeClass.getIndex()].begin();
@@ -64,11 +65,13 @@ EffectivePrey EncounterAlgorithm::calcEffectiveSizeClassVolumes(std::vector<Size
     if (&thisSizeClass == &otherSizeClass) {
       populationSize--;  // Reduce population size for a single individual for this size class.
     }
-    *effectiveSizeClassVolumesIt = *sizeClassVolumesIt * populationSize;
-    preyVolumes.autotrophVolume = *sizeClassPreferencesIt * otherSizeClass.getAutotrophs().getVolume();
+    double autotrophVolume = *sizeClassPreferencesIt * otherSizeClass.getAutotrophs().getVolume();
+    double totalVolume = (*sizeClassVolumesIt * populationSize) + autotrophVolume;
 
-    *effectiveSizeClassVolumesIt += preyVolumes.autotrophVolume;
-    preyVolumes.totalPreyVolume += *effectiveSizeClassVolumesIt;
+    *effectiveSizeClassVolumesIt = totalVolume;
+
+    preyVolumes.autotroph += autotrophVolume;
+    preyVolumes.totalPrey += totalVolume;
 
     std::advance(effectiveSizeClassVolumesIt, 1);
     std::advance(sizeClassPreferencesIt, 1);
@@ -80,11 +83,11 @@ EffectivePrey EncounterAlgorithm::calcEffectiveSizeClassVolumes(std::vector<Size
 std::vector<SizeClass>::iterator EncounterAlgorithm::setCoupledSizeClass(
                                                                 const std::vector<double>& effectiveSizeClassVolumes,
                                                                 std::vector<SizeClass>& sizeClasses,
-                                                                EffectivePrey& preyVolumes) {
+                                                                PreyVolumes& preyVolumes) {
   // Default to largest populated size class to prevent un-earned predation from taking place
   std::vector<SizeClass>::iterator coupledSizeClassIt = sizeClasses.begin();
   // Add noise to the threshold to encourage a mixed strategy (mixotroph)
-  double randEffectivePreyValue = random_.getUniform() * preyVolumes.totalPreyVolume;
+  double randEffectivePreyValue = random_.getUniform() * preyVolumes.totalPrey;
   double effectivePreySum = 0;
   int sizeClassOffset = 0;
   // Return from find_if is not used - used here to mimic break statement in classic for
@@ -92,10 +95,10 @@ std::vector<SizeClass>::iterator EncounterAlgorithm::setCoupledSizeClass(
     effectivePreySum += effectiveSizeClassVolume;
     if (effectivePreySum >= randEffectivePreyValue) {
       std::advance(coupledSizeClassIt, sizeClassOffset);
-      // Set feeding strategy here....
+      // Set feeding strategy here
       feedingStrategy_ = enums::eCarnivore;
-      if (coupledSizeClassIt->getIndex() == consts::kAutotrophSizeIndex && preyVolumes.autotrophVolume > 0) {
-        double probHerbivory = preyVolumes.autotrophVolume / preyVolumes.totalPreyVolume;
+      if (coupledSizeClassIt->getIndex() == consts::kAutotrophSizeIndex && preyVolumes.autotroph > 0) {
+        double probHerbivory = preyVolumes.autotroph / preyVolumes.totalPrey;
         if (random_.getUniform() <= probHerbivory) {
           feedingStrategy_ = enums::eHerbivore;
         }
@@ -109,9 +112,6 @@ std::vector<SizeClass>::iterator EncounterAlgorithm::setCoupledSizeClass(
   return coupledSizeClassIt;
 }
 
-void EncounterAlgorithm::calcFeedingStrategy(const unsigned& coupledSizeClassIndex) {
-
-}
 
 void EncounterAlgorithm::feedFromHeterotrophs(Heterotroph& predator, std::vector<SizeClass>::iterator coupledSizeClassIt) {
     if (coupledSizeClassIt->getPopulationSize() != 0) {
