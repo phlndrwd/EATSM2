@@ -27,16 +27,17 @@ SizeClass sizeClassGenerator(Nutrient& nutrient, Parameters& params, EcologicalD
 }  // anonymous namespace
 
 Life::Life(Nutrient& nutrient, Parameters& params) :
-    nutrient_(nutrient),
-    params_(params),
-    data_(params_),
-    functions_(data_, params_),
-    random_(params.getRandomSeed()),  // Is this the first time random is used?
-    algorithm_(data_, functions_, params_, random_.getUniformInt(1, UINT_MAX)),
-    numberOfSizeClasses_(params_.getNumberOfSizeClasses()) {
+        nutrient_(nutrient),
+        params_(params),
+        data_(params_),
+        functions_(data_, params_),
+        random_(params.getRandomSeed()),  // Is this the first time random is used?
+        algorithm_(nutrient, data_, functions_, params_, random_.getUniformInt(1, UINT_MAX)),
+        numberOfSizeClasses_(params_.getNumberOfSizeClasses()) {
   unsigned autotrophIndex = consts::kAutotrophSizeIndex;
   double idealInitialVolume = params.getSmallestIndividualVolume() * params.getPreferredPreyVolumeRatio();
   unsigned heterotrophIndex = findSizeClassIndexFromVolume(idealInitialVolume);
+
   unsigned index = 0;
   std::generate_n(std::back_inserter(sizeClasses_), numberOfSizeClasses_, [&] {
     double initialAutotrophVolume = autotrophIndex != index ? 0 : params.getInitialAutotrophVolume();

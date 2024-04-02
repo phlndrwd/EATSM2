@@ -11,14 +11,16 @@
 
 #include <cmath>
 
-EcologicalData::EcologicalData(Parameters& params): params_(params) {
-  initialise();
+#include "Constants.h"
+
+EcologicalData::EcologicalData(Parameters& params) {
+  initialise(params);
 }
 
-void EcologicalData::initialise() {
-  unsigned numberOfSizeClasses = params_.getNumberOfSizeClasses();
-  double totalVolume = params_.getInitialAutotrophVolume() + params_.getInitialHeterotrophVolume();
-  double halfSaturationConstantFraction = params_.getHalfSaturationConstantFraction();
+void EcologicalData::initialise(Parameters& params) {
+  unsigned numberOfSizeClasses = params.getNumberOfSizeClasses();
+  double totalVolume = params.getInitialAutotrophVolume() + params.getInitialHeterotrophVolume();
+  double halfSaturationConstantFraction = params.getHalfSaturationConstantFraction();
 
   maximumSizeClassPopulations_.resize(numberOfSizeClasses, 0);
   remainingVolumes_.resize(numberOfSizeClasses);
@@ -27,8 +29,8 @@ void EcologicalData::initialise() {
   sizeClassMidPoints_.resize(numberOfSizeClasses);
   sizeClassBoundaries_.resize(numberOfSizeClasses + 1);
 
-  smallestVolumeExponent_ = std::log10(params_.getSmallestIndividualVolume());
-  largestVolumeExponent_ = std::log10(params_.getLargestIndividualVolume());
+  smallestVolumeExponent_ = std::log10(params.getSmallestIndividualVolume());
+  largestVolumeExponent_ = std::log10(params.getLargestIndividualVolume());
 
   double sizeClassExponentIncrement = (largestVolumeExponent_ - smallestVolumeExponent_) / numberOfSizeClasses;
   for (unsigned sizeClassIndex = 0; sizeClassIndex < numberOfSizeClasses; ++sizeClassIndex) {
@@ -45,6 +47,8 @@ void EcologicalData::initialise() {
   }
   double sizeClassBoundaryExponent = smallestVolumeExponent_ + (numberOfSizeClasses * sizeClassExponentIncrement);
   sizeClassBoundaries_[numberOfSizeClasses] = std::pow(10, sizeClassBoundaryExponent);
+
+  autotrophCellSize_ = sizeClassMidPoints_[consts::kAutotrophSizeIndex];
 }
 
 const std::vector<std::vector<double>>& EcologicalData::getInterSizeClassPreferences() const {
@@ -89,4 +93,8 @@ const double& EcologicalData::getSmallestVolumeExponent() const {
 
 const double& EcologicalData::getLargestVolumeExponent() const {
   return largestVolumeExponent_;
+}
+
+const double& EcologicalData::getAutotrophCellSize() const {
+  return autotrophCellSize_;
 }

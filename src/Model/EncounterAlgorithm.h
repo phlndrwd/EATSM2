@@ -14,7 +14,6 @@
 
 #include "EcologicalData.h"
 #include "EcologicalFunctions.h"
-#include "Enums.h"
 #include "Parameters.h"
 #include "SizeClass.h"
 
@@ -26,7 +25,7 @@ struct PreyVolumes {
 
 class EncounterAlgorithm {
  public:
-  EncounterAlgorithm(EcologicalData&, EcologicalFunctions&, Parameters&, const unsigned&);
+  EncounterAlgorithm(Nutrient&, EcologicalData&, EcologicalFunctions&, Parameters&, const unsigned&);
 
   void update(std::vector<SizeClass>&, SizeClass&);
 
@@ -39,14 +38,15 @@ class EncounterAlgorithm {
   void feedFromAutotrophs(Heterotroph&, std::vector<SizeClass>::iterator);
   void feedFromHeterotrophs(Heterotroph&, std::vector<SizeClass>::iterator);
 
+  Nutrient& nutrient_;
   EcologicalData& data_;
   EcologicalFunctions& functions_;
-  Parameters& params_;
 
   RandomSimple random_;
 
   const std::vector<std::vector<double>> interSizeClassPreferences_;
   const std::vector<std::vector<double>> interSizeClassVolumes_;
   const unsigned numberOfSizeClasses_;
+  const double autotrophCellSize_;
 };
 #endif

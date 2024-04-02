@@ -14,16 +14,16 @@
 #include "Constants.h"
 #include "Parameters.h"
 
-EncounterAlgorithm::EncounterAlgorithm(EcologicalData& data, EcologicalFunctions& functions,
+EncounterAlgorithm::EncounterAlgorithm(Nutrient& nutrient, EcologicalData& data, EcologicalFunctions& functions,
                                        Parameters& params, const unsigned& randomSeed):
+    nutrient_(nutrient),
     data_(data),
     functions_(functions),
-    params_(params),
     random_(randomSeed),
     interSizeClassPreferences_(data_.getInterSizeClassPreferences()),
     interSizeClassVolumes_(data_.getInterSizeClassVolumes()),
-    numberOfSizeClasses_(params_.getNumberOfSizeClasses()) {
-}
+    numberOfSizeClasses_(params.getNumberOfSizeClasses()),
+    autotrophCellSize_(data.getAutotrophCellSize()) {}
 
 void EncounterAlgorithm::update(std::vector<SizeClass>& sizeClasses, SizeClass& thisSizeClass) {
   enums::eFeedingStrategy feedingStrategy = enums::eNotEating;
@@ -117,37 +117,25 @@ std::vector<SizeClass>::iterator EncounterAlgorithm::setCoupledSizeClass(
   return coupledSizeClassIt;
 }
 
-
 void EncounterAlgorithm::feedFromHeterotrophs(Heterotroph& predator, std::vector<SizeClass>::iterator coupledSizeClassIt) {
-    if (coupledSizeClassIt->getPopulationSize() != 0) {
-      Heterotroph& prey = coupledSizeClassIt->getRandomHeterotroph();
-      while(&predator == &prey) { // Predators cannot eat themselves
-        prey = coupledSizeClassIt->getRandomHeterotroph();
-      }
+  if (coupledSizeClassIt->getPopulationSize() != 0) {
+    Heterotroph& prey = coupledSizeClassIt->getRandomHeterotroph();
+    while(&predator == &prey) { // Predators cannot eat themselves
+      prey = coupledSizeClassIt->getRandomHeterotroph();
     }
-//  Types::HeterotrophPointer prey = GetRandomPreyFromSizeClass(coupledIndex, predator);
-//  if (prey != nullptr) {
-//    double preyVolume = prey->GetVolumeActual();
-//    mHeterotrophData.IncrementCarnivoreFrequencies(predator, prey);
-
-//    double waste = predator->ConsumePreyVolume(preyVolume);
-//    ++mFedCount[predator->GetSizeClassIndex()];
-
-//    mHeterotrophProcessor.UpdateCarnivoreTrophicIndex(predator, prey);
-//    mNutrient.AddToVolume(waste);
-//    Kill(prey);
-//  }
+    double preyVolume = prey.getVolumeActual();
+    double waste = predator.consumePreyVolume(preyVolume);
+    nutrient_.addToVolume(waste);
+    // PJU CRITICAL FIX - An appropriate 'kill' function needs to be written.
+    coupledSizeClassIt->removeHeterotroph(0);
+  }
 }
 
 void EncounterAlgorithm::feedFromAutotrophs(Heterotroph& grazer, std::vector<SizeClass>::iterator coupledSizeClassIt) {
-//  if (mAutotrophs.GetVolume( ) > mSmallestIndividualVolume) {
-//    mAutotrophs.SubtractFromVolume(mSmallestIndividualVolume);
-//    mHeterotrophData.IncrementVegetarianFrequencies(grazer);
-
-//    double waste = grazer->ConsumePreyVolume(mSmallestIndividualVolume);
-//    ++mFedCount[grazer->GetSizeClassIndex()];
-
-//    mHeterotrophProcessor.UpdateHerbivoreTrophicIndex(grazer);
-//    mNutrient.AddToVolume(waste);
-//  }
+  Autotrophs& autotrophs = coupledSizeClassIt->getAutotrophs();
+  if (autotrophs.getVolume() > autotrophCellSize_) {
+    autotrophs.subtractFromVolume(autotrophCellSize_);
+    double waste = grazer.consumePreyVolume(autotrophCellSize_);
+    nutrient_.addToVolume(waste);
+  }
 }

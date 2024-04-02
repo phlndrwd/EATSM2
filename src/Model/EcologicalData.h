@@ -35,10 +35,10 @@ public:
   const double& getSmallestVolumeExponent() const;
   const double& getLargestVolumeExponent() const;
 
-private:
-  void initialise();
+  const double& getAutotrophCellSize() const;
 
-  Parameters& params_;
+private:
+  void initialise(Parameters&);
 
   std::vector<std::vector<double>> interSizeClassPreferences_;
   std::vector<std::vector<double>> interSizeClassVolumes_;
@@ -55,6 +55,8 @@ private:
 
   double smallestVolumeExponent_;
   double largestVolumeExponent_;
+
+  double autotrophCellSize_;
 };
 
 #endif

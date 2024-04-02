@@ -17,7 +17,6 @@
 
 EcologicalFunctions::EcologicalFunctions(EcologicalData& data, Parameters& params) :
     data_(data),
-    params_(params),
     sizeClassBoundaries_(data.getSizeClassBoundaries()),
     linearFeedingDenominators_(data.getLinearFeedingDenominators()),
     halfSaturationConstants_(data.getHalfSaturationConstants()),

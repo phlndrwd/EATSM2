@@ -51,7 +51,6 @@ class EcologicalFunctions {
   double calcBetaExponentialStarvation(const double&, const double&, const double&, const double&) const;
 
   EcologicalData& data_;
-  Parameters& params_;
 
   std::function<double(const unsigned, const double)> starvationProbabilityFunc_;
 
