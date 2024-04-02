@@ -36,6 +36,7 @@ class SizeClass {
   std::size_t getPopulationSize();
   unsigned getRandomHeterotrophIndex();
   Heterotroph& getRandomHeterotroph();
+  Heterotroph& getRandomHeterotroph(unsigned&);
   Heterotroph& getHeterotroph(const unsigned);
   const Heterotroph& getHeterotroph(const unsigned) const;
   void removeHeterotroph(const unsigned);

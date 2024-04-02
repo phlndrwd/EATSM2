@@ -119,15 +119,15 @@ std::vector<SizeClass>::iterator EncounterAlgorithm::setCoupledSizeClass(
 
 void EncounterAlgorithm::feedFromHeterotrophs(Heterotroph& predator, std::vector<SizeClass>::iterator coupledSizeClassIt) {
   if (coupledSizeClassIt->getPopulationSize() != 0) {
-    Heterotroph& prey = coupledSizeClassIt->getRandomHeterotroph();
+    unsigned randIdxCopy = 0;  // Copy random index for fast removal.
+    Heterotroph& prey = coupledSizeClassIt->getRandomHeterotroph(randIdxCopy);
     while(&predator == &prey) { // Predators cannot eat themselves
-      prey = coupledSizeClassIt->getRandomHeterotroph();
+      prey = coupledSizeClassIt->getRandomHeterotroph(randIdxCopy);
     }
     double preyVolume = prey.getVolumeActual();
     double waste = predator.consumePreyVolume(preyVolume);
     nutrient_.addToVolume(waste);
-    // PJU CRITICAL FIX - An appropriate 'kill' function needs to be written.
-    coupledSizeClassIt->removeHeterotroph(0);
+    coupledSizeClassIt->removeHeterotroph(randIdxCopy);
   }
 }
 

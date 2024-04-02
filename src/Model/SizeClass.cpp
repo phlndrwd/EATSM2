@@ -161,6 +161,15 @@ Heterotroph& SizeClass::getRandomHeterotroph() {
   }
 }
 
+Heterotroph& SizeClass::getRandomHeterotroph(unsigned& randIdxCopy) {
+  if (alive_.size() != 0) {
+    randIdxCopy = random_.getUniformInt(alive_.size());
+    return heterotrophs_[alive_[randIdxCopy]];
+  } else {
+    throw std::runtime_error("Size class is empty...");
+  }
+}
+
 Heterotroph& SizeClass::getHeterotroph(const unsigned index) {
   if (alive_.size() != 0) {
     return heterotrophs_[index];
