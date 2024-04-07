@@ -39,6 +39,7 @@ class Life {
   EncounterAlgorithm algorithm_;
 
   std::vector<SizeClass> sizeClasses_;
+  std::vector<structs::MovingHeterotroph> movingHeterotrophs_;
 
   unsigned numberOfSizeClasses_;
 };

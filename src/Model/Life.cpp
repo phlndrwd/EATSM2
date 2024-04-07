@@ -53,13 +53,13 @@ void Life::update() {
     // This call replaces Heterotrophs.Feeding in EATSM1.
     algorithm_.update(sizeClasses_, thisSizeClass);  // PJU FIX - Finish feeding functions here
 
-    std::vector<structs::MovingHeterotroph> movingHeterotrophs;
-    thisSizeClass.update(movingHeterotrophs);  // PJU FIX - Correcrly populate movingHeterotrophs
+    movingHeterotrophs_.clear();
+    thisSizeClass.update(movingHeterotrophs_);  // PJU FIX - Correctly populate movingHeterotrophs
 
-    for (const auto& movingHeterotroph : movingHeterotrophs) {
+    for (const auto& movingHeterotroph : movingHeterotrophs_) {
       // PJU FIX - Determine SizeClassIndex here.
 
-      if (movingHeterotroph.direction_ == enums::eMoveDown) {
+      if (movingHeterotroph.direction == enums::eMoveDown) {
         // Search down from current sizeClass
         auto sizeClassDownIt = sizeClasses_.rbegin();
         std::advance(sizeClassDownIt, numberOfSizeClasses_ + thisSizeClass.getIndex() + 1);
@@ -70,8 +70,8 @@ void Life::update() {
 
 
 
-      } else if (movingHeterotroph.direction_ == enums::eMoveUp) {
-        Heterotroph& heterotroph = movingHeterotroph.heterotroph_;
+      } else if (movingHeterotroph.direction == enums::eMoveUp) {
+        Heterotroph& heterotroph = movingHeterotroph.heterotroph;
         std::vector<SizeClass>::iterator destSizeClass =
         std::find_if (sizeClasses_.begin(), sizeClasses_.end(), [&](SizeClass& nextSizeClass) {
           if (heterotroph.getVolumeActual() >= data_.getSizeClassBoundaries()[nextSizeClass.getIndex()]) {

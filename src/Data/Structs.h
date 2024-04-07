@@ -15,10 +15,11 @@
 namespace structs {
 
 struct MovingHeterotroph {
-  Heterotroph& heterotroph_;
-  enums::eMovementDirection direction_;
-  MovingHeterotroph(Heterotroph& heterotroph, enums::eMovementDirection direction) :
-    heterotroph_(heterotroph), direction_(direction) {}
+  Heterotroph& heterotroph;
+  unsigned prevSizeClassIndex;
+  enums::eMovementDirection direction;
+  MovingHeterotroph(Heterotroph& _heterotroph, unsigned _prevSizeClassIndex, enums::eMovementDirection _direction):
+      heterotroph(_heterotroph), prevSizeClassIndex(_prevSizeClassIndex), direction(_direction) {}
 };
 
 }  // namespace structs
