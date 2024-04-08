@@ -11,7 +11,7 @@
 
 #include "Constants.h"
 
-Timer::Timer(const unsigned& runTimeInSeconds, bool startNow) : runTimeInSeconds_(runTimeInSeconds) {
+Timer::Timer(const std::uint32_t& runTimeInSeconds, bool startNow) : runTimeInSeconds_(runTimeInSeconds) {
   if (startNow == true) {
     start();
   }
@@ -55,12 +55,12 @@ double Timer::stop() {
 std::string Timer::remainingString() {
   // PJU FIX - Under certain conditions (debugging) this function can output an impossibly high number.
   //            Changing to ints does not fix this.
-  unsigned secondsRemaining = runTimeInSeconds_ - elapsed();
-  unsigned minutesRemaining = secondsRemaining / consts::kSecondsInAMinute;
+  std::uint32_t secondsRemaining = runTimeInSeconds_ - elapsed();
+  std::uint32_t minutesRemaining = secondsRemaining / consts::kSecondsInAMinute;
   secondsRemaining = secondsRemaining - (minutesRemaining * consts::kSecondsInAMinute);
-  unsigned hoursRemaining = minutesRemaining / consts::kMinutesInAnHour;
+  std::uint32_t hoursRemaining = minutesRemaining / consts::kMinutesInAnHour;
   minutesRemaining = minutesRemaining - (hoursRemaining * consts::kMinutesInAnHour);
-  unsigned daysRemaining = hoursRemaining / consts::kHoursInADay;
+  std::uint32_t daysRemaining = hoursRemaining / consts::kHoursInADay;
   hoursRemaining = hoursRemaining - (daysRemaining * consts::kHoursInADay);
 
   std::string str = "";

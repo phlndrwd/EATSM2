@@ -45,7 +45,7 @@ const std::vector<std::string> Strings::stringToWords(const std::string& inputSt
   return wordList;
 }
 
-const std::string Strings::doubleToPrecisionString(const double& value, const unsigned& decimals) {
+const std::string Strings::doubleToPrecisionString(const double& value, const std::uint32_t& decimals) {
   std::ostringstream outputStringStream;
   outputStringStream << std::fixed << std::setprecision(decimals) << value;
 
@@ -55,7 +55,7 @@ const std::string Strings::doubleToPrecisionString(const double& value, const un
 int Strings::findFirstPositionOfCharacter(const std::string inString, const char character) {
   int index = consts::kMissingValue;
 
-  for (unsigned charIndex = 0; charIndex < inString.length(); charIndex++) {
+  for (std::uint32_t charIndex = 0; charIndex < inString.length(); charIndex++) {
     if (inString[charIndex] == character) {
       index = charIndex;
       break;

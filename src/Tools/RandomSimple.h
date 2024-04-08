@@ -10,6 +10,8 @@
 #ifndef RANDOMSIMPLE
 #define RANDOMSIMPLE
 
+#include <cstdint>
+
 /*
  * Written by John D. Cook
  * http://www.johndcook.com
@@ -17,18 +19,18 @@
  */
 class RandomSimple {
  public:
-  explicit RandomSimple(unsigned seed = 0);
+  explicit RandomSimple(std::uint32_t seed = 0);
 
   void reset();
 
-  unsigned getSeed() const;
-  void setSeed(unsigned, unsigned);
-  void setSeed(unsigned);
+  std::uint32_t getSeed() const;
+  void setSeed(std::uint32_t, std::uint32_t);
+  void setSeed(std::uint32_t);
 
   double getUniform();
-  unsigned getUniformInt();
-  unsigned getUniformInt(unsigned);
-  unsigned getUniformInt(unsigned, unsigned);
+  std::uint32_t getUniformInt();
+  std::uint32_t getUniformInt(std::uint32_t);
+  std::uint32_t getUniformInt(std::uint32_t, std::uint32_t);
   double getNormal();
   double getNormal(double, double);
   double getExponential();
@@ -43,9 +45,9 @@ class RandomSimple {
   double getBeta(double, double);
 
  private:
-  unsigned seed_;
-  unsigned w_;
-  unsigned z_;
+  std::uint32_t seed_;
+  std::uint32_t w_;
+  std::uint32_t z_;
   double twoPi_;
 };
 

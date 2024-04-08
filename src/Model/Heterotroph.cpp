@@ -15,7 +15,7 @@
 #include "RandomSimple.h"
 
 // For model initialisation.
-Heterotroph::Heterotroph(std::vector<double>& traitValues, std::vector<unsigned char>& areTraitsMutant,
+Heterotroph::Heterotroph(std::vector<double>& traitValues, std::vector<std::uint8_t>& areTraitsMutant,
 			 const double& mutationProbability, const double& mutationStandardDeviation,
 			 const double& volumeHeritable, const double& assimilationEfficiency):
 	traits_(traitValues, areTraitsMutant, mutationProbability, mutationStandardDeviation),
@@ -175,7 +175,7 @@ double Heterotroph::getTrophicLevel() const {
   return trophicLevel_;
 }
 
-unsigned Heterotroph::getAge() const {
+std::uint32_t Heterotroph::getAge() const {
   return age_;
 }
 
@@ -211,7 +211,7 @@ void Heterotroph::setTrophicLevel(const double trophicLevel) {
   trophicLevel_ = trophicLevel;
 }
 
-void Heterotroph::setAge(const unsigned age) {
+void Heterotroph::setAge(const std::uint32_t age) {
   age_ = age;
 }
 

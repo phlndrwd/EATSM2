@@ -18,7 +18,7 @@ EcologicalData::EcologicalData(Parameters& params) {
 }
 
 void EcologicalData::initialise(Parameters& params) {
-  unsigned numberOfSizeClasses = params.getNumberOfSizeClasses();
+  std::uint32_t numberOfSizeClasses = params.getNumberOfSizeClasses();
   double totalVolume = params.getInitialAutotrophVolume() + params.getInitialHeterotrophVolume();
   double halfSaturationConstantFraction = params.getHalfSaturationConstantFraction();
 
@@ -33,7 +33,7 @@ void EcologicalData::initialise(Parameters& params) {
   largestVolumeExponent_ = std::log10(params.getLargestIndividualVolume());
 
   double sizeClassExponentIncrement = (largestVolumeExponent_ - smallestVolumeExponent_) / numberOfSizeClasses;
-  for (unsigned sizeClassIndex = 0; sizeClassIndex < numberOfSizeClasses; ++sizeClassIndex) {
+  for (std::uint32_t sizeClassIndex = 0; sizeClassIndex < numberOfSizeClasses; ++sizeClassIndex) {
     double sizeClassMidPointExponent = smallestVolumeExponent_ + ((sizeClassIndex + 0.5) * sizeClassExponentIncrement);
     double sizeClassBoundaryExponent = smallestVolumeExponent_ + (sizeClassIndex * sizeClassExponentIncrement);
 
@@ -67,7 +67,7 @@ std::vector<std::vector<double>>& EcologicalData::getInterSizeClassVolumes() {
   return interSizeClassVolumes_;
 }
 
-const std::vector<unsigned>& EcologicalData::getMaximumSizeClassPopulations() const {
+const std::vector<std::uint32_t>& EcologicalData::getMaximumSizeClassPopulations() const {
   return maximumSizeClassPopulations_;
 }
 

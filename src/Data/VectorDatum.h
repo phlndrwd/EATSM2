@@ -10,6 +10,7 @@
 #ifndef VECTORDATUM
 #define VECTORDATUM
 
+#include <cstdint>
 #include <string>
 #include <vector>
 
@@ -18,12 +19,12 @@ class VectorDatum {
   explicit VectorDatum(const std::string&);
   ~VectorDatum();
 
-  float getDataAtIndex(const unsigned&) const;
+  float getDataAtIndex(const std::uint32_t&) const;
 
   void setData(const std::vector<float>);
   void addData(const float&);
 
-  unsigned getSize() const;
+  std::uint32_t getSize() const;
   const std::string& getName() const;
 
  private:

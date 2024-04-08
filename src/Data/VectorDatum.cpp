@@ -15,7 +15,7 @@ VectorDatum::VectorDatum(const std::string& name) {
 
 VectorDatum::~VectorDatum() {}
 
-float VectorDatum::getDataAtIndex(const unsigned& index) const {
+float VectorDatum::getDataAtIndex(const std::uint32_t& index) const {
   return data_[index];
 }
 
@@ -27,7 +27,7 @@ void VectorDatum::addData(const float& data) {
   data_.push_back(data);
 }
 
-unsigned VectorDatum::getSize() const {
+std::uint32_t VectorDatum::getSize() const {
   return data_.size();
 }
 

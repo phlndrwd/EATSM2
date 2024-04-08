@@ -11,6 +11,7 @@
 #define PARAMETERS
 
 #include <array>
+#include <cstdint>
 #include <string>
 #include <vector>
 
@@ -23,10 +24,10 @@ class Parameters {
 
   bool initialise(const std::vector<std::vector<std::string>>&);
 
-  const unsigned& getRunTimeInSeconds() const;
-  const unsigned& getRandomSeed() const;
-  const unsigned& getSamplingRate() const;
-  const unsigned& getNumberOfSizeClasses() const;
+  const std::uint32_t& getRunTimeInSeconds() const;
+  const std::uint32_t& getRandomSeed() const;
+  const std::uint32_t& getSamplingRate() const;
+  const std::uint32_t& getNumberOfSizeClasses() const;
 
   const bool& getReadModelState() const;
   const bool& getWriteModelState() const;
@@ -39,7 +40,7 @@ class Parameters {
   const double& getSmallestIndividualVolume() const;
   const double& getLargestIndividualVolume() const;
 
-  const unsigned& getPreferredPreyVolumeRatio() const;
+  const std::uint32_t& getPreferredPreyVolumeRatio() const;
   const double& getPreferenceFunctionWidth() const;
 
   const double& getSizeClassSubsetFraction() const;
@@ -52,10 +53,10 @@ class Parameters {
   const double& getMutationProbability() const;
   const double& getMutationStandardDeviation() const;
 
-  void setRandomSeed(const unsigned&);
-  void setRunTimeInSeconds(const unsigned&);
-  void setSamplingRate(const unsigned&);
-  void setNumberOfSizeClasses(const unsigned&);
+  void setRandomSeed(const std::uint32_t&);
+  void setRunTimeInSeconds(const std::uint32_t&);
+  void setSamplingRate(const std::uint32_t&);
+  void setNumberOfSizeClasses(const std::uint32_t&);
 
   void setReadModelState(const bool&);
   void setWriteModelState(const bool&);
@@ -68,7 +69,7 @@ class Parameters {
   void setSmallestIndividualVolume(const double&);
   void setLargestIndividualVolume(const double&);
 
-  void setPreferredPreyVolumeRatio(const unsigned&);
+  void setPreferredPreyVolumeRatio(const std::uint32_t&);
   void setPreferenceFunctionWidth(const double&);
 
   void setSizeClassSubsetFraction(const double&);
@@ -84,10 +85,10 @@ class Parameters {
  private:
   bool isInitialised();
 
-  unsigned randomSeed_;
-  unsigned runTimeInSeconds_;
-  unsigned samplingRate_;
-  unsigned numberOfSizeClasses_;
+  std::uint32_t randomSeed_;
+  std::uint32_t runTimeInSeconds_;
+  std::uint32_t samplingRate_;
+  std::uint32_t numberOfSizeClasses_;
 
   bool readModelState_;
   bool writeModelState_;
@@ -102,7 +103,7 @@ class Parameters {
   double sizeClassSubsetFraction_;
   double halfSaturationConstantFraction_;
 
-  unsigned preferredPreyVolumeRatio_;
+  std::uint32_t preferredPreyVolumeRatio_;
   double preferenceFunctionWidth_;
 
   double assimilationEfficiency_;

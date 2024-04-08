@@ -40,11 +40,11 @@ void EcologicalFunctions::calcPreferenceMatrices() {
   interSizeClassPreferences.resize(numberOfSizeClasses_);
   interSizeClassVolumes.resize(numberOfSizeClasses_);
 
-  for (unsigned subjectIndex = 0; subjectIndex < numberOfSizeClasses_; ++subjectIndex) {
+  for (std::uint32_t subjectIndex = 0; subjectIndex < numberOfSizeClasses_; ++subjectIndex) {
     double subjectVolumeMean = sizeClassMidPoints[subjectIndex];
     double preferenceSum = 0;
 
-    for (unsigned referenceIndex = 0; referenceIndex < numberOfSizeClasses_; ++referenceIndex) {
+    for (std::uint32_t referenceIndex = 0; referenceIndex < numberOfSizeClasses_; ++referenceIndex) {
       double referenceVolumeMean = sizeClassMidPoints[referenceIndex];
       double preferenceForReferenceSizeClass = calcPreferenceForPrey(subjectVolumeMean, referenceVolumeMean);
 
@@ -55,11 +55,11 @@ void EcologicalFunctions::calcPreferenceMatrices() {
   }
 }
 
-double EcologicalFunctions::functionalResponseLinear(const unsigned& predatorIndex, const double& effectivePreyVolume) const {
+double EcologicalFunctions::functionalResponseLinear(const std::uint32_t& predatorIndex, const double& effectivePreyVolume) const {
   return std::min(effectivePreyVolume / linearFeedingDenominators_[predatorIndex], 1.0);
 }
 
-double EcologicalFunctions::functionalResponseNonLinear(const unsigned& predatorIndex, const double& effectivePreyVolume) const {
+double EcologicalFunctions::functionalResponseNonLinear(const std::uint32_t& predatorIndex, const double& effectivePreyVolume) const {
   return (effectivePreyVolume / (halfSaturationConstants_[predatorIndex] + effectivePreyVolume));
 }
 
@@ -77,14 +77,14 @@ double EcologicalFunctions::calcStarvationProbability(const Heterotroph& heterot
                                    heterotroph.getVolumeMinimum(), heterotroph.getStarvationMultiplier());
 }
 
-unsigned EcologicalFunctions::findIndividualSizeClassIndex(const Heterotroph& heterotroph,
-                                                            unsigned& directionToMove) const {
-  unsigned currentSizeClass = 0; // PJU FIX - heterotroph.getSizeClassIndex();
-  unsigned newSizeClassIndex = currentSizeClass;
+std::uint32_t EcologicalFunctions::findIndividualSizeClassIndex(const Heterotroph& heterotroph,
+                                                            std::uint32_t& directionToMove) const {
+  std::uint32_t currentSizeClass = 0; // PJU FIX - heterotroph.getSizeClassIndex();
+  std::uint32_t newSizeClassIndex = currentSizeClass;
   double volume = heterotroph.getVolumeActual();
 
   if (directionToMove == enums::eMoveUp) {
-    for (unsigned index = currentSizeClass; index < numberOfSizeClasses_; ++index) {
+    for (std::uint32_t index = currentSizeClass; index < numberOfSizeClasses_; ++index) {
       if (volume < sizeClassBoundaries_[index]) {
         newSizeClassIndex = index - 1;
         break;
@@ -93,7 +93,7 @@ unsigned EcologicalFunctions::findIndividualSizeClassIndex(const Heterotroph& he
   } else if (directionToMove == enums::eMoveDown) {
     for (int index = currentSizeClass; index >= 0; --index) {
       if (volume >= sizeClassBoundaries_[index]) {
-        newSizeClassIndex = (unsigned)index;
+        newSizeClassIndex = (std::uint32_t)index;
         break;
       }
     }
@@ -103,21 +103,21 @@ unsigned EcologicalFunctions::findIndividualSizeClassIndex(const Heterotroph& he
 }
 
 bool EcologicalFunctions::updateSizeClassIndex(Heterotroph& heterotroph) const {
-  unsigned directionToMove = directionIndividualShouldMoveSizeClasses(heterotroph);
+  std::uint32_t directionToMove = directionIndividualShouldMoveSizeClasses(heterotroph);
   if (directionToMove != enums::eNoMovement) {
     // PJU FIX
-    // unsigned newSizeClassIndex = findIndividualSizeClassIndex(heterotroph, directionToMove);
+    // std::uint32_t newSizeClassIndex = findIndividualSizeClassIndex(heterotroph, directionToMove);
     // heterotroph.setSizeClassIndex(newSizeClassIndex);
     return true;
   }
   return false;
 }
 
-unsigned EcologicalFunctions::directionIndividualShouldMoveSizeClasses(const Heterotroph& heterotroph) const {
-  unsigned directionToMove = enums::eNoMovement;
+std::uint32_t EcologicalFunctions::directionIndividualShouldMoveSizeClasses(const Heterotroph& heterotroph) const {
+  std::uint32_t directionToMove = enums::eNoMovement;
 
   // PJU FIX
-  unsigned sizeClassIndex = 0;  // heterotroph.getSizeClassIndex();
+  std::uint32_t sizeClassIndex = 0;  // heterotroph.getSizeClassIndex();
   double volumeActual = heterotroph.getVolumeActual();
 
   if (volumeActual < sizeClassBoundaries_[sizeClassIndex])
@@ -154,12 +154,12 @@ void EcologicalFunctions::updateCarnivoreTrophicIndex(Heterotroph* predator,
   predator->setTrophicLevel(predatorTrophicLevel);
 }
 
-//double EcologicalFunctions::calcFeedingProbabilityLinear(const unsigned predatorIndex,
+//double EcologicalFunctions::calcFeedingProbabilityLinear(const std::uint32_t predatorIndex,
 //                                                          const double effectivePreyVolume) {
 //  return std::min(effectivePreyVolume / linearFeedingDenominators_[predatorIndex], 1.0);
 //}
 
-//double EcologicalFunctions::calcFeedingProbabilityNonLinear(const unsigned predatorIndex,
+//double EcologicalFunctions::calcFeedingProbabilityNonLinear(const std::uint32_t predatorIndex,
 //                                                             const double effectivePreyVolume) {
 //  return (effectivePreyVolume / (halfSaturationConstants_[predatorIndex] + effectivePreyVolume));
 //}

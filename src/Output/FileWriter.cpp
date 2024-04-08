@@ -72,7 +72,7 @@ void FileWriter::initialiseOutputDirectory() {
 bool FileWriter::writeInputFiles() {
   std::vector<std::string> inputFilePaths = DataRecorder::get()->getInputFilePaths();
 
-  for (unsigned stringIndex = 0; stringIndex < inputFilePaths.size(); ++stringIndex) {
+  for (std::uint32_t stringIndex = 0; stringIndex < inputFilePaths.size(); ++stringIndex) {
     std::ifstream sourceFileStream(inputFilePaths[stringIndex].c_str(), std::ios::in);
 
     std::string outputFilePath = outputPath_;
@@ -114,14 +114,14 @@ bool FileWriter::writeVectorDatums() {
   for (std::map<std::string, VectorDatum*>::iterator iter = vectorDatumMap.begin(); iter != vectorDatumMap.end(); ++iter) {
     std::string fileName = iter->first;
     VectorDatum* vectorDatum = iter->second;
-    unsigned datumSize = vectorDatum->getSize();
+    std::uint32_t datumSize = vectorDatum->getSize();
     if (datumSize > 0) {
       fileName.insert(0, outputPath_).append(consts::kFileNameExtension);
       std::ofstream outputFileStream;
       outputFileStream.open(fileName.c_str(), std::ios::out);
 
       if (outputFileStream.is_open() == true) {
-        for (unsigned dataIndex = 0; dataIndex < datumSize - 1; ++dataIndex) {
+        for (std::uint32_t dataIndex = 0; dataIndex < datumSize - 1; ++dataIndex) {
           outputFileStream << vectorDatum->getDataAtIndex(dataIndex) << consts::kDataDelimiterValue;
         }
         outputFileStream << vectorDatum->getDataAtIndex(vectorDatum->getSize() - 1);
@@ -139,14 +139,14 @@ bool FileWriter::writeMatrixDatums() {
   for (std::map<std::string, MatrixDatum*>::iterator iter = matrixDatumMap.begin(); iter != matrixDatumMap.end(); ++iter) {
     std::string fileName = iter->first;
     MatrixDatum* matrixDatum = iter->second;
-    unsigned rowSize = matrixDatum->getRows();
+    std::uint32_t rowSize = matrixDatum->getRows();
     if (rowSize > 0) {
       fileName.insert(0, outputPath_).append(consts::kFileNameExtension);
       std::ofstream outputFileStream;
       outputFileStream.open(fileName.c_str(), std::ios::out);
       if (outputFileStream.is_open() == true) {
-        for (unsigned rowIndex = 0; rowIndex < rowSize; ++rowIndex) {
-          for (unsigned columnIndex = 0; columnIndex < matrixDatum->getColumns() - 1; ++columnIndex) {
+        for (std::uint32_t rowIndex = 0; rowIndex < rowSize; ++rowIndex) {
+          for (std::uint32_t columnIndex = 0; columnIndex < matrixDatum->getColumns() - 1; ++columnIndex) {
             outputFileStream << matrixDatum->getDataAtIndices(rowIndex, columnIndex) << consts::kDataDelimiterValue;
           }
           outputFileStream << matrixDatum->getDataAtIndices(rowIndex, matrixDatum->getColumns() - 1) << std::endl;

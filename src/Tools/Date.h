@@ -15,7 +15,7 @@
 class Date {
  public:
   static std::string getDateAndTimeString(const std::string format = consts::kCompleteDateFormat,
-                                          unsigned addedSeconds = 0);
+                                          std::uint32_t addedSeconds = 0);
 };
 
 #endif

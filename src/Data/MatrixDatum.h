@@ -10,6 +10,7 @@
 #ifndef MATRIXDATUM
 #define MATRIXDATUM
 
+#include <cstdint>
 #include <string>
 #include <vector>
 
@@ -18,14 +19,14 @@ class MatrixDatum {
   explicit MatrixDatum(const std::string&);
   ~MatrixDatum();
 
-  void setGroupSize(const unsigned&);
+  void setGroupSize(const std::uint32_t&);
 
-  float getDataAtIndices(const unsigned&, const unsigned&) const;
-  void addDataAtIndex(const unsigned&, const float&);
+  float getDataAtIndices(const std::uint32_t&, const std::uint32_t&) const;
+  void addDataAtIndex(const std::uint32_t&, const float&);
   void addData(const std::vector<float>);
 
-  unsigned getRows() const;
-  unsigned getColumns() const;
+  std::uint32_t getRows() const;
+  std::uint32_t getColumns() const;
   const std::string& getName() const;
 
  private:

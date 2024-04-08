@@ -14,7 +14,7 @@
 
 #include "Constants.h"
 
-std::string Date::getDateAndTimeString(const std::string format, unsigned addedSeconds) {
+std::string Date::getDateAndTimeString(const std::string format, std::uint32_t addedSeconds) {
   char dateTimeChar[consts::kDateTimeBufferSize];
   timeval timeNow;
   gettimeofday(&timeNow, nullptr);

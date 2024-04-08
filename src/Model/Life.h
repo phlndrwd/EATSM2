@@ -29,7 +29,7 @@ class Life {
 
  private:
   void moveHeterotrophs();
-  unsigned findSizeClassIndexFromVolume(const double&) const;
+  std::uint32_t findSizeClassIndexFromVolume(const double&) const;
 
   Nutrient& nutrient_;
   Parameters& params_;
@@ -42,7 +42,7 @@ class Life {
   std::vector<SizeClass> sizeClasses_;
   std::vector<structs::MovingHeterotroph> movingHeterotrophs_;
 
-  unsigned numberOfSizeClasses_;
+  std::uint32_t numberOfSizeClasses_;
 };
 
 #endif

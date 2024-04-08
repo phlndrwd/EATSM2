@@ -15,7 +15,7 @@
 #include "Parameters.h"
 
 EncounterAlgorithm::EncounterAlgorithm(Nutrient& nutrient, EcologicalData& data, EcologicalFunctions& functions,
-                                       Parameters& params, const unsigned& randomSeed):
+                                       Parameters& params, const std::uint32_t& randomSeed):
     nutrient_(nutrient),
     data_(data),
     functions_(functions),
@@ -29,7 +29,7 @@ void EncounterAlgorithm::update(std::vector<SizeClass>& sizeClasses, SizeClass& 
   enums::eFeedingStrategy feedingStrategy = enums::eNotEating;
   std::vector<SizeClass>::iterator coupledSizeClassIt = sizeClasses.begin();
   double feedingProbability = calcFeedingProbability(sizeClasses, thisSizeClass, coupledSizeClassIt, feedingStrategy);
-  thisSizeClass.sizeClassSubset([&](unsigned randomIndex) {
+  thisSizeClass.sizeClassSubset([&](std::uint32_t randomIndex) {
     if (random_.getUniform() <= feedingProbability) {
       Heterotroph& predator = thisSizeClass.getHeterotroph(randomIndex);
       if (feedingStrategy == enums::eHerbivore){
@@ -119,7 +119,7 @@ std::vector<SizeClass>::iterator EncounterAlgorithm::setCoupledSizeClass(
 
 void EncounterAlgorithm::feedFromHeterotrophs(Heterotroph& predator, std::vector<SizeClass>::iterator coupledSizeClassIt) {
   if (coupledSizeClassIt->getPopulationSize() != 0) {
-    unsigned randIdxCopy = 0;  // Copy random index for fast removal.
+    std::uint32_t randIdxCopy = 0;  // Copy random index for fast removal.
     Heterotroph& prey = coupledSizeClassIt->getRandomHeterotroph(randIdxCopy);
     while(&predator == &prey) { // Predators cannot eat themselves
       prey = coupledSizeClassIt->getRandomHeterotroph(randIdxCopy);

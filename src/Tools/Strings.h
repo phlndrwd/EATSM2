@@ -10,6 +10,7 @@
 #ifndef CONVERTOR
 #define CONVERTOR
 
+#include <cstdint>
 #include <string>
 #include <vector>
 
@@ -21,7 +22,7 @@ class Strings {
   static double stringToNumber(const std::string&);
 
   static const std::vector<std::string> stringToWords(const std::string&, const char);
-  static const std::string doubleToPrecisionString(const double&, const unsigned&);
+  static const std::string doubleToPrecisionString(const double&, const std::uint32_t&);
 
   static int findFirstPositionOfCharacter(const std::string, const char);
   static std::string truncateStringAtCharacter(const std::string, const char);

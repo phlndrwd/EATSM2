@@ -12,7 +12,7 @@
 #include "Parameters.h"
 #include "RandomSimple.h"
 
-Traits::Traits(const std::vector<double>& values, const std::vector<unsigned char>& areMutantTraits,
+Traits::Traits(const std::vector<double>& values, const std::vector<std::uint8_t>& areMutantTraits,
                const double& mutationProbability_, const double& mutationStandardDeviation_):
     mutationProbability_(mutationProbability_),
     mutationStandardDeviation_(mutationStandardDeviation_) {
@@ -59,7 +59,7 @@ Traits& Traits::operator=(Traits&& traits) noexcept {
 const Traits Traits::getChildTraits(RandomSimple& random) {
   std::size_t numberOfGenes = values_.size();
   std::vector<double> childValues = values_;
-  std::vector<unsigned char> areTraitsMutations(numberOfGenes, 0);
+  std::vector<std::uint8_t> areTraitsMutations(numberOfGenes, 0);
 
   if (mutationProbability_ > 0) {
     for (std::size_t i = 0; i < numberOfGenes; ++i) {
@@ -82,7 +82,7 @@ const Traits Traits::getChildTraits(RandomSimple& random) {
   return Traits(childValues, areTraitsMutations, mutationProbability_, mutationStandardDeviation_);
 }
 
-const std::vector<unsigned char>& Traits::areTraitsMutant() const {
+const std::vector<std::uint8_t>& Traits::areTraitsMutant() const {
   return areMutantTraits_;
 }
 
@@ -90,7 +90,7 @@ const std::vector<double>& Traits::getValues() const {
   return values_;
 }
 
-bool Traits::isTraitMutant(const unsigned traitIndex) const {
+bool Traits::isTraitMutant(const std::uint32_t traitIndex) const {
   return areMutantTraits_[traitIndex] != 0;
 }
 

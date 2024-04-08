@@ -7,6 +7,7 @@
 * which can be obtained from https://opensource.org/license/bsd-3-clause/.    *
 ******************************************************************************/
 
+#include <cstdint>
 #include <iostream>
 
 #include "Constants.h"
@@ -30,7 +31,7 @@ int main() {
   Timer timer(params.getRunTimeInSeconds(), true);
   FileWriter fileWriter;  // Created here to initialise output directory
 
-  unsigned runTimeInSeconds = params.getRunTimeInSeconds();
+  std::uint32_t runTimeInSeconds = params.getRunTimeInSeconds();
   double oneTenthOfRunTimeInSeconds = runTimeInSeconds / 10.0;
   double cumulativeTenthsOfRunTime = 0;
   bool isAlive = true;
@@ -53,7 +54,7 @@ int main() {
       isAlive = environment.recordData();
     }
     // Text output at the completion of each ten percent of the run
-    if (timer.elapsed() >= (unsigned)cumulativeTenthsOfRunTime) {
+    if (timer.elapsed() >= (std::uint32_t)cumulativeTenthsOfRunTime) {
       cumulativeTenthsOfRunTime = cumulativeTenthsOfRunTime + oneTenthOfRunTimeInSeconds;
       std::cout << "t = " << timeStep.getTimeStep() << consts::kDataDelimiterValue
                 << consts::kWhiteSpaceCharacter << timer.remainingString() << " remaining at "

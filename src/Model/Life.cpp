@@ -18,7 +18,7 @@
 namespace {
 SizeClass sizeClassGenerator(Nutrient& nutrient, Parameters& params, EcologicalData& data, EcologicalFunctions& functions,
 			     RandomSimple& random, const double initialAutotrophVolume,
-			     const double initialHeterotrophVolume, unsigned& index) {
+			     const double initialHeterotrophVolume, std::uint32_t& index) {
   SizeClass sizeClass(nutrient, params, data, functions, initialAutotrophVolume,
                       initialHeterotrophVolume, index, random.getUniformInt(1, UINT_MAX));
   ++index;
@@ -34,11 +34,11 @@ Life::Life(Nutrient& nutrient, Parameters& params) :
         random_(params.getRandomSeed()),  // Is this the first time random is used?
         algorithm_(nutrient, data_, functions_, params_, random_.getUniformInt(1, UINT_MAX)),
         numberOfSizeClasses_(params_.getNumberOfSizeClasses()) {
-  unsigned autotrophIndex = consts::kAutotrophSizeIndex;
+  std::uint32_t autotrophIndex = consts::kAutotrophSizeIndex;
   double idealInitialVolume = params.getSmallestIndividualVolume() * params.getPreferredPreyVolumeRatio();
-  unsigned heterotrophIndex = findSizeClassIndexFromVolume(idealInitialVolume);
+  std::uint32_t heterotrophIndex = findSizeClassIndexFromVolume(idealInitialVolume);
 
-  unsigned index = 0;
+  std::uint32_t index = 0;
   std::generate_n(std::back_inserter(sizeClasses_), numberOfSizeClasses_, [&] {
     double initialAutotrophVolume = autotrophIndex != index ? 0 : params.getInitialAutotrophVolume();
     double initialHeterotrophVolume = heterotrophIndex != index ? 0 : params.getInitialHeterotrophVolume();
@@ -59,7 +59,7 @@ void Life::update() {
 void Life::moveHeterotrophs() {
   for (const auto& movingHeterotroph : movingHeterotrophs_) {
     Heterotroph& heterotroph = movingHeterotroph.heterotroph;
-    unsigned searchOffSet = 0;
+    std::uint32_t searchOffSet = 0;
     if (movingHeterotroph.direction == enums::eMoveDown) {
       searchOffSet = numberOfSizeClasses_ - movingHeterotroph.origSizeClassIndex;  // Search next down
     } else if (movingHeterotroph.direction == enums::eMoveUp) {
@@ -77,10 +77,10 @@ void Life::moveHeterotrophs() {
   }
 }
 
-unsigned Life::findSizeClassIndexFromVolume(const double& volume) const {
-  unsigned sizeClassIndex = 0;
+std::uint32_t Life::findSizeClassIndexFromVolume(const double& volume) const {
+  std::uint32_t sizeClassIndex = 0;
 
-  for (unsigned index = 1; index <= numberOfSizeClasses_; ++index) {
+  for (std::uint32_t index = 1; index <= numberOfSizeClasses_; ++index) {
     if (volume < data_.getSizeClassBoundaries()[index]) {
       sizeClassIndex = index - 1;
       break;

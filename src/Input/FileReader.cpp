@@ -9,6 +9,7 @@
 
 #include "FileReader.h"
 
+#include <cstdint>
 #include <fstream>
 #include <iostream>
 
@@ -42,7 +43,7 @@ bool FileReader::readTextFile(const std::string& filePath, bool copyToOutput) {
 
   if (fileStream.is_open()) {
     std::string readLine;
-    unsigned lineCount = 0;
+    std::uint32_t lineCount = 0;
 
     while (std::getline(fileStream, readLine)) {
       if (readLine.length() > 0) {
@@ -67,7 +68,7 @@ bool FileReader::readTextFile(const std::string& filePath, bool copyToOutput) {
 }
 
 void FileReader::clearRawTextData() {
-  for (unsigned rowIndex = 0; rowIndex < rawTextData_.size(); ++rowIndex) {
+  for (std::uint32_t rowIndex = 0; rowIndex < rawTextData_.size(); ++rowIndex) {
     rawTextData_[rowIndex].clear();
   }
   rawTextData_.clear();

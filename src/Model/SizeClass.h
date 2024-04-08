@@ -26,24 +26,24 @@ class SizeClass {
  public:
   SizeClass() = delete;
   explicit SizeClass(Nutrient&, Parameters&, EcologicalData&, EcologicalFunctions&,
-                     const double&, const double&, const unsigned&, const unsigned&);
+                     const double&, const double&, const std::uint32_t&, const std::uint32_t&);
 
   void populate(const double, const double, const double, const double);
   void update(std::vector<structs::MovingHeterotroph>&);
 
-  void sizeClassSubset(std::function<void(unsigned)>);
+  void sizeClassSubset(std::function<void(std::uint32_t)>);
 
   std::size_t getPopulationSize();
-  unsigned getRandomHeterotrophIndex();
+  std::uint32_t getRandomHeterotrophIndex();
   Heterotroph& getRandomHeterotroph();
-  Heterotroph& getRandomHeterotroph(unsigned&);
-  Heterotroph& getHeterotroph(const unsigned);
-  const Heterotroph& getHeterotroph(const unsigned) const;
-  void removeHeterotroph(const unsigned);
+  Heterotroph& getRandomHeterotroph(std::uint32_t&);
+  Heterotroph& getHeterotroph(const std::uint32_t);
+  const Heterotroph& getHeterotroph(const std::uint32_t) const;
+  void removeHeterotroph(const std::uint32_t);
   Autotrophs& getAutotrophs();
 
   void addHeterotroph(Heterotroph);
-  unsigned getIndex() const;
+  std::uint32_t getIndex() const;
 
  private:
   void metabolisation();
@@ -51,26 +51,26 @@ class SizeClass {
   void reproduction();
   void moveSizeClass(std::vector<structs::MovingHeterotroph>&);
 
-  void starve(const unsigned);
+  void starve(const std::uint32_t);
 
   Nutrient& nutrient_;
   EcologicalFunctions& functions_;
-  const unsigned index_;  // PJU FIX - Should index_ be deprecated?
+  const std::uint32_t index_;  // PJU FIX - Should index_ be deprecated?
 
   const double sizeClassUpper_;
   const double sizeClassMidPoint_;
   const double sizeClassLower_;
   const double sizeClassSubsetFraction_;
 
-  const unsigned numberOfSizeClasses_;
-  const unsigned maxPopulation_;
+  const std::uint32_t numberOfSizeClasses_;
+  const std::uint32_t maxPopulation_;
 
   Autotrophs autotrophs_;
   RandomSimple random_;
 
   std::vector<Heterotroph> heterotrophs_;
-  std::vector<unsigned> alive_;
-  std::queue<unsigned> dead_;
+  std::vector<std::uint32_t> alive_;
+  std::queue<std::uint32_t> dead_;
 
 };
 

@@ -9,12 +9,12 @@
 
 #include "TimeStep.h"
 
-TimeStep::TimeStep(const unsigned& samplingRate) :
+TimeStep::TimeStep(const std::uint32_t& samplingRate) :
     samplingRate_(samplingRate) {
   timeStep_ = 0;
 }
 
-const unsigned& TimeStep::getTimeStep() const {
+const std::uint32_t& TimeStep::getTimeStep() const {
   return timeStep_;
 }
 

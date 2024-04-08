@@ -10,6 +10,7 @@
 #ifndef TRAITS_H
 #define TRAITS_H
 
+#include <cstdint>
 #include <vector>
 
 #include "Enums.h"
@@ -19,7 +20,7 @@ class RandomSimple;
 class Traits {
  public:
   Traits() = delete;
-  explicit Traits(const std::vector<double>&, const std::vector<unsigned char>&, const double&, const double&);
+  explicit Traits(const std::vector<double>&, const std::vector<std::uint8_t>&, const double&, const double&);
 
   Traits(const Traits&);
   Traits(Traits&&) noexcept;
@@ -29,10 +30,10 @@ class Traits {
 
   const Traits getChildTraits(RandomSimple&);
   const std::vector<double>& getValues() const;
-  const std::vector<unsigned char>& areTraitsMutant() const;
+  const std::vector<std::uint8_t>& areTraitsMutant() const;
 
   const double& getValue(const enums::eTraitIndices) const;
-  bool isTraitMutant(const unsigned) const;
+  bool isTraitMutant(const std::uint32_t) const;
 
   void setValue(const enums::eTraitIndices, const double);
 
@@ -41,7 +42,7 @@ class Traits {
   double mutationStandardDeviation_;
 
   std::vector<double> values_;
-  std::vector<unsigned char> areMutantTraits_;
+  std::vector<std::uint8_t> areMutantTraits_;
 };
 
 #endif

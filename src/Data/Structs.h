@@ -10,15 +10,17 @@
 #ifndef STRUCTS
 #define STRUCTS
 
+#include <cstdint>
+
 #include "Heterotroph.h"
 
 namespace structs {
 
 struct MovingHeterotroph {
   Heterotroph& heterotroph;
-  unsigned origSizeClassIndex;
+  std::uint32_t origSizeClassIndex;
   enums::eMovementDirection direction;
-  MovingHeterotroph(Heterotroph& _heterotroph, unsigned _prevSizeClassIndex, enums::eMovementDirection _direction):
+  MovingHeterotroph(Heterotroph& _heterotroph, std::uint32_t _prevSizeClassIndex, enums::eMovementDirection _direction):
       heterotroph(_heterotroph), origSizeClassIndex(_prevSizeClassIndex), direction(_direction) {}
 };
 

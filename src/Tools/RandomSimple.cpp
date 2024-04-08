@@ -13,7 +13,7 @@
 #include <cmath>
 #include <random>
 
-RandomSimple::RandomSimple(unsigned seed) {
+RandomSimple::RandomSimple(std::uint32_t seed) {
   reset();
   setSeed(seed);
   twoPi_ = 2.0 * M_PI;
@@ -24,16 +24,16 @@ void RandomSimple::reset() {
   z_ = 362436069;
 }
 
-unsigned RandomSimple::getSeed() const {
+std::uint32_t RandomSimple::getSeed() const {
   return seed_;
 }
 
-void RandomSimple::setSeed(unsigned u, unsigned v) {
+void RandomSimple::setSeed(std::uint32_t u, std::uint32_t v) {
   if (u != 0) w_ = u;
   if (v != 0) z_ = v;
 }
 
-void RandomSimple::setSeed(unsigned seed) {
+void RandomSimple::setSeed(std::uint32_t seed) {
   seed_ = seed;
   if (seed_ == 0) {
     std::random_device randomDevice;
@@ -43,21 +43,21 @@ void RandomSimple::setSeed(unsigned seed) {
 }
 
 double RandomSimple::getUniform() {
-  unsigned u = getUniformInt();
+  std::uint32_t u = getUniformInt();
   return (u + 1.0) * 2.328306435454494e-10;
 }
 
-unsigned RandomSimple::getUniformInt() {
+std::uint32_t RandomSimple::getUniformInt() {
   z_ = 36969 * (z_ & 65535) + (z_ >> 16);
   w_ = 18000 * (w_ & 65535) + (w_ >> 16);
   return (z_ << 16) + w_;
 }
 
-unsigned RandomSimple::getUniformInt(unsigned maximum) {
+std::uint32_t RandomSimple::getUniformInt(std::uint32_t maximum) {
   return getUniformInt() % (maximum + 1);
 }
 
-unsigned RandomSimple::getUniformInt(unsigned minimum, unsigned maximum) {
+std::uint32_t RandomSimple::getUniformInt(std::uint32_t minimum, std::uint32_t maximum) {
   return (getUniformInt() % (maximum - minimum + 1)) + minimum;
 }
 

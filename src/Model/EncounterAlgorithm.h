@@ -25,7 +25,7 @@ struct PreyVolumes {
 
 class EncounterAlgorithm {
  public:
-  EncounterAlgorithm(Nutrient&, EcologicalData&, EcologicalFunctions&, Parameters&, const unsigned&);
+  EncounterAlgorithm(Nutrient&, EcologicalData&, EcologicalFunctions&, Parameters&, const std::uint32_t&);
 
   void update(std::vector<SizeClass>&, SizeClass&);
 
@@ -46,7 +46,7 @@ class EncounterAlgorithm {
 
   const std::vector<std::vector<double>> interSizeClassPreferences_;
   const std::vector<std::vector<double>> interSizeClassVolumes_;
-  const unsigned numberOfSizeClasses_;
+  const std::uint32_t numberOfSizeClasses_;
   const double autotrophCellSize_;
 };
 #endif

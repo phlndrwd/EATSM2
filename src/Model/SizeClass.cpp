@@ -18,7 +18,7 @@ namespace {
 Heterotroph heterotrophGenerator(double traitValue, double volume, double assimilationEfficiency,
                                  const double mutationProbability, const double mutationStandardDeviation) {
   std::vector<double> traitValues{traitValue};
-  std::vector<unsigned char> areTraitsMutant{0};
+  std::vector<std::uint8_t> areTraitsMutant{0};
   Heterotroph heterotroph(traitValues, areTraitsMutant, mutationProbability, mutationStandardDeviation, volume, assimilationEfficiency);
   return heterotroph;
 }
@@ -37,7 +37,7 @@ int roundWithProbability(RandomSimple& random, const double value) {
 
 SizeClass::SizeClass(Nutrient& nutrient, Parameters& params, EcologicalData& data, EcologicalFunctions& functions,
 		     const double& initialAutotrophVolume, const double& initialHeterotrophVolume,
-		     const unsigned& index, const unsigned& randomSeed):
+		     const std::uint32_t& index, const std::uint32_t& randomSeed):
 	nutrient_(nutrient),
 	functions_(functions),
 	index_(index),
@@ -59,11 +59,11 @@ void SizeClass::populate(const double volumeToInitialise, const double assimilat
                          const double mutationProbability, const double mutationStandardDeviation) {
   if (volumeToInitialise > 0) {
     double realInitialPopulationSize = volumeToInitialise / sizeClassMidPoint_;
-    unsigned initialPopulationSize = std::abs(realInitialPopulationSize);
+    std::uint32_t initialPopulationSize = std::abs(realInitialPopulationSize);
     nutrient_.addToVolume(realInitialPopulationSize - initialPopulationSize);
 
     double traitValue = functions_.volumeToTraitValue(sizeClassMidPoint_);
-    unsigned heterotrophIndex = 0;
+    std::uint32_t heterotrophIndex = 0;
     std::generate_n(std::back_inserter(heterotrophs_), initialPopulationSize, [&] {
       alive_.push_back(heterotrophIndex);
       ++heterotrophIndex;
@@ -83,7 +83,7 @@ void SizeClass::update(std::vector<structs::MovingHeterotroph>& movingHeterotrop
 }
 
 void SizeClass::metabolisation() {
-  std::for_each(std::begin(alive_), std::end(alive_), [&](unsigned index) {
+  std::for_each(std::begin(alive_), std::end(alive_), [&](std::uint32_t index) {
     Heterotroph& heterotroph = heterotrophs_[index];
     double metabolicDeduction = functions_.calcMetabolicDeduction(heterotroph);
 
@@ -98,7 +98,7 @@ void SizeClass::metabolisation() {
 }
 
 void SizeClass::starvation() {
-  sizeClassSubset([&](unsigned randomIndex) {
+  sizeClassSubset([&](std::uint32_t randomIndex) {
     Heterotroph& heterotroph = heterotrophs_[randomIndex];
     if (random_.getUniform() <= functions_.calcStarvationProbability(heterotroph)) {
       starve(randomIndex);
@@ -111,7 +111,7 @@ void SizeClass::reproduction() {
 }
 
 void SizeClass::moveSizeClass(std::vector<structs::MovingHeterotroph>& movingHeterotrophs) {
-  std::for_each(std::begin(alive_), std::end(alive_), [&](unsigned index) {
+  std::for_each(std::begin(alive_), std::end(alive_), [&](std::uint32_t index) {
     Heterotroph& heterotroph = heterotrophs_[index];
     removeHeterotroph(index);
     if (heterotroph.getVolumeActual() < sizeClassLower_ && index_ > 0) {  // Zero is smallest
@@ -122,17 +122,17 @@ void SizeClass::moveSizeClass(std::vector<structs::MovingHeterotroph>& movingHet
   });
 }
 
-void SizeClass::sizeClassSubset(std::function<void(unsigned)> func) {
+void SizeClass::sizeClassSubset(std::function<void(std::uint32_t)> func) {
   std::size_t numberAlive = alive_.size();
   if (numberAlive != 0) {
-    unsigned sizeClassSubset = roundWithProbability(random_, numberAlive * sizeClassSubsetFraction_);
+    std::uint32_t sizeClassSubset = roundWithProbability(random_, numberAlive * sizeClassSubsetFraction_);
     for (auto _ = sizeClassSubset; _--;) {
       func(getRandomHeterotrophIndex());
     }
   }
 }
 
-void SizeClass::starve(const unsigned index) {
+void SizeClass::starve(const std::uint32_t index) {
   Heterotroph& heterotroph = heterotrophs_[index];
   nutrient_.addToVolume(heterotroph.getVolumeActual());
   removeHeterotroph(index);
@@ -143,9 +143,9 @@ std::size_t SizeClass::getPopulationSize() {
   return alive_.size();
 }
 
-unsigned SizeClass::getRandomHeterotrophIndex() {
+std::uint32_t SizeClass::getRandomHeterotrophIndex() {
   if (alive_.size() != 0) {
-    unsigned randomIndex = random_.getUniformInt(alive_.size());
+    std::uint32_t randomIndex = random_.getUniformInt(alive_.size());
     return alive_[randomIndex];
   } else {
     throw std::runtime_error("Size class is empty...");
@@ -154,14 +154,14 @@ unsigned SizeClass::getRandomHeterotrophIndex() {
 
 Heterotroph& SizeClass::getRandomHeterotroph() {
   if (alive_.size() != 0) {
-    unsigned randomIndex = random_.getUniformInt(alive_.size());
+    std::uint32_t randomIndex = random_.getUniformInt(alive_.size());
     return heterotrophs_[alive_[randomIndex]];
   } else {
     throw std::runtime_error("Size class is empty...");
   }
 }
 
-Heterotroph& SizeClass::getRandomHeterotroph(unsigned& randIdxCopy) {
+Heterotroph& SizeClass::getRandomHeterotroph(std::uint32_t& randIdxCopy) {
   if (alive_.size() != 0) {
     randIdxCopy = random_.getUniformInt(alive_.size());
     return heterotrophs_[alive_[randIdxCopy]];
@@ -170,7 +170,7 @@ Heterotroph& SizeClass::getRandomHeterotroph(unsigned& randIdxCopy) {
   }
 }
 
-Heterotroph& SizeClass::getHeterotroph(const unsigned index) {
+Heterotroph& SizeClass::getHeterotroph(const std::uint32_t index) {
   if (alive_.size() != 0) {
     return heterotrophs_[index];
   } else {
@@ -178,7 +178,7 @@ Heterotroph& SizeClass::getHeterotroph(const unsigned index) {
   }
 }
 
-const Heterotroph& SizeClass::getHeterotroph(const unsigned index) const {
+const Heterotroph& SizeClass::getHeterotroph(const std::uint32_t index) const {
   if (alive_.size() != 0) {
     return heterotrophs_[index];
   } else {
@@ -186,7 +186,7 @@ const Heterotroph& SizeClass::getHeterotroph(const unsigned index) const {
   }
 }
 
-void SizeClass::removeHeterotroph(const unsigned index) {
+void SizeClass::removeHeterotroph(const std::uint32_t index) {
   if (alive_.size() != 0) {
     alive_.erase(std::find(std::begin(alive_), std::end(alive_), index));
     dead_.push(index);
@@ -219,6 +219,6 @@ void SizeClass::addHeterotroph(Heterotroph heterotroph) {
   }
 }
 
-unsigned SizeClass::getIndex() const {
+std::uint32_t SizeClass::getIndex() const {
   return index_;
 }

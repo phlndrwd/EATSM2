@@ -24,7 +24,7 @@ public:
   std::vector<std::vector<double>>& getInterSizeClassPreferences();
   std::vector<std::vector<double>>& getInterSizeClassVolumes();
 
-  const std::vector<unsigned>& getMaximumSizeClassPopulations() const;
+  const std::vector<std::uint32_t>& getMaximumSizeClassPopulations() const;
 
   const std::vector<double>& getSizeClassBoundaries() const;
   const std::vector<double>& getSizeClassMidPoints() const;
@@ -43,7 +43,7 @@ private:
   std::vector<std::vector<double>> interSizeClassPreferences_;
   std::vector<std::vector<double>> interSizeClassVolumes_;
 
-  std::vector<unsigned> maximumSizeClassPopulations_;
+  std::vector<std::uint32_t> maximumSizeClassPopulations_;
 
   std::vector<double> sizeClassBoundaries_;
   std::vector<double> sizeClassMidPoints_;

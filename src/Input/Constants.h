@@ -10,6 +10,7 @@
 #ifndef CONSTANTS
 #define CONSTANTS
 
+#include <cstdint>
 #include <string>
 
 namespace consts {
@@ -25,20 +26,20 @@ const std::string kFileNameExtension = ".csv";
 const std::string kVectorDatumTypeName = "vector";
 const std::string kMatrixDatumTypeName = "matrix";
 
-const unsigned kMaximumNumberOfTrophicLevels = 11;  // 0 = unclassified, 1 = primary, etc.
+const std::uint32_t kMaximumNumberOfTrophicLevels = 11;  // 0 = unclassified, 1 = primary, etc.
 const int kMissingValue = -9999;
 
-const unsigned kDateTimeBufferSize = 25;
-const unsigned kOutputFolderPermissions = 0777;
+const std::uint32_t kDateTimeBufferSize = 25;
+const std::uint32_t kOutputFolderPermissions = 0777;
 
-const unsigned kAutotrophSizeIndex = 0;
-const unsigned kReproductionFactor = 2;
+const std::uint32_t kAutotrophSizeIndex = 0;
+const std::uint32_t kReproductionFactor = 2;
 const double kReproductionMultiplier = 1 / (double)kReproductionFactor;  // Equivalent to 1 / 2
 const double kMinimumFractionalVolume = 0.5;
 
-const unsigned kSecondsInAMinute = 60;
-const unsigned kMinutesInAnHour = 60;
-const unsigned kHoursInADay = 24;
+const std::uint32_t kSecondsInAMinute = 60;
+const std::uint32_t kMinutesInAnHour = 60;
+const std::uint32_t kHoursInADay = 24;
 
 const std::string kCompleteDateFormat = "%c";
 const std::string kDataSetNameFormat = "%Y-%m-%d_%H-%M-%S";

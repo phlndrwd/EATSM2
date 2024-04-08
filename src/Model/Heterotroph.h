@@ -18,7 +18,7 @@ class RandomSimple;
 class Heterotroph {
  public:
   Heterotroph() = delete;
-  explicit Heterotroph(std::vector<double>&, std::vector<unsigned char>&,
+  explicit Heterotroph(std::vector<double>&, std::vector<std::uint8_t>&,
                        const double&, const double&, const double&, const double&);
   explicit Heterotroph(const Traits&, const double&, const double&, const double&, const double&, const double&);
 
@@ -35,7 +35,7 @@ class Heterotroph {
 
   Traits& getHeritableTraits();
   double getTrophicLevel() const;
-  unsigned getAge() const;
+  std::uint32_t getAge() const;
 
   bool hasFed() const;
   bool isDead() const;
@@ -49,7 +49,7 @@ class Heterotroph {
 
   void setTrophicLevel(const double);
 
-  void setAge(const unsigned);
+  void setAge(const std::uint32_t);
   void setHasFed(const bool);
   void setDead();
 
@@ -65,7 +65,7 @@ class Heterotroph {
   double starvationMultiplier_;
 
   double trophicLevel_;
-  unsigned age_;
+  std::uint32_t age_;
   bool hasFed_;
   bool isDead_;
 };

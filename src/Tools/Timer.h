@@ -15,7 +15,7 @@
 
 class Timer {
  public:
-  explicit Timer(const unsigned&, bool startNow = true);
+  explicit Timer(const std::uint32_t&, bool startNow = true);
   ~Timer();
 
   void start();
@@ -26,7 +26,7 @@ class Timer {
   std::string remainingString();
 
  private:
-  const unsigned runTimeInSeconds_;
+  const std::uint32_t runTimeInSeconds_;
 
   std::chrono::high_resolution_clock::time_point startTime_;
   std::chrono::high_resolution_clock::time_point splitTime_;

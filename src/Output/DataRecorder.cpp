@@ -37,7 +37,7 @@ DataRecorder::~DataRecorder() {
 
 bool DataRecorder::initialise(const std::vector<std::vector<std::string>>& rawOutputParameterData) {
   if (rawOutputParameterData.size() > 0) {
-    for (unsigned rowIndex = 0; rowIndex < rawOutputParameterData.size(); ++rowIndex) {
+    for (std::uint32_t rowIndex = 0; rowIndex < rawOutputParameterData.size(); ++rowIndex) {
       std::string name = Strings::removeWhiteSpace(rawOutputParameterData[rowIndex][enums::eDatumName]);
       std::string type =
           Strings::removeWhiteSpace(Strings::toLowercase(rawOutputParameterData[rowIndex][enums::eDatumType]));
@@ -58,7 +58,7 @@ bool DataRecorder::initialise(const std::vector<std::vector<std::string>>& rawOu
   }
 }
 
-void DataRecorder::initialiseMatrix(const std::string& name, const unsigned& size) {
+void DataRecorder::initialiseMatrix(const std::string& name, const std::uint32_t& size) {
   MatrixDatum* matrixDatum = getMatrixDatumFromName(name);
 
   if (matrixDatum != nullptr) matrixDatum->setGroupSize(size);
@@ -76,7 +76,7 @@ void DataRecorder::addDataTo(const std::string& name, const std::vector<float> d
   if (matrixDatum != nullptr) matrixDatum->addData(data);
 }
 
-void DataRecorder::addDataTo(const std::string& name, const unsigned& index, const float& data) {
+void DataRecorder::addDataTo(const std::string& name, const std::uint32_t& index, const float& data) {
   MatrixDatum* matrixDatum = getMatrixDatumFromName(name);
 
   if (matrixDatum != nullptr) matrixDatum->addDataAtIndex(index, data);
@@ -103,7 +103,7 @@ VectorDatum* DataRecorder::getVectorDatumFromName(const std::string& name) {
   if (iter != vectorDatumMap_.end()) {
     vectorDatum = iter->second;
   } else {
-    for (unsigned datumIndex = 0; datumIndex < vectorDatumMetadata_.size(); ++datumIndex) {
+    for (std::uint32_t datumIndex = 0; datumIndex < vectorDatumMetadata_.size(); ++datumIndex) {
       std::string datumName = vectorDatumMetadata_[datumIndex][enums::eDatumName];
 
       if (datumName == name) {
@@ -123,7 +123,7 @@ MatrixDatum* DataRecorder::getMatrixDatumFromName(const std::string& name) {
   if (iter != matrixDatumMap_.end()) {
     matrixDatum = iter->second;
   } else {
-    for (unsigned datumIndex = 0; datumIndex < matrixDatumMetadata_.size(); ++datumIndex) {
+    for (std::uint32_t datumIndex = 0; datumIndex < matrixDatumMetadata_.size(); ++datumIndex) {
       std::string datumName = matrixDatumMetadata_[datumIndex][enums::eDatumName];
 
       if (datumName == name) {

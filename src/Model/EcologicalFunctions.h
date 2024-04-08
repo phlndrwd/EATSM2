@@ -21,19 +21,19 @@ class EcologicalFunctions {
  public:
   EcologicalFunctions(EcologicalData&, Parameters&);
 
-  double functionalResponseLinear(const unsigned&, const double&) const;
-  double functionalResponseNonLinear(const unsigned&, const double&) const;
+  double functionalResponseLinear(const std::uint32_t&, const double&) const;
+  double functionalResponseNonLinear(const std::uint32_t&, const double&) const;
 
   double calcMetabolicDeduction(const Heterotroph&) const;
   bool updateSizeClassIndex(Heterotroph&) const;
-  unsigned directionIndividualShouldMoveSizeClasses(const Heterotroph&) const;
-  unsigned findIndividualSizeClassIndex(const Heterotroph&, unsigned&) const;
+  std::uint32_t directionIndividualShouldMoveSizeClasses(const Heterotroph&) const;
+  std::uint32_t findIndividualSizeClassIndex(const Heterotroph&, std::uint32_t&) const;
   double calcStarvationProbability(const Heterotroph&) const;
 
   double calcPreferenceForPrey(const double&, const double&) const;
-  //  double calcFeedingProbability(const unsigned, const double);
+  //  double calcFeedingProbability(const std::uint32_t, const double);
 
-  // unsigned findSizeClassIndexFromVolume(const double) const;
+  // std::uint32_t findSizeClassIndexFromVolume(const double) const;
 
   void updateHerbivoreTrophicIndex(Heterotroph*);
   void updateCarnivoreTrophicIndex(Heterotroph*, const Heterotroph*);
@@ -52,7 +52,7 @@ class EcologicalFunctions {
 
   EcologicalData& data_;
 
-  std::function<double(const unsigned, const double)> starvationProbabilityFunc_;
+  std::function<double(const std::uint32_t, const double)> starvationProbabilityFunc_;
 
   const std::vector<double> sizeClassBoundaries_;
   const std::vector<double> linearFeedingDenominators_;

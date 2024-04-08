@@ -10,19 +10,21 @@
 #ifndef TIMESTEP_H
 #define TIMESTEP_H
 
+#include <cstdint>
+
 class TimeStep {
  public:
-  TimeStep(const unsigned&);
+  TimeStep(const std::uint32_t&);
 
-  const unsigned& getTimeStep() const;
+  const std::uint32_t& getTimeStep() const;
 
   bool doRecordData() const;
   void incrementTimeStep();
 
  private:
-  const unsigned samplingRate_;
+  const std::uint32_t samplingRate_;
 
-  unsigned timeStep_;
+  std::uint32_t timeStep_;
 };
 
 #endif

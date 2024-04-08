@@ -14,15 +14,15 @@ MatrixDatum::MatrixDatum(const std::string& name)
 
 MatrixDatum::~MatrixDatum() {}
 
-void MatrixDatum::setGroupSize(const unsigned& size) {
+void MatrixDatum::setGroupSize(const std::uint32_t& size) {
   data_.resize(size);
 }
 
-float MatrixDatum::getDataAtIndices(const unsigned& rowIndex, const unsigned& columnIndex) const {
+float MatrixDatum::getDataAtIndices(const std::uint32_t& rowIndex, const std::uint32_t& columnIndex) const {
   return data_[columnIndex][rowIndex];
 }
 
-void MatrixDatum::addDataAtIndex(const unsigned& index, const float& data) {
+void MatrixDatum::addDataAtIndex(const std::uint32_t& index, const float& data) {
   data_[index].push_back(data);
 }
 
@@ -30,11 +30,11 @@ void MatrixDatum::addData(const std::vector<float> data) {
   data_.push_back(data);
 }
 
-unsigned MatrixDatum::getRows() const {
+std::uint32_t MatrixDatum::getRows() const {
   return data_[0].size();
 }
 
-unsigned MatrixDatum::getColumns() const {
+std::uint32_t MatrixDatum::getColumns() const {
   return data_.size();
 }
 

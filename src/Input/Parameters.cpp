@@ -18,7 +18,7 @@ Parameters::~Parameters() {}
 
 bool Parameters::initialise(const std::vector<std::vector<std::string>>& rawInputParameterData) {
   if (rawInputParameterData.size() > 0) {
-    for (unsigned rowIndex = 0; rowIndex < rawInputParameterData.size(); ++rowIndex) {
+    for (std::uint32_t rowIndex = 0; rowIndex < rawInputParameterData.size(); ++rowIndex) {
       std::string parameterName = Strings::toLowercase(rawInputParameterData[rowIndex][enums::eParameterName]);
       double parameterValue = Strings::stringToNumber(rawInputParameterData[rowIndex][enums::eParameterValue]);
 
@@ -78,25 +78,25 @@ bool Parameters::initialise(const std::vector<std::vector<std::string>>& rawInpu
 
 bool Parameters::isInitialised() {
   bool isInitialised = true;
-  for (unsigned i = 0; i < enums::eNumberOfParamters; ++i)
+  for (std::uint32_t i = 0; i < enums::eNumberOfParamters; ++i)
     if (parametersInitialised_[i] == false) isInitialised = false;
 
   return isInitialised;
 }
 
-const unsigned& Parameters::getRunTimeInSeconds() const {
+const std::uint32_t& Parameters::getRunTimeInSeconds() const {
   return runTimeInSeconds_;
 }
 
-const unsigned& Parameters::getRandomSeed() const {
+const std::uint32_t& Parameters::getRandomSeed() const {
   return randomSeed_;
 }
 
-const unsigned& Parameters::getSamplingRate() const {
+const std::uint32_t& Parameters::getSamplingRate() const {
   return samplingRate_;
 }
 
-const unsigned& Parameters::getNumberOfSizeClasses() const {
+const std::uint32_t& Parameters::getNumberOfSizeClasses() const {
   return numberOfSizeClasses_;
 }
 
@@ -132,7 +132,7 @@ const double& Parameters::getLargestIndividualVolume() const {
   return largestIndividualVolume_;
 }
 
-const unsigned& Parameters::getPreferredPreyVolumeRatio() const {
+const std::uint32_t& Parameters::getPreferredPreyVolumeRatio() const {
   return preferredPreyVolumeRatio_;
 }
 
@@ -168,22 +168,22 @@ const double& Parameters::getMutationStandardDeviation() const {
   return mutationStandardDeviation_;
 }
 
-void Parameters::setRandomSeed(const unsigned& randomNumberSeed) {
+void Parameters::setRandomSeed(const std::uint32_t& randomNumberSeed) {
   randomSeed_ = randomNumberSeed;
   parametersInitialised_[enums::eRandomSeed] = true;
 }
 
-void Parameters::setRunTimeInSeconds(const unsigned& runTimeInSeconds) {
+void Parameters::setRunTimeInSeconds(const std::uint32_t& runTimeInSeconds) {
   runTimeInSeconds_ = runTimeInSeconds;
   parametersInitialised_[enums::eRunTimeInSeconds] = true;
 }
 
-void Parameters::setSamplingRate(const unsigned& samplingRate) {
+void Parameters::setSamplingRate(const std::uint32_t& samplingRate) {
   samplingRate_ = samplingRate;
   parametersInitialised_[enums::eSamplingRate] = true;
 }
 
-void Parameters::setNumberOfSizeClasses(const unsigned& numberOfSizeClasses) {
+void Parameters::setNumberOfSizeClasses(const std::uint32_t& numberOfSizeClasses) {
   numberOfSizeClasses_ = numberOfSizeClasses;
   parametersInitialised_[enums::eNumberOfSizeClasses] = true;
 }
@@ -228,7 +228,7 @@ void Parameters::setLargestIndividualVolume(const double& largestIndividualVolum
   parametersInitialised_[enums::eLargestIndividualVolume] = true;
 }
 
-void Parameters::setPreferredPreyVolumeRatio(const unsigned& preferredPreyVolumeRatio) {
+void Parameters::setPreferredPreyVolumeRatio(const std::uint32_t& preferredPreyVolumeRatio) {
   preferredPreyVolumeRatio_ = preferredPreyVolumeRatio;
   parametersInitialised_[enums::ePreferredPreyVolumeRatio] = true;
 }
