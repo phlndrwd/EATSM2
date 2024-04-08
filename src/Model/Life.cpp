@@ -49,52 +49,32 @@ Life::Life(Nutrient& nutrient, Parameters& params) :
 
 void Life::update() {
   std::for_each(std::begin(sizeClasses_), std::end(sizeClasses_), [&](SizeClass& thisSizeClass) {
-
     // This call replaces Heterotrophs.Feeding in EATSM1.
-    algorithm_.update(sizeClasses_, thisSizeClass);  // PJU FIX - Finish feeding functions here
-
-    movingHeterotrophs_.clear();
-    thisSizeClass.update(movingHeterotrophs_);  // PJU FIX - Correctly populate movingHeterotrophs
-
-    for (const auto& movingHeterotroph : movingHeterotrophs_) {
-      // PJU FIX - Determine SizeClassIndex here.
-
-      if (movingHeterotroph.direction == enums::eMoveDown) {
-        // Search down from current sizeClass
-        auto sizeClassDownIt = sizeClasses_.rbegin();
-        std::advance(sizeClassDownIt, numberOfSizeClasses_ + thisSizeClass.getIndex() + 1);
-        std::for_each(sizeClassDownIt, sizeClasses_.rend(), [&](SizeClass& nextSizeClass){
-          //
-        });
-
-
-
-
-      } else if (movingHeterotroph.direction == enums::eMoveUp) {
-        Heterotroph& heterotroph = movingHeterotroph.heterotroph;
-        std::vector<SizeClass>::iterator destSizeClass =
-        std::find_if (sizeClasses_.begin(), sizeClasses_.end(), [&](SizeClass& nextSizeClass) {
-          if (heterotroph.getVolumeActual() >= data_.getSizeClassBoundaries()[nextSizeClass.getIndex()]) {
-            return true;
-          } else {
-            return false;
-          }
-        });
-        destSizeClass = std::prev(destSizeClass);
-        destSizeClass->addHeterotroph(heterotroph);
-
-        //// Search up from current sizeClass
-        //auto sizeClassUpIt = sizeClasses_.begin();
-        //std::advance(sizeClassUpIt, sizeClass.getIndex());
-        //std::for_each(sizeClassUpIt, sizeClasses_.end(), [&](SizeClass& nextSizeClass){
-        //  //
-        //});
-      }
-
-      //std::advance(sizeClassIt, heterotroph.getSizeClassIndex());
-      //sizeClassIt->addHeterotroph(movingHeterotroph.heterotroph_);
-    }
+    algorithm_.update(sizeClasses_, thisSizeClass);
+    thisSizeClass.update(movingHeterotrophs_);
+    moveHeterotrophs();
   });
+}
+
+void Life::moveHeterotrophs() {
+  for (const auto& movingHeterotroph : movingHeterotrophs_) {
+    Heterotroph& heterotroph = movingHeterotroph.heterotroph;
+    unsigned searchOffSet = 0;
+    if (movingHeterotroph.direction == enums::eMoveDown) {
+      searchOffSet = numberOfSizeClasses_ - movingHeterotroph.origSizeClassIndex;  // Search next down
+    } else if (movingHeterotroph.direction == enums::eMoveUp) {
+      searchOffSet = movingHeterotroph.origSizeClassIndex + 1;  // Search next up
+    }  // No need for else?
+    auto sizeClassDownIt = std::next(sizeClasses_.begin(), searchOffSet);
+    std::find_if (sizeClassDownIt, sizeClasses_.end(), [&](SizeClass& nextSizeClass) {
+      if (heterotroph.getVolumeActual() >= data_.getSizeClassBoundaries()[nextSizeClass.getIndex()]) {
+        nextSizeClass.addHeterotroph(heterotroph);
+        return true;
+      } else {
+        return false;
+      }
+    });
+  }
 }
 
 unsigned Life::findSizeClassIndexFromVolume(const double& volume) const {

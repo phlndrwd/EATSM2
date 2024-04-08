@@ -28,6 +28,7 @@ class Life {
   void update();
 
  private:
+  void moveHeterotrophs();
   unsigned findSizeClassIndexFromVolume(const double&) const;
 
   Nutrient& nutrient_;
