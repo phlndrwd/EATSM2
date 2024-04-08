@@ -27,7 +27,7 @@ const std::string kVectorDatumTypeName = "vector";
 const std::string kMatrixDatumTypeName = "matrix";
 
 const std::uint32_t kMaximumNumberOfTrophicLevels = 11;  // 0 = unclassified, 1 = primary, etc.
-const int kMissingValue = -9999;
+const std::int32_t kMissingValue = -9999;
 
 const std::uint32_t kDateTimeBufferSize = 25;
 const std::uint32_t kOutputFolderPermissions = 0777;

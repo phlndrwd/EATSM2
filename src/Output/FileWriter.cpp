@@ -50,14 +50,14 @@ void FileWriter::initialiseOutputDirectory() {
   dataSetDirectoryName_ = Date::getDateAndTimeString(consts::kDataSetNameFormat);
 
   outputPath_.append(dataSetDirectoryName_);
-  int returnValue = mkdir(outputPath_.c_str(), consts::kOutputFolderPermissions);
+  std::int32_t returnValue = mkdir(outputPath_.c_str(), consts::kOutputFolderPermissions);
 
   // The following code ensures the data are written into a unique subdirectory.
   if (returnValue == -1) {
     outputPath_.append("_");
-    int stringLength = outputPath_.length();
+    std::int32_t stringLength = outputPath_.length();
 
-    int count = 1;
+    std::int32_t count = 1;
     while (returnValue == -1) {
       outputPath_.replace(stringLength, 1, Strings::toString(count));
       returnValue = mkdir(outputPath_.c_str(), consts::kOutputFolderPermissions);

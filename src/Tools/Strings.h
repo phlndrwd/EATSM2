@@ -24,7 +24,7 @@ class Strings {
   static const std::vector<std::string> stringToWords(const std::string&, const char);
   static const std::string doubleToPrecisionString(const double&, const std::uint32_t&);
 
-  static int findFirstPositionOfCharacter(const std::string, const char);
+  static std::int32_t findFirstPositionOfCharacter(const std::string, const char);
   static std::string truncateStringAtCharacter(const std::string, const char);
 
   static std::string toLowercase(const std::string);

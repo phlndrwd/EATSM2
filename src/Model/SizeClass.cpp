@@ -23,8 +23,8 @@ Heterotroph heterotrophGenerator(double traitValue, double volume, double assimi
   return heterotroph;
 }
 
-int roundWithProbability(RandomSimple& random, const double value) {
-  int flooredValue = static_cast<int>(std::floor(value));
+std::int32_t roundWithProbability(RandomSimple& random, const double value) {
+  std::int32_t flooredValue = static_cast<std::int32_t>(std::floor(value));
   double probability = value - flooredValue;
 
   if (random.getUniform() < probability) {
@@ -201,7 +201,7 @@ Autotrophs& SizeClass::getAutotrophs() {
 
 void SizeClass::addHeterotroph(Heterotroph heterotroph) {
   if (alive_.size() != maxPopulation_) {
-    int index;
+    std::int32_t index;
     std::vector<Heterotroph>::iterator heterotrophsIt;
     if (dead_.size() != 0) {
       index = dead_.front();

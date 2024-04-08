@@ -21,7 +21,7 @@
 
 #include "Timer.h"
 
-int main() {
+std::int32_t main() {
   std::cout << consts::kSystemName + " " + consts::kSystemVersion + " starting on "
             << Date::getDateAndTimeString() << "..." << std::endl
             << std::endl;

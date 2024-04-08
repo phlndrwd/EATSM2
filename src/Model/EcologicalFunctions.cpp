@@ -91,7 +91,7 @@ std::uint32_t EcologicalFunctions::findIndividualSizeClassIndex(const Heterotrop
       }
     }
   } else if (directionToMove == enums::eMoveDown) {
-    for (int index = currentSizeClass; index >= 0; --index) {
+    for (std::int32_t index = currentSizeClass; index >= 0; --index) {
       if (volume >= sizeClassBoundaries_[index]) {
         newSizeClassIndex = (std::uint32_t)index;
         break;

@@ -94,7 +94,7 @@ std::vector<SizeClass>::iterator EncounterAlgorithm::setCoupledSizeClass(
   // Add noise to the threshold to encourage a mixed strategy (mixotroph)
   double randEffectivePreyValue = random_.getUniform() * preyVolumes.totalPrey;
   double effectivePreySum = 0;
-  int sizeClassOffset = 0;
+  std::int32_t sizeClassOffset = 0;
   // Return from find_if is not used - used here to mimic break statement in classic for
   std::find_if (begin(effectiveSizeClassVolumes), end(effectiveSizeClassVolumes), [&](double effectiveSizeClassVolume) {
     effectivePreySum += effectiveSizeClassVolume;

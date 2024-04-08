@@ -24,7 +24,7 @@ const std::string Strings::toString(const T& input) {
 }
 
 template const std::string Strings::toString<char>(const char& input);
-template const std::string Strings::toString<int>(const int& input);
+template const std::string Strings::toString<std::int32_t>(const std::int32_t& input);
 
 double Strings::stringToNumber(const std::string& string) {
   double number = strtod(string.c_str(), nullptr);
@@ -52,8 +52,8 @@ const std::string Strings::doubleToPrecisionString(const double& value, const st
   return outputStringStream.str();
 }
 
-int Strings::findFirstPositionOfCharacter(const std::string inString, const char character) {
-  int index = consts::kMissingValue;
+std::int32_t Strings::findFirstPositionOfCharacter(const std::string inString, const char character) {
+  std::int32_t index = consts::kMissingValue;
 
   for (std::uint32_t charIndex = 0; charIndex < inString.length(); charIndex++) {
     if (inString[charIndex] == character) {
@@ -67,7 +67,7 @@ int Strings::findFirstPositionOfCharacter(const std::string inString, const char
 std::string Strings::truncateStringAtCharacter(const std::string inString, const char character) {
   std::string outString = inString;
 
-  int index = findFirstPositionOfCharacter(outString, character);
+  std::int32_t index = findFirstPositionOfCharacter(outString, character);
   if (index != consts::kMissingValue) outString = outString.substr(0, index);
 
   return outString;
