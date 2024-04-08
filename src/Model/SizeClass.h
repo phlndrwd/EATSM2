@@ -69,6 +69,7 @@ class SizeClass {
   RandomSimple random_;
 
   std::vector<Heterotroph> heterotrophs_;
+  std::vector<Heterotroph> children_;
   std::vector<std::uint32_t> alive_;
   std::queue<std::uint32_t> dead_;
 

@@ -16,8 +16,8 @@
 #include "Parameters.h"
 
 namespace {
-SizeClass sizeClassGenerator(Nutrient& nutrient, Parameters& params, EcologicalData& data, EcologicalFunctions& functions,
-			     RandomSimple& random, const double initialAutotrophVolume,
+SizeClass sizeClassGenerator(Nutrient& nutrient, Parameters& params, EcologicalData& data,
+			     EcologicalFunctions& functions, RandomSimple& random, const double initialAutotrophVolume,
 			     const double initialHeterotrophVolume, std::uint32_t& index) {
   SizeClass sizeClass(nutrient, params, data, functions, initialAutotrophVolume,
                       initialHeterotrophVolume, index, random.getUniformInt(1, UINT_MAX));
@@ -79,7 +79,6 @@ void Life::moveHeterotrophs() {
 
 std::uint32_t Life::findSizeClassIndexFromVolume(const double& volume) const {
   std::uint32_t sizeClassIndex = 0;
-
   for (std::uint32_t index = 1; index <= numberOfSizeClasses_; ++index) {
     if (volume < data_.getSizeClassBoundaries()[index]) {
       sizeClassIndex = index - 1;

@@ -107,7 +107,17 @@ void SizeClass::starvation() {
 }
 
 void SizeClass::reproduction() {
-
+  children_.clear();
+  std::for_each(std::begin(alive_), std::end(alive_), [&](std::uint32_t index) {
+    Heterotroph& heterotroph = heterotrophs_[index];
+    if (heterotroph.getVolumeActual() >= heterotroph.getVolumeReproduction()) {
+      Heterotroph child = heterotroph.getChild(random_, functions_);
+      children_.push_back(child);
+    }
+  });
+  std::for_each(std::begin(children_), std::end(children_), [&](Heterotroph& child) {
+    addHeterotroph(child);
+  });
 }
 
 void SizeClass::moveSizeClass(std::vector<structs::MovingHeterotroph>& movingHeterotrophs) {
