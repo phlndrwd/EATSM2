@@ -10,6 +10,7 @@
 #ifndef HETEROTROPHS_H
 #define HETEROTROPHS_H
 
+#include <cmath>
 #include <cstdint>
 #include <functional>
 #include <queue>
@@ -20,11 +21,23 @@
 #include "Parameters.h"
 #include "RandomSimple.h"
 
+namespace {
+std::int32_t roundWithProbability(RandomSimple& random, const double value) {
+  std::int32_t flooredValue = static_cast<std::int32_t>(std::floor(value));
+  double probability = value - flooredValue;
+
+  if (random.getUniform() < probability) {
+    return flooredValue + 1;
+  } else {
+    return flooredValue;
+  }
+}
+}  // anonymous namespace
+
 class Heterotrophs {
 public:
   Heterotrophs() = delete;
-  explicit Heterotrophs(Nutrient&, Parameters&, EcologicalFunctions&, const double&,
-                        const std::uint32_t&, const std::uint32_t&);
+  explicit Heterotrophs(Nutrient&, Parameters&, const double&, const std::uint32_t&, const std::uint32_t&);
 
   void subset(std::function<void(std::uint32_t)>);
 
@@ -33,6 +46,17 @@ public:
     std::for_each(std::begin(alive_), std::end(alive_), [&](std::uint32_t index) {
       func(index);
     });
+  }
+
+  template <typename F>
+  void subset(F&& func) {
+    std::size_t numberAlive = alive_.size();
+    if (numberAlive != 0) {
+      std::uint32_t sizeClassSubset = roundWithProbability(random_, numberAlive * subsetFraction_);
+      for (auto _ = sizeClassSubset; _--;) {
+        func(getRandomHeterotrophIndex());
+      }
+    }
   }
 
   template <typename F>
@@ -58,7 +82,6 @@ public:
 
 private:
   Nutrient& nutrient_;
-  EcologicalFunctions& functions_;
 
   RandomSimple random_;
 

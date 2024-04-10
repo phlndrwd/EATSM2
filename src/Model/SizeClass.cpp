@@ -34,8 +34,8 @@ SizeClass::SizeClass(Nutrient& nutrient, Parameters& params, EcologicalData& dat
 	numberOfSizeClasses_(params.getNumberOfSizeClasses()),
 	random_(randomSeed),
 	autotrophs_(nutrient, initialAutotrophVolume),
-	heterotrophs_(nutrient, params, functions_, sizeClassMidPoint_,
-		      data.getMaximumSizeClassPopulations()[index_], random_.getUniformInt(1, UINT_MAX)) {
+	heterotrophs_(nutrient, params, sizeClassMidPoint_, data.getMaximumSizeClassPopulations()[index_],
+		      random_.getUniformInt(1, UINT_MAX)) {
   populate(initialHeterotrophVolume, params.getAssimilationEfficiency(),
            params.getMutationProbability(), params.getMutationStandardDeviation());
 }

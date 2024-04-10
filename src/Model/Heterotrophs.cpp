@@ -9,43 +9,17 @@
 
 #include "Heterotrophs.h"
 
-#include <cmath>
 #include <stdexcept>
 
-namespace {
-std::int32_t roundWithProbability(RandomSimple& random, const double value) {
-  std::int32_t flooredValue = static_cast<std::int32_t>(std::floor(value));
-  double probability = value - flooredValue;
-
-  if (random.getUniform() < probability) {
-    return flooredValue + 1;
-  } else {
-    return flooredValue;
-  }
-}
-}  // anonymous namespace
-
-Heterotrophs::Heterotrophs(Nutrient& nutrient, Parameters& params, EcologicalFunctions& functions,
-			   const double& sizeClassMidPoint, const std::uint32_t& maxPopulation,
-			   const std::uint32_t& randomSeed):
+Heterotrophs::Heterotrophs(Nutrient& nutrient, Parameters& params, const double& sizeClassMidPoint,
+			   const std::uint32_t& maxPopulation, const std::uint32_t& randomSeed):
 	nutrient_(nutrient),
-	functions_(functions),
 	random_(randomSeed),
 	sizeClassMidPoint_(sizeClassMidPoint),
 	subsetFraction_(params.getSizeClassSubsetFraction()),
 	maxPopulation_(maxPopulation) {
   heterotrophs_.reserve(maxPopulation);
   alive_.reserve(maxPopulation);
-}
-
-void Heterotrophs::subset(std::function<void(std::uint32_t)> func) {
-  std::size_t numberAlive = alive_.size();
-  if (numberAlive != 0) {
-    std::uint32_t sizeClassSubset = roundWithProbability(random_, numberAlive * subsetFraction_);
-    for (auto _ = sizeClassSubset; _--;) {
-      func(getRandomHeterotrophIndex());
-    }
-  }
 }
 
 std::size_t Heterotrophs::getPopulationSize() {

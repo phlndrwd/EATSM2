@@ -9,7 +9,7 @@
 
 #include "Environment.h"
 
-#include<iostream>
+#include <iostream>
 
 Environment::Environment(Parameters& params): nutrient_(), life_(nutrient_, params) {
   std::cout << "Environment created." << std::endl << std::endl;
