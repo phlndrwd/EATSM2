@@ -94,15 +94,14 @@ bool FileWriter::writeInputFiles() {
   return true;
 }
 
-void FileWriter::writeOutputData(Environment& environment) {
+void FileWriter::writeOutputData() {
   bool success = false;
-
-  if (writeVectorDatums())
+  if (writeVectorDatums()) {
     success = writeMatrixDatums();
-
-  if (success)
+  }
+  if (success == true) {
     std::cout << "Output data written to \"" << outputPath_ << "\"." << std::endl;
-  else {
+  } else {
     std::cout << "ERROR> File writing failed. Could not access \"" << outputPath_ << "\"." << std::endl;
     exit(1);
   }

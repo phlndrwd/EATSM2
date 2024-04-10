@@ -65,6 +65,8 @@ std::int32_t main() {
     // runTimeInSeconds> " << runTimeInSeconds << ", isAlive> " << isAlive <<
     // std::endl;
   } while (timer.elapsed() < runTimeInSeconds && isAlive == true);
+
+  fileWriter.writeOutputData();
   std::cout << "Total run time " << timer.stop() << "s" << std::endl;
   return 0;
 }

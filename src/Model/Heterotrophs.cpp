@@ -13,14 +13,6 @@
 #include <stdexcept>
 
 namespace {
-Heterotroph heterotrophGenerator(double traitValue, double volume, double assimilationEfficiency,
-                                 const double mutationProbability, const double mutationStandardDeviation) {
-  std::vector<double> traitValues{traitValue};
-  std::vector<std::uint8_t> areTraitsMutant{0};
-  Heterotroph heterotroph(traitValues, areTraitsMutant, mutationProbability, mutationStandardDeviation, volume, assimilationEfficiency);
-  return heterotroph;
-}
-
 std::int32_t roundWithProbability(RandomSimple& random, const double value) {
   std::int32_t flooredValue = static_cast<std::int32_t>(std::floor(value));
   double probability = value - flooredValue;

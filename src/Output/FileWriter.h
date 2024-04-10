@@ -12,13 +12,11 @@
 
 #include <string>
 
-class Environment;
-
 class FileWriter {
  public:
   FileWriter();
 
-  void writeOutputData(Environment&);
+  void writeOutputData();
 
  private:
   void initialiseOutputDirectory();
