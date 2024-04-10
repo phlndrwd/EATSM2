@@ -35,7 +35,6 @@ class Life {
   Parameters& params_;
 
   EcologicalData data_;
-  EcologicalFunctions functions_;
   RandomSimple random_;
   EncounterAlgorithm algorithm_;
 

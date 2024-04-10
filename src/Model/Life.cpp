@@ -17,10 +17,10 @@
 
 namespace {
 SizeClass sizeClassGenerator(Nutrient& nutrient, Parameters& params, EcologicalData& data,
-			     EcologicalFunctions& functions, RandomSimple& random, const double initialAutotrophVolume,
-			     const double initialHeterotrophVolume, std::uint32_t& index) {
-  SizeClass sizeClass(nutrient, params, data, functions, initialAutotrophVolume,
-                      initialHeterotrophVolume, index, random.getUniformInt(1, UINT_MAX));
+			     const double initialAutotrophVolume, const double initialHeterotrophVolume,
+			     std::uint32_t& index, std::uint32_t randomSeed) {
+  SizeClass sizeClass(nutrient, params, data, initialAutotrophVolume, initialHeterotrophVolume,
+                      index, randomSeed);
   ++index;
   return sizeClass;
 }
@@ -30,9 +30,8 @@ Life::Life(Nutrient& nutrient, Parameters& params) :
         nutrient_(nutrient),
         params_(params),
         data_(params_),
-        functions_(data_, params_),
         random_(params.getRandomSeed()),  // Is this the first time random is used?
-        algorithm_(nutrient, data_, functions_, params_, random_.getUniformInt(1, UINT_MAX)),
+        algorithm_(nutrient, data_, params_, random_.getUniformInt(1, UINT_MAX)),
         numberOfSizeClasses_(params_.getNumberOfSizeClasses()) {
   std::uint32_t autotrophIndex = consts::kAutotrophSizeIndex;
   double idealInitialVolume = params.getSmallestIndividualVolume() * params.getPreferredPreyVolumeRatio();
@@ -42,8 +41,8 @@ Life::Life(Nutrient& nutrient, Parameters& params) :
   std::generate_n(std::back_inserter(sizeClasses_), numberOfSizeClasses_, [&] {
     double initialAutotrophVolume = autotrophIndex != index ? 0 : params.getInitialAutotrophVolume();
     double initialHeterotrophVolume = heterotrophIndex != index ? 0 : params.getInitialHeterotrophVolume();
-    return sizeClassGenerator(nutrient_, params_, data_, functions_, random_,
-                              initialAutotrophVolume, initialHeterotrophVolume, index);
+    return sizeClassGenerator(nutrient_, params_, data_, initialAutotrophVolume, initialHeterotrophVolume,
+                              index, random_.getUniformInt(1, UINT_MAX));
   });
 }
 
@@ -68,7 +67,7 @@ void Life::moveHeterotrophs() {
     auto sizeClassDownIt = std::next(sizeClasses_.begin(), searchOffSet);
     std::find_if (sizeClassDownIt, sizeClasses_.end(), [&](SizeClass& nextSizeClass) {
       if (heterotroph.getVolumeActual() >= data_.getSizeClassBoundaries()[nextSizeClass.getIndex()]) {
-        nextSizeClass.addHeterotroph(heterotroph);
+        nextSizeClass.getHeterotrophs().addHeterotroph(heterotroph);
         return true;
       } else {
         return false;

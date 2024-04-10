@@ -25,7 +25,7 @@ struct PreyVolumes {
 
 class EncounterAlgorithm {
  public:
-  EncounterAlgorithm(Nutrient&, EcologicalData&, EcologicalFunctions&, Parameters&, const std::uint32_t&);
+  EncounterAlgorithm(Nutrient&, EcologicalData&, Parameters&, const std::uint32_t&);
 
   void update(std::vector<SizeClass>&, SizeClass&);
 
@@ -40,8 +40,8 @@ class EncounterAlgorithm {
 
   Nutrient& nutrient_;
   EcologicalData& data_;
-  EcologicalFunctions& functions_;
 
+  EcologicalFunctions functions_;
   RandomSimple random_;
 
   const std::vector<std::vector<double>> interSizeClassPreferences_;

@@ -21,6 +21,8 @@ list(APPEND EATSM2_SOURCES
   ${CMAKE_CURRENT_LIST_DIR}/Environment.h
   ${CMAKE_CURRENT_LIST_DIR}/Heterotroph.cpp
   ${CMAKE_CURRENT_LIST_DIR}/Heterotroph.h
+  ${CMAKE_CURRENT_LIST_DIR}/Heterotrophs.cpp
+  ${CMAKE_CURRENT_LIST_DIR}/Heterotrophs.h
   ${CMAKE_CURRENT_LIST_DIR}/Life.cpp
   ${CMAKE_CURRENT_LIST_DIR}/Life.h
   ${CMAKE_CURRENT_LIST_DIR}/Nutrient.cpp
