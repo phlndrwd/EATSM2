@@ -19,10 +19,9 @@ class Environment {
   Environment(Parameters&);
 
   void update();
-  bool recordData();
+  void snapshot();
 
   Nutrient& getNutrient();
-
   const Nutrient& getNutrient() const;
 
  private:

@@ -59,7 +59,6 @@ void SizeClass::populate(const double volumeToInitialise, const double assimilat
 }
 
 void SizeClass::update(std::vector<structs::MovingHeterotroph>& movingHeterotrophs) {
-  movingHeterotrophs.clear();
   metabolisation();
   starvation();
   reproduction(); // Not implemented
@@ -106,11 +105,12 @@ void SizeClass::reproduction() {
 void SizeClass::moveSizeClass(std::vector<structs::MovingHeterotroph>& movingHeterotrophs) {
   heterotrophs_.forEachHeterotrophIndex([&](std::uint32_t index) {
     Heterotroph& heterotroph = heterotrophs_.getHeterotroph(index);
-    heterotrophs_.removeHeterotroph(index);
     if (heterotroph.getVolumeActual() < sizeClassLower_ && index_ > 0) {  // Zero is smallest size class
       movingHeterotrophs.push_back(structs::MovingHeterotroph(heterotroph, index_, enums::eMoveDown));
+      heterotrophs_.removeHeterotroph(index);
     } else if (heterotroph.getVolumeActual() >= sizeClassUpper_ && index_ < numberOfSizeClasses_ - 1) {
       movingHeterotrophs.push_back(structs::MovingHeterotroph(heterotroph, index_, enums::eMoveUp));
+      heterotrophs_.removeHeterotroph(index);
     }
   });
 }

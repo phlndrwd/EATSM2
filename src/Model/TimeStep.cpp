@@ -9,16 +9,16 @@
 
 #include "TimeStep.h"
 
-TimeStep::TimeStep(const std::uint32_t& samplingRate) :
+TimeStep::TimeStep(const std::uint64_t& samplingRate) :
     samplingRate_(samplingRate) {
   timeStep_ = 0;
 }
 
-const std::uint32_t& TimeStep::getTimeStep() const {
+const std::uint64_t& TimeStep::getTimeStep() const {
   return timeStep_;
 }
 
-bool TimeStep::doRecordData() const {
+bool TimeStep::takeSnapshot() const {
   return (timeStep_ % samplingRate_ == 0);
 }
 

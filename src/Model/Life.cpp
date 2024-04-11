@@ -49,10 +49,14 @@ Life::Life(Nutrient& nutrient, Parameters& params) :
 void Life::update() {
   std::for_each(std::begin(sizeClasses_), std::end(sizeClasses_), [&](SizeClass& thisSizeClass) {
     // This call replaces Heterotrophs.Feeding in EATSM1.
-    algorithm_.update(sizeClasses_, thisSizeClass);
+    algorithm_.update(sizeClasses_, thisSizeClass);  // Equivalent to Heterotrophs.Feeding() in EATSM1
     thisSizeClass.update(movingHeterotrophs_);
-    moveHeterotrophs();
   });
+  moveHeterotrophs();
+}
+
+void Life::snapshot() {
+
 }
 
 void Life::moveHeterotrophs() {
@@ -74,6 +78,7 @@ void Life::moveHeterotrophs() {
       }
     });
   }
+  movingHeterotrophs_.clear();
 }
 
 std::uint32_t Life::findSizeClassIndexFromVolume(const double& volume) const {

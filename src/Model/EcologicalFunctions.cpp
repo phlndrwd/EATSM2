@@ -74,7 +74,7 @@ double EcologicalFunctions::calcPreferenceForPrey(const double& grazerVolume, co
 
 double EcologicalFunctions::calcStarvationProbability(const Heterotroph& heterotroph) const {
   return calcLinearStarvation(heterotroph.getVolumeActual(), heterotroph.getVolumeHeritable(),
-                                   heterotroph.getVolumeMinimum(), heterotroph.getStarvationMultiplier());
+                              heterotroph.getVolumeMinimum(), heterotroph.getStarvationMultiplier());
 }
 
 std::uint32_t EcologicalFunctions::findIndividualSizeClassIndex(const Heterotroph& heterotroph,

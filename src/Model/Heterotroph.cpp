@@ -23,8 +23,9 @@ Heterotroph::Heterotroph(std::vector<double>& traitValues, std::vector<std::uint
 	volumeActual_(volumeHeritable_),
 	volumeMinimum_(volumeHeritable_ * consts::kMinimumFractionalVolume),
 	volumeReproduction_(consts::kReproductionFactor * volumeHeritable_),
-	assimilationEfficiency_(assimilationEfficiency),
-	starvationMultiplier_(1 / (volumeHeritable_ - volumeMinimum_)) {
+	assimilationEfficiency_(assimilationEfficiency) {
+  volumeReproduction_ = consts::kReproductionFactor * volumeHeritable_;
+  starvationMultiplier_ = 1. / (volumeHeritable_ - volumeMinimum_);
   age_ = 0;
   trophicLevel_ = 0;
   hasFed_ = false;
@@ -41,7 +42,7 @@ Heterotroph::Heterotroph(const Traits& heritableTraits, const double& volumeHeri
         assimilationEfficiency_(assimilationEfficiency),
         trophicLevel_(trophicLevel) {
   volumeReproduction_ = consts::kReproductionFactor * volumeHeritable_;
-  starvationMultiplier_ = 1 / (volumeHeritable_ - volumeMinimum_);
+  starvationMultiplier_ = 1. / (volumeHeritable_ - volumeMinimum_);
   age_ = 0;
   hasFed_ = false;
   isDead_ = false;

@@ -13,7 +13,6 @@
 #include <vector>
 
 #include "EcologicalData.h"
-#include "EcologicalFunctions.h"
 #include "EncounterAlgorithm.h"
 #include "Nutrient.h"
 #include "Parameters.h"
@@ -26,6 +25,7 @@ class Life {
   explicit Life(Nutrient&, Parameters&);
 
   void update();
+  void snapshot();
 
  private:
   void moveHeterotrophs();

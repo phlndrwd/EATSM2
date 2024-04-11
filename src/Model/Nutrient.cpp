@@ -18,7 +18,7 @@ Nutrient::Nutrient() {
   std::cout << "Nutrient pool created." << std::endl;
 }
 
-void Nutrient::recordData() {
+void Nutrient::snapshot() {
   DataRecorder::get()->addDataTo("NutrientVolume", volume_);
   DataRecorder::get()->addDataTo("ToNutrientFlux", toFlux_);
   toFlux_ = 0;

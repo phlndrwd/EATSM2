@@ -13,8 +13,8 @@
 class Nutrient {
  public:
   Nutrient();
-
-  void recordData();
+   
+  void snapshot();
 
   const double& getVolume() const;
 

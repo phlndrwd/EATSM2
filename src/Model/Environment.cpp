@@ -19,11 +19,9 @@ void Environment::update() {
   life_.update();
 }
 
-bool Environment::recordData() {
-  //bool isAlive = population_.recordData();
-  nutrient_.recordData();
-
-  return true;
+void Environment::snapshot() {
+  nutrient_.snapshot();
+  life_.snapshot();
 }
 
 Nutrient& Environment::getNutrient() {

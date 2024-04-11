@@ -48,10 +48,10 @@ std::int32_t main() {
     // encounter rates.
     environment.update();
     // Data collection
-    if (timeStep.doRecordData() == true) {
+    if (timeStep.takeSnapshot() == true) {
       DataRecorder::get()->addDataTo("AxisTimeSteps", timeStep.getTimeStep());
       DataRecorder::get()->addDataTo("TimeSampling", timer.split());
-      isAlive = environment.recordData();
+      environment.snapshot();
     }
     // Text output at the completion of each ten percent of the run
     if (timer.elapsed() >= (std::uint32_t)cumulativeTenthsOfRunTime) {

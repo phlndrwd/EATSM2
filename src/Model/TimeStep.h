@@ -14,17 +14,17 @@
 
 class TimeStep {
  public:
-  TimeStep(const std::uint32_t&);
+  TimeStep(const std::uint64_t&);
 
-  const std::uint32_t& getTimeStep() const;
-
-  bool doRecordData() const;
+  const std::uint64_t& getTimeStep() const;
+  
+  bool takeSnapshot() const;
   void incrementTimeStep();
 
  private:
-  const std::uint32_t samplingRate_;
+  const std::uint64_t samplingRate_;
 
-  std::uint32_t timeStep_;
+  std::uint64_t timeStep_;
 };
 
 #endif
