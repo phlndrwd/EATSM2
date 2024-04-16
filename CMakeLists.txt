@@ -36,7 +36,9 @@ add_executable(EATSM2 ${EATSM2_SOURCES}
   src/Model/EcologicalData.h
   src/Model/EcologicalData.cpp
   src/Model/Heterotrophs.h
-  src/Model/Heterotrophs.cpp)
+  src/Model/Heterotrophs.cpp
+  src/Data/OutputData.h
+  src/Data/OutputData.cpp)
 
 install(TARGETS EATSM2 LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR})
 

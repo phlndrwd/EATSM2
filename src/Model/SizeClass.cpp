@@ -7,6 +7,7 @@
 * which can be obtained from https://opensource.org/license/bsd-3-clause/.    *
 ******************************************************************************/
 
+#include "DataRecorder.h"
 #include "SizeClass.h"
 
 #include <climits>
@@ -61,8 +62,14 @@ void SizeClass::populate(const double volumeToInitialise, const double assimilat
 void SizeClass::update(std::vector<structs::MovingHeterotroph>& movingHeterotrophs) {
   metabolisation();
   starvation();
-  reproduction(); // Not implemented
-  moveSizeClass(movingHeterotrophs);
+  //reproduction();
+  //moveSizeClass(movingHeterotrophs);
+}
+
+void SizeClass::snapshot() {
+  outputData_.setPopulationSize(heterotrophs_.getPopulationSize());
+
+  DataRecorder::get()->addDataTo("SizeClassPopulation", outputData_.getPopulationSize());
 }
 
 void SizeClass::metabolisation() {
@@ -122,6 +129,10 @@ void SizeClass::starve(const std::uint32_t index) {
   //heterotrophData_.incrementStarvedFrequencies(heterotroph.getSizeClassIndex());
 }
 
+std::uint32_t SizeClass::getIndex() const {
+  return index_;
+}
+
 Autotrophs& SizeClass::getAutotrophs() {
   return autotrophs_;
 }
@@ -130,6 +141,6 @@ Heterotrophs& SizeClass::getHeterotrophs() {
   return heterotrophs_;
 }
 
-std::uint32_t SizeClass::getIndex() const {
-  return index_;
+OutputData& SizeClass::getOutputData() {
+  return outputData_;
 }

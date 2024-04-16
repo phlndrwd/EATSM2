@@ -8,6 +8,7 @@
 ******************************************************************************/
 
 #include "Life.h"
+#include "DataRecorder.h"
 
 #include <algorithm>
 #include <climits>
@@ -56,7 +57,12 @@ void Life::update() {
 }
 
 void Life::snapshot() {
-
+  outputData_.reset();
+  std::for_each(std::begin(sizeClasses_), std::end(sizeClasses_), [&](SizeClass& thisSizeClass) {
+    thisSizeClass.snapshot();
+    outputData_ += thisSizeClass.getOutputData();
+  });
+  DataRecorder::get()->addDataTo( "HeterotrophFrequency", outputData_.getPopulationSize());
 }
 
 void Life::moveHeterotrophs() {

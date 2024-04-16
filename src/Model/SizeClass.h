@@ -17,6 +17,7 @@
 #include "EcologicalFunctions.h"
 #include "Heterotrophs.h"
 #include "Nutrient.h"
+#include "OutputData.h"
 #include "Parameters.h"
 #include "RandomSimple.h"
 #include "Structs.h"
@@ -27,12 +28,16 @@ class SizeClass {
   explicit SizeClass(Nutrient&, Parameters&, EcologicalData&, const double&,
                      const double&, const std::uint32_t&, const std::uint32_t&);
 
-  void update(std::vector<structs::MovingHeterotroph>&);
   void populate(const double, const double, const double, const double);
+
+  void update(std::vector<structs::MovingHeterotroph>&);
+  void snapshot();
+
+  std::uint32_t getIndex() const;
 
   Autotrophs& getAutotrophs();
   Heterotrophs& getHeterotrophs();
-  std::uint32_t getIndex() const;
+  OutputData& getOutputData();
 
  private:
   void metabolisation();
@@ -55,6 +60,7 @@ class SizeClass {
   RandomSimple random_;
   Autotrophs autotrophs_;
   Heterotrophs heterotrophs_;
+  OutputData outputData_;
 
 };
 
