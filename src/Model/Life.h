@@ -44,6 +44,8 @@ class Life {
   std::vector<structs::MovingHeterotroph> movingHeterotrophs_;
 
   std::uint32_t numberOfSizeClasses_;
+
+  std::vector<float> sizeClassFrequencies_;  // PJU FIX - This temporary.
 };
 
 #endif

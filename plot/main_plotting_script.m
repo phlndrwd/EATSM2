@@ -11,8 +11,7 @@ tic
 clear
 
 %% User Defined Parameters
-optionCurrentDataSet            = '2024-04-16_02-10-31';
-%optionOutputDirectory           = '/home/philju/Work/Writing/EATSM/Experiments/SpeedMutationTest/0.5.3/02/';
+optionCurrentDataSet            = '2024-04-18_00-49-24';
 optionOutputDirectory           = '/home/philju/Development/Repositories/EATSM2/build/Debug/output/0.0.1/';
 
 optionOutputVariablesFile      = 'Variables';

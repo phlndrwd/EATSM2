@@ -33,7 +33,8 @@ Life::Life(Nutrient& nutrient, Parameters& params) :
         data_(params_),
         random_(params.getRandomSeed()),  // Is this the first time random is used?
         algorithm_(nutrient, data_, params_, random_.getUniformInt(1, UINT_MAX)),
-        numberOfSizeClasses_(params_.getNumberOfSizeClasses()) {
+        numberOfSizeClasses_(params_.getNumberOfSizeClasses()),
+        sizeClassFrequencies_(numberOfSizeClasses_, 0) {
   std::uint32_t autotrophIndex = consts::kAutotrophSizeIndex;
   double idealInitialVolume = params.getSmallestIndividualVolume() * params.getPreferredPreyVolumeRatio();
   std::uint32_t heterotrophIndex = findSizeClassIndexFromVolume(idealInitialVolume);
@@ -45,6 +46,13 @@ Life::Life(Nutrient& nutrient, Parameters& params) :
     return sizeClassGenerator(nutrient_, params_, data_, initialAutotrophVolume, initialHeterotrophVolume,
                               index, random_.getUniformInt(1, UINT_MAX));
   });
+
+  // PJU FIX - This is temporary!
+  std::vector<float> sizeClassBoundaries(std::begin(data_.getSizeClassMidPoints()), std::end(data_.getSizeClassMidPoints()));
+  std::vector<float> sizeClassMidPoints(std::begin(data_.getSizeClassBoundaries()), std::end(data_.getSizeClassBoundaries()));
+
+  DataRecorder::get( )->setVectorDataOn("AxisSizeClassMidPointValues", sizeClassBoundaries);
+  DataRecorder::get( )->setVectorDataOn("AxisSizeClassBoundaryValues", sizeClassMidPoints);
 }
 
 void Life::update() {
@@ -58,11 +66,18 @@ void Life::update() {
 
 void Life::snapshot() {
   outputData_.reset();
+
   std::for_each(std::begin(sizeClasses_), std::end(sizeClasses_), [&](SizeClass& thisSizeClass) {
     thisSizeClass.snapshot();
+
+    std::uint32_t index = thisSizeClass.getIndex();
+    sizeClassFrequencies_[index] = (float)thisSizeClass.getOutputData().getPopulationSize();
+
     outputData_ += thisSizeClass.getOutputData();
   });
-  DataRecorder::get()->addDataTo( "HeterotrophFrequency", outputData_.getPopulationSize());
+
+  DataRecorder::get()->addDataTo("SizeClassPopulation", sizeClassFrequencies_);
+  DataRecorder::get()->addDataTo("HeterotrophFrequency", outputData_.getPopulationSize());
 }
 
 void Life::moveHeterotrophs() {
