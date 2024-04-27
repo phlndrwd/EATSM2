@@ -66,7 +66,8 @@ public:
     });
   }
 
-  std::size_t getPopulationSize();
+  std::uint64_t getPopulationSize();
+
   std::uint32_t getRandomHeterotrophIndex();
   Heterotroph& getRandomHeterotroph();
   Heterotroph& getRandomHeterotroph(std::uint32_t&);

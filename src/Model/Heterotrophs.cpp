@@ -22,7 +22,7 @@ Heterotrophs::Heterotrophs(Nutrient& nutrient, Parameters& params, const double&
   alive_.reserve(maxPopulation);
 }
 
-std::size_t Heterotrophs::getPopulationSize() {
+std::uint64_t Heterotrophs::getPopulationSize() {
   return alive_.size();
 }
 

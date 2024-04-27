@@ -45,7 +45,9 @@ class Life {
 
   std::uint32_t numberOfSizeClasses_;
 
-  std::vector<float> sizeClassFrequencies_;  // PJU FIX - This temporary.
+  // PJU FIX - The following are temporary.
+  std::vector<float> sizeClassFrequencies_;
+  std::vector<std::uint32_t> sizeClassStarved_;
 };
 
 #endif

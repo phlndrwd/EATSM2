@@ -11,12 +11,13 @@ public:
 
   void reset();
 
-  const std::uint32_t& getPopulationSize() const;
+  const std::uint64_t& getLivingCount() const;
 
-  void setPopulationSize(const std::uint32_t);
+  void setLivingCount(const std::uint64_t);
 
 private:
-  std::uint32_t populationSize_;
+  std::uint64_t livingCount_;
+  std::uint64_t deadCount_;
 };
 
 #endif // OUTPUTDATA_H

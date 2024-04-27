@@ -5,17 +5,17 @@ OutputData::OutputData() {
 }
 
 void OutputData::operator+=(const OutputData& rhs) {
-  populationSize_ += rhs.getPopulationSize();
+  livingCount_ += rhs.getLivingCount();
 }
 
 void OutputData::reset() {
-  populationSize_ = 0;
+  livingCount_ = 0;
 }
 
-const std::uint32_t& OutputData::getPopulationSize() const {
-  return populationSize_;
+const std::uint64_t& OutputData::getLivingCount() const {
+  return livingCount_;
 }
 
-void OutputData::setPopulationSize(const std::uint32_t populationSize) {
-  populationSize_ = populationSize;
+void OutputData::setLivingCount(const std::uint64_t livingCount) {
+  livingCount_ = livingCount;
 }
