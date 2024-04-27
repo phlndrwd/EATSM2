@@ -32,6 +32,11 @@ class SizeClass {
 
   void update(std::vector<structs::MovingHeterotroph>&);
 
+  void metabolisation();
+  void starvation();
+  void reproduction();
+  void moveSizeClass(std::vector<structs::MovingHeterotroph>&);
+
   OutputData& snapshot();
 
   std::uint32_t getIndex() const;
@@ -41,10 +46,6 @@ class SizeClass {
   OutputData& getOutputData();
 
  private:
-  void metabolisation();
-  void starvation();
-  void reproduction();
-  void moveSizeClass(std::vector<structs::MovingHeterotroph>&);
 
   void starve(const std::uint32_t);
 

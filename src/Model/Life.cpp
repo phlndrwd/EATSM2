@@ -58,9 +58,22 @@ Life::Life(Nutrient& nutrient, Parameters& params) :
 
 void Life::update() {
   std::for_each(std::begin(sizeClasses_), std::end(sizeClasses_), [&](SizeClass& thisSizeClass) {
-    // This call replaces Heterotrophs.Feeding in EATSM1.
     algorithm_.update(sizeClasses_, thisSizeClass);  // Equivalent to Heterotrophs.Feeding() in EATSM1
+  });
+  std::for_each(std::begin(sizeClasses_), std::end(sizeClasses_), [&](SizeClass& thisSizeClass) {
+    thisSizeClass.metabolisation();
+  });
+  std::for_each(std::begin(sizeClasses_), std::end(sizeClasses_), [&](SizeClass& thisSizeClass) {
+    thisSizeClass.starvation();
+
     thisSizeClass.update(movingHeterotrophs_);
+  });
+  std::for_each(std::begin(sizeClasses_), std::end(sizeClasses_), [&](SizeClass& thisSizeClass) {
+    thisSizeClass.reproduction();
+  });
+  // PJU FIX - Integrate this loop into reproduction.
+  std::for_each(std::begin(sizeClasses_), std::end(sizeClasses_), [&](SizeClass& thisSizeClass) {
+   thisSizeClass.moveSizeClass(movingHeterotrophs_);
   });
   moveHeterotrophs();
 }
