@@ -46,7 +46,7 @@ double EncounterAlgorithm::calcFeedingProbability(std::vector<SizeClass>& sizeCl
                                                   std::vector<SizeClass>::iterator& coupledSizeClassIt,
                                                   enums::eFeedingStrategy& feedingStrategy) {
   double feedingProbability = 0;
-  if (thisSizeClass.getHeterotrophs().getPopulationSize() != 0) {
+  if (thisSizeClass.getHeterotrophs().getLivingCount() != 0) {
     std::vector<double> effectiveSizeClassVolumes(numberOfSizeClasses_, 0);
     PreyVolumes preyVolumes = calcEffectiveSizeClassVolumes(sizeClasses, thisSizeClass, effectiveSizeClassVolumes);
     coupledSizeClassIt = setCoupledSizeClass(effectiveSizeClassVolumes, sizeClasses, preyVolumes, feedingStrategy);
@@ -65,7 +65,7 @@ PreyVolumes EncounterAlgorithm::calcEffectiveSizeClassVolumes(std::vector<SizeCl
   std::vector<double>::iterator effectiveSizeClassVolumesIt = effectiveSizeClassVolumes.begin();
 
   std::for_each(std::begin(sizeClasses), std::end(sizeClasses), [&](SizeClass& otherSizeClass) {
-    std::size_t populationSize = thisSizeClass.getHeterotrophs().getPopulationSize();
+    std::size_t populationSize = thisSizeClass.getHeterotrophs().getLivingCount();
     if (&thisSizeClass == &otherSizeClass) {
       populationSize--;  // Reduce population size for a single individual for this size class.
     }
@@ -119,7 +119,7 @@ std::vector<SizeClass>::iterator EncounterAlgorithm::setCoupledSizeClass(
 
 void EncounterAlgorithm::feedFromHeterotrophs(Heterotroph& predator,
                                               std::vector<SizeClass>::iterator coupledSizeClassIt) {
-  if (coupledSizeClassIt->getHeterotrophs().getPopulationSize() != 0) {
+  if (coupledSizeClassIt->getHeterotrophs().getLivingCount() != 0) {
     std::uint32_t randIdxCopy = 0;  // Copy random index for fast removal.
     Heterotroph& prey = coupledSizeClassIt->getHeterotrophs().getRandomHeterotroph(randIdxCopy);
     while(&predator == &prey) {  // Predators cannot eat themselves

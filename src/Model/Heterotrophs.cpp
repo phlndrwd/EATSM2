@@ -22,10 +22,6 @@ Heterotrophs::Heterotrophs(Nutrient& nutrient, Parameters& params, const double&
   alive_.reserve(maxPopulation);
 }
 
-std::uint64_t Heterotrophs::getPopulationSize() {
-  return alive_.size();
-}
-
 std::uint32_t Heterotrophs::getRandomHeterotrophIndex() {
   if (alive_.size() != 0) {
     std::uint32_t randomIndex = random_.getUniformInt(alive_.size());
@@ -112,3 +108,11 @@ std::vector<Heterotroph>& Heterotrophs::getHeterotrophs() {
   return heterotrophs_;
 }
 
+std::uint64_t Heterotrophs::getLivingCount() {
+  return alive_.size();
+}
+
+
+std::uint64_t Heterotrophs::getDeadCount() {
+  return dead_.size();
+}

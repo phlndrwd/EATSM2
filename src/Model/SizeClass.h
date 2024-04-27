@@ -31,7 +31,8 @@ class SizeClass {
   void populate(const double, const double, const double, const double);
 
   void update(std::vector<structs::MovingHeterotroph>&);
-  void snapshot();
+
+  OutputData& snapshot();
 
   std::uint32_t getIndex() const;
 

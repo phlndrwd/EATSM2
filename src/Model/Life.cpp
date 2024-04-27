@@ -34,8 +34,8 @@ Life::Life(Nutrient& nutrient, Parameters& params) :
         random_(params.getRandomSeed()),  // Is this the first time random is used?
         algorithm_(nutrient, data_, params_, random_.getUniformInt(1, UINT_MAX)),
         numberOfSizeClasses_(params_.getNumberOfSizeClasses()),
-        sizeClassFrequencies_(numberOfSizeClasses_, 0),
-        sizeClassStarved_(numberOfSizeClasses_, 0) {
+        sizeClassLiving_(numberOfSizeClasses_, 0),
+        sizeClassDead_(numberOfSizeClasses_, 0) {
   std::uint32_t autotrophIndex = consts::kAutotrophSizeIndex;
   double idealInitialVolume = params.getSmallestIndividualVolume() * params.getPreferredPreyVolumeRatio();
   std::uint32_t heterotrophIndex = findSizeClassIndexFromVolume(idealInitialVolume);
@@ -69,16 +69,18 @@ void Life::snapshot() {
   outputData_.reset();
 
   std::for_each(std::begin(sizeClasses_), std::end(sizeClasses_), [&](SizeClass& thisSizeClass) {
-    thisSizeClass.snapshot();
+    OutputData& sizeClassOutput = thisSizeClass.snapshot();
 
     std::uint32_t index = thisSizeClass.getIndex();
-    sizeClassFrequencies_[index] = (float)thisSizeClass.getOutputData().getLivingCount();
+    sizeClassLiving_[index] = (float)sizeClassOutput.getLivingCount();
+    sizeClassDead_[index] = (float)sizeClassOutput.getDeadCount();
 
     outputData_ += thisSizeClass.getOutputData();
   });
-
-  DataRecorder::get()->addDataTo("SizeClassPopulation", sizeClassFrequencies_);
-  DataRecorder::get()->addDataTo("HeterotrophFrequency", outputData_.getLivingCount());
+  DataRecorder::get()->addDataTo("SizeClassLiving", sizeClassLiving_);
+  DataRecorder::get()->addDataTo("SizeClassDead", sizeClassDead_);
+  DataRecorder::get()->addDataTo("LivingCount", outputData_.getLivingCount());
+  DataRecorder::get()->addDataTo("DeadCount", outputData_.getDeadCount());
 }
 
 void Life::moveHeterotrophs() {

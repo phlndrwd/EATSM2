@@ -66,8 +66,11 @@ void SizeClass::update(std::vector<structs::MovingHeterotroph>& movingHeterotrop
   //moveSizeClass(movingHeterotrophs);
 }
 
-void SizeClass::snapshot() {
-  outputData_.setLivingCount(heterotrophs_.getPopulationSize());
+OutputData& SizeClass::snapshot() {
+  outputData_.setLivingCount(heterotrophs_.getLivingCount());
+  outputData_.setDeadCount(heterotrophs_.getDeadCount());
+
+  return outputData_;
 }
 
 void SizeClass::metabolisation() {

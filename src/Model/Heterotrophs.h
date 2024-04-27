@@ -66,8 +66,6 @@ public:
     });
   }
 
-  std::uint64_t getPopulationSize();
-
   std::uint32_t getRandomHeterotrophIndex();
   Heterotroph& getRandomHeterotroph();
   Heterotroph& getRandomHeterotroph(std::uint32_t&);
@@ -80,6 +78,9 @@ public:
   void clearChildren();
 
   std::vector<Heterotroph>& getHeterotrophs();
+
+  std::uint64_t getLivingCount();
+  std::uint64_t getDeadCount();
 
 private:
   Nutrient& nutrient_;
