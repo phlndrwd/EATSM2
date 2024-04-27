@@ -73,9 +73,9 @@ void Life::update() {
   });
   // PJU FIX - Integrate this loop into reproduction.
   std::for_each(std::begin(sizeClasses_), std::end(sizeClasses_), [&](SizeClass& thisSizeClass) {
-   thisSizeClass.moveSizeClass(movingHeterotrophs_);
+   //thisSizeClass.moveSizeClass(movingHeterotrophs_);
   });
-  moveHeterotrophs();
+  //moveHeterotrophs();
 }
 
 void Life::snapshot() {

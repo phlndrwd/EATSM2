@@ -2,6 +2,8 @@ Name,Type,Label,Resampling
 AxisSizeClassMidPointValues,vector,Equivalent Spherical Volume,none
 AxisSizeClassBoundaryValues,vector,Equivalent Spherical Volume,none
 AxisTimeSteps,vector,Time Steps,standard
+LivingCount,vector,Individual Frequency,standard
+DeadCount,vector,Individual Frequency,standard
 HeterotrophFrequency,vector,Individual Frequency,standard
 HeterotrophVolume,vector,Volume,standard
 HeterotrophApproxVolume,vector,Volume,standard
@@ -16,7 +18,8 @@ TimingMetabolising,vector,Seconds,cumulative
 TimingReproducing,vector,Seconds,cumulative
 TimingStarving,vector,Seconds,cumulative
 TimeSampling,vector,Seconds,cumulative
-SizeClassPopulation,matrix,log_{10}( Individual Frequency ),standard
+SizeClassLiving,matrix,log_{10}( Individual Frequency ),standard
+SizeClassDead,matrix,log_{10}( Individual Frequency ),standard
 SizeClassHerbivoreFrequencies,matrix,log_{10}( Individual Frequency ),cumulative
 SizeClassCarnivoreFrequencies,matrix,log_{10}( Individual Frequency ),cumulative
 SizeClassPreyFrequencies,matrix,log_{10}( Individual Frequency ),cumulative
