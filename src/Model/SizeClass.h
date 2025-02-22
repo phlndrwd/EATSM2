@@ -46,7 +46,6 @@ class SizeClass {
   OutputData& getOutputData();
 
  private:
-
   void starve(const std::uint32_t);
 
   Nutrient& nutrient_;

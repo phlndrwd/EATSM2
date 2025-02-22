@@ -78,16 +78,13 @@ void Heterotrophs::removeHeterotroph(const std::uint32_t index) {
 void Heterotrophs::addHeterotroph(Heterotroph heterotroph) {
   if (alive_.size() != maxPopulation_) {
     std::int32_t index;
-    std::vector<Heterotroph>::iterator heterotrophsIt;
     if (dead_.size() != 0) {
       index = dead_.front();
       dead_.pop();
-      heterotrophsIt = heterotrophs_.begin();
-      std::advance(heterotrophsIt, index);
     } else {
       index = heterotrophs_.size();
-      heterotrophsIt = heterotrophs_.end();
     }
+    auto heterotrophsIt = std::next(heterotrophs_.begin(), index);
     heterotrophs_.insert(heterotrophsIt, std::move(heterotroph));
     alive_.push_back(index);
   } else {
@@ -98,7 +95,6 @@ void Heterotrophs::addHeterotroph(Heterotroph heterotroph) {
 void Heterotrophs::addChild(Heterotroph child) {
   children_.push_back(child);
 }
-
 
 void Heterotrophs::clearChildren() {
   children_.clear();

@@ -73,7 +73,7 @@ void Life::update() {
   });
   // PJU FIX - Integrate this loop into reproduction.
   std::for_each(std::begin(sizeClasses_), std::end(sizeClasses_), [&](SizeClass& thisSizeClass) {
-   //thisSizeClass.moveSizeClass(movingHeterotrophs_);
+   thisSizeClass.moveSizeClass(movingHeterotrophs_);
   });
   //moveHeterotrophs();
 }
@@ -101,19 +101,21 @@ void Life::moveHeterotrophs() {
     Heterotroph& heterotroph = movingHeterotroph.heterotroph;
     std::uint32_t searchOffSet = 0;
     if (movingHeterotroph.direction == enums::eMoveDown) {
-      searchOffSet = numberOfSizeClasses_ - movingHeterotroph.origSizeClassIndex;  // Search next down
+      searchOffSet = movingHeterotroph.origSizeClassIndex + 1;
+      auto sizeClassDownIt = std::next(sizeClasses_.rbegin(), searchOffSet);
+
+      std::find_if (sizeClassDownIt, sizeClasses_.rend(), [&](SizeClass& nextSizeClass) {
+        if (heterotroph.getVolumeActual() >= data_.getSizeClassBoundaries()[nextSizeClass.getIndex()]) {
+          nextSizeClass.getHeterotrophs().addHeterotroph(heterotroph);
+          return true;
+        } else {
+          return false;
+        }
+      });
     } else if (movingHeterotroph.direction == enums::eMoveUp) {
-      searchOffSet = movingHeterotroph.origSizeClassIndex + 1;  // Search next up
-    }  // No need for else?
-    auto sizeClassDownIt = std::next(sizeClasses_.begin(), searchOffSet);
-    std::find_if (sizeClassDownIt, sizeClasses_.end(), [&](SizeClass& nextSizeClass) {
-      if (heterotroph.getVolumeActual() >= data_.getSizeClassBoundaries()[nextSizeClass.getIndex()]) {
-        nextSizeClass.getHeterotrophs().addHeterotroph(heterotroph);
-        return true;
-      } else {
-        return false;
-      }
-    });
+      searchOffSet = movingHeterotroph.origSizeClassIndex + 1;
+      //sizeClassDownIt = std::next(sizeClasses_.rbegin(), searchOffSet);
+    }
   }
   movingHeterotrophs_.clear();
 }
