@@ -11,70 +11,39 @@
 #include <iostream>
 
 #include "Constants.h"
-#include "DataRecorder.h"
 #include "Date.h"
 #include "Environment.h"
-#include "FileReader.h"
-#include "FileWriter.h"
-#include "Parameters.h"
 #include "TimeStep.h"
 
 #include "Data.h"
 #include "JsonReader.h"
 
-#include "Timer.h"
-
 std::int32_t main() {
-  std::cout << "1. Testing file reading..." << std::endl;
-  jino::Data params2;
-  jino::JsonReader reader;
-  reader.readParams(params2);
-
   std::cout << consts::kSystemName + " " + consts::kSystemVersion + " starting on "
-            << Date::getDateAndTimeString() << "..." << std::endl
-            << std::endl;
-  Parameters params;
-  FileReader fileReader;
-  fileReader.setParameters(params);
-  Timer timer(params.getRunTimeInSeconds(), true);
-  FileWriter fileWriter;  // Created here to initialise output directory
+            << Date::getDateAndTimeString() << "..." << std::endl << std::endl;
+  jino::Data input;
+  jino::JsonReader reader;
+  reader.readParams(input);
 
-  std::uint32_t runTimeInSeconds = params.getRunTimeInSeconds();
-  double oneTenthOfRunTimeInSeconds = runTimeInSeconds / 10.0;
-  double cumulativeTenthsOfRunTime = 0;
-  bool isAlive = true;
+  Parameters params(input);
+
+  const std::uint64_t samplingRate = input.getValue<std::uint64_t>(consts::kParamNames.at(enums::eSamplingRate));
+  const std::uint64_t maxTimeStep = input.getValue<std::uint64_t>(consts::kParamNames.at(enums::eMaxTimeStep));
 
   Environment environment(params);
   TimeStep timeStep(params.getSamplingRate());
 
-  std::cout << "Model run due to complete on "
-            << Date::getDateAndTimeString(consts::kCompleteDateFormat, runTimeInSeconds) << std::endl
-            << std::endl;
   std::cout << "Starting main time loop..." << std::endl;
-  do {
-    // Update before data collection; calculates essential variables for
-    // encounter rates.
+  for (std::uint64_t t = 0; t < maxTimeStep; ++t) {
     environment.update();
-    // Data collection
-    if (timeStep.takeSnapshot() == true) {
-      DataRecorder::get()->addDataTo("AxisTimeSteps", timeStep.getTimeStep());
-      DataRecorder::get()->addDataTo("TimeSampling", timer.split());
-      environment.snapshot();
+    if (t % samplingRate == 0) {
+      // jino::Buffers::get().record();
+      // output.writeDatums(data);
+      std::cout << "t=" << t << std::endl;
     }
-    // Text output at the completion of each ten percent of the run
-    if (timer.elapsed() >= (std::uint32_t)cumulativeTenthsOfRunTime) {
-      cumulativeTenthsOfRunTime = cumulativeTenthsOfRunTime + oneTenthOfRunTimeInSeconds;
-      std::cout << "t = " << timeStep.getTimeStep() << consts::kDataDelimiterValue
-                << consts::kWhiteSpaceCharacter << timer.remainingString() << " remaining at "
-                << Date::getDateAndTimeString() << "..." << std::endl;
-    }
-    timeStep.incrementTimeStep();
-    //std::cout << "timer.Elapsed( )> " << timer.Elapsed( ) << ",
-    // runTimeInSeconds> " << runTimeInSeconds << ", isAlive> " << isAlive <<
-    // std::endl;
-  } while (timer.elapsed() < runTimeInSeconds && isAlive == true);
+  }
 
-  fileWriter.writeOutputData();
-  std::cout << "Total run time " << timer.stop() << "s" << std::endl;
+  std::cout << "Complete." << std::endl;
+
   return 0;
 }

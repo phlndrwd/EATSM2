@@ -10,8 +10,11 @@
 #ifndef CONSTANTS
 #define CONSTANTS
 
+#include <array>
 #include <cstdint>
 #include <string>
+
+#include "Enums.h"
 
 namespace consts {
 const std::string kConfigurationDirectory = "./input/";
@@ -58,6 +61,31 @@ const std::string kSystemName = "EATSM2";
 const std::string kSystemVersion = "0.0.1";
 const std::string kSystemDate = "29/01/2023";
 const std::string kSystemTime = "00:00";
+
+const std::array<std::string, enums::eNumberOfParamters> kParamNames = {
+  "RandomSeed",
+  "MaxTimeStep",
+  "SamplingRate",
+  "NumberOfSizeClasses",
+  "ReadModelState",
+  "WriteModelState",
+  "UseLinearFeeding",
+  "InitialAutotrophicVolume",
+  "InitialHeterotrophicVolume",
+  "MinimumHeterotrophicVolume",
+  "SmallestIndividualVolume",
+  "LargestIndividualVolume",
+  "SizeClassSubsetFraction",
+  "HalfSaturationConstantFraction",
+  "PreferredPreyVolumeRatio",
+  "PreferenceFunctionWidth",
+  "AssimilationEfficiency",
+  "FractionalMetabolicExpense",
+  "MetabolicIndex",
+  "MutationProbability",
+  "MutationStandardDeviation",
+};
+
 }  // namespace Constants
 
 #endif

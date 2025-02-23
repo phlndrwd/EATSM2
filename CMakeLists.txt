@@ -44,8 +44,6 @@ list(APPEND EATSM2_SOURCES
   src/Data/VectorDatum.h
 
   src/Input/Constants.h
-  src/Input/FileReader.cpp
-  src/Input/FileReader.h
   src/Input/Parameters.cpp
   src/Input/Parameters.h
 

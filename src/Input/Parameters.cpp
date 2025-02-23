@@ -8,88 +8,48 @@
 ******************************************************************************/
 
 #include "Parameters.h"
-#include "Strings.h"
 
-Parameters::Parameters() {
-  parametersInitialised_ = {false};
+#include "Constants.h"
+#include "Enums.h"
+
+Parameters::Parameters(jino::Data& input) {
+  randomSeed_ = input.getValue<std::uint32_t>(consts::kParamNames.at(enums::eRandomSeed));
+  maxTimeStep_ = input.getValue<std::uint64_t>(consts::kParamNames.at(enums::eMaxTimeStep));
+  samplingRate_ = input.getValue<std::uint32_t>(consts::kParamNames.at(enums::eSamplingRate));
+  numberOfSizeClasses_ = input.getValue<std::uint32_t>(consts::kParamNames.at(enums::eNumberOfSizeClasses));
+
+  readModelState_ = input.getValue<std::uint8_t>(consts::kParamNames.at(enums::eReadModelState));
+  writeModelState_ = input.getValue<std::uint8_t>(consts::kParamNames.at(enums::eWriteModelState));
+  useLinearFeeding_ = input.getValue<std::uint8_t>(consts::kParamNames.at(enums::eUseLinearFeeding));
+
+  initialAutotrophicVolume_ = input.getValue<double>(consts::kParamNames.at(enums::eInitialAutotrophicVolume));
+  initialHeterotrophicVolume_ = input.getValue<double>(consts::kParamNames.at(enums::eInitialHeterotrophicVolume));
+  minimumHeterotrophicVolume_ = input.getValue<double>(consts::kParamNames.at(enums::eMinimumHeterotrophicVolume));
+
+  smallestIndividualVolume_ = input.getValue<double>(consts::kParamNames.at(enums::eSmallestIndividualVolume));
+  largestIndividualVolume_ = input.getValue<double>(consts::kParamNames.at(enums::eLargestIndividualVolume));
+  sizeClassSubsetFraction_ = input.getValue<double>(consts::kParamNames.at(enums::eSizeClassSubsetFraction));
+  halfSaturationConstantFraction_ = input.getValue<double>(consts::kParamNames.at(enums::eHalfSaturationConstantFraction));
+
+  preferredPreyVolumeRatio_ = input.getValue<std::uint32_t>(consts::kParamNames.at(enums::ePreferredPreyVolumeRatio));
+  preferenceFunctionWidth_ = input.getValue<double>(consts::kParamNames.at(enums::ePreferenceFunctionWidth));
+
+  assimilationEfficiency_ = input.getValue<double>(consts::kParamNames.at(enums::eAssimilationEfficiency));
+  fractionalMetabolicExpense_ = input.getValue<double>(consts::kParamNames.at(enums::eFractionalMetabolicExpense));
+  metabolicIndex_ = input.getValue<double>(consts::kParamNames.at(enums::eMetabolicIndex));
+
+  mutationProbability_ = input.getValue<double>(consts::kParamNames.at(enums::eMutationProbability));
+  mutationStandardDeviation_ = input.getValue<double>(consts::kParamNames.at(enums::eMutationStandardDeviation));
 }
 
 Parameters::~Parameters() {}
 
-bool Parameters::initialise(const std::vector<std::vector<std::string>>& rawInputParameterData) {
-  if (rawInputParameterData.size() > 0) {
-    for (std::uint32_t rowIndex = 0; rowIndex < rawInputParameterData.size(); ++rowIndex) {
-      std::string parameterName = Strings::toLowercase(rawInputParameterData[rowIndex][enums::eParameterName]);
-      double parameterValue = Strings::stringToNumber(rawInputParameterData[rowIndex][enums::eParameterValue]);
-
-      if (parameterName == "randomseed")
-        setRandomSeed(parameterValue);
-      else if (parameterName == "runtimeinseconds")
-        setRunTimeInSeconds(parameterValue);
-      else if (parameterName == "samplingrate")
-        setSamplingRate(parameterValue);
-      else if (parameterName == "numberofsizeclasses")
-        setNumberOfSizeClasses(parameterValue);
-
-      else if (parameterName == "readmodelstate")
-        setReadModelState(parameterValue);
-      else if (parameterName == "writemodelstate")
-        setWriteModelState(parameterValue);
-      else if (parameterName == "uselinearfeeding")
-        setUseLinearFeeding(parameterValue);
-
-      else if (parameterName == "initialautotrophicvolume")
-        setInitialAutotrophicVolume(parameterValue);
-      else if (parameterName == "initialheterotrophicvolume")
-        setInitialHeterotrophicVolume(parameterValue);
-      else if (parameterName == "minimumheterotrophicvolume")
-        setMinimumHeterotrophicVolume(parameterValue);
-
-      else if (parameterName == "smallestindividualvolume")
-        setSmallestIndividualVolume(parameterValue);
-      else if (parameterName == "largestindividualvolume")
-        setLargestIndividualVolume(parameterValue);
-      else if (parameterName == "preferredpreyvolumeratio")
-        setPreferredPreyVolumeRatio(parameterValue);
-      else if (parameterName == "preferencefunctionwidth")
-        setPreferenceFunctionWidth(parameterValue);
-      else if (parameterName == "sizeclasssubsetfraction")
-        setSizeClassSubsetFraction(parameterValue);
-      else if (parameterName == "halfsaturationconstantfraction")
-        setHalfSaturationConstantFraction(parameterValue);
-
-      else if (parameterName == "assimilationefficiency")
-        setAssimilationEfficiency(parameterValue);
-      else if (parameterName == "fractionalmetabolicexpense")
-        setFractionalMetabolicExpense(parameterValue);
-
-      else if (parameterName == "metabolicindex")
-        setMetabolicIndex(parameterValue);
-      else if (parameterName == "mutationprobability")
-        setMutationProbability(parameterValue);
-      else if (parameterName == "mutationstandarddeviation")
-        setMutationStandardDeviation(parameterValue);
-    }
-
-    return isInitialised();
-  } else
-    return false;
-}
-
-bool Parameters::isInitialised() {
-  bool isInitialised = true;
-  for (std::uint32_t i = 0; i < enums::eNumberOfParamters; ++i)
-    if (parametersInitialised_[i] == false) isInitialised = false;
-
-  return isInitialised;
-}
-
-const std::uint32_t& Parameters::getRunTimeInSeconds() const {
-  return runTimeInSeconds_;
-}
-
 const std::uint32_t& Parameters::getRandomSeed() const {
   return randomSeed_;
+}
+
+const std::uint64_t& Parameters::getMaxTimeStep() const {
+  return maxTimeStep_;
 }
 
 const std::uint32_t& Parameters::getSamplingRate() const {
@@ -100,15 +60,15 @@ const std::uint32_t& Parameters::getNumberOfSizeClasses() const {
   return numberOfSizeClasses_;
 }
 
-const bool& Parameters::getReadModelState() const {
+const uint8_t& Parameters::getReadModelState() const {
   return readModelState_;
 }
 
-const bool& Parameters::getWriteModelState() const {
+const uint8_t& Parameters::getWriteModelState() const {
   return writeModelState_;
 }
 
-const bool& Parameters::getUseLinearFeeding() const {
+const uint8_t& Parameters::getUseLinearFeeding() const {
   return useLinearFeeding_;
 }
 
@@ -166,109 +126,4 @@ const double& Parameters::getMutationProbability() const {
 
 const double& Parameters::getMutationStandardDeviation() const {
   return mutationStandardDeviation_;
-}
-
-void Parameters::setRandomSeed(const std::uint32_t& randomNumberSeed) {
-  randomSeed_ = randomNumberSeed;
-  parametersInitialised_[enums::eRandomSeed] = true;
-}
-
-void Parameters::setRunTimeInSeconds(const std::uint32_t& runTimeInSeconds) {
-  runTimeInSeconds_ = runTimeInSeconds;
-  parametersInitialised_[enums::eRunTimeInSeconds] = true;
-}
-
-void Parameters::setSamplingRate(const std::uint32_t& samplingRate) {
-  samplingRate_ = samplingRate;
-  parametersInitialised_[enums::eSamplingRate] = true;
-}
-
-void Parameters::setNumberOfSizeClasses(const std::uint32_t& numberOfSizeClasses) {
-  numberOfSizeClasses_ = numberOfSizeClasses;
-  parametersInitialised_[enums::eNumberOfSizeClasses] = true;
-}
-
-void Parameters::setReadModelState(const bool& createNewPopulation) {
-  readModelState_ = createNewPopulation;
-  parametersInitialised_[enums::eReadModelState] = true;
-}
-
-void Parameters::setWriteModelState(const bool& writeModelState) {
-  writeModelState_ = writeModelState;
-  parametersInitialised_[enums::eWriteModelState] = true;
-}
-
-void Parameters::setUseLinearFeeding(const bool& useLinearFeeding) {
-  useLinearFeeding_ = useLinearFeeding;
-  parametersInitialised_[enums::eUseLinearFeeding] = true;
-}
-
-void Parameters::setInitialAutotrophicVolume(const double& initialAutotrophicVolume) {
-  initialAutotrophicVolume_ = initialAutotrophicVolume;
-  parametersInitialised_[enums::eInitialAutotrophicVolume] = true;
-}
-
-void Parameters::setInitialHeterotrophicVolume(const double& initialHeterotrophicVolume) {
-  initialHeterotrophicVolume_ = initialHeterotrophicVolume;
-  parametersInitialised_[enums::eInitialHeterotrophicVolume] = true;
-}
-
-void Parameters::setMinimumHeterotrophicVolume(const double& minimumHeterotrophicVolume) {
-  minimumHeterotrophicVolume_ = minimumHeterotrophicVolume;
-  parametersInitialised_[enums::eMinimumHeterotrophicVolume] = true;
-}
-
-void Parameters::setSmallestIndividualVolume(const double& smallestIndividualVolume) {
-  smallestIndividualVolume_ = smallestIndividualVolume;
-  parametersInitialised_[enums::eSmallestIndividualVolume] = true;
-}
-
-void Parameters::setLargestIndividualVolume(const double& largestIndividualVolume) {
-  largestIndividualVolume_ = largestIndividualVolume;
-  parametersInitialised_[enums::eLargestIndividualVolume] = true;
-}
-
-void Parameters::setPreferredPreyVolumeRatio(const std::uint32_t& preferredPreyVolumeRatio) {
-  preferredPreyVolumeRatio_ = preferredPreyVolumeRatio;
-  parametersInitialised_[enums::ePreferredPreyVolumeRatio] = true;
-}
-
-void Parameters::setPreferenceFunctionWidth(const double& preferenceFunctionWidth) {
-  preferenceFunctionWidth_ = preferenceFunctionWidth;
-  parametersInitialised_[enums::ePreferenceFunctionWidth] = true;
-}
-
-void Parameters::setSizeClassSubsetFraction(const double& sizeClassSubsetFraction) {
-  sizeClassSubsetFraction_ = sizeClassSubsetFraction;
-  parametersInitialised_[enums::eSizeClassSubsetFraction] = true;
-}
-
-void Parameters::setHalfSaturationConstantFraction(const double& halfSaturationConstantFraction) {
-  halfSaturationConstantFraction_ = halfSaturationConstantFraction;
-  parametersInitialised_[enums::eHalfSaturationConstantFraction] = true;
-}
-
-void Parameters::setAssimilationEfficiency(const double& assimilationEfficiency) {
-  assimilationEfficiency_ = assimilationEfficiency;
-  parametersInitialised_[enums::eAssimilationEfficiency] = true;
-}
-
-void Parameters::setFractionalMetabolicExpense(const double& fractionalMetabolicExpense) {
-  fractionalMetabolicExpense_ = fractionalMetabolicExpense;
-  parametersInitialised_[enums::eFractionalMetabolicExpense] = true;
-}
-
-void Parameters::setMetabolicIndex(const double& metabolicIndex) {
-  metabolicIndex_ = metabolicIndex;
-  parametersInitialised_[enums::eMetabolicIndex] = true;
-}
-
-void Parameters::setMutationProbability(const double& mutationProbability) {
-  mutationProbability_ = mutationProbability;
-  parametersInitialised_[enums::eMutationProbability] = true;
-}
-
-void Parameters::setMutationStandardDeviation(const double& mutationStandardDeviation) {
-  mutationStandardDeviation_ = mutationStandardDeviation;
-  parametersInitialised_[enums::eMutationStandardDeviation] = true;
 }

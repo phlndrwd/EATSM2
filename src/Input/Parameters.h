@@ -10,28 +10,23 @@
 #ifndef PARAMETERS
 #define PARAMETERS
 
-#include <array>
 #include <cstdint>
-#include <string>
-#include <vector>
 
-#include "Enums.h"
+#include "Data.h"
 
 class Parameters {
  public:
-  Parameters();
+  explicit Parameters(jino::Data&);
   ~Parameters();
 
-  bool initialise(const std::vector<std::vector<std::string>>&);
-
-  const std::uint32_t& getRunTimeInSeconds() const;
   const std::uint32_t& getRandomSeed() const;
+  const std::uint64_t& getMaxTimeStep() const;
   const std::uint32_t& getSamplingRate() const;
   const std::uint32_t& getNumberOfSizeClasses() const;
 
-  const bool& getReadModelState() const;
-  const bool& getWriteModelState() const;
-  const bool& getUseLinearFeeding() const;
+  const uint8_t& getReadModelState() const;
+  const uint8_t& getWriteModelState() const;
+  const uint8_t& getUseLinearFeeding() const;
 
   const double& getInitialAutotrophVolume() const;
   const double& getInitialHeterotrophVolume() const;
@@ -53,46 +48,15 @@ class Parameters {
   const double& getMutationProbability() const;
   const double& getMutationStandardDeviation() const;
 
-  void setRandomSeed(const std::uint32_t&);
-  void setRunTimeInSeconds(const std::uint32_t&);
-  void setSamplingRate(const std::uint32_t&);
-  void setNumberOfSizeClasses(const std::uint32_t&);
-
-  void setReadModelState(const bool&);
-  void setWriteModelState(const bool&);
-  void setUseLinearFeeding(const bool&);
-
-  void setInitialAutotrophicVolume(const double&);
-  void setInitialHeterotrophicVolume(const double&);
-  void setMinimumHeterotrophicVolume(const double&);
-
-  void setSmallestIndividualVolume(const double&);
-  void setLargestIndividualVolume(const double&);
-
-  void setPreferredPreyVolumeRatio(const std::uint32_t&);
-  void setPreferenceFunctionWidth(const double&);
-
-  void setSizeClassSubsetFraction(const double&);
-  void setHalfSaturationConstantFraction(const double&);
-
-  void setAssimilationEfficiency(const double&);
-  void setFractionalMetabolicExpense(const double&);
-  void setMetabolicIndex(const double&);
-
-  void setMutationProbability(const double&);
-  void setMutationStandardDeviation(const double&);
-
  private:
-  bool isInitialised();
-
   std::uint32_t randomSeed_;
-  std::uint32_t runTimeInSeconds_;
+  std::uint64_t maxTimeStep_;
   std::uint32_t samplingRate_;
   std::uint32_t numberOfSizeClasses_;
 
-  bool readModelState_;
-  bool writeModelState_;
-  bool useLinearFeeding_;
+  std::uint8_t readModelState_;
+  std::uint8_t writeModelState_;
+  std::uint8_t useLinearFeeding_;
 
   double initialAutotrophicVolume_;
   double initialHeterotrophicVolume_;
@@ -112,8 +76,6 @@ class Parameters {
 
   double mutationProbability_;
   double mutationStandardDeviation_;
-
-  std::array<bool, enums::eNumberOfParamters> parametersInitialised_;
 };
 
 #endif

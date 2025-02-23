@@ -14,7 +14,7 @@ namespace enums {
 
 enum eInputParameters {
   eRandomSeed,
-  eRunTimeInSeconds,
+  eMaxTimeStep,
   eSamplingRate,
   eNumberOfSizeClasses,
   eReadModelState,
