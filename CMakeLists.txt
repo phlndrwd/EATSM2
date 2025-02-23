@@ -89,12 +89,20 @@ list(APPEND EATSM2_SOURCES
   src/Tools/Timer.h
 )
 
+## Add jino
 include_directories(${JINO_PATH}/include)
-link_directories(${JINO_PATH}/build/Release)
+include_directories(${JINO_PATH}/external/nlohmann-src/include/)
+
+if(CMAKE_BUILD_TYPE STREQUAL "Release")
+  link_directories(${JINO_PATH}/build/Release)
+elseif(CMAKE_BUILD_TYPE STREQUAL "Debug")
+  link_directories(${JINO_PATH}/build/Debug)
+endif()
 
 add_executable(eatsm2 src/Main.cpp ${EATSM2_SOURCES})
 target_compile_features(eatsm2 PRIVATE cxx_std_20)
 target_compile_options(eatsm2 PRIVATE -Wall -Wextra -Wpedantic)
+target_link_libraries(eatsm2 libjino.a)
 
 ## Create tests
 enable_testing()

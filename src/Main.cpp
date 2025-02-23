@@ -19,9 +19,17 @@
 #include "Parameters.h"
 #include "TimeStep.h"
 
+#include "Data.h"
+#include "JsonReader.h"
+
 #include "Timer.h"
 
 std::int32_t main() {
+  std::cout << "1. Testing file reading..." << std::endl;
+  jino::Data params2;
+  jino::JsonReader reader;
+  reader.readParams(params2);
+
   std::cout << consts::kSystemName + " " + consts::kSystemVersion + " starting on "
             << Date::getDateAndTimeString() << "..." << std::endl
             << std::endl;

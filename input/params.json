@@ -1,0 +1,7 @@
+{
+  "MaxTimeStep": 10000,
+  "SamplingRate": 10,
+  "WriteState": true,
+  "YMin": -1.0,
+  "YMax": 1.0
+}
