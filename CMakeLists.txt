@@ -9,12 +9,23 @@
 
 cmake_minimum_required(VERSION 3.5)
 
-project(EATSM2 LANGUAGES CXX)
+project(eatsm2 LANGUAGES CXX)
 
-set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
+#set(CMAKE_CXX_CLANG_TIDY "clang-tidy;-checks=*")
+
+set(JINO_PATH "../jino/")
 
 file(COPY ${CMAKE_SOURCE_DIR}/input DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
+
+## Download required files
+include(FetchContent)
+set(FETCHCONTENT_BASE_DIR "${CMAKE_SOURCE_DIR}/external/")
+FetchContent_Declare(cpplint
+  GIT_REPOSITORY "https://github.com/cpplint/cpplint.git"
+  GIT_TAG "2.0.0"
+)
+FetchContent_MakeAvailable(cpplint)
 
 include_directories(${CMAKE_SOURCE_DIR}/src/Data)
 include_directories(${CMAKE_SOURCE_DIR}/src/Input)
@@ -22,23 +33,74 @@ include_directories(${CMAKE_SOURCE_DIR}/src/Model)
 include_directories(${CMAKE_SOURCE_DIR}/src/Output)
 include_directories(${CMAKE_SOURCE_DIR}/src/Tools)
 
-include(${CMAKE_SOURCE_DIR}/src/CMakeLists.txt)
-include(${CMAKE_SOURCE_DIR}/src/Data/CMakeLists.txt)
-include(${CMAKE_SOURCE_DIR}/src/Input/CMakeLists.txt)
-include(${CMAKE_SOURCE_DIR}/src/Model/CMakeLists.txt)
-include(${CMAKE_SOURCE_DIR}/src/Output/CMakeLists.txt)
-include(${CMAKE_SOURCE_DIR}/src/Tools/CMakeLists.txt)
-
-add_compile_options(-Wall -Wextra -Wpedantic -std=c++17)
-add_executable(EATSM2 ${EATSM2_SOURCES}
-  src/Model/EncounterAlgorithm.h
-  src/Model/EncounterAlgorithm.cpp
-  src/Model/EcologicalData.h
-  src/Model/EcologicalData.cpp
-  src/Model/Heterotrophs.h
-  src/Model/Heterotrophs.cpp
+list(APPEND EATSM2_SOURCES
+  src/Data/Enums.h
+  src/Data/MatrixDatum.cpp
+  src/Data/MatrixDatum.h
+  src/Data/OutputData.cpp
   src/Data/OutputData.h
-  src/Data/OutputData.cpp)
+  src/Data/Structs.h
+  src/Data/VectorDatum.cpp
+  src/Data/VectorDatum.h
 
-install(TARGETS EATSM2 LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR})
+  src/Input/Constants.h
+  src/Input/FileReader.cpp
+  src/Input/FileReader.h
+  src/Input/Parameters.cpp
+  src/Input/Parameters.h
+
+  src/Model/Autotrophs.cpp
+  src/Model/Autotrophs.h
+  src/Model/EcologicalData.cpp
+  src/Model/EcologicalData.h
+  src/Model/EcologicalFunctions.cpp
+  src/Model/EcologicalFunctions.h
+  src/Model/EncounterAlgorithm.cpp
+  src/Model/EncounterAlgorithm.h
+  src/Model/Environment.h
+  src/Model/Environment.cpp
+  src/Model/Heterotroph.cpp
+  src/Model/Heterotroph.h
+  src/Model/Heterotrophs.cpp
+  src/Model/Heterotrophs.h
+  src/Model/Life.cpp
+  src/Model/Life.h
+  src/Model/Nutrient.cpp
+  src/Model/Nutrient.h
+  src/Model/SizeClass.cpp
+  src/Model/SizeClass.h
+  src/Model/TimeStep.cpp
+  src/Model/TimeStep.h
+  src/Model/Traits.cpp
+  src/Model/Traits.h
+
+  src/Output/DataRecorder.cpp
+  src/Output/DataRecorder.h
+  src/Output/FileWriter.cpp
+  src/Output/FileWriter.h
+
+  src/Tools/Date.cpp
+  src/Tools/Date.h
+  src/Tools/RandomSimple.cpp
+  src/Tools/RandomSimple.h
+  src/Tools/Strings.cpp
+  src/Tools/Strings.h
+  src/Tools/Timer.cpp
+  src/Tools/Timer.h
+)
+
+include_directories(${JINO_PATH}/include)
+link_directories(${JINO_PATH}/build/Release)
+
+add_executable(eatsm2 src/Main.cpp ${EATSM2_SOURCES})
+target_compile_features(eatsm2 PRIVATE cxx_std_20)
+target_compile_options(eatsm2 PRIVATE -Wall -Wextra -Wpedantic)
+
+## Create tests
+enable_testing()
+add_test(NAME coding_norms
+         COMMAND "${FETCHCONTENT_BASE_DIR}/cpplint-src/cpplint.py" --quiet --recursive
+                 ${PROJECT_SOURCE_DIR}/src
+                 ${PROJECT_SOURCE_DIR}/test)
+
 
