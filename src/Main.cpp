@@ -21,14 +21,16 @@
 std::int32_t main() {
   std::cout << consts::kSystemName + " " + consts::kSystemVersion + " starting on "
             << Date::getDateAndTimeString() << "..." << std::endl << std::endl;
-  jino::Data input;
+  jino::Data paramsData;
   jino::JsonReader reader;
-  reader.readParams(input);
 
-  Parameters params(input);
+  const std::string paramFilePath = consts::kConfigurationDirectory + consts::kParamsFile;
+  reader.readParams(paramsData, paramFilePath, consts::getParamNames());
 
-  const std::uint64_t samplingRate = input.getValue<std::uint64_t>(consts::kParamNames.at(enums::eSamplingRate));
-  const std::uint64_t maxTimeStep = input.getValue<std::uint64_t>(consts::kParamNames.at(enums::eMaxTimeStep));
+  Parameters params(paramsData);
+
+  const std::uint64_t samplingRate = paramsData.getValue<std::uint64_t>(consts::kParamNames.at(enums::eSamplingRate));
+  const std::uint64_t maxTimeStep = paramsData.getValue<std::uint64_t>(consts::kParamNames.at(enums::eMaxTimeStep));
 
   Environment environment(params);
   TimeStep timeStep(params.getSamplingRate());

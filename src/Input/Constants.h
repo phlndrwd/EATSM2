@@ -13,11 +13,14 @@
 #include <array>
 #include <cstdint>
 #include <string>
+#include <vector>
 
 #include "Enums.h"
 
 namespace consts {
-const std::string kConfigurationDirectory = "./input/";
+constexpr std::string kConfigurationDirectory = "./input/";
+constexpr std::string kParamsFile = "params.json";
+
 const std::string kOutputDirectoryName = "output";
 
 const std::string kInputParametersFileName = "Parameters.csv";
@@ -85,6 +88,10 @@ const std::array<std::string, enums::eNumberOfParamters> kParamNames = {
   "MutationProbability",
   "MutationStandardDeviation",
 };
+
+inline std::vector<std::string> getParamNames() {
+  return std::vector<std::string>(std::begin(consts::kParamNames), std::end(consts::kParamNames));
+}
 
 }  // namespace Constants
 

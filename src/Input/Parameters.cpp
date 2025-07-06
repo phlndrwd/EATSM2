@@ -13,7 +13,7 @@
 #include "Enums.h"
 
 Parameters::Parameters(jino::Data& input) {
-  randomSeed_ = input.getValue<std::uint32_t>(consts::kParamNames.at(enums::eRandomSeed));
+  randomSeed_ = input.getValue<std::uint8_t>(consts::kParamNames.at(enums::eRandomSeed));
   maxTimeStep_ = input.getValue<std::uint64_t>(consts::kParamNames.at(enums::eMaxTimeStep));
   samplingRate_ = input.getValue<std::uint32_t>(consts::kParamNames.at(enums::eSamplingRate));
   numberOfSizeClasses_ = input.getValue<std::uint32_t>(consts::kParamNames.at(enums::eNumberOfSizeClasses));
