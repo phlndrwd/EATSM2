@@ -21,49 +21,48 @@ namespace consts {
 constexpr std::string kConfigurationDirectory = "./input/";
 constexpr std::string kParamsFile = "params.json";
 
-const std::string kOutputDirectoryName = "output";
+constexpr std::string kOutputDirectoryName = "output";
 
-const std::string kInputParametersFileName = "Parameters.csv";
-const std::string kOutputParametersFileName = "Variables.csv";
-const std::string kInitialStateFileName = "InitialState.csv";
-const std::string kModelStateFileName = "State.csv";
-const std::string kFileNameExtension = ".csv";
+constexpr std::string kInputParametersFileName = "Parameters.csv";
+constexpr std::string kOutputParametersFileName = "Variables.csv";
+constexpr std::string kModelStateFileName = "State.csv";
+constexpr std::string kFileNameExtension = ".csv";
 
-const std::string kVectorDatumTypeName = "vector";
-const std::string kMatrixDatumTypeName = "matrix";
+constexpr std::string kVectorDatumTypeName = "vector";
+constexpr std::string kMatrixDatumTypeName = "matrix";
 
-const std::uint32_t kMaximumNumberOfTrophicLevels = 11;  // 0 = unclassified, 1 = primary, etc.
-const std::int32_t kMissingValue = -9999;
+constexpr std::uint32_t kMaximumNumberOfTrophicLevels = 11;  // 0 = unclassified, 1 = primary, etc.
+constexpr std::int32_t kMissingValue = -9999;
 
-const std::uint32_t kDateTimeBufferSize = 25;
-const std::uint32_t kOutputFolderPermissions = 0777;
+constexpr std::uint32_t kDateTimeBufferSize = 25;
+constexpr std::uint32_t kOutputFolderPermissions = 0777;
 
-const std::uint32_t kAutotrophSizeIndex = 0;
-const std::uint32_t kReproductionFactor = 2;
-const double kReproductionMultiplier = 1 / (double)kReproductionFactor;  // Equivalent to 1 / 2
-const double kMinimumFractionalVolume = 0.5;
+constexpr std::uint32_t kAutotrophSizeIndex = 0;
+constexpr std::uint32_t kReproductionFactor = 2;
+constexpr double kReproductionMultiplier = 1 / (double)kReproductionFactor;  // Equivalent to 1 / 2
+constexpr double kMinimumFractionalVolume = 0.5;
 
-const std::uint32_t kSecondsInAMinute = 60;
-const std::uint32_t kMinutesInAnHour = 60;
-const std::uint32_t kHoursInADay = 24;
+constexpr std::uint32_t kSecondsInAMinute = 60;
+constexpr std::uint32_t kMinutesInAnHour = 60;
+constexpr std::uint32_t kHoursInADay = 24;
 
-const std::string kCompleteDateFormat = "%c";
+constexpr std::string kCompleteDateFormat = "%c";
 const std::string kDataSetNameFormat = "%Y-%m-%d_%H-%M-%S";
 
-const char kFolderDelimiter = '/';
-const char kWhiteSpaceCharacter = ' ';
-const char kDataDelimiterValue = ',';
-const char kCommentCharacter = '#';
+constexpr char kFolderDelimiter = '/';
+constexpr char kWhiteSpaceCharacter = ' ';
+constexpr char kDataDelimiterValue = ',';
+constexpr char kCommentCharacter = '#';
 
-const std::string kParameterFileCommand = "-p";
-const std::string kStateFileCommand = "-s";
-const std::string kRestartCommand = "-r";
-const std::string kVersionCommand = "-v";
+constexpr std::string kParameterFileCommand = "-p";
+constexpr std::string kStateFileCommand = "-s";
+constexpr std::string kRestartCommand = "-r";
+constexpr std::string kVersionCommand = "-v";
 
-const std::string kSystemName = "EATSM2";
-const std::string kSystemVersion = "0.0.1";
-const std::string kSystemDate = "29/01/2023";
-const std::string kSystemTime = "00:00";
+constexpr std::string kSystemName = "EATSM2";
+constexpr std::string kSystemVersion = "0.0.1";
+constexpr std::string kSystemDate = "29/01/2023";
+constexpr std::string kSystemTime = "00:00";
 
 const std::array<std::string, enums::eNumberOfParamters> kParamNames = {
   "RandomSeed",
