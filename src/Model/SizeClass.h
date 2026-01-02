@@ -30,8 +30,6 @@ class SizeClass {
 
   void populate(const double, const double, const double, const double);
 
-  void update(std::vector<structs::MovingHeterotroph>&);
-
   void metabolisation();
   void starvation();
   void reproduction();

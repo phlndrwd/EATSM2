@@ -29,8 +29,8 @@ std::int32_t main() {
 
   Parameters params(paramsData);
 
-  const std::uint64_t samplingRate = paramsData.getValue<std::uint64_t>(consts::kParamNames.at(enums::eSamplingRate));
-  const std::uint64_t maxTimeStep = paramsData.getValue<std::uint64_t>(consts::kParamNames.at(enums::eMaxTimeStep));
+  const std::uint64_t samplingRate = params.getSamplingRate();
+  const std::uint64_t maxTimeStep = params.getMaxTimeStep();
 
   Environment environment(params);
   TimeStep timeStep(params.getSamplingRate());

@@ -10,6 +10,7 @@
 #ifndef HETEROTROPHS_H
 #define HETEROTROPHS_H
 
+#include <algorithm>
 #include <cmath>
 #include <cstdint>
 #include <functional>

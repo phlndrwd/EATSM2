@@ -59,13 +59,6 @@ void SizeClass::populate(const double volumeToInitialise, const double assimilat
   }
 }
 
-void SizeClass::update(std::vector<structs::MovingHeterotroph>& movingHeterotrophs) {
-  metabolisation();
-  starvation();
-  reproduction();
-  //moveSizeClass(movingHeterotrophs);
-}
-
 OutputData& SizeClass::snapshot() {
   outputData_.setLivingCount(heterotrophs_.getLivingCount());
   outputData_.setDeadCount(heterotrophs_.getDeadCount());
