@@ -29,7 +29,6 @@ void EncounterAlgorithm::update(std::vector<SizeClass>& sizeClasses, SizeClass& 
   enums::eFeedingStrategy feedingStrategy = enums::eNotEating;
   std::vector<SizeClass>::iterator coupledSizeClassIt = sizeClasses.begin();
   double feedingProbability = calcFeedingProbability(sizeClasses, thisSizeClass, coupledSizeClassIt, feedingStrategy);
-
   thisSizeClass.getHeterotrophs().subset([&](std::uint32_t randomIndex) {
     if (random_.getUniform() <= feedingProbability) {
       Heterotroph& predator = thisSizeClass.getHeterotrophs().getHeterotroph(randomIndex);
@@ -60,8 +59,8 @@ PreyVolumes EncounterAlgorithm::calcEffectiveSizeClassVolumes(std::vector<SizeCl
 							      SizeClass& thisSizeClass,
 							      std::vector<double>& effectiveSizeClassVolumes) {
   PreyVolumes preyVolumes;
-  auto sizeClassVolumesIt = interSizeClassVolumes_[thisSizeClass.getIndex()].begin();
-  auto sizeClassPreferencesIt = interSizeClassPreferences_[thisSizeClass.getIndex()].begin();
+  auto sizeClassVolumesIt = interSizeClassVolumes_.at(thisSizeClass.getIndex()).begin();
+  auto sizeClassPreferencesIt = interSizeClassPreferences_.at(thisSizeClass.getIndex()).begin();
   std::vector<double>::iterator effectiveSizeClassVolumesIt = effectiveSizeClassVolumes.begin();
 
   std::for_each(std::begin(sizeClasses), std::end(sizeClasses), [&](SizeClass& otherSizeClass) {

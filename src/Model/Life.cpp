@@ -57,24 +57,24 @@ Life::Life(Nutrient& nutrient, Parameters& params) :
 }
 
 void Life::update() {
-  //std::for_each(std::begin(sizeClasses_), std::end(sizeClasses_), [&](SizeClass& thisSizeClass) {
-  //  algorithm_.update(sizeClasses_, thisSizeClass);  // Equivalent to Heterotrophs.Feeding() in EATSM1
-  //});
+  std::for_each(std::begin(sizeClasses_), std::end(sizeClasses_), [&](SizeClass& thisSizeClass) {
+    algorithm_.update(sizeClasses_, thisSizeClass);  // Equivalent to Heterotrophs.Feeding() in EATSM1
+  });
   std::for_each(std::begin(sizeClasses_), std::end(sizeClasses_), [&](SizeClass& thisSizeClass) {
     thisSizeClass.metabolisation();
   });
-  //std::for_each(std::begin(sizeClasses_), std::end(sizeClasses_), [&](SizeClass& thisSizeClass) {
-  //  thisSizeClass.starvation();
-  //});
+  std::for_each(std::begin(sizeClasses_), std::end(sizeClasses_), [&](SizeClass& thisSizeClass) {
+    thisSizeClass.starvation();
+  });
   std::for_each(std::begin(sizeClasses_), std::end(sizeClasses_), [&](SizeClass& thisSizeClass) {
     thisSizeClass.reproduction();
   });
 
-  //// PJU FIX - Integrate this loop into reproduction.
+  // PJU FIX - Integrate this loop into reproduction.
   std::for_each(std::begin(sizeClasses_), std::end(sizeClasses_), [&](SizeClass& thisSizeClass) {
    thisSizeClass.moveSizeClass(movingHeterotrophs_);
   });
-  //moveHeterotrophs();
+  moveHeterotrophs();
 }
 
 void Life::snapshot() {
@@ -84,8 +84,8 @@ void Life::snapshot() {
     OutputData& sizeClassOutput = thisSizeClass.snapshot();
 
     std::uint32_t index = thisSizeClass.getIndex();
-    sizeClassLiving_[index] = (float)sizeClassOutput.getLivingCount();
-    sizeClassDead_[index] = (float)sizeClassOutput.getDeadCount();
+    sizeClassLiving_.at(index) = (float)sizeClassOutput.getLivingCount();
+    sizeClassDead_.at(index) = (float)sizeClassOutput.getDeadCount();
 
     outputData_ += thisSizeClass.getOutputData();
   });
@@ -104,7 +104,7 @@ void Life::moveHeterotrophs() {
       auto sizeClassDownIt = std::next(sizeClasses_.rbegin(), searchOffSet);
 
       std::find_if (sizeClassDownIt, sizeClasses_.rend(), [&](SizeClass& nextSizeClass) {
-        if (heterotroph.getVolumeActual() >= data_.getSizeClassBoundaries()[nextSizeClass.getIndex()]) {
+        if (heterotroph.getVolumeActual() >= data_.getSizeClassBoundaries().at(nextSizeClass.getIndex())) {
           nextSizeClass.getHeterotrophs().addHeterotroph(heterotroph);
           return true;
         } else {
@@ -122,7 +122,7 @@ void Life::moveHeterotrophs() {
 std::uint32_t Life::findSizeClassIndexFromVolume(const double& volume) const {
   std::uint32_t sizeClassIndex = 0;
   for (std::uint32_t index = 1; index <= numberOfSizeClasses_; ++index) {
-    if (volume < data_.getSizeClassBoundaries()[index]) {
+    if (volume < data_.getSizeClassBoundaries().at(index)) {
       sizeClassIndex = index - 1;
       break;
     }

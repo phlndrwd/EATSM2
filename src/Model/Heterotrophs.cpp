@@ -24,8 +24,8 @@ Heterotrophs::Heterotrophs(Nutrient& nutrient, Parameters& params, const double&
 
 std::uint32_t Heterotrophs::getRandomHeterotrophIndex() {
   if (alive_.size() != 0) {
-    std::uint32_t randomIndex = random_.getUniformInt(alive_.size());
-    return alive_[randomIndex];
+    std::uint32_t randomIndex = random_.getUniformInt(alive_.size() - 1);
+    return alive_.at(randomIndex);
   } else {
     throw std::runtime_error("Size class is empty...");
   }
@@ -33,8 +33,8 @@ std::uint32_t Heterotrophs::getRandomHeterotrophIndex() {
 
 Heterotroph& Heterotrophs::getRandomHeterotroph() {
   if (alive_.size() != 0) {
-    std::uint32_t randomIndex = random_.getUniformInt(alive_.size());
-    return heterotrophs_[alive_[randomIndex]];
+    std::uint32_t randomIndex = random_.getUniformInt(alive_.size() - 1);
+    return heterotrophs_.at(alive_.at(randomIndex));
   } else {
     throw std::runtime_error("Size class is empty...");
   }
@@ -42,8 +42,8 @@ Heterotroph& Heterotrophs::getRandomHeterotroph() {
 
 Heterotroph& Heterotrophs::getRandomHeterotroph(std::uint32_t& randIdxCopy) {
   if (alive_.size() != 0) {
-    randIdxCopy = random_.getUniformInt(alive_.size());
-    return heterotrophs_[alive_[randIdxCopy]];
+    randIdxCopy = random_.getUniformInt(alive_.size() - 1);
+    return heterotrophs_.at(alive_.at(randIdxCopy));
   } else {
     throw std::runtime_error("Size class is empty...");
   }
@@ -51,7 +51,7 @@ Heterotroph& Heterotrophs::getRandomHeterotroph(std::uint32_t& randIdxCopy) {
 
 Heterotroph& Heterotrophs::getHeterotroph(const std::uint32_t index) {
   if (alive_.size() != 0) {
-    return heterotrophs_[index];
+    return heterotrophs_.at(index);
   } else {
     throw std::runtime_error("Size class is empty...");
   }
@@ -59,7 +59,7 @@ Heterotroph& Heterotrophs::getHeterotroph(const std::uint32_t index) {
 
 const Heterotroph& Heterotrophs::getHeterotroph(const std::uint32_t index) const {
   if (alive_.size() != 0) {
-    return heterotrophs_[index];
+    return heterotrophs_.at(index);
   } else {
     throw std::runtime_error("Size class is empty...");
   }
