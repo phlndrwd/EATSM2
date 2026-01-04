@@ -1,6 +1,6 @@
 {
   "RandomSeed": 0,
-  "MaxTimeStep": 10000,
+  "MaxTimeStep": 600,
   "SamplingRate": 100,
   "NumberOfSizeClasses": 100,
   "ReadModelState": false,

@@ -15,32 +15,37 @@
 #include "Environment.h"
 #include "TimeStep.h"
 
+#include "Buffers.h"
 #include "Data.h"
 #include "JsonReader.h"
+#include "Output.h"
 
 std::int32_t main() {
   std::cout << consts::kSystemName + " " + consts::kSystemVersion + " starting on "
             << Date::getDateAndTimeString() << "..." << std::endl << std::endl;
+
   jino::Data paramsData;
   jino::JsonReader reader;
+  jino::Output output;
+  jino::NetCDFData data;
 
   const std::string paramFilePath = consts::kConfigurationDirectory + consts::kParamsFile;
   reader.readParams(paramsData, paramFilePath, consts::getParamNames());
 
   Parameters params(paramsData);
+  Environment environment(params);
+  TimeStep timeStep(params.getSamplingRate());
+
 
   const std::uint64_t samplingRate = params.getSamplingRate();
   const std::uint64_t maxTimeStep = params.getMaxTimeStep();
-
-  Environment environment(params);
-  TimeStep timeStep(params.getSamplingRate());
 
   std::cout << "Starting main time loop..." << std::endl;
   for (std::uint64_t t = 0; t < maxTimeStep; ++t) {
     environment.update();
     if (t % samplingRate == 0) {
-      // jino::Buffers::get().record();
-      // output.writeDatums(data);
+      jino::Buffers::get().record();
+      output.writeDatums(data);
       std::cout << "t=" << t << std::endl;
     }
   }
