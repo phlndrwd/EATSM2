@@ -33,7 +33,7 @@ class SizeClass {
   void metabolisation();
   void starvation();
   void reproduction();
-  void moveSizeClass(std::vector<structs::MovingHeterotroph>&);
+  void whoIsMoving(std::vector<structs::MovingHeterotroph>&);
 
   OutputData& snapshot();
 

@@ -57,22 +57,26 @@ Life::Life(Nutrient& nutrient, Parameters& params) :
 }
 
 void Life::update() {
+  /// Feeding - subset
   std::for_each(std::begin(sizeClasses_), std::end(sizeClasses_), [&](SizeClass& thisSizeClass) {
-    algorithm_.update(sizeClasses_, thisSizeClass);  // Equivalent to Heterotrophs.Feeding() in EATSM1
+    algorithm_.update(sizeClasses_, thisSizeClass);
   });
+  /// Metabolisation - full set
   std::for_each(std::begin(sizeClasses_), std::end(sizeClasses_), [&](SizeClass& thisSizeClass) {
     thisSizeClass.metabolisation();
   });
+  /// Starvation - subset
   std::for_each(std::begin(sizeClasses_), std::end(sizeClasses_), [&](SizeClass& thisSizeClass) {
     thisSizeClass.starvation();
   });
+  /// Reproduction - full set
   std::for_each(std::begin(sizeClasses_), std::end(sizeClasses_), [&](SizeClass& thisSizeClass) {
     thisSizeClass.reproduction();
   });
 
-  // PJU FIX - Integrate this loop into reproduction.
+  // Movement between size classes - integrate into reproduction?
   std::for_each(std::begin(sizeClasses_), std::end(sizeClasses_), [&](SizeClass& thisSizeClass) {
-   thisSizeClass.moveSizeClass(movingHeterotrophs_);
+   thisSizeClass.whoIsMoving(movingHeterotrophs_);
   });
   moveHeterotrophs();
 }
@@ -99,21 +103,28 @@ void Life::moveHeterotrophs() {
   for (const auto& movingHeterotroph : movingHeterotrophs_) {
     Heterotroph& heterotroph = movingHeterotroph.heterotroph;
     std::uint32_t searchOffSet = 0;
-    if (movingHeterotroph.direction == enums::eMoveDown) {
-      searchOffSet = movingHeterotroph.origSizeClassIndex + 1;
+    if (movingHeterotroph.growthTrajectory == enums::eShrinking) {
+      searchOffSet = movingHeterotroph.prevSizeClassIndex - 1;
       auto sizeClassDownIt = std::next(sizeClasses_.rbegin(), searchOffSet);
-
-      std::find_if (sizeClassDownIt, sizeClasses_.rend(), [&](SizeClass& nextSizeClass) {
-        if (heterotroph.getVolumeActual() >= data_.getSizeClassBoundaries().at(nextSizeClass.getIndex())) {
-          nextSizeClass.getHeterotrophs().addHeterotroph(heterotroph);
+      std::find_if(sizeClassDownIt, sizeClasses_.rend(), [&](SizeClass& prevSizeClass) {
+        if (heterotroph.getVolumeActual() >= data_.getSizeClassBoundaries().at(prevSizeClass.getIndex())) {
+          prevSizeClass.getHeterotrophs().addHeterotroph(heterotroph);
           return true;
         } else {
           return false;
         }
       });
-    } else if (movingHeterotroph.direction == enums::eMoveUp) {
-      searchOffSet = movingHeterotroph.origSizeClassIndex + 1;
-      //sizeClassDownIt = std::next(sizeClasses_.rbegin(), searchOffSet);
+    } else if (movingHeterotroph.growthTrajectory == enums::eGrowing) {
+      searchOffSet = movingHeterotroph.prevSizeClassIndex + 1;
+        auto sizeClassUpIt = std::next(sizeClasses_.begin(), searchOffSet);
+        std::find_if(sizeClassUpIt, sizeClasses_.end(), [&](SizeClass& nextSizeClass) {
+          if (heterotroph.getVolumeActual() >= data_.getSizeClassBoundaries().at(nextSizeClass.getIndex())) {
+              nextSizeClass.getHeterotrophs().addHeterotroph(heterotroph);
+              return true;
+            } else {
+              return false;
+            }
+        });
     }
   }
   movingHeterotrophs_.clear();

@@ -58,10 +58,10 @@ enum eTraitIndices {
 };
 
 // Model enums
-enum eMovementDirection {
-  eNoMovement,
-  eMoveUp,
-  eMoveDown
+enum eGrowthTrajectory {
+  eStatic,
+  eGrowing,
+  eShrinking
 };
 
 }  // namespace enums

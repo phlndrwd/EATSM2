@@ -7,7 +7,6 @@
 * which can be obtained from https://opensource.org/license/bsd-3-clause/.    *
 ******************************************************************************/
 
-#include "DataRecorder.h"
 #include "SizeClass.h"
 
 #include <climits>
@@ -103,14 +102,14 @@ void SizeClass::reproduction() {
   heterotrophs_.clearChildren();
 }
 
-void SizeClass::moveSizeClass(std::vector<structs::MovingHeterotroph>& movingHeterotrophs) {
+void SizeClass::whoIsMoving(std::vector<structs::MovingHeterotroph>& movingHeterotrophs) {
   heterotrophs_.forEachHeterotrophIndex([&](std::uint32_t index) {
     Heterotroph& heterotroph = heterotrophs_.getHeterotroph(index);
     if (heterotroph.getVolumeActual() < sizeClassLower_ && index_ > 0) {  // Zero is smallest size class
-      movingHeterotrophs.push_back(structs::MovingHeterotroph(heterotroph, index_, enums::eMoveDown));
+      movingHeterotrophs.push_back(structs::MovingHeterotroph(heterotroph, index_, enums::eShrinking));
       heterotrophs_.removeHeterotroph(index);
     } else if (heterotroph.getVolumeActual() >= sizeClassUpper_ && index_ < numberOfSizeClasses_ - 1) {
-      movingHeterotrophs.push_back(structs::MovingHeterotroph(heterotroph, index_, enums::eMoveUp));
+      movingHeterotrophs.push_back(structs::MovingHeterotroph(heterotroph, index_, enums::eGrowing));
       heterotrophs_.removeHeterotroph(index);
     }
   });

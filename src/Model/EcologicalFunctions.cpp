@@ -83,14 +83,14 @@ std::uint32_t EcologicalFunctions::findIndividualSizeClassIndex(const Heterotrop
   std::uint32_t newSizeClassIndex = currentSizeClass;
   double volume = heterotroph.getVolumeActual();
 
-  if (directionToMove == enums::eMoveUp) {
+  if (directionToMove == enums::eGrowing) {
     for (std::uint32_t index = currentSizeClass; index < numberOfSizeClasses_; ++index) {
       if (volume < sizeClassBoundaries_[index]) {
         newSizeClassIndex = index - 1;
         break;
       }
     }
-  } else if (directionToMove == enums::eMoveDown) {
+  } else if (directionToMove == enums::eShrinking) {
     for (std::int32_t index = currentSizeClass; index >= 0; --index) {
       if (volume >= sizeClassBoundaries_[index]) {
         newSizeClassIndex = (std::uint32_t)index;
@@ -104,7 +104,7 @@ std::uint32_t EcologicalFunctions::findIndividualSizeClassIndex(const Heterotrop
 
 bool EcologicalFunctions::updateSizeClassIndex(Heterotroph& heterotroph) const {
   std::uint32_t directionToMove = directionIndividualShouldMoveSizeClasses(heterotroph);
-  if (directionToMove != enums::eNoMovement) {
+  if (directionToMove != enums::eStatic) {
     // PJU FIX
     // std::uint32_t newSizeClassIndex = findIndividualSizeClassIndex(heterotroph, directionToMove);
     // heterotroph.setSizeClassIndex(newSizeClassIndex);
@@ -114,16 +114,16 @@ bool EcologicalFunctions::updateSizeClassIndex(Heterotroph& heterotroph) const {
 }
 
 std::uint32_t EcologicalFunctions::directionIndividualShouldMoveSizeClasses(const Heterotroph& heterotroph) const {
-  std::uint32_t directionToMove = enums::eNoMovement;
+  std::uint32_t directionToMove = enums::eStatic;
 
   // PJU FIX
   std::uint32_t sizeClassIndex = 0;  // heterotroph.getSizeClassIndex();
   double volumeActual = heterotroph.getVolumeActual();
 
   if (volumeActual < sizeClassBoundaries_[sizeClassIndex])
-    directionToMove = enums::eMoveDown;
+    directionToMove = enums::eShrinking;
   else if (volumeActual >= sizeClassBoundaries_[sizeClassIndex + 1])
-    directionToMove = enums::eMoveUp;
+    directionToMove = enums::eGrowing;
 
   return directionToMove;
 }
