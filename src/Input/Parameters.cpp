@@ -24,7 +24,7 @@ std::uint64_t calcDataSize(const std::uint64_t maxTimeStep, const std::uint64_t 
     }
   std::float64_t result = static_cast<std::float64_t>(maxTimeStep) /
                   static_cast<std::float64_t>(samplingRate);
-  return static_cast<std::uint64_t>(std::ceil(result) + 1);
+  return static_cast<std::uint64_t>(std::ceil(result));
 }
 }
 
