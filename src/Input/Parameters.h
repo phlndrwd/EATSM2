@@ -49,6 +49,8 @@ class Parameters {
   const std::float64_t& getMutationProbability() const;
   const std::float64_t& getMutationStandardDeviation() const;
 
+  const std::uint64_t& getDataSize() const;
+
  private:
   std::uint32_t randomSeed_;
   std::uint64_t maxTimeStep_;
@@ -77,6 +79,9 @@ class Parameters {
 
   std::float64_t mutationProbability_;
   std::float64_t mutationStandardDeviation_;
+
+  // Calculated parameters
+  std::uint64_t dataSize_;
 };
 
 #endif

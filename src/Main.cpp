@@ -47,6 +47,8 @@ std::int32_t main() {
   const std::uint64_t samplingRate = params.getSamplingRate();
   const std::uint64_t maxTimeStep = params.getMaxTimeStep();
 
+  data.addDimension("dataSize", params.getDataSize(), true);
+
   output.writeMetadata(data);
   std::cout << "Starting main time loop..." << std::endl;
   for (std::uint64_t t = 0; t < maxTimeStep; ++t) {

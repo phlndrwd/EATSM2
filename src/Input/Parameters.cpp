@@ -9,8 +9,24 @@
 
 #include "Parameters.h"
 
+#include <cmath>
+
 #include "Constants.h"
 #include "Enums.h"
+
+namespace {
+std::uint64_t calcDataSize(const std::uint64_t maxTimeStep, const std::uint64_t samplingRate) {
+  if (maxTimeStep == 0) {
+      throw std::invalid_argument("Numerator must be greater than zero...");
+    }
+  if (samplingRate == 0) {
+      throw std::invalid_argument("Division by zero is not allowed...");
+    }
+  std::float64_t result = static_cast<std::float64_t>(maxTimeStep) /
+                  static_cast<std::float64_t>(samplingRate);
+  return static_cast<std::uint64_t>(std::ceil(result) + 1);
+}
+}
 
 Parameters::Parameters(jino::Data& input):
     randomSeed_(input.getValue<std::uint8_t>(consts::kParamNames.at(enums::eRandomSeed))),
@@ -41,7 +57,7 @@ Parameters::Parameters(jino::Data& input):
     mutationProbability_(input.getValue<std::float64_t>(consts::kParamNames.at(enums::eMutationProbability))),
     mutationStandardDeviation_(input.getValue<std::float64_t>(consts::kParamNames.at(enums::eMutationStandardDeviation)))
 {
-
+  dataSize_ = calcDataSize(maxTimeStep_, samplingRate_);
 }
 
 Parameters::~Parameters() {}
@@ -128,4 +144,8 @@ const std::float64_t& Parameters::getMutationProbability() const {
 
 const std::float64_t& Parameters::getMutationStandardDeviation() const {
   return mutationStandardDeviation_;
+}
+
+const std::uint64_t& Parameters::getDataSize() const {
+  return dataSize_;
 }
