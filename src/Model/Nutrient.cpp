@@ -24,13 +24,13 @@ void Nutrient::snapshot() {
   toFlux_ = 0;
 }
 
-const double& Nutrient::getVolume() const {
+const std::float64_t& Nutrient::getVolume() const {
   return volume_;
 }
 
-void Nutrient::addToVolume(const double& volume) {
+void Nutrient::addToVolume(const std::float64_t& volume) {
   volume_ += volume;
   toFlux_ += volume;
 }
 
-void Nutrient::subtractFromVolume(const double& volume) { volume_ -= volume; }
+void Nutrient::subtractFromVolume(const std::float64_t& volume) { volume_ -= volume; }

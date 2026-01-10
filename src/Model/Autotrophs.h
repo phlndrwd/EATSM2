@@ -10,26 +10,28 @@
 #ifndef AUTOTROPHS_H
 #define AUTOTROPHS_H
 
+#include <stdfloat>
+
 class Nutrient;
 
 class Autotrophs {
  public:
   Autotrophs() = delete;
-  explicit Autotrophs(Nutrient&, const double&);
+  explicit Autotrophs(Nutrient&, const std::float64_t&);
 
   void update();
-  void addToVolume(const double&);
-  void subtractFromVolume(const double&);
+  void addToVolume(const std::float64_t&);
+  void subtractFromVolume(const std::float64_t&);
   void recordData();
 
-  double& getVolume();
-  const double& getVolume() const;
+  std::float64_t& getVolume();
+  const std::float64_t& getVolume() const;
 
  private:
   Nutrient& nutrient_;
 
-  double volume_;
-  double toFlux_;
+  std::float64_t volume_;
+  std::float64_t toFlux_;
 };
 
 #endif

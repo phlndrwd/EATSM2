@@ -26,8 +26,8 @@ const std::string Strings::toString(const T& input) {
 template const std::string Strings::toString<char>(const char& input);
 template const std::string Strings::toString<std::int32_t>(const std::int32_t& input);
 
-double Strings::stringToNumber(const std::string& string) {
-  double number = strtod(string.c_str(), nullptr);
+std::float64_t Strings::stringToNumber(const std::string& string) {
+  std::float64_t number = strtod(string.c_str(), nullptr);
 
   return number;
 }
@@ -45,7 +45,7 @@ const std::vector<std::string> Strings::stringToWords(const std::string& inputSt
   return wordList;
 }
 
-const std::string Strings::doubleToPrecisionString(const double& value, const std::uint32_t& decimals) {
+const std::string Strings::doubleToPrecisionString(const std::float64_t& value, const std::uint32_t& decimals) {
   std::ostringstream outputStringStream;
   outputStringStream << std::fixed << std::setprecision(decimals) << value;
 

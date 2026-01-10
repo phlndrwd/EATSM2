@@ -12,13 +12,14 @@
 
 #include <algorithm>
 #include <climits>
+#include <iostream>
 
 #include "Constants.h"
 #include "Parameters.h"
 
 namespace {
 SizeClass sizeClassGenerator(Nutrient& nutrient, Parameters& params, EcologicalData& data,
-			     const double initialAutotrophVolume, const double initialHeterotrophVolume,
+                             const std::float64_t initialAutotrophVolume, const std::float64_t initialHeterotrophVolume,
 			     std::uint32_t& index, std::uint32_t randomSeed) {
   SizeClass sizeClass(nutrient, params, data, initialAutotrophVolume, initialHeterotrophVolume,
                       index, randomSeed);
@@ -35,22 +36,24 @@ Life::Life(Nutrient& nutrient, Parameters& params) :
         algorithm_(nutrient, data_, params_, random_.getUniformInt(1, UINT_MAX)),
         numberOfSizeClasses_(params_.getNumberOfSizeClasses()),
         sizeClassLiving_(numberOfSizeClasses_, 0),
-        sizeClassDead_(numberOfSizeClasses_, 0) {
+        sizeClassDead_(numberOfSizeClasses_, 0),
+        totalHeterotrophFrequency_(0),
+        bufferTotalHeterotrophFreq_("totalHeterotrophFrequency_", "totals", params_.getMaxTimeStep() / params_.getSamplingRate(), totalHeterotrophFrequency_) {
   std::uint32_t autotrophIndex = consts::kAutotrophSizeIndex;
-  double idealInitialVolume = params.getSmallestIndividualVolume() * params.getPreferredPreyVolumeRatio();
+  std::float64_t idealInitialVolume = params.getSmallestIndividualVolume() * params.getPreferredPreyVolumeRatio();
   std::uint32_t heterotrophIndex = findSizeClassIndexFromVolume(idealInitialVolume);
 
   std::uint32_t index = 0;
   std::generate_n(std::back_inserter(sizeClasses_), numberOfSizeClasses_, [&] {
-    double initialAutotrophVolume = autotrophIndex != index ? 0 : params.getInitialAutotrophVolume();
-    double initialHeterotrophVolume = heterotrophIndex != index ? 0 : params.getInitialHeterotrophVolume();
+    std::float64_t initialAutotrophVolume = autotrophIndex != index ? 0 : params.getInitialAutotrophVolume();
+    std::float64_t initialHeterotrophVolume = heterotrophIndex != index ? 0 : params.getInitialHeterotrophVolume();
     return sizeClassGenerator(nutrient_, params_, data_, initialAutotrophVolume, initialHeterotrophVolume,
                               index, random_.getUniformInt(1, UINT_MAX));
   });
 
   // PJU FIX - This is temporary!
-  std::vector<float> sizeClassBoundaries(std::begin(data_.getSizeClassMidPoints()), std::end(data_.getSizeClassMidPoints()));
-  std::vector<float> sizeClassMidPoints(std::begin(data_.getSizeClassBoundaries()), std::end(data_.getSizeClassBoundaries()));
+  std::vector<std::float64_t> sizeClassBoundaries(std::begin(data_.getSizeClassMidPoints()), std::end(data_.getSizeClassMidPoints()));
+  std::vector<std::float64_t> sizeClassMidPoints(std::begin(data_.getSizeClassBoundaries()), std::end(data_.getSizeClassBoundaries()));
 
   DataRecorder::get( )->setVectorDataOn("AxisSizeClassMidPointValues", sizeClassBoundaries);
   DataRecorder::get( )->setVectorDataOn("AxisSizeClassBoundaryValues", sizeClassMidPoints);
@@ -69,10 +72,15 @@ void Life::update() {
   std::for_each(std::begin(sizeClasses_), std::end(sizeClasses_), [&](SizeClass& thisSizeClass) {
     thisSizeClass.starvation();
   });
+
+  totalHeterotrophFrequency_ = 0;
   /// Reproduction - full set
   std::for_each(std::begin(sizeClasses_), std::end(sizeClasses_), [&](SizeClass& thisSizeClass) {
     thisSizeClass.reproduction();
+    totalHeterotrophFrequency_ += thisSizeClass.getHeterotrophs().getLivingCount();
   });
+
+  //std::cout << "totalHeterotrophFrequency> " << totalHeterotrophFrequency_ << std::endl;
 
   // Movement between size classes - integrate into reproduction?
   std::for_each(std::begin(sizeClasses_), std::end(sizeClasses_), [&](SizeClass& thisSizeClass) {
@@ -88,8 +96,8 @@ void Life::snapshot() {
     OutputData& sizeClassOutput = thisSizeClass.snapshot();
 
     std::uint32_t index = thisSizeClass.getIndex();
-    sizeClassLiving_.at(index) = (float)sizeClassOutput.getLivingCount();
-    sizeClassDead_.at(index) = (float)sizeClassOutput.getDeadCount();
+    sizeClassLiving_.at(index) = (std::float64_t)sizeClassOutput.getLivingCount();
+    sizeClassDead_.at(index) = (std::float64_t)sizeClassOutput.getDeadCount();
 
     outputData_ += thisSizeClass.getOutputData();
   });
@@ -130,7 +138,7 @@ void Life::moveHeterotrophs() {
   movingHeterotrophs_.clear();
 }
 
-std::uint32_t Life::findSizeClassIndexFromVolume(const double& volume) const {
+std::uint32_t Life::findSizeClassIndexFromVolume(const std::float64_t& volume) const {
   std::uint32_t sizeClassIndex = 0;
   for (std::uint32_t index = 1; index <= numberOfSizeClasses_; ++index) {
     if (volume < data_.getSizeClassBoundaries().at(index)) {

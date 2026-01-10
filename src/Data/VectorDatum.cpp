@@ -15,15 +15,15 @@ VectorDatum::VectorDatum(const std::string& name) {
 
 VectorDatum::~VectorDatum() {}
 
-float VectorDatum::getDataAtIndex(const std::uint32_t& index) const {
+std::float64_t VectorDatum::getDataAtIndex(const std::uint32_t& index) const {
   return data_[index];
 }
 
-void VectorDatum::setData(const std::vector<float> data) {
+void VectorDatum::setData(const std::vector<std::float64_t> data) {
   data_ = data;
 }
 
-void VectorDatum::addData(const float& data) {
+void VectorDatum::addData(const std::float64_t& data) {
   data_.push_back(data);
 }
 

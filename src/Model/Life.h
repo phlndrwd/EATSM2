@@ -10,6 +10,7 @@
 #ifndef LIFE_H
 #define LIFE_H
 
+#include <stdfloat>
 #include <vector>
 
 #include "EcologicalData.h"
@@ -19,6 +20,8 @@
 #include "Parameters.h"
 #include "RandomSimple.h"
 #include "SizeClass.h"
+
+#include "Buffer.h"
 
 class Life {
  public:
@@ -30,7 +33,7 @@ class Life {
 
  private:
   void moveHeterotrophs();
-  std::uint32_t findSizeClassIndexFromVolume(const double&) const;
+  std::uint32_t findSizeClassIndexFromVolume(const std::float64_t&) const;
 
   Nutrient& nutrient_;
   Parameters& params_;
@@ -46,8 +49,11 @@ class Life {
   std::uint32_t numberOfSizeClasses_;
 
   // PJU FIX - The following are temporary.
-  std::vector<float> sizeClassLiving_;
-  std::vector<float> sizeClassDead_;
+  std::vector<std::float64_t> sizeClassLiving_;
+  std::vector<std::float64_t> sizeClassDead_;
+
+  std::uint64_t totalHeterotrophFrequency_;
+  jino::Buffer<std::uint64_t> bufferTotalHeterotrophFreq_;
 };
 
 #endif

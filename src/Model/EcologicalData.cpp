@@ -19,8 +19,8 @@ EcologicalData::EcologicalData(Parameters& params) {
 
 void EcologicalData::initialise(Parameters& params) {
   std::uint32_t numberOfSizeClasses = params.getNumberOfSizeClasses();
-  double totalVolume = params.getInitialAutotrophVolume() + params.getInitialHeterotrophVolume();
-  double halfSaturationConstantFraction = params.getHalfSaturationConstantFraction();
+  std::float64_t totalVolume = params.getInitialAutotrophVolume() + params.getInitialHeterotrophVolume();
+  std::float64_t halfSaturationConstantFraction = params.getHalfSaturationConstantFraction();
 
   maximumSizeClassPopulations_.resize(numberOfSizeClasses, 0);
   remainingVolumes_.resize(numberOfSizeClasses);
@@ -32,10 +32,10 @@ void EcologicalData::initialise(Parameters& params) {
   smallestVolumeExponent_ = std::log10(params.getSmallestIndividualVolume());
   largestVolumeExponent_ = std::log10(params.getLargestIndividualVolume());
 
-  double sizeClassExponentIncrement = (largestVolumeExponent_ - smallestVolumeExponent_) / numberOfSizeClasses;
+  std::float64_t sizeClassExponentIncrement = (largestVolumeExponent_ - smallestVolumeExponent_) / numberOfSizeClasses;
   for (std::uint32_t sizeClassIndex = 0; sizeClassIndex < numberOfSizeClasses; ++sizeClassIndex) {
-    double sizeClassMidPointExponent = smallestVolumeExponent_ + ((sizeClassIndex + 0.5) * sizeClassExponentIncrement);
-    double sizeClassBoundaryExponent = smallestVolumeExponent_ + (sizeClassIndex * sizeClassExponentIncrement);
+    std::float64_t sizeClassMidPointExponent = smallestVolumeExponent_ + ((sizeClassIndex + 0.5) * sizeClassExponentIncrement);
+    std::float64_t sizeClassBoundaryExponent = smallestVolumeExponent_ + (sizeClassIndex * sizeClassExponentIncrement);
 
     sizeClassBoundaries_[sizeClassIndex] = std::pow(10, sizeClassBoundaryExponent);
     sizeClassMidPoints_[sizeClassIndex] = std::pow(10, sizeClassMidPointExponent);
@@ -45,25 +45,25 @@ void EcologicalData::initialise(Parameters& params) {
     halfSaturationConstants_[sizeClassIndex] = halfSaturationConstantFraction * remainingVolumes_[sizeClassIndex];
     maximumSizeClassPopulations_[sizeClassIndex] = std::ceil(totalVolume / sizeClassMidPoints_[sizeClassIndex]);
   }
-  double sizeClassBoundaryExponent = smallestVolumeExponent_ + (numberOfSizeClasses * sizeClassExponentIncrement);
+  std::float64_t sizeClassBoundaryExponent = smallestVolumeExponent_ + (numberOfSizeClasses * sizeClassExponentIncrement);
   sizeClassBoundaries_[numberOfSizeClasses] = std::pow(10, sizeClassBoundaryExponent);
 
   autotrophCellSize_ = sizeClassMidPoints_[consts::kAutotrophSizeIndex];
 }
 
-const std::vector<std::vector<double>>& EcologicalData::getInterSizeClassPreferences() const {
+const std::vector<std::vector<std::float64_t>>& EcologicalData::getInterSizeClassPreferences() const {
   return interSizeClassPreferences_;
 }
 
-std::vector<std::vector<double>>& EcologicalData::getInterSizeClassPreferences() {
+std::vector<std::vector<std::float64_t>>& EcologicalData::getInterSizeClassPreferences() {
   return interSizeClassPreferences_;
 }
 
-const std::vector<std::vector<double>>& EcologicalData::getInterSizeClassVolumes() const {
+const std::vector<std::vector<std::float64_t>>& EcologicalData::getInterSizeClassVolumes() const {
   return interSizeClassVolumes_;
 }
 
-std::vector<std::vector<double>>& EcologicalData::getInterSizeClassVolumes() {
+std::vector<std::vector<std::float64_t>>& EcologicalData::getInterSizeClassVolumes() {
   return interSizeClassVolumes_;
 }
 
@@ -71,30 +71,30 @@ const std::vector<std::uint32_t>& EcologicalData::getMaximumSizeClassPopulations
   return maximumSizeClassPopulations_;
 }
 
-const std::vector<double>& EcologicalData::getSizeClassBoundaries() const {
+const std::vector<std::float64_t>& EcologicalData::getSizeClassBoundaries() const {
   return sizeClassBoundaries_;
 }
 
-const std::vector<double>& EcologicalData::getSizeClassMidPoints() const {
+const std::vector<std::float64_t>& EcologicalData::getSizeClassMidPoints() const {
   return sizeClassMidPoints_;
 }
 
-const std::vector<double>& EcologicalData::getLinearFeedingDenominators() const {
+const std::vector<std::float64_t>& EcologicalData::getLinearFeedingDenominators() const {
   return linearFeedingDenominators_;
 }
 
-const std::vector<double>& EcologicalData::getHalfSaturationConstants() const {
+const std::vector<std::float64_t>& EcologicalData::getHalfSaturationConstants() const {
   return halfSaturationConstants_;
 }
 
-const double& EcologicalData::getSmallestVolumeExponent() const {
+const std::float64_t& EcologicalData::getSmallestVolumeExponent() const {
   return smallestVolumeExponent_;
 }
 
-const double& EcologicalData::getLargestVolumeExponent() const {
+const std::float64_t& EcologicalData::getLargestVolumeExponent() const {
   return largestVolumeExponent_;
 }
 
-const double& EcologicalData::getAutotrophCellSize() const {
+const std::float64_t& EcologicalData::getAutotrophCellSize() const {
   return autotrophCellSize_;
 }

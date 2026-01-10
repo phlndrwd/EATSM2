@@ -18,45 +18,45 @@ class EcologicalData {
 public:
   EcologicalData(Parameters&);
 
-  const std::vector<std::vector<double>>& getInterSizeClassPreferences() const;
-  const std::vector<std::vector<double>>& getInterSizeClassVolumes() const;
+  const std::vector<std::vector<std::float64_t>>& getInterSizeClassPreferences() const;
+  const std::vector<std::vector<std::float64_t>>& getInterSizeClassVolumes() const;
 
-  std::vector<std::vector<double>>& getInterSizeClassPreferences();
-  std::vector<std::vector<double>>& getInterSizeClassVolumes();
+  std::vector<std::vector<std::float64_t>>& getInterSizeClassPreferences();
+  std::vector<std::vector<std::float64_t>>& getInterSizeClassVolumes();
 
   const std::vector<std::uint32_t>& getMaximumSizeClassPopulations() const;
 
-  const std::vector<double>& getSizeClassBoundaries() const;
-  const std::vector<double>& getSizeClassMidPoints() const;
+  const std::vector<std::float64_t>& getSizeClassBoundaries() const;
+  const std::vector<std::float64_t>& getSizeClassMidPoints() const;
 
-  const std::vector<double>& getLinearFeedingDenominators() const;
-  const std::vector<double>& getHalfSaturationConstants() const;
+  const std::vector<std::float64_t>& getLinearFeedingDenominators() const;
+  const std::vector<std::float64_t>& getHalfSaturationConstants() const;
 
-  const double& getSmallestVolumeExponent() const;
-  const double& getLargestVolumeExponent() const;
+  const std::float64_t& getSmallestVolumeExponent() const;
+  const std::float64_t& getLargestVolumeExponent() const;
 
-  const double& getAutotrophCellSize() const;
+  const std::float64_t& getAutotrophCellSize() const;
 
 private:
   void initialise(Parameters&);
 
-  std::vector<std::vector<double>> interSizeClassPreferences_;
-  std::vector<std::vector<double>> interSizeClassVolumes_;
+  std::vector<std::vector<std::float64_t>> interSizeClassPreferences_;
+  std::vector<std::vector<std::float64_t>> interSizeClassVolumes_;
 
   std::vector<std::uint32_t> maximumSizeClassPopulations_;
 
-  std::vector<double> sizeClassBoundaries_;
-  std::vector<double> sizeClassMidPoints_;
+  std::vector<std::float64_t> sizeClassBoundaries_;
+  std::vector<std::float64_t> sizeClassMidPoints_;
 
-  std::vector<double> linearFeedingDenominators_;
-  std::vector<double> halfSaturationConstants_;
+  std::vector<std::float64_t> linearFeedingDenominators_;
+  std::vector<std::float64_t> halfSaturationConstants_;
 
-  std::vector<double> remainingVolumes_;
+  std::vector<std::float64_t> remainingVolumes_;
 
-  double smallestVolumeExponent_;
-  double largestVolumeExponent_;
+  std::float64_t smallestVolumeExponent_;
+  std::float64_t largestVolumeExponent_;
 
-  double autotrophCellSize_;
+  std::float64_t autotrophCellSize_;
 };
 
 #endif

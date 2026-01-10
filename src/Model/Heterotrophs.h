@@ -23,9 +23,9 @@
 #include "RandomSimple.h"
 
 namespace {
-std::int32_t roundWithProbability(RandomSimple& random, const double value) {
+std::int32_t roundWithProbability(RandomSimple& random, const std::float64_t value) {
   std::int32_t flooredValue = static_cast<std::int32_t>(std::floor(value));
-  double probability = value - flooredValue;
+  std::float64_t probability = value - flooredValue;
 
   if (random.getUniform() < probability) {
     return flooredValue + 1;
@@ -38,7 +38,7 @@ std::int32_t roundWithProbability(RandomSimple& random, const double value) {
 class Heterotrophs {
 public:
   Heterotrophs() = delete;
-  explicit Heterotrophs(Nutrient&, Parameters&, const double&, const std::uint32_t&, const std::uint32_t&);
+  explicit Heterotrophs(Nutrient&, Parameters&, const std::float64_t&, const std::uint32_t&, const std::uint32_t&);
 
   void subset(std::function<void(std::uint32_t)>);
 
@@ -88,8 +88,8 @@ private:
 
   RandomSimple random_;
 
-  const double sizeClassMidPoint_;
-  const double subsetFraction_;
+  const std::float64_t sizeClassMidPoint_;
+  const std::float64_t subsetFraction_;
   const std::uint32_t maxPopulation_;
 
   std::vector<Heterotroph> heterotrophs_;

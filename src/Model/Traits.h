@@ -11,6 +11,7 @@
 #define TRAITS_H
 
 #include <cstdint>
+#include <stdfloat>
 #include <vector>
 
 #include "Enums.h"
@@ -20,7 +21,7 @@ class RandomSimple;
 class Traits {
  public:
   Traits() = delete;
-  explicit Traits(const std::vector<double>&, const std::vector<std::uint8_t>&, const double&, const double&);
+  explicit Traits(const std::vector<std::float64_t>&, const std::vector<std::uint8_t>&, const std::float64_t&, const std::float64_t&);
 
   Traits(const Traits&);
   Traits(Traits&&) noexcept;
@@ -29,19 +30,19 @@ class Traits {
   Traits& operator=(Traits&&) noexcept;
 
   const Traits getChildTraits(RandomSimple&);
-  const std::vector<double>& getValues() const;
+  const std::vector<std::float64_t>& getValues() const;
   const std::vector<std::uint8_t>& areTraitsMutant() const;
 
-  const double& getValue(const enums::eTraitIndices) const;
+  const std::float64_t& getValue(const enums::eTraitIndices) const;
   bool isTraitMutant(const std::uint32_t) const;
 
-  void setValue(const enums::eTraitIndices, const double);
+  void setValue(const enums::eTraitIndices, const std::float64_t);
 
  private:
-  double mutationProbability_;
-  double mutationStandardDeviation_;
+  std::float64_t mutationProbability_;
+  std::float64_t mutationStandardDeviation_;
 
-  std::vector<double> values_;
+  std::vector<std::float64_t> values_;
   std::vector<std::uint8_t> areMutantTraits_;
 };
 

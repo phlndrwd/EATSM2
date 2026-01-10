@@ -32,21 +32,21 @@ EcologicalFunctions::EcologicalFunctions(EcologicalData& data, Parameters& param
 }
 
 void EcologicalFunctions::calcPreferenceMatrices() {
-  const std::vector<double>& sizeClassMidPoints = data_.getSizeClassMidPoints();
+  const std::vector<std::float64_t>& sizeClassMidPoints = data_.getSizeClassMidPoints();
   // Calculating here to avoid circular dependeny in EcologicalData
-  std::vector<std::vector<double>>& interSizeClassPreferences = data_.getInterSizeClassPreferences();
-  std::vector<std::vector<double>>& interSizeClassVolumes = data_.getInterSizeClassVolumes();
+  std::vector<std::vector<std::float64_t>>& interSizeClassPreferences = data_.getInterSizeClassPreferences();
+  std::vector<std::vector<std::float64_t>>& interSizeClassVolumes = data_.getInterSizeClassVolumes();
 
   interSizeClassPreferences.resize(numberOfSizeClasses_);
   interSizeClassVolumes.resize(numberOfSizeClasses_);
 
   for (std::uint32_t subjectIndex = 0; subjectIndex < numberOfSizeClasses_; ++subjectIndex) {
-    double subjectVolumeMean = sizeClassMidPoints[subjectIndex];
-    double preferenceSum = 0;
+    std::float64_t subjectVolumeMean = sizeClassMidPoints[subjectIndex];
+    std::float64_t preferenceSum = 0;
 
     for (std::uint32_t referenceIndex = 0; referenceIndex < numberOfSizeClasses_; ++referenceIndex) {
-      double referenceVolumeMean = sizeClassMidPoints[referenceIndex];
-      double preferenceForReferenceSizeClass = calcPreferenceForPrey(subjectVolumeMean, referenceVolumeMean);
+      std::float64_t referenceVolumeMean = sizeClassMidPoints[referenceIndex];
+      std::float64_t preferenceForReferenceSizeClass = calcPreferenceForPrey(subjectVolumeMean, referenceVolumeMean);
 
       preferenceSum += preferenceForReferenceSizeClass;
       interSizeClassPreferences[subjectIndex].push_back(preferenceForReferenceSizeClass);
@@ -55,24 +55,24 @@ void EcologicalFunctions::calcPreferenceMatrices() {
   }
 }
 
-double EcologicalFunctions::functionalResponseLinear(const std::uint32_t& predatorIndex, const double& effectivePreyVolume) const {
-  return std::min(effectivePreyVolume / linearFeedingDenominators_[predatorIndex], 1.0);
+std::float64_t EcologicalFunctions::functionalResponseLinear(const std::uint32_t& predatorIndex, const std::float64_t& effectivePreyVolume) const {
+  return static_cast<std::float64_t>(std::min(static_cast<double>(effectivePreyVolume) / static_cast<double>(linearFeedingDenominators_[predatorIndex]), 1.0));
 }
 
-double EcologicalFunctions::functionalResponseNonLinear(const std::uint32_t& predatorIndex, const double& effectivePreyVolume) const {
+std::float64_t EcologicalFunctions::functionalResponseNonLinear(const std::uint32_t& predatorIndex, const std::float64_t& effectivePreyVolume) const {
   return (effectivePreyVolume / (halfSaturationConstants_[predatorIndex] + effectivePreyVolume));
 }
 
 
-double EcologicalFunctions::calcMetabolicDeduction(const Heterotroph& heterotroph) const {
+std::float64_t EcologicalFunctions::calcMetabolicDeduction(const Heterotroph& heterotroph) const {
   return fractionalMetabolicExpense_ * std::pow(heterotroph.getVolumeActual(), metabolicIndex_);
 }
 
-double EcologicalFunctions::calcPreferenceForPrey(const double& grazerVolume, const double& preyVolume) const {
+std::float64_t EcologicalFunctions::calcPreferenceForPrey(const std::float64_t& grazerVolume, const std::float64_t& preyVolume) const {
   return std::exp(-std::pow((std::log((preferredPreyVolumeRatio_ * preyVolume) / grazerVolume)), 2) / preferenceDenominator_);
 }
 
-double EcologicalFunctions::calcStarvationProbability(const Heterotroph& heterotroph) const {
+std::float64_t EcologicalFunctions::calcStarvationProbability(const Heterotroph& heterotroph) const {
   return calcLinearStarvation(heterotroph.getVolumeActual(), heterotroph.getVolumeHeritable(),
                               heterotroph.getVolumeMinimum(), heterotroph.getStarvationMultiplier());
 }
@@ -81,7 +81,7 @@ std::uint32_t EcologicalFunctions::findIndividualSizeClassIndex(const Heterotrop
                                                             std::uint32_t& directionToMove) const {
   std::uint32_t currentSizeClass = 0; // PJU FIX - heterotroph.getSizeClassIndex();
   std::uint32_t newSizeClassIndex = currentSizeClass;
-  double volume = heterotroph.getVolumeActual();
+  std::float64_t volume = heterotroph.getVolumeActual();
 
   if (directionToMove == enums::eGrowing) {
     for (std::uint32_t index = currentSizeClass; index < numberOfSizeClasses_; ++index) {
@@ -118,7 +118,7 @@ std::uint32_t EcologicalFunctions::directionIndividualShouldMoveSizeClasses(cons
 
   // PJU FIX
   std::uint32_t sizeClassIndex = 0;  // heterotroph.getSizeClassIndex();
-  double volumeActual = heterotroph.getVolumeActual();
+  std::float64_t volumeActual = heterotroph.getVolumeActual();
 
   if (volumeActual < sizeClassBoundaries_[sizeClassIndex])
     directionToMove = enums::eShrinking;
@@ -129,7 +129,7 @@ std::uint32_t EcologicalFunctions::directionIndividualShouldMoveSizeClasses(cons
 }
 
 void EcologicalFunctions::updateHerbivoreTrophicIndex(Heterotroph* grazer) {
-  double trophicLevel = grazer->getTrophicLevel();
+  std::float64_t trophicLevel = grazer->getTrophicLevel();
   if (trophicLevel != 0)
     grazer->setTrophicLevel((trophicLevel + 2) * 0.5);
   else
@@ -138,8 +138,8 @@ void EcologicalFunctions::updateHerbivoreTrophicIndex(Heterotroph* grazer) {
 
 void EcologicalFunctions::updateCarnivoreTrophicIndex(Heterotroph* predator,
                                                        const Heterotroph* prey) {
-  double predatorTrophicLevel = predator->getTrophicLevel();
-  double preyTrophicLevel = prey->getTrophicLevel();
+  std::float64_t predatorTrophicLevel = predator->getTrophicLevel();
+  std::float64_t preyTrophicLevel = prey->getTrophicLevel();
   if (predatorTrophicLevel != 0) {
     if (preyTrophicLevel != 0)
       predatorTrophicLevel = (predatorTrophicLevel + preyTrophicLevel + 1) * 0.5;
@@ -154,20 +154,20 @@ void EcologicalFunctions::updateCarnivoreTrophicIndex(Heterotroph* predator,
   predator->setTrophicLevel(predatorTrophicLevel);
 }
 
-//double EcologicalFunctions::calcFeedingProbabilityLinear(const std::uint32_t predatorIndex,
-//                                                          const double effectivePreyVolume) {
+//std::float64_t EcologicalFunctions::calcFeedingProbabilityLinear(const std::uint32_t predatorIndex,
+//                                                          const std::float64_t effectivePreyVolume) {
 //  return std::min(effectivePreyVolume / linearFeedingDenominators_[predatorIndex], 1.0);
 //}
 
-//double EcologicalFunctions::calcFeedingProbabilityNonLinear(const std::uint32_t predatorIndex,
-//                                                             const double effectivePreyVolume) {
+//std::float64_t EcologicalFunctions::calcFeedingProbabilityNonLinear(const std::uint32_t predatorIndex,
+//                                                             const std::float64_t effectivePreyVolume) {
 //  return (effectivePreyVolume / (halfSaturationConstants_[predatorIndex] + effectivePreyVolume));
 //}
 
-double EcologicalFunctions::calcLinearStarvation(const double& volumeActual,
-                                                 const double& volumeHeritable,
-                                                 const double& volumeMinimum,
-                                                 const double& starvationMultiplier) const {
+std::float64_t EcologicalFunctions::calcLinearStarvation(const std::float64_t& volumeActual,
+                                                 const std::float64_t& volumeHeritable,
+                                                 const std::float64_t& volumeMinimum,
+                                                 const std::float64_t& starvationMultiplier) const {
   if (volumeActual <= volumeMinimum)
     return 1;
   else if (volumeActual >= volumeHeritable)
@@ -176,10 +176,10 @@ double EcologicalFunctions::calcLinearStarvation(const double& volumeActual,
     return (1 + ((volumeMinimum - volumeActual) * starvationMultiplier));
 }
 
-double EcologicalFunctions::calcBetaExponentialStarvation(const double& volumeActual,
-                                                          const double& volumeHeritable,
-                                                          const double& volumeMinimum,
-                                                          const double& starvationMultiplier) const {
+std::float64_t EcologicalFunctions::calcBetaExponentialStarvation(const std::float64_t& volumeActual,
+                                                          const std::float64_t& volumeHeritable,
+                                                          const std::float64_t& volumeMinimum,
+                                                          const std::float64_t& starvationMultiplier) const {
   if (volumeActual <= volumeMinimum)
     return 1;
   else if (volumeActual >= volumeHeritable)
@@ -189,11 +189,11 @@ double EcologicalFunctions::calcBetaExponentialStarvation(const double& volumeAc
            starvationMultiplier) * ((volumeActual - volumeMinimum) * starvationMultiplier));
 }
 
-double EcologicalFunctions::traitValueToVolume(const double& traitValue) const {
-  double volumeExponent = traitValue * (largestVolumeExponent_ - smallestVolumeExponent_) + smallestVolumeExponent_;
+std::float64_t EcologicalFunctions::traitValueToVolume(const std::float64_t& traitValue) const {
+  std::float64_t volumeExponent = traitValue * (largestVolumeExponent_ - smallestVolumeExponent_) + smallestVolumeExponent_;
   return std::pow(10, volumeExponent);
 }
 
-double EcologicalFunctions::volumeToTraitValue(const double& volume) const {
+std::float64_t EcologicalFunctions::volumeToTraitValue(const std::float64_t& volume) const {
   return (std::log10(volume) - smallestVolumeExponent_) / (largestVolumeExponent_ - smallestVolumeExponent_);
 }

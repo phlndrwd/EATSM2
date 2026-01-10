@@ -11,6 +11,7 @@
 #define RANDOMSIMPLE
 
 #include <cstdint>
+#include <stdfloat>
 
 /*
  * Written by John D. Cook
@@ -27,28 +28,28 @@ class RandomSimple {
   void setSeed(std::uint32_t, std::uint32_t);
   void setSeed(std::uint32_t);
 
-  double getUniform();
+  std::float64_t getUniform();
   std::uint32_t getUniformInt();
   std::uint32_t getUniformInt(std::uint32_t);
   std::uint32_t getUniformInt(std::uint32_t, std::uint32_t);
-  double getNormal();
-  double getNormal(double, double);
-  double getExponential();
-  double getExponential(double);
-  double getGamma(double, double);
-  double getChiSquare(double);
-  double getInverseGamma(double, double);
-  double getWeibull(double, double);
-  double getCauchy(double, double);
-  double getLaplace(double, double);
-  double getLogNormal(double, double);
-  double getBeta(double, double);
+  std::float64_t getNormal();
+  std::float64_t getNormal(std::float64_t, std::float64_t);
+  std::float64_t getExponential();
+  std::float64_t getExponential(std::float64_t);
+  std::float64_t getGamma(std::float64_t, std::float64_t);
+  std::float64_t getChiSquare(std::float64_t);
+  std::float64_t getInverseGamma(std::float64_t, std::float64_t);
+  std::float64_t getWeibull(std::float64_t, std::float64_t);
+  std::float64_t getCauchy(std::float64_t, std::float64_t);
+  std::float64_t getLaplace(std::float64_t, std::float64_t);
+  std::float64_t getLogNormal(std::float64_t, std::float64_t);
+  std::float64_t getBeta(std::float64_t, std::float64_t);
 
  private:
   std::uint32_t seed_;
   std::uint32_t w_;
   std::uint32_t z_;
-  double twoPi_;
+  std::float64_t twoPi_;
 };
 
 #endif

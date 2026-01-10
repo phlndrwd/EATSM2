@@ -12,6 +12,7 @@
 
 #include <array>
 #include <cstdint>
+#include <stdfloat>
 #include <string>
 #include <vector>
 
@@ -20,6 +21,7 @@
 namespace consts {
 constexpr std::string kConfigurationDirectory = "./input/";
 constexpr std::string kParamsFile = "params.json";
+constexpr std::string kAttrsFile = "attrs.json";
 
 constexpr std::string kOutputDirectoryName = "output";
 
@@ -39,8 +41,8 @@ constexpr std::uint32_t kOutputFolderPermissions = 0777;
 
 constexpr std::uint32_t kAutotrophSizeIndex = 0;
 constexpr std::uint32_t kReproductionFactor = 2;
-constexpr double kReproductionMultiplier = 1 / (double)kReproductionFactor;  // Equivalent to 1 / 2
-constexpr double kMinimumFractionalVolume = 0.5;
+constexpr std::float64_t kReproductionMultiplier = 1 / (std::float64_t)kReproductionFactor;  // Equivalent to 1 / 2
+constexpr std::float64_t kMinimumFractionalVolume = 0.5;
 
 constexpr std::uint32_t kSecondsInAMinute = 60;
 constexpr std::uint32_t kMinutesInAnHour = 60;

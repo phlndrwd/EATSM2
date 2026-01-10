@@ -64,25 +64,25 @@ void DataRecorder::initialiseMatrix(const std::string& name, const std::uint32_t
   if (matrixDatum != nullptr) matrixDatum->setGroupSize(size);
 }
 
-void DataRecorder::addDataTo(const std::string& name, const float& data) {
+void DataRecorder::addDataTo(const std::string& name, const std::float64_t& data) {
   VectorDatum* vectorDatum = getVectorDatumFromName(name);
 
   if (vectorDatum != nullptr) vectorDatum->addData(data);
 }
 
-void DataRecorder::addDataTo(const std::string& name, const std::vector<float> data) {
+void DataRecorder::addDataTo(const std::string& name, const std::vector<std::float64_t> data) {
   MatrixDatum* matrixDatum = getMatrixDatumFromName(name);
 
   if (matrixDatum != nullptr) matrixDatum->addData(data);
 }
 
-void DataRecorder::addDataTo(const std::string& name, const std::uint32_t& index, const float& data) {
+void DataRecorder::addDataTo(const std::string& name, const std::uint32_t& index, const std::float64_t& data) {
   MatrixDatum* matrixDatum = getMatrixDatumFromName(name);
 
   if (matrixDatum != nullptr) matrixDatum->addDataAtIndex(index, data);
 }
 
-void DataRecorder::setVectorDataOn(const std::string& name, const std::vector<float> data) {
+void DataRecorder::setVectorDataOn(const std::string& name, const std::vector<std::float64_t> data) {
   VectorDatum* vectorDatum = getVectorDatumFromName(name);
 
   if (vectorDatum != nullptr) vectorDatum->setData(data);

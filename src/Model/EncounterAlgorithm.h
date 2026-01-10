@@ -19,8 +19,8 @@
 
 struct PreyVolumes {
   PreyVolumes(): totalPrey(0), autotroph(0) {}
-  double totalPrey;
-  double autotroph;
+  std::float64_t totalPrey;
+  std::float64_t autotroph;
 };
 
 class EncounterAlgorithm {
@@ -30,10 +30,10 @@ class EncounterAlgorithm {
   void update(std::vector<SizeClass>&, SizeClass&);
 
  private:
-  double calcFeedingProbability(std::vector<SizeClass>&, SizeClass&,
+  std::float64_t calcFeedingProbability(std::vector<SizeClass>&, SizeClass&,
                                 std::vector<SizeClass>::iterator&, enums::eFeedingStrategy&);
-  PreyVolumes calcEffectiveSizeClassVolumes(std::vector<SizeClass>&, SizeClass&, std::vector<double>&);
-  std::vector<SizeClass>::iterator setCoupledSizeClass(const std::vector<double>&, std::vector<SizeClass>&,
+  PreyVolumes calcEffectiveSizeClassVolumes(std::vector<SizeClass>&, SizeClass&, std::vector<std::float64_t>&);
+  std::vector<SizeClass>::iterator setCoupledSizeClass(const std::vector<std::float64_t>&, std::vector<SizeClass>&,
                                                        PreyVolumes&, enums::eFeedingStrategy&);
   void feedFromAutotrophs(Heterotroph&, std::vector<SizeClass>::iterator);
   void feedFromHeterotrophs(Heterotroph&, std::vector<SizeClass>::iterator);
@@ -44,9 +44,9 @@ class EncounterAlgorithm {
   EcologicalFunctions functions_;
   RandomSimple random_;
 
-  const std::vector<std::vector<double>> interSizeClassPreferences_;
-  const std::vector<std::vector<double>> interSizeClassVolumes_;
+  const std::vector<std::vector<std::float64_t>> interSizeClassPreferences_;
+  const std::vector<std::vector<std::float64_t>> interSizeClassVolumes_;
   const std::uint32_t numberOfSizeClasses_;
-  const double autotrophCellSize_;
+  const std::float64_t autotrophCellSize_;
 };
 #endif

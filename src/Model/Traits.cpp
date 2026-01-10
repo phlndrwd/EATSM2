@@ -12,8 +12,8 @@
 #include "Parameters.h"
 #include "RandomSimple.h"
 
-Traits::Traits(const std::vector<double>& values, const std::vector<std::uint8_t>& areMutantTraits,
-               const double& mutationProbability_, const double& mutationStandardDeviation_):
+Traits::Traits(const std::vector<std::float64_t>& values, const std::vector<std::uint8_t>& areMutantTraits,
+               const std::float64_t& mutationProbability_, const std::float64_t& mutationStandardDeviation_):
     mutationProbability_(mutationProbability_),
     mutationStandardDeviation_(mutationStandardDeviation_) {
   values_.insert(values_.end(), values.begin(), values.end());
@@ -58,7 +58,7 @@ Traits& Traits::operator=(Traits&& traits) noexcept {
 
 const Traits Traits::getChildTraits(RandomSimple& random) {
   std::size_t numberOfGenes = values_.size();
-  std::vector<double> childValues = values_;
+  std::vector<std::float64_t> childValues = values_;
   std::vector<std::uint8_t> areTraitsMutations(numberOfGenes, 0);
 
   if (mutationProbability_ > 0) {
@@ -66,7 +66,7 @@ const Traits Traits::getChildTraits(RandomSimple& random) {
       if (random.getUniform() <= mutationProbability_) {
         areTraitsMutations[i] = true;  // PJU FIX - What gets assigned here?
 
-        double mutationValue = random.getNormal(0.0, mutationStandardDeviation_);
+        std::float64_t mutationValue = random.getNormal(0.0, mutationStandardDeviation_);
 
         childValues[i] += mutationValue;
 
@@ -86,7 +86,7 @@ const std::vector<std::uint8_t>& Traits::areTraitsMutant() const {
   return areMutantTraits_;
 }
 
-const std::vector<double>& Traits::getValues() const {
+const std::vector<std::float64_t>& Traits::getValues() const {
   return values_;
 }
 
@@ -94,10 +94,10 @@ bool Traits::isTraitMutant(const std::uint32_t traitIndex) const {
   return areMutantTraits_[traitIndex] != 0;
 }
 
-const double& Traits::getValue(const enums::eTraitIndices trait) const {
+const std::float64_t& Traits::getValue(const enums::eTraitIndices trait) const {
   return values_[trait];
 }
 
-void Traits::setValue(const enums::eTraitIndices trait, const double traitValue) {
+void Traits::setValue(const enums::eTraitIndices trait, const std::float64_t traitValue) {
   values_[trait] = traitValue;
 }

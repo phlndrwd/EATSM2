@@ -10,6 +10,7 @@
 #ifndef SIZECLASS_H
 #define SIZECLASS_H
 
+#include <stdfloat>
 #include <vector>
 
 #include "Autotrophs.h"
@@ -25,10 +26,10 @@
 class SizeClass {
  public:
   SizeClass() = delete;
-  explicit SizeClass(Nutrient&, Parameters&, EcologicalData&, const double&,
-                     const double&, const std::uint32_t&, const std::uint32_t&);
+  explicit SizeClass(Nutrient&, Parameters&, EcologicalData&, const std::float64_t&,
+                     const std::float64_t&, const std::uint32_t&, const std::uint32_t&);
 
-  void populate(const double, const double, const double, const double);
+  void populate(const std::float64_t, const std::float64_t, const std::float64_t, const std::float64_t);
 
   void metabolisation();
   void starvation();
@@ -50,9 +51,9 @@ class SizeClass {
   EcologicalFunctions functions_;
   const std::uint32_t index_;  // PJU FIX - Should index_ be deprecated?
 
-  const double sizeClassUpper_;
-  const double sizeClassMidPoint_;
-  const double sizeClassLower_;
+  const std::float64_t sizeClassUpper_;
+  const std::float64_t sizeClassMidPoint_;
+  const std::float64_t sizeClassLower_;
 
   const std::uint32_t numberOfSizeClasses_;
 

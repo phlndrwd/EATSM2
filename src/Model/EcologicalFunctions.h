@@ -21,53 +21,53 @@ class EcologicalFunctions {
  public:
   EcologicalFunctions(EcologicalData&, Parameters&);
 
-  double functionalResponseLinear(const std::uint32_t&, const double&) const;
-  double functionalResponseNonLinear(const std::uint32_t&, const double&) const;
+  std::float64_t functionalResponseLinear(const std::uint32_t&, const std::float64_t&) const;
+  std::float64_t functionalResponseNonLinear(const std::uint32_t&, const std::float64_t&) const;
 
-  double calcMetabolicDeduction(const Heterotroph&) const;
+  std::float64_t calcMetabolicDeduction(const Heterotroph&) const;
   bool updateSizeClassIndex(Heterotroph&) const;
   std::uint32_t directionIndividualShouldMoveSizeClasses(const Heterotroph&) const;
   std::uint32_t findIndividualSizeClassIndex(const Heterotroph&, std::uint32_t&) const;
-  double calcStarvationProbability(const Heterotroph&) const;
+  std::float64_t calcStarvationProbability(const Heterotroph&) const;
 
-  double calcPreferenceForPrey(const double&, const double&) const;
-  //  double calcFeedingProbability(const std::uint32_t, const double);
+  std::float64_t calcPreferenceForPrey(const std::float64_t&, const std::float64_t&) const;
+  //  std::float64_t calcFeedingProbability(const std::uint32_t, const std::float64_t);
 
-  // std::uint32_t findSizeClassIndexFromVolume(const double) const;
+  // std::uint32_t findSizeClassIndexFromVolume(const std::float64_t) const;
 
   void updateHerbivoreTrophicIndex(Heterotroph*);
   void updateCarnivoreTrophicIndex(Heterotroph*, const Heterotroph*);
 
-  double calcHerbivoreTrophicIndex(const double&) const;
-  double calcCarnivoreTrophicIndex(const double&, const double&) const;
+  std::float64_t calcHerbivoreTrophicIndex(const std::float64_t&) const;
+  std::float64_t calcCarnivoreTrophicIndex(const std::float64_t&, const std::float64_t&) const;
 
-  double traitValueToVolume(const double&) const;
-  double volumeToTraitValue(const double&) const;
+  std::float64_t traitValueToVolume(const std::float64_t&) const;
+  std::float64_t volumeToTraitValue(const std::float64_t&) const;
 
  private:
   void calcPreferenceMatrices();
 
-  double calcLinearStarvation(const double&, const double&, const double&, const double&) const;
-  double calcBetaExponentialStarvation(const double&, const double&, const double&, const double&) const;
+  std::float64_t calcLinearStarvation(const std::float64_t&, const std::float64_t&, const std::float64_t&, const std::float64_t&) const;
+  std::float64_t calcBetaExponentialStarvation(const std::float64_t&, const std::float64_t&, const std::float64_t&, const std::float64_t&) const;
 
   EcologicalData& data_;
 
-  std::function<double(const std::uint32_t, const double)> starvationProbabilityFunc_;
+  std::function<std::float64_t(const std::uint32_t, const std::float64_t)> starvationProbabilityFunc_;
 
-  const std::vector<double> sizeClassBoundaries_;
-  const std::vector<double> linearFeedingDenominators_;
-  const std::vector<double> halfSaturationConstants_;
+  const std::vector<std::float64_t> sizeClassBoundaries_;
+  const std::vector<std::float64_t> linearFeedingDenominators_;
+  const std::vector<std::float64_t> halfSaturationConstants_;
 
-  const double largestVolumeExponent_;
-  const double smallestVolumeExponent_;
+  const std::float64_t largestVolumeExponent_;
+  const std::float64_t smallestVolumeExponent_;
 
-  const double preferredPreyVolumeRatio_;
-  const double preferenceFunctionWidth_;
-  const double fractionalMetabolicExpense_;
-  const double metabolicIndex_;
-  const double numberOfSizeClasses_;
+  const std::float64_t preferredPreyVolumeRatio_;
+  const std::float64_t preferenceFunctionWidth_;
+  const std::float64_t fractionalMetabolicExpense_;
+  const std::float64_t metabolicIndex_;
+  const std::float64_t numberOfSizeClasses_;
 
-  const double preferenceDenominator_;
+  const std::float64_t preferenceDenominator_;
 };
 
 #endif

@@ -42,7 +42,7 @@ void RandomSimple::setSeed(std::uint32_t seed) {
   w_ = seed_;
 }
 
-double RandomSimple::getUniform() {
+std::float64_t RandomSimple::getUniform() {
   std::uint32_t u = getUniformInt();
   return (u + 1.0) * 2.328306435454494e-10;
 }
@@ -61,29 +61,29 @@ std::uint32_t RandomSimple::getUniformInt(std::uint32_t minimum, std::uint32_t m
   return (getUniformInt() % (maximum - minimum + 1)) + minimum;
 }
 
-double RandomSimple::getNormal() {
-  double u1 = getUniform();
-  double u2 = getUniform();
-  double r = sqrt(-2.0 * log(u1));
+std::float64_t RandomSimple::getNormal() {
+  std::float64_t u1 = getUniform();
+  std::float64_t u2 = getUniform();
+  std::float64_t r = sqrt(-2.0 * log(u1));
   return r * sin(twoPi_ * u2);
 }
 
-double RandomSimple::getNormal(double mean, double standardDeviation) {
+std::float64_t RandomSimple::getNormal(std::float64_t mean, std::float64_t standardDeviation) {
   assert(standardDeviation > 0.);
   return mean + standardDeviation * getNormal();
 }
 
-double RandomSimple::getExponential() {
+std::float64_t RandomSimple::getExponential() {
   return -log(getUniform());
 }
 
-double RandomSimple::getExponential(double mean) {
+std::float64_t RandomSimple::getExponential(std::float64_t mean) {
   assert(mean > 0);
   return mean * getExponential();
 }
 
-double RandomSimple::getGamma(double shape, double scale) {
-  double d, c, x, xsquared, v, u;
+std::float64_t RandomSimple::getGamma(std::float64_t shape, std::float64_t scale) {
+  std::float64_t d, c, x, xsquared, v, u;
   assert(shape > 0);
   if (shape >= 1.0) {
     d = shape - 1.0 / 3.0;
@@ -101,47 +101,47 @@ double RandomSimple::getGamma(double shape, double scale) {
         return scale * d * v;
     }
   } else {
-    double g = getGamma(shape + 1.0, 1.0);
-    double w = getUniform();
+    std::float64_t g = getGamma(shape + 1.0, 1.0);
+    std::float64_t w = getUniform();
     return scale * g * pow(w, 1.0 / shape);
   }
 }
 
-double RandomSimple::getChiSquare(double degreesOfFreedom) {
+std::float64_t RandomSimple::getChiSquare(std::float64_t degreesOfFreedom) {
   return getGamma(0.5 * degreesOfFreedom, 2.0);
 }
 
-double RandomSimple::getInverseGamma(double shape, double scale) {
+std::float64_t RandomSimple::getInverseGamma(std::float64_t shape, std::float64_t scale) {
   return 1.0 / getGamma(shape, 1.0 / scale);
 }
 
-double RandomSimple::getWeibull(double shape, double scale) {
+std::float64_t RandomSimple::getWeibull(std::float64_t shape, std::float64_t scale) {
   assert(shape > 0.);
   assert(scale > 0);
 
   return scale * pow(-log(getUniform()), 1.0 / shape);
 }
 
-double RandomSimple::getCauchy(double median, double scale) {
+std::float64_t RandomSimple::getCauchy(std::float64_t median, std::float64_t scale) {
   assert(scale > 0);
-  double p = getUniform();
+  std::float64_t p = getUniform();
   return median + scale * tan(M_PI * (p - 0.5));
 }
 
-double RandomSimple::getLaplace(double mean, double scale) {
-  double u = getUniform();
+std::float64_t RandomSimple::getLaplace(std::float64_t mean, std::float64_t scale) {
+  std::float64_t u = getUniform();
   return (u < 0.5) ? mean + scale * log(2.0 * u) : mean - scale * log(2 * (1 - u));
 }
 
-double RandomSimple::getLogNormal(double mu, double sigma) {
+std::float64_t RandomSimple::getLogNormal(std::float64_t mu, std::float64_t sigma) {
   return exp(getNormal(mu, sigma));
 }
 
-double RandomSimple::getBeta(double a, double b) {
+std::float64_t RandomSimple::getBeta(std::float64_t a, std::float64_t b) {
   assert(a > 0);
   assert(b > 0);
 
-  double u = getGamma(a, 1.0);
-  double v = getGamma(b, 1.0);
+  std::float64_t u = getGamma(a, 1.0);
+  std::float64_t v = getGamma(b, 1.0);
   return u / (u + v);
 }

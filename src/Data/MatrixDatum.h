@@ -11,6 +11,7 @@
 #define MATRIXDATUM
 
 #include <cstdint>
+#include <stdfloat>
 #include <string>
 #include <vector>
 
@@ -21,16 +22,16 @@ class MatrixDatum {
 
   void setGroupSize(const std::uint32_t&);
 
-  float getDataAtIndices(const std::uint32_t&, const std::uint32_t&) const;
-  void addDataAtIndex(const std::uint32_t&, const float&);
-  void addData(const std::vector<float>);
+  std::float64_t getDataAtIndices(const std::uint32_t&, const std::uint32_t&) const;
+  void addDataAtIndex(const std::uint32_t&, const std::float64_t&);
+  void addData(const std::vector<std::float64_t>);
 
   std::uint32_t getRows() const;
   std::uint32_t getColumns() const;
   const std::string& getName() const;
 
  private:
-  std::vector<std::vector<float>> data_;
+  std::vector<std::vector<std::float64_t>> data_;
   const std::string name_;
 };
 

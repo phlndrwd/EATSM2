@@ -7,18 +7,15 @@
 # which can be obtained from https://opensource.org/license/bsd-3-clause/.    #
 ###############################################################################
 
-cmake_minimum_required(VERSION 3.5)
+cmake_minimum_required(VERSION 3.25)
 
 project(eatsm2 LANGUAGES CXX)
-
-set(CMAKE_CXX_STANDARD_REQUIRED ON)
-#set(CMAKE_CXX_CLANG_TIDY "clang-tidy;-checks=*")
 
 set(JINO_PATH "../jino/")
 
 file(COPY ${CMAKE_SOURCE_DIR}/input DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
 
-## Download required files
+# Download required files
 include(FetchContent)
 set(FETCHCONTENT_BASE_DIR "${CMAKE_SOURCE_DIR}/external/")
 FetchContent_Declare(cpplint
@@ -91,7 +88,7 @@ target_include_directories(eatsm2 PRIVATE
   src/Output
   src/Tools
 )
-target_compile_features(eatsm2 PRIVATE cxx_std_20)
+target_compile_features(eatsm2 PRIVATE cxx_std_23)
 target_compile_options(eatsm2 PRIVATE -Wall -Wextra -Wpedantic)
 target_link_libraries(eatsm2 PRIVATE
   jino

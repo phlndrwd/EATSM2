@@ -11,7 +11,7 @@
 
 #include <stdexcept>
 
-Heterotrophs::Heterotrophs(Nutrient& nutrient, Parameters& params, const double& sizeClassMidPoint,
+Heterotrophs::Heterotrophs(Nutrient& nutrient, Parameters& params, const std::float64_t& sizeClassMidPoint,
 			   const std::uint32_t& maxPopulation, const std::uint32_t& randomSeed):
 	nutrient_(nutrient),
 	random_(randomSeed),

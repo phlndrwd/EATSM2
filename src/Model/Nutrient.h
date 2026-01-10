@@ -10,20 +10,22 @@
 #ifndef NUTRIENT_H
 #define NUTRIENT_H
 
+#include <stdfloat>
+
 class Nutrient {
  public:
   Nutrient();
    
   void snapshot();
 
-  const double& getVolume() const;
+  const std::float64_t& getVolume() const;
 
-  void addToVolume(const double&);
-  void subtractFromVolume(const double&);
+  void addToVolume(const std::float64_t&);
+  void subtractFromVolume(const std::float64_t&);
 
  private:
-  double volume_;
-  double toFlux_;
+  std::float64_t volume_;
+  std::float64_t toFlux_;
 };
 
 #endif

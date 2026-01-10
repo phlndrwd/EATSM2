@@ -12,6 +12,7 @@
 
 #include <map>
 #include <cstdint>
+#include <stdfloat>
 #include <string>
 #include <vector>
 
@@ -28,11 +29,11 @@ class DataRecorder {
 
   static DataRecorder* get();
 
-  void addDataTo(const std::string&, const float&);
-  void addDataTo(const std::string&, const std::vector<float>);
-  void addDataTo(const std::string&, const std::uint32_t&, const float&);
+  void addDataTo(const std::string&, const std::float64_t&);
+  void addDataTo(const std::string&, const std::vector<std::float64_t>);
+  void addDataTo(const std::string&, const std::uint32_t&, const std::float64_t&);
 
-  void setVectorDataOn(const std::string&, const std::vector<float>);
+  void setVectorDataOn(const std::string&, const std::vector<std::float64_t>);
 
   void addInputFilePath(const std::string&);
 

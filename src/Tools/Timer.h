@@ -11,6 +11,7 @@
 #define TIMER
 
 #include <chrono>
+#include <stdfloat>
 #include <string>
 
 class Timer {
@@ -19,9 +20,9 @@ class Timer {
   ~Timer();
 
   void start();
-  double split();
-  double elapsed();
-  double stop();
+  std::float64_t split();
+  std::float64_t elapsed();
+  std::float64_t stop();
 
   std::string remainingString();
 

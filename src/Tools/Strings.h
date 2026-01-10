@@ -11,6 +11,7 @@
 #define CONVERTOR
 
 #include <cstdint>
+#include <stdfloat>
 #include <string>
 #include <vector>
 
@@ -19,10 +20,10 @@ class Strings {
   template <class T>
   static const std::string toString(const T& input);
 
-  static double stringToNumber(const std::string&);
+  static std::float64_t stringToNumber(const std::string&);
 
   static const std::vector<std::string> stringToWords(const std::string&, const char);
-  static const std::string doubleToPrecisionString(const double&, const std::uint32_t&);
+  static const std::string doubleToPrecisionString(const std::float64_t&, const std::uint32_t&);
 
   static std::int32_t findFirstPositionOfCharacter(const std::string, const char);
   static std::string truncateStringAtCharacter(const std::string, const char);

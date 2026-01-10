@@ -18,15 +18,15 @@ void MatrixDatum::setGroupSize(const std::uint32_t& size) {
   data_.resize(size);
 }
 
-float MatrixDatum::getDataAtIndices(const std::uint32_t& rowIndex, const std::uint32_t& columnIndex) const {
+std::float64_t MatrixDatum::getDataAtIndices(const std::uint32_t& rowIndex, const std::uint32_t& columnIndex) const {
   return data_[columnIndex][rowIndex];
 }
 
-void MatrixDatum::addDataAtIndex(const std::uint32_t& index, const float& data) {
+void MatrixDatum::addDataAtIndex(const std::uint32_t& index, const std::float64_t& data) {
   data_[index].push_back(data);
 }
 
-void MatrixDatum::addData(const std::vector<float> data) {
+void MatrixDatum::addData(const std::vector<std::float64_t> data) {
   data_.push_back(data);
 }
 

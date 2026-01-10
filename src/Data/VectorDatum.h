@@ -11,6 +11,7 @@
 #define VECTORDATUM
 
 #include <cstdint>
+#include <stdfloat>
 #include <string>
 #include <vector>
 
@@ -19,16 +20,16 @@ class VectorDatum {
   explicit VectorDatum(const std::string&);
   ~VectorDatum();
 
-  float getDataAtIndex(const std::uint32_t&) const;
+  std::float64_t getDataAtIndex(const std::uint32_t&) const;
 
-  void setData(const std::vector<float>);
-  void addData(const float&);
+  void setData(const std::vector<std::float64_t>);
+  void addData(const std::float64_t&);
 
   std::uint32_t getSize() const;
   const std::string& getName() const;
 
  private:
-  std::vector<float> data_;
+  std::vector<std::float64_t> data_;
   std::string name_;
 };
 
