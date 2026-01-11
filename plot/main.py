@@ -16,8 +16,8 @@ from plot_utils import area_like_matlab
 ###############################################################################
 ## PARAMS
 ###############################################################################
-data_dir = "/home/doomsayer/Development/Repositories/eatsm2/build/Debug/output/"
-data_file = "2026-01-11_19:54:42.nc"
+data_dir = "/home/doomsayer/Development/Repositories/eatsm2/build/Release/output/"
+data_file = "2026-01-11_20:00:49.nc"
 
 var_names_totals = ["totalHeterotrophFrequency"]
 
@@ -51,10 +51,15 @@ if exists(file_path) == 1:
         )
         plt.show()
         
+        freq_heterotrophs = variables["heterotrophFrequency"][:]
+        plt.plot(freq_heterotrophs)
+        plt.xlabel('time')
+        plt.ylabel('heterotrophFrequency')
+        
         #for var_name in variables:
         #    print("Plotting for", var_name)
         #    var_data = variables[var_name][:]
-        #    plt.figure(figsize=[12,9])
+        #    
         #    plt.plot(var_data)
         #    plt.xlabel('time')
         #    plt.ylabel(var_name)
