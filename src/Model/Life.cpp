@@ -39,9 +39,9 @@ Life::Life(Nutrient& nutrient, Parameters& params) :
         varTotalHeterotrophFrequency_(0),
         varTotalHeterotrophVolume_(0),
         varTotalAutotrophVolume_(0),
-        buffTotalHeterotrophFrequency_("totalHeterotrophFrequency", "totals", params_.getDataSize(), varTotalHeterotrophFrequency_),
-        buffTotalHeterotrophVolume_("totalHeterotrophVolume", "totals", params_.getDataSize(), varTotalHeterotrophVolume_),
-        buffTotalAutotrophVolume_("totalAutotrophVolume", "totals", params_.getDataSize(), varTotalAutotrophVolume_){
+        buffTotalHeterotrophFrequency_("heterotrophFrequency", "totals", params_.getDataSize(), varTotalHeterotrophFrequency_),
+        buffTotalHeterotrophVolume_("heterotrophVolume", "totals", params_.getDataSize(), varTotalHeterotrophVolume_),
+        buffTotalAutotrophVolume_("autotrophVolume", "totals", params_.getDataSize(), varTotalAutotrophVolume_){
   std::uint32_t autotrophIndex = consts::kAutotrophSizeIndex;
   std::float64_t idealInitialVolume = params.getSmallestIndividualVolume() * params.getPreferredPreyVolumeRatio();
   std::uint32_t heterotrophIndex = findSizeClassIndexFromVolume(idealInitialVolume);
@@ -87,24 +87,20 @@ void Life::update() {
     varTotalHeterotrophFrequency_ += sizeClassHeterotrophFrequency;
     varTotalHeterotrophVolume_ += sizeClassHeterotrophFrequency * data_.getSizeClassMidPoints()[thisSizeClass.getIndex()];
     varTotalAutotrophVolume_ += thisSizeClass.getAutotrophs().getVolume();
-  });
-
-  // Movement between size classes - integrate into reproduction?
-  std::for_each(std::begin(sizeClasses_), std::end(sizeClasses_), [&](SizeClass& thisSizeClass) {
-   thisSizeClass.whoIsMoving(movingHeterotrophs_);
+    thisSizeClass.whoIsMoving(movingHeterotrophs_);
   });
   moveHeterotrophs();
 }
 
 void Life::moveHeterotrophs() {
   for (const auto& movingHeterotroph : movingHeterotrophs_) {
-    Heterotroph& heterotroph = movingHeterotroph.heterotroph;
+    auto heterotroph = movingHeterotroph.heterotroph;
     std::uint32_t searchOffSet = 0;
     if (movingHeterotroph.growthTrajectory == enums::eShrinking) {
-      searchOffSet = movingHeterotroph.prevSizeClassIndex - 1;
+      searchOffSet = params_.getNumberOfSizeClasses() - movingHeterotroph.prevSizeClassIndex;
       auto sizeClassDownIt = std::next(sizeClasses_.rbegin(), searchOffSet);
       std::find_if(sizeClassDownIt, sizeClasses_.rend(), [&](SizeClass& prevSizeClass) {
-        if (heterotroph.getVolumeActual() >= data_.getSizeClassBoundaries().at(prevSizeClass.getIndex())) {
+        if (heterotroph->getVolumeActual() >= data_.getSizeClassBoundaries().at(prevSizeClass.getIndex())) {
           prevSizeClass.getHeterotrophs().addHeterotroph(heterotroph);
           return true;
         } else {
@@ -115,7 +111,7 @@ void Life::moveHeterotrophs() {
       searchOffSet = movingHeterotroph.prevSizeClassIndex + 1;
         auto sizeClassUpIt = std::next(sizeClasses_.begin(), searchOffSet);
         std::find_if(sizeClassUpIt, sizeClasses_.end(), [&](SizeClass& nextSizeClass) {
-          if (heterotroph.getVolumeActual() >= data_.getSizeClassBoundaries().at(nextSizeClass.getIndex())) {
+          if (heterotroph->getVolumeActual() >= data_.getSizeClassBoundaries().at(nextSizeClass.getIndex())) {
               nextSizeClass.getHeterotrophs().addHeterotroph(heterotroph);
               return true;
             } else {

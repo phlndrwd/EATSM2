@@ -24,11 +24,11 @@ class EcologicalFunctions {
   std::float64_t functionalResponseLinear(const std::uint32_t&, const std::float64_t&) const;
   std::float64_t functionalResponseNonLinear(const std::uint32_t&, const std::float64_t&) const;
 
-  std::float64_t calcMetabolicDeduction(const Heterotroph&) const;
-  bool updateSizeClassIndex(Heterotroph&) const;
-  std::uint32_t directionIndividualShouldMoveSizeClasses(const Heterotroph&) const;
-  std::uint32_t findIndividualSizeClassIndex(const Heterotroph&, std::uint32_t&) const;
-  std::float64_t calcStarvationProbability(const Heterotroph&) const;
+  std::float64_t calcMetabolicDeduction(const Heterotroph*) const;
+  bool updateSizeClassIndex(Heterotroph*) const;
+  std::uint32_t directionIndividualShouldMoveSizeClasses(const Heterotroph*) const;
+  std::uint32_t findIndividualSizeClassIndex(const Heterotroph*, std::uint32_t&) const;
+  std::float64_t calcStarvationProbability(const Heterotroph*) const;
 
   std::float64_t calcPreferenceForPrey(const std::float64_t&, const std::float64_t&) const;
   //  std::float64_t calcFeedingProbability(const std::uint32_t, const std::float64_t);

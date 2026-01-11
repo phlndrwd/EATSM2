@@ -11,16 +11,17 @@
 #define STRUCTS
 
 #include <cstdint>
+#include <memory>
 
 #include "Heterotroph.h"
 
 namespace structs {
 
 struct MovingHeterotroph {
-  Heterotroph& heterotroph;
+  std::shared_ptr<Heterotroph> heterotroph;
   std::uint32_t prevSizeClassIndex;
   enums::eGrowthTrajectory growthTrajectory;
-  MovingHeterotroph(Heterotroph& _heterotroph, std::uint32_t _prevSizeClassIndex, enums::eGrowthTrajectory _growthTrajectory):
+  MovingHeterotroph(std::shared_ptr<Heterotroph> _heterotroph, std::uint32_t _prevSizeClassIndex, enums::eGrowthTrajectory _growthTrajectory):
       heterotroph(_heterotroph), prevSizeClassIndex(_prevSizeClassIndex), growthTrajectory(_growthTrajectory) {}
 };
 

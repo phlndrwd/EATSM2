@@ -11,14 +11,13 @@ from os.path import exists
 
 import matplotlib.pyplot as plt
 import netCDF4 as nc
-import numpy as np
 from plot_utils import area_like_matlab
 
 ###############################################################################
 ## PARAMS
 ###############################################################################
 data_dir = "/home/doomsayer/Development/Repositories/eatsm2/build/Debug/output/"
-data_file = "2026-01-11_15:11:28.nc"
+data_file = "2026-01-11_19:54:42.nc"
 
 var_names_totals = ["totalHeterotrophFrequency"]
 
@@ -34,17 +33,17 @@ if exists(file_path) == 1:
     print(file_path, "exists...")
     data_set = nc.Dataset(file_path, format="NETCDF4")
         
-    sz_data_size = data_set.dimensions[name_data_size]
-    sz_number_size_classes = data_set.dimensions[name_number_size_classes]
+    #sz_data_size = data_set.dimensions[name_data_size]
+    #sz_number_size_classes = data_set.dimensions[name_number_size_classes]
   
     for group in data_set.groups:
         print("Getting group data for", group)
         variables = data_set.groups[group].variables
         
         # Create volume histogram
-        vol_nutrient = variables["totalNutrientVolume"][:]
-        vol_autotrophs = variables["totalAutotrophVolume"][:]
-        vol_heterotrophs = variables["totalHeterotrophVolume"][:]
+        vol_nutrient = variables["nutrientVolume"][:]
+        vol_autotrophs = variables["autotrophVolume"][:]
+        vol_heterotrophs = variables["heterotrophVolume"][:]
         
         ax, polys = area_like_matlab(
             [vol_nutrient, vol_autotrophs, vol_heterotrophs],

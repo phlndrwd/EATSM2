@@ -127,7 +127,7 @@ Heterotroph& Heterotroph::operator=(const Heterotroph&& heterotroph) {
   return *this;
 }
 
-Heterotroph Heterotroph::getChild(RandomSimple& random, const EcologicalFunctions& functions) {
+std::shared_ptr<Heterotroph> Heterotroph::getChild(RandomSimple& random, const EcologicalFunctions& functions) {
   Traits childTraits = traits_.getChildTraits(random);
 
   std::float64_t childVolumeHeritable = 0;
@@ -149,7 +149,7 @@ Heterotroph Heterotroph::getChild(RandomSimple& random, const EcologicalFunction
   }
   volumeActual_ = volumeActual_ - childVolumeActual;
 
-  return Heterotroph(std::move(childTraits), childVolumeHeritable, childVolumeActual, childVolumeMinimum, trophicLevel_, assimilationEfficiency_);
+  return std::make_shared<Heterotroph>(std::move(childTraits), childVolumeHeritable, childVolumeActual, childVolumeMinimum, trophicLevel_, assimilationEfficiency_);
 }
 
 std::float64_t Heterotroph::consumePreyVolume(const std::float64_t preyVolume) {

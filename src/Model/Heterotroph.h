@@ -10,6 +10,7 @@
 #ifndef HETEROTROPH_H
 #define HETEROTROPH_H
 
+#include <memory>
 #include <stdfloat>
 
 #include "Traits.h"
@@ -30,7 +31,7 @@ class Heterotroph {
   Heterotroph& operator=(const Heterotroph&);
   Heterotroph& operator=(const Heterotroph&&);
 
-  Heterotroph getChild(RandomSimple&, const EcologicalFunctions&);
+  std::shared_ptr<Heterotroph> getChild(RandomSimple&, const EcologicalFunctions&);
 
   std::float64_t consumePreyVolume(const std::float64_t);
   std::float64_t metabolise(const std::float64_t);

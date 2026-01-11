@@ -14,6 +14,7 @@
 #include <cmath>
 #include <cstdint>
 #include <functional>
+#include <memory>
 #include <queue>
 #include <vector>
 
@@ -62,23 +63,24 @@ public:
 
   template <typename F>
   void forEachChild(F&& func) {
-    std::for_each(std::begin(children_), std::end(children_), [&](Heterotroph child) {
+    std::for_each(std::begin(children_), std::end(children_), [&](std::shared_ptr<Heterotroph> child) {
       func(child);
     });
   }
 
   std::uint32_t getRandomHeterotrophIndex();
-  Heterotroph& getRandomHeterotroph();
-  Heterotroph& getRandomHeterotroph(std::uint32_t&);
-  Heterotroph& getHeterotroph(const std::uint32_t);
-  const Heterotroph& getHeterotroph(const std::uint32_t) const;
+  Heterotroph* getRandomHeterotroph();
+  Heterotroph* getRandomHeterotroph(std::uint32_t&);
+  Heterotroph* getHeterotroph(const std::uint32_t);
+  const Heterotroph* getHeterotroph(const std::uint32_t) const;
+  std::shared_ptr<Heterotroph> ownHeterotroph(const std::uint32_t);
   void removeHeterotroph(const std::uint32_t);
 
-  void addHeterotroph(Heterotroph);
-  void addChild(Heterotroph);
+  void addHeterotroph(std::shared_ptr<Heterotroph>);
+  void addChild(std::shared_ptr<Heterotroph>);
   void clearChildren();
 
-  std::vector<Heterotroph>& getHeterotrophs();
+  std::vector<std::shared_ptr<Heterotroph>>& getHeterotrophs();
 
   std::uint64_t getLivingCount();
   std::uint64_t getDeadCount();
@@ -92,8 +94,8 @@ private:
   const std::float64_t subsetFraction_;
   const std::uint32_t maxPopulation_;
 
-  std::vector<Heterotroph> heterotrophs_;
-  std::vector<Heterotroph> children_;
+  std::vector<std::shared_ptr<Heterotroph>> heterotrophs_;
+  std::vector<std::shared_ptr<Heterotroph>> children_;
   std::vector<std::uint32_t> alive_;
   std::queue<std::uint32_t> dead_;
 };

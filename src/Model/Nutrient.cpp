@@ -16,7 +16,7 @@
 Nutrient::Nutrient(Parameters& params):
       volume_(0),  // No option to set initial nutrient volume
       toFlux_(0),
-      buffVolume_("totalNutrientVolume", "totals", params.getDataSize(), volume_) {
+      buffVolume_("nutrientVolume", "totals", params.getDataSize(), volume_) {
   std::cout << "Nutrient pool created." << std::endl;
 }
 

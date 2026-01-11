@@ -35,8 +35,8 @@ class EncounterAlgorithm {
   PreyVolumes calcEffectiveSizeClassVolumes(std::vector<SizeClass>&, SizeClass&, std::vector<std::float64_t>&);
   std::vector<SizeClass>::iterator setCoupledSizeClass(const std::vector<std::float64_t>&, std::vector<SizeClass>&,
                                                        PreyVolumes&, enums::eFeedingStrategy&);
-  void feedFromAutotrophs(Heterotroph&, std::vector<SizeClass>::iterator);
-  void feedFromHeterotrophs(Heterotroph&, std::vector<SizeClass>::iterator);
+  void feedFromAutotrophs(Heterotroph*, std::vector<SizeClass>::iterator);
+  void feedFromHeterotrophs(Heterotroph*, std::vector<SizeClass>::iterator);
 
   Nutrient& nutrient_;
   EcologicalData& data_;
