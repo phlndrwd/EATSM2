@@ -88,24 +88,6 @@ void Life::update() {
   moveHeterotrophs();
 }
 
-void Life::snapshot() {
-  outputData_.reset();
-
-  std::for_each(std::begin(sizeClasses_), std::end(sizeClasses_), [&](SizeClass& thisSizeClass) {
-    OutputData& sizeClassOutput = thisSizeClass.snapshot();
-
-    std::uint32_t index = thisSizeClass.getIndex();
-    sizeClassLiving_.at(index) = (std::float64_t)sizeClassOutput.getLivingCount();
-    sizeClassDead_.at(index) = (std::float64_t)sizeClassOutput.getDeadCount();
-
-    outputData_ += thisSizeClass.getOutputData();
-  });
-  DataRecorder::get()->addDataTo("SizeClassLiving", sizeClassLiving_);
-  DataRecorder::get()->addDataTo("SizeClassDead", sizeClassDead_);
-  DataRecorder::get()->addDataTo("LivingCount", outputData_.getLivingCount());
-  DataRecorder::get()->addDataTo("DeadCount", outputData_.getDeadCount());
-}
-
 void Life::moveHeterotrophs() {
   for (const auto& movingHeterotroph : movingHeterotrophs_) {
     Heterotroph& heterotroph = movingHeterotroph.heterotroph;

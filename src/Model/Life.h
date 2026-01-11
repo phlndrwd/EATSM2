@@ -29,7 +29,6 @@ class Life {
   explicit Life(Nutrient&, Parameters&);
 
   void update();
-  void snapshot();
 
  private:
   void moveHeterotrophs();

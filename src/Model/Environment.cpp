@@ -12,18 +12,13 @@
 #include <iostream>
 
 Environment::Environment(Parameters& params) :
-        nutrient_(),
+        nutrient_(params),
         life_(nutrient_, params) {
   std::cout << "Environment created." << std::endl << std::endl;
 }
 
 void Environment::update() {
   life_.update();
-}
-
-void Environment::snapshot() {
-  nutrient_.snapshot();
-  life_.snapshot();
 }
 
 Nutrient& Environment::getNutrient() {

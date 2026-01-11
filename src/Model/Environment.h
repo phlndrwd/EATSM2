@@ -19,7 +19,6 @@ class Environment {
   Environment(Parameters&);
 
   void update();
-  void snapshot();
 
   Nutrient& getNutrient();
   const Nutrient& getNutrient() const;

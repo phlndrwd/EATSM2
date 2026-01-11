@@ -20,7 +20,7 @@ import netCDF4 as nc
 ## PARAMS
 ###############################################################################
 data_dir = "/home/doomsayer/Development/Repositories/eatsm2/build/Debug/output/"
-data_file = "2026-01-11_12:14:21.nc"
+data_file = "2026-01-11_13:10:13.nc"
 
 var_names_totals = ["totalHeterotrophFrequency"]
 
@@ -47,6 +47,8 @@ if exists(file_path) == 1:
             var_data = variables[var_name][:]
             plt.figure(figsize=[12,9])
             plt.plot(var_data)
+            plt.xlabel('time')
+            plt.ylabel(var_name)
     
     data_set.close()
     

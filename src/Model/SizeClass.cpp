@@ -58,13 +58,6 @@ void SizeClass::populate(const std::float64_t volumeToInitialise, const std::flo
   }
 }
 
-OutputData& SizeClass::snapshot() {
-  outputData_.setLivingCount(heterotrophs_.getLivingCount());
-  outputData_.setDeadCount(heterotrophs_.getDeadCount());
-
-  return outputData_;
-}
-
 void SizeClass::metabolisation() {
   heterotrophs_.forEachHeterotrophIndex([&](std::uint32_t index) {
     Heterotroph& heterotroph = heterotrophs_.getHeterotroph(index);

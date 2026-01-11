@@ -13,15 +13,11 @@
 
 #include "DataRecorder.h"
 
-Nutrient::Nutrient() {
-  volume_ = 0;
+Nutrient::Nutrient(Parameters& params):
+      volume_(0),  // No option to set initial nutrient volume
+      toFlux_(0),
+      buffVolume_("totalNutrientVolume", "totals", params.getDataSize(), volume_) {
   std::cout << "Nutrient pool created." << std::endl;
-}
-
-void Nutrient::snapshot() {
-  DataRecorder::get()->addDataTo("NutrientVolume", volume_);
-  DataRecorder::get()->addDataTo("ToNutrientFlux", toFlux_);
-  toFlux_ = 0;
 }
 
 const std::float64_t& Nutrient::getVolume() const {

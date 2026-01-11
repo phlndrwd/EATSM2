@@ -12,11 +12,13 @@
 
 #include <stdfloat>
 
+#include "Parameters.h"
+
+#include "Buffer.h"
+
 class Nutrient {
  public:
-  Nutrient();
-   
-  void snapshot();
+  Nutrient(Parameters&);
 
   const std::float64_t& getVolume() const;
 
@@ -26,6 +28,8 @@ class Nutrient {
  private:
   std::float64_t volume_;
   std::float64_t toFlux_;
+
+  jino::Buffer<std::float64_t> buffVolume_;
 };
 
 #endif
