@@ -52,8 +52,8 @@ class Life {
   std::vector<std::float64_t> sizeClassLiving_;
   std::vector<std::float64_t> sizeClassDead_;
 
-  std::uint64_t totalHeterotrophFrequency_;
-  jino::Buffer<std::uint64_t> bufferTotalHeterotrophFreq_;
+  std::uint64_t varTotalHeterotrophFrequency_;
+  jino::Buffer<std::uint64_t> buffTotalHeterotrophFrequency_;
 };
 
 #endif

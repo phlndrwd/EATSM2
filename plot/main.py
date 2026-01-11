@@ -1,0 +1,57 @@
+###############################################################################
+# Evolutionary Adaptive Trophic Structure Model 2 (EATSM2)                    #
+#                                                                             #
+# (C) Copyright 2024, Phil Underwood. All rights reserved.                    #
+#                                                                             #
+# This software is licensed under the terms of the 3-Clause BSD License       #
+# which can be obtained from https://opensource.org/license/bsd-3-clause/.    #
+###############################################################################
+
+#from IPython import get_ipython
+from os.path import exists
+
+import matplotlib.pyplot as plt
+import netCDF4 as nc
+#import numpy as np
+
+#get_ipython().magic('reset -sf')
+
+###############################################################################
+## PARAMS
+###############################################################################
+data_dir = "/home/doomsayer/Development/Repositories/eatsm2/build/Debug/output/"
+data_file = "2026-01-11_12:14:21.nc"
+
+var_names_totals = ["totalHeterotrophFrequency"]
+
+name_data_size = "dataSize"
+name_number_size_classes = "numberOfSizeClasses"
+
+###############################################################################
+file_path = data_dir + data_file
+
+if exists(file_path) == 1:
+    
+    print('-------------------------------------------------------------------------------')
+    print(file_path, "exists...")
+    data_set = nc.Dataset(file_path, format="NETCDF4")
+        
+    sz_data_size = data_set.dimensions[name_data_size]
+    sz_number_size_classes = data_set.dimensions[name_number_size_classes]
+  
+    for group in data_set.groups:
+        print("Getting group data for", group)
+        variables = data_set.groups[group].variables
+        for var_name in variables:
+            print("Plotting for", var_name)
+            var_data = variables[var_name][:]
+            plt.figure(figsize=[12,9])
+            plt.plot(var_data)
+    
+    data_set.close()
+    
+    ###########################################################################
+else:
+    print(file_path, "does not exist...")
+  
+###############################################################################

@@ -12,7 +12,6 @@
 
 #include <algorithm>
 #include <climits>
-#include <iostream>
 
 #include "Constants.h"
 #include "Parameters.h"
@@ -37,8 +36,8 @@ Life::Life(Nutrient& nutrient, Parameters& params) :
         numberOfSizeClasses_(params_.getNumberOfSizeClasses()),
         sizeClassLiving_(numberOfSizeClasses_, 0),
         sizeClassDead_(numberOfSizeClasses_, 0),
-        totalHeterotrophFrequency_(0),
-        bufferTotalHeterotrophFreq_("totalHeterotrophFrequency_", "totals", params_.getMaxTimeStep() / params_.getSamplingRate(), totalHeterotrophFrequency_) {
+        varTotalHeterotrophFrequency_(0),
+        buffTotalHeterotrophFrequency_("totalHeterotrophFrequency", "totals", params_.getDataSize(), varTotalHeterotrophFrequency_) {
   std::uint32_t autotrophIndex = consts::kAutotrophSizeIndex;
   std::float64_t idealInitialVolume = params.getSmallestIndividualVolume() * params.getPreferredPreyVolumeRatio();
   std::uint32_t heterotrophIndex = findSizeClassIndexFromVolume(idealInitialVolume);
@@ -73,11 +72,11 @@ void Life::update() {
     thisSizeClass.starvation();
   });
 
-  totalHeterotrophFrequency_ = 0;
+  varTotalHeterotrophFrequency_ = 0;
   /// Reproduction - full set
   std::for_each(std::begin(sizeClasses_), std::end(sizeClasses_), [&](SizeClass& thisSizeClass) {
     thisSizeClass.reproduction();
-    totalHeterotrophFrequency_ += thisSizeClass.getHeterotrophs().getLivingCount();
+    varTotalHeterotrophFrequency_ += thisSizeClass.getHeterotrophs().getLivingCount();
   });
 
   //std::cout << "totalHeterotrophFrequency> " << totalHeterotrophFrequency_ << std::endl;

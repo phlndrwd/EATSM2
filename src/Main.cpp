@@ -48,6 +48,7 @@ std::int32_t main() {
   const std::uint64_t maxTimeStep = params.getMaxTimeStep();
 
   data.addDimension("dataSize", params.getDataSize(), true);
+  data.addDimension("numberOfSizeClasses", params.getNumberOfSizeClasses(), false);
 
   output.writeMetadata(data);
   std::cout << "Starting main time loop..." << std::endl;
