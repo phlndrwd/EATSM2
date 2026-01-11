@@ -37,7 +37,11 @@ Life::Life(Nutrient& nutrient, Parameters& params) :
         sizeClassLiving_(numberOfSizeClasses_, 0),
         sizeClassDead_(numberOfSizeClasses_, 0),
         varTotalHeterotrophFrequency_(0),
-        buffTotalHeterotrophFrequency_("totalHeterotrophFrequency", "totals", params_.getDataSize(), varTotalHeterotrophFrequency_) {
+        varTotalHeterotrophVolume_(0),
+        varTotalAutotrophVolume_(0),
+        buffTotalHeterotrophFrequency_("totalHeterotrophFrequency", "totals", params_.getDataSize(), varTotalHeterotrophFrequency_),
+        buffTotalHeterotrophVolume_("totalHeterotrophVolume", "totals", params_.getDataSize(), varTotalHeterotrophVolume_),
+        buffTotalAutotrophVolume_("totalAutotrophVolume", "totals", params_.getDataSize(), varTotalAutotrophVolume_){
   std::uint32_t autotrophIndex = consts::kAutotrophSizeIndex;
   std::float64_t idealInitialVolume = params.getSmallestIndividualVolume() * params.getPreferredPreyVolumeRatio();
   std::uint32_t heterotrophIndex = findSizeClassIndexFromVolume(idealInitialVolume);
@@ -71,15 +75,19 @@ void Life::update() {
   std::for_each(std::begin(sizeClasses_), std::end(sizeClasses_), [&](SizeClass& thisSizeClass) {
     thisSizeClass.starvation();
   });
-
+  /// Reproduction - full set.
+  /// Collect data at the same time.
   varTotalHeterotrophFrequency_ = 0;
-  /// Reproduction - full set
+  varTotalHeterotrophVolume_ = 0;
+  varTotalAutotrophVolume_ = 0;
+
   std::for_each(std::begin(sizeClasses_), std::end(sizeClasses_), [&](SizeClass& thisSizeClass) {
     thisSizeClass.reproduction();
-    varTotalHeterotrophFrequency_ += thisSizeClass.getHeterotrophs().getLivingCount();
+    const std::uint64_t sizeClassHeterotrophFrequency = thisSizeClass.getHeterotrophs().getLivingCount();
+    varTotalHeterotrophFrequency_ += sizeClassHeterotrophFrequency;
+    varTotalHeterotrophVolume_ += sizeClassHeterotrophFrequency * data_.getSizeClassMidPoints()[thisSizeClass.getIndex()];
+    varTotalAutotrophVolume_ += thisSizeClass.getAutotrophs().getVolume();
   });
-
-  //std::cout << "totalHeterotrophFrequency> " << totalHeterotrophFrequency_ << std::endl;
 
   // Movement between size classes - integrate into reproduction?
   std::for_each(std::begin(sizeClasses_), std::end(sizeClasses_), [&](SizeClass& thisSizeClass) {

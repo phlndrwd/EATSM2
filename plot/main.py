@@ -7,20 +7,18 @@
 # which can be obtained from https://opensource.org/license/bsd-3-clause/.    #
 ###############################################################################
 
-#from IPython import get_ipython
 from os.path import exists
 
 import matplotlib.pyplot as plt
 import netCDF4 as nc
-#import numpy as np
-
-#get_ipython().magic('reset -sf')
+import numpy as np
+from plot_utils import area_like_matlab
 
 ###############################################################################
 ## PARAMS
 ###############################################################################
 data_dir = "/home/doomsayer/Development/Repositories/eatsm2/build/Debug/output/"
-data_file = "2026-01-11_13:10:13.nc"
+data_file = "2026-01-11_15:11:28.nc"
 
 var_names_totals = ["totalHeterotrophFrequency"]
 
@@ -42,14 +40,26 @@ if exists(file_path) == 1:
     for group in data_set.groups:
         print("Getting group data for", group)
         variables = data_set.groups[group].variables
-        for var_name in variables:
-            print("Plotting for", var_name)
-            var_data = variables[var_name][:]
-            plt.figure(figsize=[12,9])
-            plt.plot(var_data)
-            plt.xlabel('time')
-            plt.ylabel(var_name)
-    
+        
+        # Create volume histogram
+        vol_nutrient = variables["totalNutrientVolume"][:]
+        vol_autotrophs = variables["totalAutotrophVolume"][:]
+        vol_heterotrophs = variables["totalHeterotrophVolume"][:]
+        
+        ax, polys = area_like_matlab(
+            [vol_nutrient, vol_autotrophs, vol_heterotrophs],
+            labels=['Nutrient', 'Autotrophs', 'Heterotrophs']
+        )
+        plt.show()
+        
+        #for var_name in variables:
+        #    print("Plotting for", var_name)
+        #    var_data = variables[var_name][:]
+        #    plt.figure(figsize=[12,9])
+        #    plt.plot(var_data)
+        #    plt.xlabel('time')
+        #    plt.ylabel(var_name)
+            
     data_set.close()
     
     ###########################################################################
