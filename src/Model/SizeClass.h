@@ -18,7 +18,6 @@
 #include "EcologicalFunctions.h"
 #include "Heterotrophs.h"
 #include "Nutrient.h"
-#include "OutputData.h"
 #include "Parameters.h"
 #include "RandomSimple.h"
 #include "Structs.h"
@@ -36,13 +35,10 @@ class SizeClass {
   void reproduction();
   void whoIsMoving(std::vector<structs::MovingHeterotroph>&);
 
-  OutputData& snapshot();
-
   std::uint32_t getIndex() const;
 
   Autotrophs& getAutotrophs();
   Heterotrophs& getHeterotrophs();
-  OutputData& getOutputData();
 
  private:
   void starve(const std::uint32_t);
@@ -60,7 +56,6 @@ class SizeClass {
   RandomSimple random_;
   Autotrophs autotrophs_;
   Heterotrophs heterotrophs_;
-  OutputData outputData_;
 
 };
 

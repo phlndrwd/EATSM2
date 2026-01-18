@@ -125,7 +125,3 @@ Autotrophs& SizeClass::getAutotrophs() {
 Heterotrophs& SizeClass::getHeterotrophs() {
   return heterotrophs_;
 }
-
-OutputData& SizeClass::getOutputData() {
-  return outputData_;
-}

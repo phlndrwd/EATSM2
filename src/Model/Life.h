@@ -16,7 +16,6 @@
 #include "EcologicalData.h"
 #include "EncounterAlgorithm.h"
 #include "Nutrient.h"
-#include "OutputData.h"
 #include "Parameters.h"
 #include "RandomSimple.h"
 #include "SizeClass.h"
@@ -40,7 +39,6 @@ class Life {
   EcologicalData data_;
   RandomSimple random_;
   EncounterAlgorithm algorithm_;
-  OutputData outputData_;
 
   std::vector<SizeClass> sizeClasses_;
   std::vector<structs::MovingHeterotroph> movingHeterotrophs_;
