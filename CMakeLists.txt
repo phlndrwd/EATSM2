@@ -34,12 +34,12 @@ list(APPEND EATSM2_SOURCES
 
   src/Model/Autotrophs.cpp
   src/Model/Autotrophs.h
-  src/Model/EcologicalFunctions.cpp
-  src/Model/EcologicalFunctions.h
   src/Model/EncounterAlgorithm.cpp
   src/Model/EncounterAlgorithm.h
   src/Model/Environment.h
   src/Model/Environment.cpp
+  src/Model/Functions.cpp
+  src/Model/Functions.h
   src/Model/Heterotroph.cpp
   src/Model/Heterotroph.h
   src/Model/Heterotrophs.cpp
@@ -52,7 +52,6 @@ list(APPEND EATSM2_SOURCES
   src/Model/SizeClass.h
   src/Model/Traits.cpp
   src/Model/Traits.h
-
   src/Tools/RandomSimple.cpp
   src/Tools/RandomSimple.h
 )

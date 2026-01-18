@@ -12,7 +12,7 @@
 
 #include <vector>
 
-#include "EcologicalFunctions.h"
+#include "Functions.h"
 #include "Parameters.h"
 #include "SizeClass.h"
 
@@ -39,7 +39,7 @@ class EncounterAlgorithm {
 
   Nutrient& nutrient_;
 
-  EcologicalFunctions functions_;
+  Functions functions_;
   RandomSimple random_;
 
   const std::vector<std::vector<std::float64_t>> interSizeClassPreferences_;

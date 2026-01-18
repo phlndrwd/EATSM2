@@ -15,14 +15,13 @@
 
 #include "Traits.h"
 
-class EcologicalFunctions;
 class RandomSimple;
 
 class Heterotroph {
  public:
   Heterotroph() = delete;
-  explicit Heterotroph(std::vector<std::float64_t>&, std::vector<std::uint8_t>&,
-                       const std::float64_t&, const std::float64_t&, const std::float64_t&, const std::float64_t&);
+
+  explicit Heterotroph(const std::float64_t&, const std::float64_t&, const std::float64_t&, const std::float64_t&, const std::float64_t&);
   explicit Heterotroph(const Traits&, const std::float64_t&, const std::float64_t&, const std::float64_t&, const std::float64_t&, const std::float64_t&);
 
   Heterotroph(const Heterotroph&);
@@ -31,7 +30,7 @@ class Heterotroph {
   Heterotroph& operator=(const Heterotroph&);
   Heterotroph& operator=(const Heterotroph&&);
 
-  std::shared_ptr<Heterotroph> getChild(RandomSimple&, const EcologicalFunctions&);
+  std::shared_ptr<Heterotroph> getChild(RandomSimple&, const std::float64_t& smallestVolumeExponent, const std::float64_t& largestVolumeExponent);
 
   std::float64_t consumePreyVolume(const std::float64_t);
   std::float64_t metabolise(const std::float64_t);
@@ -39,9 +38,6 @@ class Heterotroph {
   Traits& getHeritableTraits();
   std::float64_t getTrophicLevel() const;
   std::uint32_t getAge() const;
-
-  bool hasFed() const;
-  bool isDead() const;
 
   std::float64_t getVolumeActual() const;
   std::float64_t getVolumeHeritable() const;
@@ -53,8 +49,6 @@ class Heterotroph {
   void setTrophicLevel(const std::float64_t);
 
   void setAge(const std::uint32_t);
-  void setHasFed(const bool);
-  void setDead();
 
  private:
   Traits traits_;
@@ -69,8 +63,6 @@ class Heterotroph {
 
   std::float64_t trophicLevel_;
   std::uint32_t age_;
-  bool hasFed_;
-  bool isDead_;
 };
 
 #endif

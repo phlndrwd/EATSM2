@@ -49,7 +49,7 @@ std::float64_t EncounterAlgorithm::calcFeedingProbability(std::vector<SizeClass>
     PreyVolumes preyVolumes = calcEffectiveSizeClassVolumes(sizeClasses, thisSizeClass, effectiveSizeClassVolumes);
     coupledSizeClassIt = setCoupledSizeClass(effectiveSizeClassVolumes, sizeClasses, preyVolumes, feedingStrategy);
     // PJU FIX - Introduce option switch for functional response types?
-    feedingProbability = functions_.functionalResponseNonLinear(thisSizeClass.getIndex(), preyVolumes.totalPrey);
+    feedingProbability = functions_.functionalResponse(thisSizeClass.getIndex(), preyVolumes.totalPrey);
   }
   return feedingProbability;
 }
@@ -58,8 +58,8 @@ PreyVolumes EncounterAlgorithm::calcEffectiveSizeClassVolumes(std::vector<SizeCl
 							      SizeClass& thisSizeClass,
 							      std::vector<std::float64_t>& effectiveSizeClassVolumes) {
   PreyVolumes preyVolumes;
-  auto sizeClassVolumesIt = interSizeClassVolumes_.at(thisSizeClass.getIndex()).begin();
-  auto sizeClassPreferencesIt = interSizeClassPreferences_.at(thisSizeClass.getIndex()).begin();
+  auto sizeClassVolumesIt = interSizeClassVolumes_[thisSizeClass.getIndex()].begin();
+  auto sizeClassPreferencesIt = interSizeClassPreferences_[thisSizeClass.getIndex()].begin();
   std::vector<std::float64_t>::iterator effectiveSizeClassVolumesIt = effectiveSizeClassVolumes.begin();
 
   std::for_each(std::begin(sizeClasses), std::end(sizeClasses), [&](SizeClass& otherSizeClass) {

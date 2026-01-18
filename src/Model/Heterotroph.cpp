@@ -9,16 +9,24 @@
 
 #include "Heterotroph.h"
 
+#include <cmath>
+
 #include "Constants.h"
-#include "EcologicalFunctions.h"
 #include "Parameters.h"
 #include "RandomSimple.h"
 
+namespace {
+std::float64_t traitValueToVolume(const std::float64_t& traitValue, const std::float64_t& smallestVolumeExponent, const std::float64_t& largestVolumeExponent) {
+  std::float64_t volumeExponent = traitValue * (largestVolumeExponent - smallestVolumeExponent) + smallestVolumeExponent;
+  return std::pow(10, volumeExponent);
+}
+}
+
 // For model initialisation.
-Heterotroph::Heterotroph(std::vector<std::float64_t>& traitValues, std::vector<std::uint8_t>& areTraitsMutant,
-			 const std::float64_t& mutationProbability, const std::float64_t& mutationStandardDeviation,
+Heterotroph::Heterotroph(const std::float64_t& traitValue,
+                         const std::float64_t& mutationProbability, const std::float64_t& mutationStandardDeviation,
 			 const std::float64_t& volumeHeritable, const std::float64_t& assimilationEfficiency):
-	traits_(traitValues, areTraitsMutant, mutationProbability, mutationStandardDeviation),
+        traits_(traitValue, mutationProbability, mutationStandardDeviation),
 	volumeHeritable_(volumeHeritable),
 	volumeActual_(volumeHeritable_),
 	volumeMinimum_(volumeHeritable_ * consts::kMinimumFractionalVolume),
@@ -28,13 +36,12 @@ Heterotroph::Heterotroph(std::vector<std::float64_t>& traitValues, std::vector<s
   starvationMultiplier_ = 1. / (volumeHeritable_ - volumeMinimum_);
   age_ = 0;
   trophicLevel_ = 0;
-  hasFed_ = false;
-  isDead_ = false;
 }
 
 // For reproduction.
-Heterotroph::Heterotroph(const Traits& heritableTraits, const std::float64_t& volumeHeritable, const std::float64_t& volumeActual,
-                         const std::float64_t& volumeMinimum, const std::float64_t& trophicLevel, const std::float64_t& assimilationEfficiency):
+Heterotroph::Heterotroph(const Traits& heritableTraits, const std::float64_t& volumeHeritable,
+                         const std::float64_t& volumeActual, const std::float64_t& volumeMinimum,
+                         const std::float64_t& trophicLevel, const std::float64_t& assimilationEfficiency):
         traits_(heritableTraits),
         volumeHeritable_(volumeHeritable),
         volumeActual_(volumeActual),
@@ -44,8 +51,6 @@ Heterotroph::Heterotroph(const Traits& heritableTraits, const std::float64_t& vo
   volumeReproduction_ = consts::kReproductionFactor * volumeHeritable_;
   starvationMultiplier_ = 1. / (volumeHeritable_ - volumeMinimum_);
   age_ = 0;
-  hasFed_ = false;
-  isDead_ = false;
 }
 
 Heterotroph::Heterotroph(const Heterotroph& heterotroph) :
@@ -61,9 +66,6 @@ Heterotroph::Heterotroph(const Heterotroph& heterotroph) :
   starvationMultiplier_ = heterotroph.starvationMultiplier_;
 
   age_ = heterotroph.age_;
-
-  hasFed_ = heterotroph.hasFed_;
-  isDead_ = heterotroph.isDead_;
 }
 
 Heterotroph::Heterotroph(const Heterotroph&& heterotroph) noexcept :
@@ -79,9 +81,6 @@ Heterotroph::Heterotroph(const Heterotroph&& heterotroph) noexcept :
   starvationMultiplier_ = std::move(heterotroph.starvationMultiplier_);
 
   age_ = std::move(heterotroph.age_);
-
-  hasFed_ = std::move(heterotroph.hasFed_);
-  isDead_ = std::move(heterotroph.isDead_);
 }
 
 Heterotroph& Heterotroph::operator=(const Heterotroph& heterotroph) {
@@ -98,9 +97,6 @@ Heterotroph& Heterotroph::operator=(const Heterotroph& heterotroph) {
     starvationMultiplier_ = heterotroph.starvationMultiplier_;
 
     age_ = heterotroph.age_;
-
-    hasFed_ = heterotroph.hasFed_;
-    isDead_ = heterotroph.isDead_;
   }
   return *this;
 }
@@ -120,26 +116,23 @@ Heterotroph& Heterotroph::operator=(const Heterotroph&& heterotroph) {
     starvationMultiplier_ = std::move(heterotroph.starvationMultiplier_);
 
     age_ = std::move(heterotroph.age_);
-
-    hasFed_ = std::move(heterotroph.hasFed_);
-    isDead_ = std::move(heterotroph.isDead_);
   }
   return *this;
 }
 
-std::shared_ptr<Heterotroph> Heterotroph::getChild(RandomSimple& random, const EcologicalFunctions& functions) {
+std::shared_ptr<Heterotroph> Heterotroph::getChild(RandomSimple& random, const std::float64_t& smallestVolumeExponent, const std::float64_t& largestVolumeExponent) {
   Traits childTraits = traits_.getChildTraits(random);
 
   std::float64_t childVolumeHeritable = 0;
   std::float64_t childVolumeActual = 0;
   std::float64_t childVolumeMinimum = 0;
 
-  if (childTraits.isTraitMutant(enums::eVolume) == false) {
+  if (childTraits.getValues().volumeIsMutant == false) {
     childVolumeActual = volumeActual_ * consts::kReproductionMultiplier;
     childVolumeHeritable = volumeHeritable_;
     childVolumeMinimum = volumeMinimum_;
   } else {
-    childVolumeHeritable = functions.traitValueToVolume(childTraits.getValue(enums::eVolume));
+    childVolumeHeritable = traitValueToVolume(childTraits.getValues().volume, smallestVolumeExponent, largestVolumeExponent);
     childVolumeMinimum = childVolumeHeritable * consts::kMinimumFractionalVolume;
     if (childVolumeHeritable < volumeActual_) {
       childVolumeActual = childVolumeHeritable;
@@ -157,7 +150,6 @@ std::float64_t Heterotroph::consumePreyVolume(const std::float64_t preyVolume) {
   std::float64_t wasteVolume = preyVolume - volumeAssimilated;
 
   volumeActual_ += volumeAssimilated;
-  hasFed_ = true;
 
   return wasteVolume;
 }
@@ -178,14 +170,6 @@ std::float64_t Heterotroph::getTrophicLevel() const {
 
 std::uint32_t Heterotroph::getAge() const {
   return age_;
-}
-
-bool Heterotroph::hasFed() const {
-  return hasFed_;
-}
-
-bool Heterotroph::isDead() const {
-  return isDead_;
 }
 
 std::float64_t Heterotroph::getVolumeActual() const {
@@ -214,12 +198,4 @@ void Heterotroph::setTrophicLevel(const std::float64_t trophicLevel) {
 
 void Heterotroph::setAge(const std::uint32_t age) {
   age_ = age;
-}
-
-void Heterotroph::setHasFed(const bool hasFed) {
-  hasFed_ = hasFed;
-}
-
-void Heterotroph::setDead() {
-  isDead_ = true;
 }

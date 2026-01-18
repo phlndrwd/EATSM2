@@ -9,33 +9,28 @@
 
 #include "Traits.h"
 
+#include <cassert>
+
 #include "Parameters.h"
 #include "RandomSimple.h"
 
-Traits::Traits(const std::vector<std::float64_t>& values, const std::vector<std::uint8_t>& areMutantTraits,
-               const std::float64_t& mutationProbability_, const std::float64_t& mutationStandardDeviation_):
+Traits::Traits(const TraitValues& values, const std::float64_t& mutationProbability_, const std::float64_t& mutationStandardDeviation_) :
+    values_(values),
+    mutationProbability_(mutationProbability_),
+    mutationStandardDeviation_(mutationStandardDeviation_) {}
+
+Traits::Traits(const Traits& traits) :
+    values_(traits.values_),
     mutationProbability_(mutationProbability_),
     mutationStandardDeviation_(mutationStandardDeviation_) {
-  values_.insert(values_.end(), values.begin(), values.end());
-  areMutantTraits_.insert(areMutantTraits_.end(), areMutantTraits.begin(), areMutantTraits.end());
+  assert(this != &traits);
 }
 
-Traits::Traits(const Traits& traits) {
-  if (this != &traits) {
-    mutationProbability_ = traits.mutationProbability_;
-    mutationStandardDeviation_ = traits.mutationStandardDeviation_;
-    values_ = traits.values_;
-    areMutantTraits_ = traits.areMutantTraits_;
-  }
-}
-
-Traits::Traits(Traits&& traits) noexcept {
-  if (this != &traits) {
-    mutationProbability_ = std::move(traits.mutationProbability_);
-    mutationStandardDeviation_ = std::move(traits.mutationStandardDeviation_);
-    values_ = std::move(traits.values_);
-    areMutantTraits_ = std::move(traits.areMutantTraits_);
-  }
+Traits::Traits(Traits&& traits) noexcept  :
+    values_(traits.values_),
+    mutationProbability_(mutationProbability_),
+    mutationStandardDeviation_(mutationStandardDeviation_) {
+  assert(this != &traits);
 }
 
 Traits& Traits::operator=(const Traits& traits) {
@@ -43,7 +38,6 @@ Traits& Traits::operator=(const Traits& traits) {
     mutationProbability_ = traits.mutationProbability_;
     mutationStandardDeviation_ = traits.mutationStandardDeviation_;
     values_ = traits.values_;
-    areMutantTraits_ = traits.areMutantTraits_;
   }
   return *this;
 }
@@ -51,53 +45,34 @@ Traits& Traits::operator=(const Traits& traits) {
 Traits& Traits::operator=(Traits&& traits) noexcept {
   if (this != &traits) {
     values_ = std::move(traits.values_);
-    areMutantTraits_ = std::move(traits.areMutantTraits_);
   }
   return *this;
 }
 
 const Traits Traits::getChildTraits(RandomSimple& random) {
-  std::size_t numberOfGenes = values_.size();
-  std::vector<std::float64_t> childValues = values_;
-  std::vector<std::uint8_t> areTraitsMutations(numberOfGenes, 0);
-
+  TraitValues childValues(values_);
   if (mutationProbability_ > 0) {
-    for (std::size_t i = 0; i < numberOfGenes; ++i) {
-      if (random.getUniform() <= mutationProbability_) {
-        areTraitsMutations[i] = true;  // PJU FIX - What gets assigned here?
+    if (random.getUniform() <= mutationProbability_) {
+      childValues.volumeIsMutant = true;
+      childValues.volume += random.getNormal(0.0, mutationStandardDeviation_);
 
-        std::float64_t mutationValue = random.getNormal(0.0, mutationStandardDeviation_);
-
-        childValues[i] += mutationValue;
-
-        // Perform reflection on mutations outside the required range 0 to 1.
-        if (childValues[i] < 0) {
-          childValues[i] = 0 - childValues[i];
-        } else if (childValues[i] > 1) {
-          childValues[i] = 2 - childValues[i];
-        }
+      // Perform reflection on mutations outside the required range 0 to 1.
+      std::float64_t volValue = childValues.volume;
+      if (volValue < 0) {
+        childValues.volume = 0 - volValue;
+      } else if (volValue > 1) {
+        childValues.volume = 2 - volValue;
       }
     }
   }
-  return Traits(childValues, areTraitsMutations, mutationProbability_, mutationStandardDeviation_);
+  return Traits(childValues, mutationProbability_, mutationStandardDeviation_);
 }
 
-const std::vector<std::uint8_t>& Traits::areTraitsMutant() const {
-  return areMutantTraits_;
-}
-
-const std::vector<std::float64_t>& Traits::getValues() const {
+const TraitValues& Traits::getValues() const {
   return values_;
 }
 
-bool Traits::isTraitMutant(const std::uint32_t traitIndex) const {
-  return areMutantTraits_[traitIndex] != 0;
+void Traits::setValues(const TraitValues& values) {
+  values_ = values;
 }
 
-const std::float64_t& Traits::getValue(const enums::eTraitIndices trait) const {
-  return values_[trait];
-}
-
-void Traits::setValue(const enums::eTraitIndices trait, const std::float64_t traitValue) {
-  values_[trait] = traitValue;
-}

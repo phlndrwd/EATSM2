@@ -53,10 +53,6 @@ enum eFeedingStrategy {
   eCarnivore
 };
 
-enum eTraitIndices {
-  eVolume
-};
-
 // Model enums
 enum eGrowthTrajectory {
   eStatic,

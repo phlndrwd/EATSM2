@@ -18,10 +18,17 @@
 
 class RandomSimple;
 
+struct TraitValues {
+  std::float64_t volume;
+  std::uint8_t volumeIsMutant;
+  TraitValues(std::float64_t _volume) : volume(_volume), volumeIsMutant(false) {}
+  TraitValues(std::float64_t _volume, std::uint8_t _volumeIsMutant) : volume(_volume), volumeIsMutant(_volumeIsMutant) {}
+};
+
 class Traits {
  public:
   Traits() = delete;
-  explicit Traits(const std::vector<std::float64_t>&, const std::vector<std::uint8_t>&, const std::float64_t&, const std::float64_t&);
+  explicit Traits(const TraitValues&, const std::float64_t&, const std::float64_t&);
 
   Traits(const Traits&);
   Traits(Traits&&) noexcept;
@@ -30,20 +37,15 @@ class Traits {
   Traits& operator=(Traits&&) noexcept;
 
   const Traits getChildTraits(RandomSimple&);
-  const std::vector<std::float64_t>& getValues() const;
-  const std::vector<std::uint8_t>& areTraitsMutant() const;
 
-  const std::float64_t& getValue(const enums::eTraitIndices) const;
-  bool isTraitMutant(const std::uint32_t) const;
-
-  void setValue(const enums::eTraitIndices, const std::float64_t);
+  const TraitValues& getValues() const;
+  void setValues(const TraitValues&);
 
  private:
   std::float64_t mutationProbability_;
   std::float64_t mutationStandardDeviation_;
 
-  std::vector<std::float64_t> values_;
-  std::vector<std::uint8_t> areMutantTraits_;
+  TraitValues values_;
 };
 
 #endif

@@ -15,7 +15,7 @@
 
 #include "Autotrophs.h"
 #include "Heterotroph.h"
-#include "EcologicalFunctions.h"
+#include "Functions.h"
 #include "Heterotrophs.h"
 #include "Nutrient.h"
 #include "Parameters.h"
@@ -44,12 +44,15 @@ class SizeClass {
   void starve(const std::uint32_t);
 
   Nutrient& nutrient_;
-  EcologicalFunctions functions_;
+  Functions functions_;
   const std::uint32_t index_;  // PJU FIX - Should index_ be deprecated?
 
   const std::float64_t sizeClassUpper_;
   const std::float64_t sizeClassMidPoint_;
   const std::float64_t sizeClassLower_;
+
+  const std::float64_t& smallestVolumeExponent_;
+  const std::float64_t& largestVolumeExponent_;
 
   const std::uint32_t numberOfSizeClasses_;
 
