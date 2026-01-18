@@ -26,11 +26,7 @@ FetchContent_MakeAvailable(cpplint)
 
 list(APPEND EATSM2_SOURCES
   src/Data/Enums.h
-  src/Data/MatrixDatum.cpp
-  src/Data/MatrixDatum.h
   src/Data/Structs.h
-  src/Data/VectorDatum.cpp
-  src/Data/VectorDatum.h
 
   src/Input/Constants.h
   src/Input/Parameters.cpp
