@@ -34,8 +34,6 @@ list(APPEND EATSM2_SOURCES
 
   src/Model/Autotrophs.cpp
   src/Model/Autotrophs.h
-  src/Model/EcologicalData.cpp
-  src/Model/EcologicalData.h
   src/Model/EcologicalFunctions.cpp
   src/Model/EcologicalFunctions.h
   src/Model/EncounterAlgorithm.cpp

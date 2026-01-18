@@ -18,7 +18,6 @@
 class Parameters {
  public:
   explicit Parameters(jino::Data&);
-  ~Parameters();
 
   const std::uint32_t& getRandomSeed() const;
   const std::uint64_t& getMaxTimeStep() const;
@@ -49,7 +48,33 @@ class Parameters {
   const std::float64_t& getMutationProbability() const;
   const std::float64_t& getMutationStandardDeviation() const;
 
+  // Calculated parameters
+  void calculate();
+
   const std::uint64_t& getDataSize() const;
+
+  const std::vector<std::vector<std::float64_t>>& getInterSizeClassPreferences() const;
+  const std::vector<std::vector<std::float64_t>>& getInterSizeClassVolumes() const;
+
+  std::vector<std::vector<std::float64_t>>& getInterSizeClassPreferences();
+  std::vector<std::vector<std::float64_t>>& getInterSizeClassVolumes();
+
+  const std::vector<std::uint32_t>& getMaximumSizeClassPopulations() const;
+  const std::uint32_t& getMaximumSizeClassPopulation(const std::uint64_t&) const;
+
+  const std::vector<std::float64_t>& getSizeClassBoundaries() const;
+  const std::vector<std::float64_t>& getSizeClassMidPoints() const;
+
+  const std::float64_t& getSizeClassBoundary(const std::uint64_t&) const;
+  const std::float64_t& getSizeClassMidPoint(const std::uint64_t&) const;
+
+  const std::vector<std::float64_t>& getLinearFeedingDenominators() const;
+  const std::vector<std::float64_t>& getHalfSaturationConstants() const;
+
+  const std::float64_t& getSmallestVolumeExponent() const;
+  const std::float64_t& getLargestVolumeExponent() const;
+
+  const std::float64_t& getAutotrophCellSize() const;
 
  private:
   std::uint32_t randomSeed_;
@@ -82,6 +107,24 @@ class Parameters {
 
   // Calculated parameters
   std::uint64_t dataSize_;
+
+  std::vector<std::vector<std::float64_t>> interSizeClassPreferences_;
+  std::vector<std::vector<std::float64_t>> interSizeClassVolumes_;
+
+  std::vector<std::uint32_t> maximumSizeClassPopulations_;
+
+  std::vector<std::float64_t> sizeClassBoundaries_;
+  std::vector<std::float64_t> sizeClassMidPoints_;
+
+  std::vector<std::float64_t> linearFeedingDenominators_;
+  std::vector<std::float64_t> halfSaturationConstants_;
+
+  std::vector<std::float64_t> remainingVolumes_;
+
+  std::float64_t smallestVolumeExponent_;
+  std::float64_t largestVolumeExponent_;
+
+  std::float64_t autotrophCellSize_;
 };
 
 #endif

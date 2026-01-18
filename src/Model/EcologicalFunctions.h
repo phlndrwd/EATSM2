@@ -13,13 +13,12 @@
 #include <functional>
 #include <vector>
 
-#include "EcologicalData.h"
 #include "Heterotroph.h"
 #include "Parameters.h"
 
 class EcologicalFunctions {
  public:
-  EcologicalFunctions(EcologicalData&, Parameters&);
+  EcologicalFunctions(Parameters&);
 
   std::float64_t functionalResponseLinear(const std::uint32_t&, const std::float64_t&) const;
   std::float64_t functionalResponseNonLinear(const std::uint32_t&, const std::float64_t&) const;
@@ -31,9 +30,6 @@ class EcologicalFunctions {
   std::float64_t calcStarvationProbability(const Heterotroph*) const;
 
   std::float64_t calcPreferenceForPrey(const std::float64_t&, const std::float64_t&) const;
-  //  std::float64_t calcFeedingProbability(const std::uint32_t, const std::float64_t);
-
-  // std::uint32_t findSizeClassIndexFromVolume(const std::float64_t) const;
 
   void updateHerbivoreTrophicIndex(Heterotroph*);
   void updateCarnivoreTrophicIndex(Heterotroph*, const Heterotroph*);
@@ -45,12 +41,10 @@ class EcologicalFunctions {
   std::float64_t volumeToTraitValue(const std::float64_t&) const;
 
  private:
-  void calcPreferenceMatrices();
+  void calcPreferenceMatrices(Parameters&);
 
   std::float64_t calcLinearStarvation(const std::float64_t&, const std::float64_t&, const std::float64_t&, const std::float64_t&) const;
   std::float64_t calcBetaExponentialStarvation(const std::float64_t&, const std::float64_t&, const std::float64_t&, const std::float64_t&) const;
-
-  EcologicalData& data_;
 
   std::function<std::float64_t(const std::uint32_t, const std::float64_t)> starvationProbabilityFunc_;
 

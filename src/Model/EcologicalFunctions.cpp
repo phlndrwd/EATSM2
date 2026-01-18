@@ -15,27 +15,26 @@
 #include "Parameters.h"
 #include "Enums.h"
 
-EcologicalFunctions::EcologicalFunctions(EcologicalData& data, Parameters& params) :
-    data_(data),
-    sizeClassBoundaries_(data.getSizeClassBoundaries()),
-    linearFeedingDenominators_(data.getLinearFeedingDenominators()),
-    halfSaturationConstants_(data.getHalfSaturationConstants()),
-    largestVolumeExponent_(data.getLargestVolumeExponent()),
-    smallestVolumeExponent_(data.getSmallestVolumeExponent()),
+EcologicalFunctions::EcologicalFunctions(Parameters& params) :
+    sizeClassBoundaries_(params.getSizeClassBoundaries()),
+    linearFeedingDenominators_(params.getLinearFeedingDenominators()),
+    halfSaturationConstants_(params.getHalfSaturationConstants()),
+    largestVolumeExponent_(params.getLargestVolumeExponent()),
+    smallestVolumeExponent_(params.getSmallestVolumeExponent()),
     preferredPreyVolumeRatio_(params.getPreferredPreyVolumeRatio()),
     preferenceFunctionWidth_(params.getPreferenceFunctionWidth()),
     fractionalMetabolicExpense_(params.getFractionalMetabolicExpense()),
     metabolicIndex_(params.getMetabolicIndex()),
     numberOfSizeClasses_(params.getNumberOfSizeClasses()),
     preferenceDenominator_(2 * std::pow(preferenceFunctionWidth_, 2)) {
-  calcPreferenceMatrices();
+  calcPreferenceMatrices(params);
 }
 
-void EcologicalFunctions::calcPreferenceMatrices() {
-  const std::vector<std::float64_t>& sizeClassMidPoints = data_.getSizeClassMidPoints();
+void EcologicalFunctions::calcPreferenceMatrices(Parameters& params) {
+  const std::vector<std::float64_t>& sizeClassMidPoints = params.getSizeClassMidPoints();
   // Calculating here to avoid circular dependeny in EcologicalData
-  std::vector<std::vector<std::float64_t>>& interSizeClassPreferences = data_.getInterSizeClassPreferences();
-  std::vector<std::vector<std::float64_t>>& interSizeClassVolumes = data_.getInterSizeClassVolumes();
+  std::vector<std::vector<std::float64_t>>& interSizeClassPreferences = params.getInterSizeClassPreferences();
+  std::vector<std::vector<std::float64_t>>& interSizeClassVolumes = params.getInterSizeClassVolumes();
 
   interSizeClassPreferences.resize(numberOfSizeClasses_);
   interSizeClassVolumes.resize(numberOfSizeClasses_);

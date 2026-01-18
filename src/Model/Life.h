@@ -13,7 +13,6 @@
 #include <stdfloat>
 #include <vector>
 
-#include "EcologicalData.h"
 #include "EncounterAlgorithm.h"
 #include "Nutrient.h"
 #include "Parameters.h"
@@ -36,7 +35,6 @@ class Life {
   Nutrient& nutrient_;
   Parameters& params_;
 
-  EcologicalData data_;
   RandomSimple random_;
   EncounterAlgorithm algorithm_;
 
@@ -44,10 +42,6 @@ class Life {
   std::vector<structs::MovingHeterotroph> movingHeterotrophs_;
 
   std::uint32_t numberOfSizeClasses_;
-
-  // PJU FIX - The following are temporary.
-  std::vector<std::float64_t> sizeClassLiving_;
-  std::vector<std::float64_t> sizeClassDead_;
 
   std::uint64_t varTotalHeterotrophFrequency_;
   std::float64_t varTotalHeterotrophVolume_;

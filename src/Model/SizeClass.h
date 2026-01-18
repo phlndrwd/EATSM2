@@ -25,7 +25,7 @@
 class SizeClass {
  public:
   SizeClass() = delete;
-  explicit SizeClass(Nutrient&, Parameters&, EcologicalData&, const std::float64_t&,
+  explicit SizeClass(Nutrient&, Parameters&, const std::float64_t&,
                      const std::float64_t&, const std::uint32_t&, const std::uint32_t&);
 
   void populate(const std::float64_t, const std::float64_t, const std::float64_t, const std::float64_t);

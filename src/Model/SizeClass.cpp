@@ -22,19 +22,19 @@ std::shared_ptr<Heterotroph> heterotrophGenerator(std::float64_t traitValue, std
 }
 }  // Anonymous namespace
 
-SizeClass::SizeClass(Nutrient& nutrient, Parameters& params, EcologicalData& data,
+SizeClass::SizeClass(Nutrient& nutrient, Parameters& params,
 		     const std::float64_t& initialAutotrophVolume, const std::float64_t& initialHeterotrophVolume,
 		     const std::uint32_t& index, const std::uint32_t& randomSeed):
 	nutrient_(nutrient),
-	functions_(data, params),
+        functions_(params),
 	index_(index),
-	sizeClassUpper_(data.getSizeClassBoundaries()[index_ + 1]),
-	sizeClassMidPoint_(data.getSizeClassMidPoints()[index_]),
-	sizeClassLower_(data.getSizeClassBoundaries()[index_]),
+        sizeClassUpper_(params.getSizeClassBoundaries()[index_ + 1]),
+        sizeClassMidPoint_(params.getSizeClassMidPoints()[index_]),
+        sizeClassLower_(params.getSizeClassBoundaries()[index_]),
 	numberOfSizeClasses_(params.getNumberOfSizeClasses()),
 	random_(randomSeed),
 	autotrophs_(nutrient, initialAutotrophVolume),
-	heterotrophs_(nutrient, params, sizeClassMidPoint_, data.getMaximumSizeClassPopulations()[index_],
+        heterotrophs_(nutrient, params, sizeClassMidPoint_, params.getMaximumSizeClassPopulation(index_),
 		      random_.getUniformInt(1, UINT_MAX)) {
   populate(initialHeterotrophVolume, params.getAssimilationEfficiency(),
            params.getMutationProbability(), params.getMutationStandardDeviation());
@@ -111,7 +111,6 @@ void SizeClass::starve(const std::uint32_t index) {
   Heterotroph* heterotroph = heterotrophs_.getHeterotroph(index);
   nutrient_.addToVolume(heterotroph->getVolumeActual());
   heterotrophs_.removeHeterotroph(index);
-  //heterotrophData_.incrementStarvedFrequencies(heterotroph.getSizeClassIndex());
 }
 
 std::uint32_t SizeClass::getIndex() const {

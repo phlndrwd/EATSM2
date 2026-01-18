@@ -14,16 +14,15 @@
 #include "Constants.h"
 #include "Parameters.h"
 
-EncounterAlgorithm::EncounterAlgorithm(Nutrient& nutrient, EcologicalData& data, Parameters& params,
+EncounterAlgorithm::EncounterAlgorithm(Nutrient& nutrient, Parameters& params,
                                        const std::uint32_t& randomSeed):
     nutrient_(nutrient),
-    data_(data),
-    functions_(data_, params),
+    functions_(params),
     random_(randomSeed),
-    interSizeClassPreferences_(data_.getInterSizeClassPreferences()),
-    interSizeClassVolumes_(data_.getInterSizeClassVolumes()),
+    interSizeClassPreferences_(params.getInterSizeClassPreferences()),
+    interSizeClassVolumes_(params.getInterSizeClassVolumes()),
     numberOfSizeClasses_(params.getNumberOfSizeClasses()),
-    autotrophCellSize_(data.getAutotrophCellSize()) {}
+    autotrophCellSize_(params.getAutotrophCellSize()) {}
 
 void EncounterAlgorithm::update(std::vector<SizeClass>& sizeClasses, SizeClass& thisSizeClass) {
   enums::eFeedingStrategy feedingStrategy = enums::eNotEating;

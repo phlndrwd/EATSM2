@@ -12,7 +12,6 @@
 
 #include <vector>
 
-#include "EcologicalData.h"
 #include "EcologicalFunctions.h"
 #include "Parameters.h"
 #include "SizeClass.h"
@@ -25,7 +24,7 @@ struct PreyVolumes {
 
 class EncounterAlgorithm {
  public:
-  EncounterAlgorithm(Nutrient&, EcologicalData&, Parameters&, const std::uint32_t&);
+  EncounterAlgorithm(Nutrient&, Parameters&, const std::uint32_t&);
 
   void update(std::vector<SizeClass>&, SizeClass&);
 
@@ -39,7 +38,6 @@ class EncounterAlgorithm {
   void feedFromHeterotrophs(Heterotroph*, std::vector<SizeClass>::iterator);
 
   Nutrient& nutrient_;
-  EcologicalData& data_;
 
   EcologicalFunctions functions_;
   RandomSimple random_;

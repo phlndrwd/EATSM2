@@ -57,10 +57,44 @@ Parameters::Parameters(jino::Data& input):
     mutationProbability_(input.getValue<std::float64_t>(consts::kParamNames.at(enums::eMutationProbability))),
     mutationStandardDeviation_(input.getValue<std::float64_t>(consts::kParamNames.at(enums::eMutationStandardDeviation)))
 {
-  dataSize_ = calcDataSize(maxTimeStep_, samplingRate_);
+  calculate();
 }
 
-Parameters::~Parameters() {}
+void Parameters::calculate() {
+  dataSize_ = calcDataSize(maxTimeStep_, samplingRate_);
+
+  std::uint32_t numberOfSizeClasses = numberOfSizeClasses_;
+  std::float64_t totalVolume = initialAutotrophicVolume_ + initialHeterotrophicVolume_;
+  std::float64_t halfSaturationConstantFraction = halfSaturationConstantFraction_;
+
+  maximumSizeClassPopulations_.resize(numberOfSizeClasses, 0);
+  remainingVolumes_.resize(numberOfSizeClasses);
+  linearFeedingDenominators_.resize(numberOfSizeClasses);
+  halfSaturationConstants_.resize(numberOfSizeClasses);
+  sizeClassMidPoints_.resize(numberOfSizeClasses);
+  sizeClassBoundaries_.resize(numberOfSizeClasses + 1);
+
+  smallestVolumeExponent_ = std::log10(smallestIndividualVolume_);
+  largestVolumeExponent_ = std::log10(largestIndividualVolume_);
+
+  std::float64_t sizeClassExponentIncrement = (largestVolumeExponent_ - smallestVolumeExponent_) / numberOfSizeClasses;
+  for (std::uint32_t sizeClassIndex = 0; sizeClassIndex < numberOfSizeClasses; ++sizeClassIndex) {
+      std::float64_t sizeClassMidPointExponent = smallestVolumeExponent_ + ((sizeClassIndex + 0.5) * sizeClassExponentIncrement);
+      std::float64_t sizeClassBoundaryExponent = smallestVolumeExponent_ + (sizeClassIndex * sizeClassExponentIncrement);
+
+      sizeClassBoundaries_[sizeClassIndex] = std::pow(10, sizeClassBoundaryExponent);
+      sizeClassMidPoints_[sizeClassIndex] = std::pow(10, sizeClassMidPointExponent);
+
+      remainingVolumes_[sizeClassIndex] = totalVolume - sizeClassMidPoints_[sizeClassIndex];
+      linearFeedingDenominators_[sizeClassIndex] = (2 * halfSaturationConstantFraction) * remainingVolumes_[sizeClassIndex];
+      halfSaturationConstants_[sizeClassIndex] = halfSaturationConstantFraction * remainingVolumes_[sizeClassIndex];
+      maximumSizeClassPopulations_[sizeClassIndex] = std::ceil(totalVolume / sizeClassMidPoints_[sizeClassIndex]);
+    }
+  std::float64_t sizeClassBoundaryExponent = smallestVolumeExponent_ + (numberOfSizeClasses * sizeClassExponentIncrement);
+  sizeClassBoundaries_[numberOfSizeClasses] = std::pow(10, sizeClassBoundaryExponent);
+
+  autotrophCellSize_ = sizeClassMidPoints_[consts::kAutotrophSizeIndex];
+}
 
 const std::uint32_t& Parameters::getRandomSeed() const {
   return randomSeed_;
@@ -148,4 +182,64 @@ const std::float64_t& Parameters::getMutationStandardDeviation() const {
 
 const std::uint64_t& Parameters::getDataSize() const {
   return dataSize_;
+}
+
+const std::vector<std::vector<std::float64_t>>& Parameters::getInterSizeClassPreferences() const {
+  return interSizeClassPreferences_;
+}
+
+std::vector<std::vector<std::float64_t>>& Parameters::getInterSizeClassPreferences() {
+  return interSizeClassPreferences_;
+}
+
+const std::vector<std::vector<std::float64_t>>& Parameters::getInterSizeClassVolumes() const {
+  return interSizeClassVolumes_;
+}
+
+std::vector<std::vector<std::float64_t>>& Parameters::getInterSizeClassVolumes() {
+  return interSizeClassVolumes_;
+}
+
+const std::vector<std::uint32_t>& Parameters::getMaximumSizeClassPopulations() const {
+  return maximumSizeClassPopulations_;
+}
+
+const std::uint32_t& Parameters::getMaximumSizeClassPopulation(const std::uint64_t& i) const {
+  return maximumSizeClassPopulations_.at(i);
+}
+
+const std::vector<std::float64_t>& Parameters::getSizeClassBoundaries() const {
+  return sizeClassBoundaries_;
+}
+
+const std::vector<std::float64_t>& Parameters::getSizeClassMidPoints() const {
+  return sizeClassMidPoints_;
+}
+
+const std::float64_t& Parameters::getSizeClassBoundary(const std::uint64_t& i) const {
+  return sizeClassBoundaries_.at(i);
+}
+
+const std::float64_t& Parameters::getSizeClassMidPoint(const std::uint64_t& i) const {
+  return sizeClassMidPoints_.at(i);
+}
+
+const std::vector<std::float64_t>& Parameters::getLinearFeedingDenominators() const {
+  return linearFeedingDenominators_;
+}
+
+const std::vector<std::float64_t>& Parameters::getHalfSaturationConstants() const {
+  return halfSaturationConstants_;
+}
+
+const std::float64_t& Parameters::getSmallestVolumeExponent() const {
+  return smallestVolumeExponent_;
+}
+
+const std::float64_t& Parameters::getLargestVolumeExponent() const {
+  return largestVolumeExponent_;
+}
+
+const std::float64_t& Parameters::getAutotrophCellSize() const {
+  return autotrophCellSize_;
 }
