@@ -11,7 +11,6 @@
 #include <iostream>
 
 #include "Constants.h"
-#include "Date.h"
 #include "Environment.h"
 #include "TimeStep.h"
 
@@ -21,14 +20,14 @@
 #include "Output.h"
 
 std::int32_t main() {
-  std::cout << consts::kSystemName + " " + consts::kSystemVersion + " starting on "
-            << Date::getDateAndTimeString() << "..." << std::endl << std::endl;
-
   jino::Data attrs;
   jino::Data paramsData;
   jino::JsonReader reader;
   jino::Output output;
   jino::NetCDFData data;
+
+  std::cout << consts::kSystemName + " " + consts::kSystemVersion + " starting on "
+            << output.getDate() << "..." << std::endl << std::endl;
 
   const std::string attrsPath = consts::kConfigurationDirectory + consts::kAttrsFile;
   const std::string paramFilePath = consts::kConfigurationDirectory + consts::kParamsFile;

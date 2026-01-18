@@ -57,8 +57,6 @@ list(APPEND EATSM2_SOURCES
   src/Model/Traits.cpp
   src/Model/Traits.h
 
-  src/Tools/Date.cpp
-  src/Tools/Date.h
   src/Tools/RandomSimple.cpp
   src/Tools/RandomSimple.h
   src/Tools/Strings.cpp
