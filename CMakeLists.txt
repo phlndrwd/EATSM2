@@ -52,17 +52,11 @@ list(APPEND EATSM2_SOURCES
   src/Model/Nutrient.h
   src/Model/SizeClass.cpp
   src/Model/SizeClass.h
-  src/Model/TimeStep.cpp
-  src/Model/TimeStep.h
   src/Model/Traits.cpp
   src/Model/Traits.h
 
   src/Tools/RandomSimple.cpp
   src/Tools/RandomSimple.h
-  src/Tools/Strings.cpp
-  src/Tools/Strings.h
-  src/Tools/Timer.cpp
-  src/Tools/Timer.h
 )
 
 add_subdirectory(${JINO_PATH} jino_build)

@@ -12,7 +12,6 @@
 
 #include "Constants.h"
 #include "Environment.h"
-#include "TimeStep.h"
 
 #include "Buffers.h"
 #include "Data.h"
@@ -40,8 +39,6 @@ std::int32_t main() {
 
   Parameters params(paramsData);
   Environment environment(params);
-  TimeStep timeStep(params.getSamplingRate());
-
 
   const std::uint64_t samplingRate = params.getSamplingRate();
   const std::uint64_t maxTimeStep = params.getMaxTimeStep();
