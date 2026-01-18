@@ -26,9 +26,6 @@ class Functions {
   std::float64_t calcStarvationProbability(const Heterotroph*) const;
   std::float64_t calcPreferenceForPrey(const std::float64_t&, const std::float64_t&) const;
 
-  void updateHerbivoreTrophicIndex(Heterotroph*);
-  void updateCarnivoreTrophicIndex(Heterotroph*, const Heterotroph*);
-
  private:
   void calcPreferenceMatrices(Parameters&);
 

@@ -22,7 +22,7 @@ class Heterotroph {
   Heterotroph() = delete;
 
   explicit Heterotroph(const std::float64_t&, const std::float64_t&, const std::float64_t&, const std::float64_t&, const std::float64_t&);
-  explicit Heterotroph(const Traits&, const std::float64_t&, const std::float64_t&, const std::float64_t&, const std::float64_t&, const std::float64_t&);
+  explicit Heterotroph(const Traits&, const std::float64_t&, const std::float64_t&, const std::float64_t&, const std::float64_t&);
 
   Heterotroph(const Heterotroph&);
   Heterotroph(const Heterotroph&&) noexcept;
@@ -36,8 +36,6 @@ class Heterotroph {
   std::float64_t metabolise(const std::float64_t);
 
   Traits& getHeritableTraits();
-  std::float64_t getTrophicLevel() const;
-  std::uint32_t getAge() const;
 
   std::float64_t getVolumeActual() const;
   std::float64_t getVolumeHeritable() const;
@@ -45,10 +43,6 @@ class Heterotroph {
   std::float64_t getVolumeReproduction() const;
 
   std::float64_t getStarvationMultiplier() const;
-
-  void setTrophicLevel(const std::float64_t);
-
-  void setAge(const std::uint32_t);
 
  private:
   Traits traits_;
@@ -60,9 +54,6 @@ class Heterotroph {
 
   std::float64_t assimilationEfficiency_;
   std::float64_t starvationMultiplier_;
-
-  std::float64_t trophicLevel_;
-  std::uint32_t age_;
 };
 
 #endif

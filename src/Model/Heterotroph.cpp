@@ -9,6 +9,7 @@
 
 #include "Heterotroph.h"
 
+#include <cassert>
 #include <cmath>
 
 #include "Constants.h"
@@ -34,69 +35,51 @@ Heterotroph::Heterotroph(const std::float64_t& traitValue,
 	assimilationEfficiency_(assimilationEfficiency) {
   volumeReproduction_ = consts::kReproductionFactor * volumeHeritable_;
   starvationMultiplier_ = 1. / (volumeHeritable_ - volumeMinimum_);
-  age_ = 0;
-  trophicLevel_ = 0;
 }
 
 // For reproduction.
 Heterotroph::Heterotroph(const Traits& heritableTraits, const std::float64_t& volumeHeritable,
                          const std::float64_t& volumeActual, const std::float64_t& volumeMinimum,
-                         const std::float64_t& trophicLevel, const std::float64_t& assimilationEfficiency):
+                         const std::float64_t& assimilationEfficiency):
         traits_(heritableTraits),
         volumeHeritable_(volumeHeritable),
         volumeActual_(volumeActual),
         volumeMinimum_(volumeMinimum),
-        assimilationEfficiency_(assimilationEfficiency),
-        trophicLevel_(trophicLevel) {
+        assimilationEfficiency_(assimilationEfficiency) {
   volumeReproduction_ = consts::kReproductionFactor * volumeHeritable_;
   starvationMultiplier_ = 1. / (volumeHeritable_ - volumeMinimum_);
-  age_ = 0;
 }
 
 Heterotroph::Heterotroph(const Heterotroph& heterotroph) :
-    traits_(heterotroph.traits_),
-    assimilationEfficiency_(heterotroph.assimilationEfficiency_) {
+        traits_(heterotroph.traits_),
+        assimilationEfficiency_(heterotroph.assimilationEfficiency_) {
+  assert(this != &heterotroph);
   volumeHeritable_ = heterotroph.volumeHeritable_;
   volumeMinimum_ = heterotroph.volumeMinimum_;
   volumeReproduction_ = heterotroph.volumeReproduction_;
-
   volumeActual_ = heterotroph.volumeActual_;
-  trophicLevel_ = heterotroph.trophicLevel_;
-
   starvationMultiplier_ = heterotroph.starvationMultiplier_;
-
-  age_ = heterotroph.age_;
 }
 
 Heterotroph::Heterotroph(const Heterotroph&& heterotroph) noexcept :
-    traits_(std::move(heterotroph.traits_)),
-    assimilationEfficiency_(std::move(heterotroph.assimilationEfficiency_)) {
+        traits_(std::move(heterotroph.traits_)),
+        assimilationEfficiency_(std::move(heterotroph.assimilationEfficiency_)) {
+  assert(this != &heterotroph);
   volumeHeritable_ = std::move(heterotroph.volumeHeritable_);
   volumeMinimum_ = std::move(heterotroph.volumeMinimum_);
   volumeReproduction_ = std::move(heterotroph.volumeReproduction_);
-
   volumeActual_ = std::move(heterotroph.volumeActual_);
-  trophicLevel_ = std::move(heterotroph.trophicLevel_);
-
   starvationMultiplier_ = std::move(heterotroph.starvationMultiplier_);
-
-  age_ = std::move(heterotroph.age_);
 }
 
 Heterotroph& Heterotroph::operator=(const Heterotroph& heterotroph) {
   if (this != &heterotroph) {
     traits_ = heterotroph.traits_;
-
     volumeHeritable_ = heterotroph.volumeHeritable_;
     volumeMinimum_ = heterotroph.volumeMinimum_;
     volumeReproduction_ = heterotroph.volumeReproduction_;
-
     volumeActual_ = heterotroph.volumeActual_;
-    trophicLevel_ = heterotroph.trophicLevel_;
-
     starvationMultiplier_ = heterotroph.starvationMultiplier_;
-
-    age_ = heterotroph.age_;
   }
   return *this;
 }
@@ -105,17 +88,11 @@ Heterotroph& Heterotroph::operator=(const Heterotroph&& heterotroph) {
   if (this != &heterotroph) {
     traits_ = std::move(heterotroph.traits_);
     assimilationEfficiency_ = std::move(heterotroph.assimilationEfficiency_);
-
     volumeHeritable_ = std::move(heterotroph.volumeHeritable_);
     volumeMinimum_ = std::move(heterotroph.volumeMinimum_);
     volumeReproduction_ = std::move(heterotroph.volumeReproduction_);
-
     volumeActual_ = std::move(heterotroph.volumeActual_);
-    trophicLevel_ = std::move(heterotroph.trophicLevel_);
-
     starvationMultiplier_ = std::move(heterotroph.starvationMultiplier_);
-
-    age_ = std::move(heterotroph.age_);
   }
   return *this;
 }
@@ -142,7 +119,7 @@ std::shared_ptr<Heterotroph> Heterotroph::getChild(RandomSimple& random, const s
   }
   volumeActual_ = volumeActual_ - childVolumeActual;
 
-  return std::make_shared<Heterotroph>(std::move(childTraits), childVolumeHeritable, childVolumeActual, childVolumeMinimum, trophicLevel_, assimilationEfficiency_);
+  return std::make_shared<Heterotroph>(std::move(childTraits), std::move(childVolumeHeritable), std::move(childVolumeActual), std::move(childVolumeMinimum), assimilationEfficiency_);
 }
 
 std::float64_t Heterotroph::consumePreyVolume(const std::float64_t preyVolume) {
@@ -155,21 +132,12 @@ std::float64_t Heterotroph::consumePreyVolume(const std::float64_t preyVolume) {
 }
 
 std::float64_t Heterotroph::metabolise(const std::float64_t metabolicDeduction) {
-  ++age_;
   volumeActual_ -= metabolicDeduction;
   return metabolicDeduction;
 }
 
 Traits& Heterotroph::getHeritableTraits() {
   return traits_;
-}
-
-std::float64_t Heterotroph::getTrophicLevel() const {
-  return trophicLevel_;
-}
-
-std::uint32_t Heterotroph::getAge() const {
-  return age_;
 }
 
 std::float64_t Heterotroph::getVolumeActual() const {
@@ -190,12 +158,4 @@ std::float64_t Heterotroph::getVolumeReproduction() const {
 
 std::float64_t Heterotroph::getStarvationMultiplier() const {
   return starvationMultiplier_;
-}
-
-void Heterotroph::setTrophicLevel(const std::float64_t trophicLevel) {
-  trophicLevel_ = trophicLevel;
-}
-
-void Heterotroph::setAge(const std::uint32_t age) {
-  age_ = age;
 }

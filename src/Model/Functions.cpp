@@ -77,28 +77,3 @@ std::float64_t Functions::calcStarvationProbability(const Heterotroph* heterotro
   else
     return (1 + ((volumeMinimum - volumeActual) * heterotroph->getStarvationMultiplier()));
 }
-
-void Functions::updateHerbivoreTrophicIndex(Heterotroph* grazer) {
-  std::float64_t trophicLevel = grazer->getTrophicLevel();
-  if (trophicLevel != 0)
-    grazer->setTrophicLevel((trophicLevel + 2) * 0.5);
-  else
-    grazer->setTrophicLevel(2);
-}
-
-void Functions::updateCarnivoreTrophicIndex(Heterotroph* predator, const Heterotroph* prey) {
-  std::float64_t predatorTrophicLevel = predator->getTrophicLevel();
-  std::float64_t preyTrophicLevel = prey->getTrophicLevel();
-  if (predatorTrophicLevel != 0) {
-    if (preyTrophicLevel != 0)
-      predatorTrophicLevel = (predatorTrophicLevel + preyTrophicLevel + 1) * 0.5;
-    else
-      predatorTrophicLevel = (predatorTrophicLevel + 3) * 0.5;
-  } else {
-    if (preyTrophicLevel != 0)
-      predatorTrophicLevel = preyTrophicLevel + 1;
-    else
-      predatorTrophicLevel = 3;
-  }
-  predator->setTrophicLevel(predatorTrophicLevel);
-}
