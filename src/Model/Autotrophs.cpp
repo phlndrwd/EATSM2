@@ -9,7 +9,6 @@
 
 #include "Autotrophs.h"
 
-#include "DataRecorder.h"
 #include "Nutrient.h"
 
 Autotrophs::Autotrophs(Nutrient& nutrient, const std::float64_t& initialVolume) :
@@ -30,12 +29,6 @@ void Autotrophs::addToVolume(const std::float64_t& volume) {
 
 void Autotrophs::subtractFromVolume(const std::float64_t& volume) {
   volume_ -= volume;
-}
-
-void Autotrophs::recordData() {
-  DataRecorder::get()->addDataTo("AutotrophVolume", volume_);
-  DataRecorder::get()->addDataTo("ToAutotrophFlux", toFlux_);
-  toFlux_ = 0;
 }
 
 std::float64_t& Autotrophs::getVolume() {

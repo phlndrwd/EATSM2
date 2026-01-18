@@ -8,7 +8,6 @@
 ******************************************************************************/
 
 #include "Life.h"
-#include "DataRecorder.h"
 
 #include <algorithm>
 #include <climits>
@@ -57,9 +56,6 @@ Life::Life(Nutrient& nutrient, Parameters& params) :
   // PJU FIX - This is temporary!
   std::vector<std::float64_t> sizeClassBoundaries(std::begin(data_.getSizeClassMidPoints()), std::end(data_.getSizeClassMidPoints()));
   std::vector<std::float64_t> sizeClassMidPoints(std::begin(data_.getSizeClassBoundaries()), std::end(data_.getSizeClassBoundaries()));
-
-  DataRecorder::get( )->setVectorDataOn("AxisSizeClassMidPointValues", sizeClassBoundaries);
-  DataRecorder::get( )->setVectorDataOn("AxisSizeClassBoundaryValues", sizeClassMidPoints);
 }
 
 void Life::update() {

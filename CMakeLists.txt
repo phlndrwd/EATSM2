@@ -63,11 +63,6 @@ list(APPEND EATSM2_SOURCES
   src/Model/Traits.cpp
   src/Model/Traits.h
 
-  src/Output/DataRecorder.cpp
-  src/Output/DataRecorder.h
-  src/Output/FileWriter.cpp
-  src/Output/FileWriter.h
-
   src/Tools/Date.cpp
   src/Tools/Date.h
   src/Tools/RandomSimple.cpp
@@ -85,7 +80,6 @@ target_include_directories(eatsm2 PRIVATE
   src/Data
   src/Input
   src/Model
-  src/Output
   src/Tools
 )
 target_compile_features(eatsm2 PRIVATE cxx_std_23)

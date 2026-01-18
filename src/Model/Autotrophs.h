@@ -22,7 +22,6 @@ class Autotrophs {
   void update();
   void addToVolume(const std::float64_t&);
   void subtractFromVolume(const std::float64_t&);
-  void recordData();
 
   std::float64_t& getVolume();
   const std::float64_t& getVolume() const;

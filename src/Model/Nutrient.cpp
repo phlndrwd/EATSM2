@@ -11,8 +11,6 @@
 
 #include <iostream>
 
-#include "DataRecorder.h"
-
 Nutrient::Nutrient(Parameters& params):
       volume_(0),  // No option to set initial nutrient volume
       toFlux_(0),
@@ -29,4 +27,6 @@ void Nutrient::addToVolume(const std::float64_t& volume) {
   toFlux_ += volume;
 }
 
-void Nutrient::subtractFromVolume(const std::float64_t& volume) { volume_ -= volume; }
+void Nutrient::subtractFromVolume(const std::float64_t& volume) {
+  volume_ -= volume;
+}
