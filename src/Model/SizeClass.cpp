@@ -99,14 +99,14 @@ void SizeClass::reproduction() {
   heterotrophs_.clearChildren();
 }
 
-void SizeClass::whoIsMoving(std::vector<structs::MovingHeterotroph>& movingHeterotrophs) {
+void SizeClass::whoIsMoving(std::vector<MovingHeterotroph>& movingHeterotrophs) {
   heterotrophs_.forEachHeterotrophIndex([&](std::uint32_t index) {
     std::shared_ptr<Heterotroph> heterotroph = heterotrophs_.ownHeterotroph(index);
     if (heterotroph->getVolumeActual() < sizeClassLower_ && index_ > 0) {  // Zero is smallest size class
-      movingHeterotrophs.push_back(structs::MovingHeterotroph(heterotroph, index_, enums::eShrinking));
+      movingHeterotrophs.push_back(MovingHeterotroph(heterotroph, index_, enums::eShrinking));
       heterotrophs_.removeHeterotroph(index);
     } else if (heterotroph->getVolumeActual() >= sizeClassUpper_ && index_ < numberOfSizeClasses_ - 1) {
-      movingHeterotrophs.push_back(structs::MovingHeterotroph(heterotroph, index_, enums::eGrowing));
+      movingHeterotrophs.push_back(MovingHeterotroph(heterotroph, index_, enums::eGrowing));
       heterotrophs_.removeHeterotroph(index);
     }
   });

@@ -22,6 +22,14 @@
 #include "RandomSimple.h"
 #include "Structs.h"
 
+struct MovingHeterotroph {
+  std::shared_ptr<Heterotroph> heterotroph;
+  std::uint32_t prevSizeClassIndex;
+  enums::eGrowthTrajectory growthTrajectory;
+  MovingHeterotroph(std::shared_ptr<Heterotroph> _heterotroph, std::uint32_t _prevSizeClassIndex, enums::eGrowthTrajectory _growthTrajectory):
+      heterotroph(_heterotroph), prevSizeClassIndex(_prevSizeClassIndex), growthTrajectory(_growthTrajectory) {}
+};
+
 class SizeClass {
  public:
   SizeClass() = delete;
@@ -33,7 +41,7 @@ class SizeClass {
   void metabolisation();
   void starvation();
   void reproduction();
-  void whoIsMoving(std::vector<structs::MovingHeterotroph>&);
+  void whoIsMoving(std::vector<MovingHeterotroph>&);
 
   std::uint32_t getIndex() const;
 
