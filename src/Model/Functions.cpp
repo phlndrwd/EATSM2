@@ -13,7 +13,6 @@
 
 #include "Heterotroph.h"
 #include "Parameters.h"
-#include "Enums.h"
 
 Functions::Functions(Parameters& params) :
     sizeClassBoundaries_(params.getSizeClassBoundaries()),

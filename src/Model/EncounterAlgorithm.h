@@ -16,6 +16,12 @@
 #include "Parameters.h"
 #include "SizeClass.h"
 
+enum eFeedingStrategy {
+  eNotEating,
+  eHerbivore,
+  eCarnivore
+};
+
 struct PreyVolumes {
   PreyVolumes(): totalPrey(0), autotroph(0) {}
   std::float64_t totalPrey;
@@ -30,10 +36,10 @@ class EncounterAlgorithm {
 
  private:
   std::float64_t calcFeedingProbability(std::vector<SizeClass>&, SizeClass&,
-                                std::vector<SizeClass>::iterator&, enums::eFeedingStrategy&);
+                                std::vector<SizeClass>::iterator&, eFeedingStrategy&);
   PreyVolumes calcEffectiveSizeClassVolumes(std::vector<SizeClass>&, SizeClass&, std::vector<std::float64_t>&);
   std::vector<SizeClass>::iterator setCoupledSizeClass(const std::vector<std::float64_t>&, std::vector<SizeClass>&,
-                                                       PreyVolumes&, enums::eFeedingStrategy&);
+                                                       PreyVolumes&, eFeedingStrategy&);
   void feedFromAutotrophs(Heterotroph*, std::vector<SizeClass>::iterator);
   void feedFromHeterotrophs(Heterotroph*, std::vector<SizeClass>::iterator);
 

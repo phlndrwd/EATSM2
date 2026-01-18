@@ -88,7 +88,7 @@ void Life::moveHeterotrophs() {
   for (const auto& movingHeterotroph : movingHeterotrophs_) {
     auto heterotroph = movingHeterotroph.heterotroph;
     std::uint32_t searchOffSet = 0;
-    if (movingHeterotroph.growthTrajectory == enums::eShrinking) {
+    if (movingHeterotroph.growthTrajectory == eShrinking) {
       searchOffSet = params_.getNumberOfSizeClasses() - movingHeterotroph.prevSizeClassIndex;
       auto sizeClassDownIt = std::next(sizeClasses_.rbegin(), searchOffSet);
       std::find_if(sizeClassDownIt, sizeClasses_.rend(), [&](SizeClass& prevSizeClass) {
@@ -99,7 +99,7 @@ void Life::moveHeterotrophs() {
           return false;
         }
       });
-    } else if (movingHeterotroph.growthTrajectory == enums::eGrowing) {
+    } else if (movingHeterotroph.growthTrajectory == eGrowing) {
       searchOffSet = movingHeterotroph.prevSizeClassIndex + 1;
         auto sizeClassUpIt = std::next(sizeClasses_.begin(), searchOffSet);
         std::find_if(sizeClassUpIt, sizeClasses_.end(), [&](SizeClass& nextSizeClass) {

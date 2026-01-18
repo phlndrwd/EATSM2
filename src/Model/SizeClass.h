@@ -20,13 +20,18 @@
 #include "Nutrient.h"
 #include "Parameters.h"
 #include "RandomSimple.h"
-#include "Structs.h"
+
+enum eGrowthTrajectory {
+  eStatic,
+  eGrowing,
+  eShrinking
+};
 
 struct MovingHeterotroph {
   std::shared_ptr<Heterotroph> heterotroph;
   std::uint32_t prevSizeClassIndex;
-  enums::eGrowthTrajectory growthTrajectory;
-  MovingHeterotroph(std::shared_ptr<Heterotroph> _heterotroph, std::uint32_t _prevSizeClassIndex, enums::eGrowthTrajectory _growthTrajectory):
+  eGrowthTrajectory growthTrajectory;
+  MovingHeterotroph(std::shared_ptr<Heterotroph> _heterotroph, std::uint32_t _prevSizeClassIndex, eGrowthTrajectory _growthTrajectory):
       heterotroph(_heterotroph), prevSizeClassIndex(_prevSizeClassIndex), growthTrajectory(_growthTrajectory) {}
 };
 

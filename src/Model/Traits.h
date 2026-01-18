@@ -14,8 +14,6 @@
 #include <stdfloat>
 #include <vector>
 
-#include "Enums.h"
-
 class RandomSimple;
 
 struct TraitValues {

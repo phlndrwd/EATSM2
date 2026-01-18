@@ -16,7 +16,7 @@
 #include <string>
 #include <vector>
 
-#include "Enums.h"
+#include "Parameters.h"
 
 namespace consts {
 constexpr std::string kConfigurationDirectory = "./input/";
@@ -66,7 +66,7 @@ constexpr std::string kSystemVersion = "0.0.1";
 constexpr std::string kSystemDate = "29/01/2023";
 constexpr std::string kSystemTime = "00:00";
 
-const std::array<std::string, enums::eNumberOfParamters> kParamNames = {
+const std::array<std::string, eNumberOfParamters> kParamNames = {
   "RandomSeed",
   "MaxTimeStep",
   "SamplingRate",

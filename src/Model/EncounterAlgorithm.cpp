@@ -25,15 +25,15 @@ EncounterAlgorithm::EncounterAlgorithm(Nutrient& nutrient, Parameters& params,
     autotrophCellSize_(params.getAutotrophCellSize()) {}
 
 void EncounterAlgorithm::update(std::vector<SizeClass>& sizeClasses, SizeClass& thisSizeClass) {
-  enums::eFeedingStrategy feedingStrategy = enums::eNotEating;
+  eFeedingStrategy feedingStrategy = eNotEating;
   std::vector<SizeClass>::iterator coupledSizeClassIt = sizeClasses.begin();
   std::float64_t feedingProbability = calcFeedingProbability(sizeClasses, thisSizeClass, coupledSizeClassIt, feedingStrategy);
   thisSizeClass.getHeterotrophs().subset([&](std::uint32_t randomIndex) {
     if (random_.getUniform() <= feedingProbability) {
       Heterotroph* predator = thisSizeClass.getHeterotrophs().getHeterotroph(randomIndex);
-      if (feedingStrategy == enums::eHerbivore){
+      if (feedingStrategy == eHerbivore){
         feedFromAutotrophs(predator, coupledSizeClassIt);
-      } else if (feedingStrategy == enums::eCarnivore) {
+      } else if (feedingStrategy == eCarnivore) {
         feedFromHeterotrophs(predator, coupledSizeClassIt);
       }
     }
@@ -42,7 +42,7 @@ void EncounterAlgorithm::update(std::vector<SizeClass>& sizeClasses, SizeClass& 
 
 std::float64_t EncounterAlgorithm::calcFeedingProbability(std::vector<SizeClass>& sizeClasses, SizeClass& thisSizeClass,
                                                   std::vector<SizeClass>::iterator& coupledSizeClassIt,
-                                                  enums::eFeedingStrategy& feedingStrategy) {
+                                                  eFeedingStrategy& feedingStrategy) {
   std::float64_t feedingProbability = 0;
   if (thisSizeClass.getHeterotrophs().getLivingCount() != 0) {
     std::vector<std::float64_t> effectiveSizeClassVolumes(numberOfSizeClasses_, 0);
@@ -86,7 +86,7 @@ std::vector<SizeClass>::iterator EncounterAlgorithm::setCoupledSizeClass(
                                                                 const std::vector<std::float64_t>& effectiveSizeClassVolumes,
                                                                 std::vector<SizeClass>& sizeClasses,
                                                                 PreyVolumes& preyVolumes,
-                                                                enums::eFeedingStrategy& feedingStrategy) {
+                                                                eFeedingStrategy& feedingStrategy) {
   // Default to largest populated size class to prevent un-earned predation from taking place
   std::vector<SizeClass>::iterator coupledSizeClassIt = sizeClasses.begin();
   // Add noise to the threshold to encourage a mixed strategy (mixotroph)
@@ -99,11 +99,11 @@ std::vector<SizeClass>::iterator EncounterAlgorithm::setCoupledSizeClass(
     if (effectivePreySum >= randEffectivePreyValue) {
       std::advance(coupledSizeClassIt, sizeClassOffset);
       // Set feeding strategy here
-      feedingStrategy = enums::eCarnivore;
+      feedingStrategy = eCarnivore;
       if (coupledSizeClassIt->getIndex() == consts::kAutotrophSizeIndex && preyVolumes.autotroph > 0) {
         std::float64_t probHerbivory = preyVolumes.autotroph / preyVolumes.totalPrey;
         if (random_.getUniform() <= probHerbivory) {
-          feedingStrategy = enums::eHerbivore;
+          feedingStrategy = eHerbivore;
         }
       }
       return true;

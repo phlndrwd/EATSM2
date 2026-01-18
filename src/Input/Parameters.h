@@ -15,6 +15,31 @@
 
 #include "Data.h"
 
+enum eParameters {
+  eRandomSeed,
+  eMaxTimeStep,
+  eSamplingRate,
+  eNumberOfSizeClasses,
+  eReadModelState,
+  eWriteModelState,
+  eUseLinearFeeding,
+  eInitialAutotrophicVolume,
+  eInitialHeterotrophicVolume,
+  eMinimumHeterotrophicVolume,
+  eSmallestIndividualVolume,
+  eLargestIndividualVolume,
+  eSizeClassSubsetFraction,
+  eHalfSaturationConstantFraction,
+  ePreferredPreyVolumeRatio,
+  ePreferenceFunctionWidth,
+  eAssimilationEfficiency,
+  eFractionalMetabolicExpense,
+  eMetabolicIndex,
+  eMutationProbability,
+  eMutationStandardDeviation,
+  eNumberOfParamters
+};
+
 class Parameters {
  public:
   explicit Parameters(jino::Data&);

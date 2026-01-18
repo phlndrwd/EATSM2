@@ -12,7 +12,6 @@
 #include <cmath>
 
 #include "Constants.h"
-#include "Enums.h"
 
 namespace {
 std::uint64_t calcDataSize(const std::uint64_t maxTimeStep, const std::uint64_t samplingRate) {
@@ -29,33 +28,33 @@ std::uint64_t calcDataSize(const std::uint64_t maxTimeStep, const std::uint64_t 
 }
 
 Parameters::Parameters(jino::Data& input):
-    randomSeed_(input.getValue<std::uint8_t>(consts::kParamNames.at(enums::eRandomSeed))),
-    maxTimeStep_(input.getValue<std::uint64_t>(consts::kParamNames.at(enums::eMaxTimeStep))),
-    samplingRate_(input.getValue<std::uint32_t>(consts::kParamNames.at(enums::eSamplingRate))),
-    numberOfSizeClasses_(input.getValue<std::uint32_t>(consts::kParamNames.at(enums::eNumberOfSizeClasses))),
+    randomSeed_(input.getValue<std::uint8_t>(consts::kParamNames.at(eRandomSeed))),
+    maxTimeStep_(input.getValue<std::uint64_t>(consts::kParamNames.at(eMaxTimeStep))),
+    samplingRate_(input.getValue<std::uint32_t>(consts::kParamNames.at(eSamplingRate))),
+    numberOfSizeClasses_(input.getValue<std::uint32_t>(consts::kParamNames.at(eNumberOfSizeClasses))),
 
-    readModelState_(input.getValue<std::uint8_t>(consts::kParamNames.at(enums::eReadModelState))),
-    writeModelState_(input.getValue<std::uint8_t>(consts::kParamNames.at(enums::eWriteModelState))),
-    useLinearFeeding_(input.getValue<std::uint8_t>(consts::kParamNames.at(enums::eUseLinearFeeding))),
+    readModelState_(input.getValue<std::uint8_t>(consts::kParamNames.at(eReadModelState))),
+    writeModelState_(input.getValue<std::uint8_t>(consts::kParamNames.at(eWriteModelState))),
+    useLinearFeeding_(input.getValue<std::uint8_t>(consts::kParamNames.at(eUseLinearFeeding))),
 
-    initialAutotrophicVolume_(input.getValue<std::float64_t>(consts::kParamNames.at(enums::eInitialAutotrophicVolume))),
-    initialHeterotrophicVolume_(input.getValue<std::float64_t>(consts::kParamNames.at(enums::eInitialHeterotrophicVolume))),
-    minimumHeterotrophicVolume_(input.getValue<std::float64_t>(consts::kParamNames.at(enums::eMinimumHeterotrophicVolume))),
+    initialAutotrophicVolume_(input.getValue<std::float64_t>(consts::kParamNames.at(eInitialAutotrophicVolume))),
+    initialHeterotrophicVolume_(input.getValue<std::float64_t>(consts::kParamNames.at(eInitialHeterotrophicVolume))),
+    minimumHeterotrophicVolume_(input.getValue<std::float64_t>(consts::kParamNames.at(eMinimumHeterotrophicVolume))),
 
-    smallestIndividualVolume_(input.getValue<std::float64_t>(consts::kParamNames.at(enums::eSmallestIndividualVolume))),
-    largestIndividualVolume_(input.getValue<std::float64_t>(consts::kParamNames.at(enums::eLargestIndividualVolume))),
-    sizeClassSubsetFraction_(input.getValue<std::float64_t>(consts::kParamNames.at(enums::eSizeClassSubsetFraction))),
-    halfSaturationConstantFraction_(input.getValue<std::float64_t>(consts::kParamNames.at(enums::eHalfSaturationConstantFraction))),
+    smallestIndividualVolume_(input.getValue<std::float64_t>(consts::kParamNames.at(eSmallestIndividualVolume))),
+    largestIndividualVolume_(input.getValue<std::float64_t>(consts::kParamNames.at(eLargestIndividualVolume))),
+    sizeClassSubsetFraction_(input.getValue<std::float64_t>(consts::kParamNames.at(eSizeClassSubsetFraction))),
+    halfSaturationConstantFraction_(input.getValue<std::float64_t>(consts::kParamNames.at(eHalfSaturationConstantFraction))),
 
-    preferredPreyVolumeRatio_(input.getValue<std::uint32_t>(consts::kParamNames.at(enums::ePreferredPreyVolumeRatio))),
-    preferenceFunctionWidth_(input.getValue<std::float64_t>(consts::kParamNames.at(enums::ePreferenceFunctionWidth))),
+    preferredPreyVolumeRatio_(input.getValue<std::uint32_t>(consts::kParamNames.at(ePreferredPreyVolumeRatio))),
+    preferenceFunctionWidth_(input.getValue<std::float64_t>(consts::kParamNames.at(ePreferenceFunctionWidth))),
 
-    assimilationEfficiency_(input.getValue<std::float64_t>(consts::kParamNames.at(enums::eAssimilationEfficiency))),
-    fractionalMetabolicExpense_(input.getValue<std::float64_t>(consts::kParamNames.at(enums::eFractionalMetabolicExpense))),
-    metabolicIndex_(input.getValue<std::float64_t>(consts::kParamNames.at(enums::eMetabolicIndex))),
+    assimilationEfficiency_(input.getValue<std::float64_t>(consts::kParamNames.at(eAssimilationEfficiency))),
+    fractionalMetabolicExpense_(input.getValue<std::float64_t>(consts::kParamNames.at(eFractionalMetabolicExpense))),
+    metabolicIndex_(input.getValue<std::float64_t>(consts::kParamNames.at(eMetabolicIndex))),
 
-    mutationProbability_(input.getValue<std::float64_t>(consts::kParamNames.at(enums::eMutationProbability))),
-    mutationStandardDeviation_(input.getValue<std::float64_t>(consts::kParamNames.at(enums::eMutationStandardDeviation)))
+    mutationProbability_(input.getValue<std::float64_t>(consts::kParamNames.at(eMutationProbability))),
+    mutationStandardDeviation_(input.getValue<std::float64_t>(consts::kParamNames.at(eMutationStandardDeviation)))
 {
   calculate();
 }

@@ -25,9 +25,6 @@ FetchContent_Declare(cpplint
 FetchContent_MakeAvailable(cpplint)
 
 list(APPEND EATSM2_SOURCES
-  src/Data/Enums.h
-  src/Data/Structs.h
-
   src/Input/Constants.h
   src/Input/Parameters.cpp
   src/Input/Parameters.h
@@ -60,7 +57,6 @@ add_subdirectory(${JINO_PATH} jino_build)
 
 add_executable(eatsm2 src/Main.cpp ${EATSM2_SOURCES})
 target_include_directories(eatsm2 PRIVATE
-  src/Data
   src/Input
   src/Model
   src/Tools
