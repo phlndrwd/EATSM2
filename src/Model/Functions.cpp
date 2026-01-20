@@ -57,22 +57,22 @@ std::float64_t Functions::functionalResponse(const std::uint32_t& predatorIndex,
   return (effectivePreyVolume / (halfSaturationConstants_[predatorIndex] + effectivePreyVolume));
 }
 
-std::float64_t Functions::calcMetabolicDeduction(const Heterotroph* heterotroph) const {
-  return fractionalMetabolicExpense_ * std::pow(heterotroph->getVolumeActual(), metabolicIndex_);
+std::float64_t Functions::calcMetabolicDeduction(const Heterotroph& heterotroph) const {
+  return fractionalMetabolicExpense_ * std::pow(heterotroph.getVolumeActual(), metabolicIndex_);
 }
 
 std::float64_t Functions::calcPreferenceForPrey(const std::float64_t& grazerVolume, const std::float64_t& preyVolume) const {
   return std::exp(-std::pow((std::log((preferredPreyVolumeRatio_ * preyVolume) / grazerVolume)), 2) / preferenceDenominator_);
 }
 
-std::float64_t Functions::calcStarvationProbability(const Heterotroph* heterotroph) const {
-  const std::float64_t& volumeActual = heterotroph->getVolumeActual();
-  const std::float64_t& volumeMinimum = heterotroph->getVolumeMinimum();
+std::float64_t Functions::calcStarvationProbability(const Heterotroph& heterotroph) const {
+  const std::float64_t& volumeActual = heterotroph.getVolumeActual();
+  const std::float64_t& volumeMinimum = heterotroph.getVolumeMinimum();
 
   if (volumeActual <= volumeMinimum)
     return 1;
-  else if (volumeActual >= heterotroph->getVolumeHeritable())
+  else if (volumeActual >= heterotroph.getVolumeHeritable())
     return 0;
   else
-    return (1 + ((volumeMinimum - volumeActual) * heterotroph->getStarvationMultiplier()));
+    return (1 + ((volumeMinimum - volumeActual) * heterotroph.getStarvationMultiplier()));
 }

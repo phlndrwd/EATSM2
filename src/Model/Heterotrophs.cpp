@@ -11,55 +11,27 @@
 
 #include <stdexcept>
 
-Heterotrophs::Heterotrophs(Nutrient& nutrient, Parameters& params, const std::float64_t& sizeClassMidPoint,
-			   const std::uint32_t& maxPopulation, const std::uint32_t& randomSeed):
-	nutrient_(nutrient),
-	random_(randomSeed),
-	sizeClassMidPoint_(sizeClassMidPoint),
+Heterotrophs::Heterotrophs(Nutrient& nutrient,
+                            Parameters& params,
+                     const std::uint32_t maxPopulation) :
+        nutrient_(nutrient),
 	subsetFraction_(params.getSizeClassSubsetFraction()),
 	maxPopulation_(maxPopulation) {
   heterotrophs_.reserve(maxPopulation);
   alive_.reserve(maxPopulation);
 }
 
-std::uint32_t Heterotrophs::getRandomHeterotrophIndex() {
+Heterotroph& Heterotrophs::keyHeterotroph(const std::uint32_t index) {
   if (alive_.size() != 0) {
-    std::uint32_t randomIndex = random_.getUniformInt(alive_.size() - 1);
-    return alive_.at(randomIndex);
+    return *heterotrophs_.at(index).get();
   } else {
     throw std::runtime_error("Size class is empty...");
   }
 }
 
-Heterotroph* Heterotrophs::getRandomHeterotroph() {
+const Heterotroph& Heterotrophs::keyHeterotroph(const std::uint32_t index) const {
   if (alive_.size() != 0) {
-    std::uint32_t randomIndex = random_.getUniformInt(alive_.size() - 1);
-    return heterotrophs_.at(alive_.at(randomIndex)).get();
-  } else {
-    throw std::runtime_error("Size class is empty...");
-  }
-}
-
-Heterotroph* Heterotrophs::getRandomHeterotroph(std::uint32_t& randIdxCopy) {
-  if (alive_.size() != 0) {
-    randIdxCopy = random_.getUniformInt(alive_.size() - 1);
-    return heterotrophs_.at(alive_.at(randIdxCopy)).get();
-  } else {
-    throw std::runtime_error("Size class is empty...");
-  }
-}
-
-Heterotroph* Heterotrophs::getHeterotroph(const std::uint32_t index) {
-  if (alive_.size() != 0) {
-    return heterotrophs_.at(index).get();
-  } else {
-    throw std::runtime_error("Size class is empty...");
-  }
-}
-
-const Heterotroph* Heterotrophs::getHeterotroph(const std::uint32_t index) const {
-  if (alive_.size() != 0) {
-    return heterotrophs_.at(index).get();
+    return *heterotrophs_.at(index).get();
   } else {
     throw std::runtime_error("Size class is empty...");
   }
@@ -81,7 +53,6 @@ void Heterotrophs::removeHeterotroph(const std::uint32_t index) {
     throw std::runtime_error("Size class is empty...");
   }
 }
-
 
 void Heterotrophs::addHeterotroph(std::shared_ptr<Heterotroph> heterotroph) {
   if (alive_.size() != maxPopulation_) {
@@ -112,11 +83,11 @@ std::vector<std::shared_ptr<Heterotroph>>& Heterotrophs::getHeterotrophs() {
   return heterotrophs_;
 }
 
-std::uint64_t Heterotrophs::getLivingCount() {
-  return alive_.size();
+std::uint32_t Heterotrophs::getLivingCount() const {
+  return static_cast<std::uint32_t>(alive_.size());
 }
 
 
-std::uint64_t Heterotrophs::getDeadCount() {
-  return dead_.size();
+std::uint32_t Heterotrophs::getDeadCount() const {
+  return static_cast<std::uint32_t>(dead_.size());
 }

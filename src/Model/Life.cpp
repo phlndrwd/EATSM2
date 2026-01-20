@@ -17,9 +17,9 @@
 
 namespace {
 SizeClass sizeClassGenerator(Nutrient& nutrient, Parameters& params,
-                             const std::float64_t initialAutotrophVolume, const std::float64_t initialHeterotrophVolume,
-			     std::uint32_t& index, std::uint32_t randomSeed) {
-  SizeClass sizeClass(nutrient, params, initialAutotrophVolume, initialHeterotrophVolume, index, randomSeed);
+                       const std::float64_t initialHeterotrophVolume,
+                             std::uint32_t index, const std::uint32_t randomSeed) {
+  SizeClass sizeClass(nutrient, params, initialHeterotrophVolume, index, randomSeed);
   ++index;
   return sizeClass;
 }
@@ -43,11 +43,12 @@ Life::Life(Nutrient& nutrient, Parameters& params) :
 
   std::uint32_t index = 0;
   std::generate_n(std::back_inserter(sizeClasses_), numberOfSizeClasses_, [&] {
-    std::float64_t initialAutotrophVolume = autotrophIndex != index ? 0 : params.getInitialAutotrophVolume();
-    std::float64_t initialHeterotrophVolume = heterotrophIndex != index ? 0 : params.getInitialHeterotrophVolume();
-    return sizeClassGenerator(nutrient_, params_, initialAutotrophVolume, initialHeterotrophVolume,
-                              index, random_.getUniformInt(1, UINT_MAX));
+    const std::float64_t initialHeterotrophVolume = heterotrophIndex != index ? 0 : params.getInitialHeterotrophVolume();
+    return sizeClassGenerator(nutrient_, params_, initialHeterotrophVolume, index,
+                             random_.getUniformInt(1, UINT_MAX));
   });
+
+  std::float64_t initialAutotrophVolume = autotrophIndex != index ? 0 : params.getInitialAutotrophVolume();
 
   // PJU FIX - This is temporary!
   std::vector<std::float64_t> sizeClassBoundaries(std::begin(params_.getSizeClassMidPoints()), std::end(params_.getSizeClassMidPoints()));
@@ -78,7 +79,7 @@ void Life::update() {
     const std::uint64_t sizeClassHeterotrophFrequency = thisSizeClass.getHeterotrophs().getLivingCount();
     varTotalHeterotrophFrequency_ += sizeClassHeterotrophFrequency;
     varTotalHeterotrophVolume_ += sizeClassHeterotrophFrequency * params_.getSizeClassMidPoint(thisSizeClass.getIndex());
-    varTotalAutotrophVolume_ += thisSizeClass.getAutotrophs().getVolume();
+    //varTotalAutotrophVolume_ += thisSizeClass.getAutotrophs().getVolume();
     thisSizeClass.whoIsMoving(movingHeterotrophs_);
   });
   moveHeterotrophs();

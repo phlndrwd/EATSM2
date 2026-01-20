@@ -28,9 +28,9 @@ void EncounterAlgorithm::update(std::vector<SizeClass>& sizeClasses, SizeClass& 
   eFeedingStrategy feedingStrategy = eNotEating;
   std::vector<SizeClass>::iterator coupledSizeClassIt = sizeClasses.begin();
   std::float64_t feedingProbability = calcFeedingProbability(sizeClasses, thisSizeClass, coupledSizeClassIt, feedingStrategy);
-  thisSizeClass.getHeterotrophs().subset([&](std::uint32_t randomIndex) {
+  thisSizeClass.getHeterotrophs().subset(random_, [&](const std::uint32_t randomIndex) {
     if (random_.getUniform() <= feedingProbability) {
-      Heterotroph* predator = thisSizeClass.getHeterotrophs().getHeterotroph(randomIndex);
+      Heterotroph& predator = thisSizeClass.getHeterotroph(randomIndex);
       if (feedingStrategy == eHerbivore){
         feedFromAutotrophs(predator, coupledSizeClassIt);
       } else if (feedingStrategy == eCarnivore) {
@@ -67,7 +67,7 @@ PreyVolumes EncounterAlgorithm::calcEffectiveSizeClassVolumes(std::vector<SizeCl
     if (&thisSizeClass == &otherSizeClass) {
       populationSize--;  // Reduce population size for a single individual for this size class.
     }
-    std::float64_t autotrophVolume = *sizeClassPreferencesIt * otherSizeClass.getAutotrophs().getVolume();
+    std::float64_t autotrophVolume = 0; ////////////////////////////////////// *sizeClassPreferencesIt * otherSizeClass.getAutotrophs().getVolume();
     std::float64_t totalVolume = (*sizeClassVolumesIt * populationSize) + autotrophVolume;
 
     *effectiveSizeClassVolumesIt = totalVolume;
@@ -115,26 +115,26 @@ std::vector<SizeClass>::iterator EncounterAlgorithm::setCoupledSizeClass(
   return coupledSizeClassIt;
 }
 
-void EncounterAlgorithm::feedFromHeterotrophs(Heterotroph* predator,
+void EncounterAlgorithm::feedFromHeterotrophs(Heterotroph& predator,
                                               std::vector<SizeClass>::iterator coupledSizeClassIt) {
   if (coupledSizeClassIt->getHeterotrophs().getLivingCount() != 0) {
-    std::uint32_t randIdxCopy = 0;  // Copy random index for fast removal.
-    Heterotroph* prey = coupledSizeClassIt->getHeterotrophs().getRandomHeterotroph(randIdxCopy);
-    while(predator == prey) {  // Predators cannot eat themselves
-      prey = coupledSizeClassIt->getHeterotrophs().getRandomHeterotroph(randIdxCopy);
+    std::uint32_t randIndex = coupledSizeClassIt->getRandomHeterotrophIndex();
+    Heterotroph& prey = coupledSizeClassIt->getHeterotroph(randIndex);
+    while(&predator == &prey) {  // Predators cannot eat themselves
+      prey = coupledSizeClassIt->getHeterotroph(randIndex);
     }
-    std::float64_t preyVolume = prey->getVolumeActual();
-    std::float64_t waste = predator->consumePreyVolume(preyVolume);
+    std::float64_t preyVolume = prey.getVolumeActual();
+    std::float64_t waste = predator.consumePreyVolume(preyVolume);
     nutrient_.addToVolume(waste);
-    coupledSizeClassIt->getHeterotrophs().removeHeterotroph(randIdxCopy);
+    coupledSizeClassIt->getHeterotrophs().removeHeterotroph(randIndex);
   }
 }
 
-void EncounterAlgorithm::feedFromAutotrophs(Heterotroph* grazer, std::vector<SizeClass>::iterator coupledSizeClassIt) {
-  Autotrophs& autotrophs = coupledSizeClassIt->getAutotrophs();
-  if (autotrophs.getVolume() > autotrophCellSize_) {
-    autotrophs.subtractFromVolume(autotrophCellSize_);
-    std::float64_t waste = grazer->consumePreyVolume(autotrophCellSize_);
-    nutrient_.addToVolume(waste);
-  }
+void EncounterAlgorithm::feedFromAutotrophs(Heterotroph& grazer, std::vector<SizeClass>::iterator coupledSizeClassIt) {
+  //Autotrophs& autotrophs = coupledSizeClassIt->getAutotrophs();
+  //if (autotrophs.getVolume() > autotrophCellSize_) {
+  //  autotrophs.subtractFromVolume(autotrophCellSize_);
+  //  std::float64_t waste = grazer->consumePreyVolume(autotrophCellSize_);
+  //  nutrient_.addToVolume(waste);
+  //}
 }

@@ -16,7 +16,7 @@
 /*
  * Written by John D. Cook
  * http://www.johndcook.com
- * https://www.codeproject.com/Articles/25172/Simple-Random-Number-Generation
+ * https://www.codeproject.com/articles/Simple-Random-Number-Generation#comments-section
  */
 class RandomSimple {
  public:

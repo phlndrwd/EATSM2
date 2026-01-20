@@ -38,10 +38,11 @@ struct MovingHeterotroph {
 class SizeClass {
  public:
   SizeClass() = delete;
-  explicit SizeClass(Nutrient&, Parameters&, const std::float64_t&,
-                     const std::float64_t&, const std::uint32_t&, const std::uint32_t&);
+  explicit SizeClass(Nutrient&, Parameters&, const std::float64_t,
+                     const std::uint32_t, const std::uint32_t);
 
-  void populate(const std::float64_t, const std::float64_t, const std::float64_t, const std::float64_t);
+  void populate(const std::float64_t, const std::float64_t,
+                const std::float64_t, const std::float64_t);
 
   void metabolisation();
   void starvation();
@@ -49,8 +50,11 @@ class SizeClass {
   void whoIsMoving(std::vector<MovingHeterotroph>&);
 
   std::uint32_t getIndex() const;
+  std::uint32_t getPopulationSize() const;
+  std::uint32_t getRandomHeterotrophIndex();
 
-  Autotrophs& getAutotrophs();
+  const Heterotroph& getHeterotroph(const std::uint32_t) const;
+  Heterotroph& getHeterotroph(const std::uint32_t);
   Heterotrophs& getHeterotrophs();
 
  private:
@@ -70,7 +74,6 @@ class SizeClass {
   const std::uint32_t numberOfSizeClasses_;
 
   RandomSimple random_;
-  Autotrophs autotrophs_;
   Heterotrophs heterotrophs_;
 
 };

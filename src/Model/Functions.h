@@ -22,8 +22,8 @@ class Functions {
 
   std::float64_t functionalResponse(const std::uint32_t&, const std::float64_t&) const;
 
-  std::float64_t calcMetabolicDeduction(const Heterotroph*) const;
-  std::float64_t calcStarvationProbability(const Heterotroph*) const;
+  std::float64_t calcMetabolicDeduction(const Heterotroph&) const;
+  std::float64_t calcStarvationProbability(const Heterotroph&) const;
   std::float64_t calcPreferenceForPrey(const std::float64_t&, const std::float64_t&) const;
 
  private:
