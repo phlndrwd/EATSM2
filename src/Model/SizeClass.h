@@ -28,11 +28,11 @@ enum eGrowthTrajectory {
 };
 
 struct MovingHeterotroph {
-  std::shared_ptr<Heterotroph> heterotroph;
+  std::unique_ptr<Heterotroph> heterotroph;
   std::uint32_t prevSizeClassIndex;
   eGrowthTrajectory growthTrajectory;
-  MovingHeterotroph(std::shared_ptr<Heterotroph> _heterotroph, std::uint32_t _prevSizeClassIndex, eGrowthTrajectory _growthTrajectory):
-      heterotroph(_heterotroph), prevSizeClassIndex(_prevSizeClassIndex), growthTrajectory(_growthTrajectory) {}
+  MovingHeterotroph(std::unique_ptr<Heterotroph> _heterotroph, std::uint32_t _prevSizeClassIndex, eGrowthTrajectory _growthTrajectory):
+      heterotroph(std::move(_heterotroph)), prevSizeClassIndex(_prevSizeClassIndex), growthTrajectory(_growthTrajectory) {}
 };
 
 class SizeClass {

@@ -30,7 +30,7 @@ class Heterotroph {
   Heterotroph& operator=(const Heterotroph&);
   Heterotroph& operator=(const Heterotroph&&);
 
-  std::shared_ptr<Heterotroph> getChild(RandomSimple&, const std::float64_t& smallestVolumeExponent, const std::float64_t& largestVolumeExponent);
+  std::unique_ptr<Heterotroph> getChild(RandomSimple&, const std::float64_t&, const std::float64_t&);
 
   std::float64_t consumePreyVolume(const std::float64_t);
   std::float64_t metabolise(const std::float64_t);

@@ -63,22 +63,22 @@ public:
 
   template <typename F>
   void forEachChild(F&& func) {
-    std::for_each(std::begin(children_), std::end(children_), [&](std::shared_ptr<Heterotroph> child) {
-      func(child);
-    });
+    for (auto& child : children_) {
+      func(std::move(child));
+    }
   }
 
   Heterotroph& keyHeterotroph(const std::uint32_t);
   const Heterotroph& keyHeterotroph(const std::uint32_t) const;
 
-  std::shared_ptr<Heterotroph> ownHeterotroph(const std::uint32_t);
+  std::unique_ptr<Heterotroph> ownHeterotroph(const std::uint32_t);
   void removeHeterotroph(const std::uint32_t);
 
-  void addHeterotroph(std::shared_ptr<Heterotroph>);
-  void addChild(std::shared_ptr<Heterotroph>);
+  void addHeterotroph(std::unique_ptr<Heterotroph>);
+  void addChild(std::unique_ptr<Heterotroph>);
   void clearChildren();
 
-  std::vector<std::shared_ptr<Heterotroph>>& getHeterotrophs();
+  std::vector<std::unique_ptr<Heterotroph>>& getHeterotrophs();
 
   std::uint32_t getLivingCount() const;
   std::uint32_t getDeadCount() const;
@@ -89,8 +89,8 @@ private:
   const std::float64_t subsetFraction_;
   const std::uint32_t maxPopulation_;
 
-  std::vector<std::shared_ptr<Heterotroph>> heterotrophs_;
-  std::vector<std::shared_ptr<Heterotroph>> children_;
+  std::vector<std::unique_ptr<Heterotroph>> heterotrophs_;
+  std::vector<std::unique_ptr<Heterotroph>> children_;
   std::vector<std::uint32_t> alive_;
   std::queue<std::uint32_t> dead_;
 };

@@ -15,13 +15,12 @@
 #include <iostream>
 
 namespace {
-std::shared_ptr<Heterotroph> heterotrophGenerator(std::float64_t traitValue,
+std::unique_ptr<Heterotroph> heterotrophGenerator(std::float64_t traitValue,
                                                   std::float64_t volume,
                                                   std::float64_t assimilationEfficiency,
                                             const std::float64_t mutationProbability,
                                             const std::float64_t mutationStandardDeviation) {
-  return std::make_shared<Heterotroph>(traitValue, mutationProbability, mutationStandardDeviation,
-                                       volume, assimilationEfficiency);
+  return std::make_unique<Heterotroph>(traitValue, mutationProbability, mutationStandardDeviation, volume, assimilationEfficiency);
 }
 
 std::float64_t volumeToTraitValue(const std::float64_t& volume,
@@ -59,8 +58,7 @@ void SizeClass::populate(const std::float64_t volumeToInitialise, const std::flo
 
     std::float64_t traitValue = volumeToTraitValue(sizeClassMidPoint_, smallestVolumeExponent_, largestVolumeExponent_);
     for (auto _ = initialPopulationSize; _--;) {
-      std::shared_ptr<Heterotroph> heterotroph = heterotrophGenerator(traitValue, sizeClassMidPoint_, assimilationEfficiency, mutationProbability, mutationStandardDeviation);
-      heterotrophs_.addHeterotroph(heterotroph);
+      heterotrophs_.addHeterotroph(heterotrophGenerator(traitValue, sizeClassMidPoint_, assimilationEfficiency, mutationProbability, mutationStandardDeviation));
     }
     std::cout << "Size class with index " << index_ << " initialised with " << initialPopulationSize <<
                  " heterotrophs." << std::endl;
@@ -93,24 +91,25 @@ void SizeClass::reproduction() {
   heterotrophs_.forEachHeterotrophIndex([&](std::uint32_t index) {
     Heterotroph& heterotroph = heterotrophs_.keyHeterotroph(index);
     if (heterotroph.getVolumeActual() >= heterotroph.getVolumeReproduction()) {
-      std::shared_ptr<Heterotroph> child = heterotroph.getChild(random_, smallestVolumeExponent_, largestVolumeExponent_);
-      heterotrophs_.addChild(child);
+      heterotrophs_.addChild(
+        heterotroph.getChild(random_, smallestVolumeExponent_, largestVolumeExponent_)
+      );
     }
   });
-  heterotrophs_.forEachChild([&](std::shared_ptr<Heterotroph> child) {
-    heterotrophs_.addHeterotroph(child);
+  heterotrophs_.forEachChild([&](std::unique_ptr<Heterotroph> child) {
+    heterotrophs_.addHeterotroph(std::move(child));
   });
   heterotrophs_.clearChildren();
 }
 
 void SizeClass::whoIsMoving(std::vector<MovingHeterotroph>& movingHeterotrophs) {
   heterotrophs_.forEachHeterotrophIndex([&](std::uint32_t index) {
-    std::shared_ptr<Heterotroph> heterotroph = heterotrophs_.ownHeterotroph(index);
-    if (heterotroph->getVolumeActual() < sizeClassLower_ && index_ > 0) {  // Zero is smallest size class
-      movingHeterotrophs.push_back(MovingHeterotroph(heterotroph, index_, eShrinking));
+    Heterotroph& heterotroph = heterotrophs_.keyHeterotroph(index);
+    if (heterotroph.getVolumeActual() < sizeClassLower_ && index_ > 0) {  // Zero is smallest size class
+      movingHeterotrophs.push_back(MovingHeterotroph(heterotrophs_.ownHeterotroph(index), index_, eShrinking));
       heterotrophs_.removeHeterotroph(index);
-    } else if (heterotroph->getVolumeActual() >= sizeClassUpper_ && index_ < numberOfSizeClasses_ - 1) {
-      movingHeterotrophs.push_back(MovingHeterotroph(heterotroph, index_, eGrowing));
+    } else if (heterotroph.getVolumeActual() >= sizeClassUpper_ && index_ < numberOfSizeClasses_ - 1) {
+      movingHeterotrophs.push_back(MovingHeterotroph(heterotrophs_.ownHeterotroph(index), index_, eGrowing));
       heterotrophs_.removeHeterotroph(index);
     }
   });

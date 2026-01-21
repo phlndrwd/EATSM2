@@ -97,7 +97,7 @@ Heterotroph& Heterotroph::operator=(const Heterotroph&& heterotroph) {
   return *this;
 }
 
-std::shared_ptr<Heterotroph> Heterotroph::getChild(RandomSimple& random, const std::float64_t& smallestVolumeExponent, const std::float64_t& largestVolumeExponent) {
+std::unique_ptr<Heterotroph> Heterotroph::getChild(RandomSimple& random, const std::float64_t& smallestVolumeExponent, const std::float64_t& largestVolumeExponent) {
   Traits childTraits = traits_.getChildTraits(random);
 
   std::float64_t childVolumeHeritable = 0;
@@ -119,7 +119,7 @@ std::shared_ptr<Heterotroph> Heterotroph::getChild(RandomSimple& random, const s
   }
   volumeActual_ = volumeActual_ - childVolumeActual;
 
-  return std::make_shared<Heterotroph>(std::move(childTraits), std::move(childVolumeHeritable), std::move(childVolumeActual), std::move(childVolumeMinimum), assimilationEfficiency_);
+  return std::move(std::make_unique<Heterotroph>(std::move(childTraits), std::move(childVolumeHeritable), std::move(childVolumeActual), std::move(childVolumeMinimum), assimilationEfficiency_));
 }
 
 std::float64_t Heterotroph::consumePreyVolume(const std::float64_t preyVolume) {

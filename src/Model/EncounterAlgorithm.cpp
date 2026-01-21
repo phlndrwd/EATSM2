@@ -41,8 +41,8 @@ void EncounterAlgorithm::update(std::vector<SizeClass>& sizeClasses, SizeClass& 
 }
 
 std::float64_t EncounterAlgorithm::calcFeedingProbability(std::vector<SizeClass>& sizeClasses, SizeClass& thisSizeClass,
-                                                  std::vector<SizeClass>::iterator& coupledSizeClassIt,
-                                                  eFeedingStrategy& feedingStrategy) {
+                                                          std::vector<SizeClass>::iterator& coupledSizeClassIt,
+                                                          eFeedingStrategy& feedingStrategy) {
   std::float64_t feedingProbability = 0;
   if (thisSizeClass.getHeterotrophs().getLivingCount() != 0) {
     std::vector<std::float64_t> effectiveSizeClassVolumes(numberOfSizeClasses_, 0);

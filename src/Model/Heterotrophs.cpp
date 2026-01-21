@@ -37,9 +37,9 @@ const Heterotroph& Heterotrophs::keyHeterotroph(const std::uint32_t index) const
   }
 }
 
-std::shared_ptr<Heterotroph> Heterotrophs::ownHeterotroph(const std::uint32_t index) {
+std::unique_ptr<Heterotroph> Heterotrophs::ownHeterotroph(const std::uint32_t index) {
   if (alive_.size() != 0) {
-      return heterotrophs_.at(index);
+      return std::move(heterotrophs_.at(index));
     } else {
       throw std::runtime_error("Size class is empty...");
     }
@@ -54,7 +54,7 @@ void Heterotrophs::removeHeterotroph(const std::uint32_t index) {
   }
 }
 
-void Heterotrophs::addHeterotroph(std::shared_ptr<Heterotroph> heterotroph) {
+void Heterotrophs::addHeterotroph(std::unique_ptr<Heterotroph> heterotroph) {
   if (alive_.size() != maxPopulation_) {
     std::int32_t index;
     if (dead_.size() != 0) {
@@ -64,22 +64,22 @@ void Heterotrophs::addHeterotroph(std::shared_ptr<Heterotroph> heterotroph) {
       index = heterotrophs_.size();
     }
     auto heterotrophsIt = std::next(heterotrophs_.begin(), index);
-    heterotrophs_.insert(heterotrophsIt, heterotroph);
+    heterotrophs_.insert(heterotrophsIt, std::move(heterotroph));
     alive_.push_back(index);
   } else {
     throw std::runtime_error("Size class is full...");
   }
 }
 
-void Heterotrophs::addChild(std::shared_ptr<Heterotroph> child) {
-  children_.push_back(child);
+void Heterotrophs::addChild(std::unique_ptr<Heterotroph> child) {
+  children_.push_back(std::move(child));
 }
 
 void Heterotrophs::clearChildren() {
   children_.clear();
 }
 
-std::vector<std::shared_ptr<Heterotroph>>& Heterotrophs::getHeterotrophs() {
+std::vector<std::unique_ptr<Heterotroph>>& Heterotrophs::getHeterotrophs() {
   return heterotrophs_;
 }
 
