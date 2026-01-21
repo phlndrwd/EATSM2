@@ -38,6 +38,11 @@ std::int32_t roundWithProbability(RandomSimple& random, const std::float64_t val
 class Heterotrophs {
 public:
   Heterotrophs() = delete;
+  Heterotrophs(const Heterotrophs&) = delete;
+  Heterotrophs& operator=(const Heterotrophs&) = delete;
+
+  Heterotrophs(Heterotrophs&&) noexcept = default;
+  Heterotrophs& operator=(Heterotrophs&&) noexcept = default;
   explicit Heterotrophs(Nutrient&, Parameters&, const std::uint32_t);
 
   void subset(std::function<void(std::uint32_t)>);

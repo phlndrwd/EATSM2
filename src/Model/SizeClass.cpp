@@ -32,21 +32,21 @@ std::float64_t volumeToTraitValue(const std::float64_t& volume,
 
 }  // Anonymous namespace
 
-SizeClass::SizeClass(Nutrient& nutrient, Parameters& params, const std::float64_t initialVolume,
+SizeClass::SizeClass(Nutrient* nutrient, Parameters* params, const std::float64_t initialVolume,
                      const std::uint32_t index, const std::uint32_t randomSeed) :
 	nutrient_(nutrient),
-        functions_(params),
+        functions_(*params),
 	index_(index),
-        sizeClassUpper_(params.getSizeClassBoundary(index_ + 1)),
-        sizeClassMidPoint_(params.getSizeClassMidPoint(index_)),
-        sizeClassLower_(params.getSizeClassBoundary(index_)),
-        smallestVolumeExponent_(params.getSmallestVolumeExponent()),
-        largestVolumeExponent_(params.getLargestVolumeExponent()),
-	numberOfSizeClasses_(params.getNumberOfSizeClasses()),
+        sizeClassUpper_(params->getSizeClassBoundary(index_ + 1)),
+        sizeClassMidPoint_(params->getSizeClassMidPoint(index_)),
+        sizeClassLower_(params->getSizeClassBoundary(index_)),
+        smallestVolumeExponent_(params->getSmallestVolumeExponent()),
+        largestVolumeExponent_(params->getLargestVolumeExponent()),
+        numberOfSizeClasses_(params->getNumberOfSizeClasses()),
         random_(randomSeed),
-        heterotrophs_(nutrient, params, params.getMaximumSizeClassPopulation(index_)) {
-  populate(initialVolume, params.getAssimilationEfficiency(),
-           params.getMutationProbability(), params.getMutationStandardDeviation());
+        heterotrophs_(*nutrient, *params, params->getMaximumSizeClassPopulation(index_)) {
+  populate(initialVolume, params->getAssimilationEfficiency(),
+           params->getMutationProbability(), params->getMutationStandardDeviation());
 }
 
 void SizeClass::populate(const std::float64_t volumeToInitialise, const std::float64_t assimilationEfficiency,
@@ -54,7 +54,7 @@ void SizeClass::populate(const std::float64_t volumeToInitialise, const std::flo
   if (volumeToInitialise > 0) {
     std::float64_t realInitialPopulationSize = volumeToInitialise / sizeClassMidPoint_;
     std::uint32_t initialPopulationSize = std::abs(realInitialPopulationSize);
-    nutrient_.addToVolume(realInitialPopulationSize - initialPopulationSize);
+    nutrient_->addToVolume(realInitialPopulationSize - initialPopulationSize);
 
     std::float64_t traitValue = volumeToTraitValue(sizeClassMidPoint_, smallestVolumeExponent_, largestVolumeExponent_);
     for (auto _ = initialPopulationSize; _--;) {
@@ -71,7 +71,7 @@ void SizeClass::metabolisation() {
     std::float64_t metabolicDeduction = functions_.calcMetabolicDeduction(heterotroph);
     if ((heterotroph.getVolumeActual() - metabolicDeduction) > 0) {
       std::float64_t waste = heterotroph.metabolise(metabolicDeduction);
-      nutrient_.addToVolume(waste);
+      nutrient_->addToVolume(waste);
     } else {
       starve(index);
     }
@@ -117,7 +117,7 @@ void SizeClass::whoIsMoving(std::vector<MovingHeterotroph>& movingHeterotrophs) 
 
 void SizeClass::starve(const std::uint32_t index) {
   Heterotroph& heterotroph = heterotrophs_.keyHeterotroph(index);
-  nutrient_.addToVolume(heterotroph.getVolumeActual());
+  nutrient_->addToVolume(heterotroph.getVolumeActual());
   heterotrophs_.removeHeterotroph(index);
 }
 

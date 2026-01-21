@@ -13,7 +13,7 @@
 
 Environment::Environment(Parameters& params) :
         nutrient_(params),
-        life_(&nutrient_, &params) {
+        life_(nutrient_, params) {
   std::cout << "Environment created." << std::endl << std::endl;
 }
 

@@ -14,15 +14,15 @@
 #include "Constants.h"
 #include "Parameters.h"
 
-EncounterAlgorithm::EncounterAlgorithm(Nutrient& nutrient, Parameters& params,
+EncounterAlgorithm::EncounterAlgorithm(Nutrient* nutrient, Parameters* params,
                                        const std::uint32_t& randomSeed):
     nutrient_(nutrient),
-    functions_(params),
+    functions_(*params),
     random_(randomSeed),
-    interSizeClassPreferences_(params.getInterSizeClassPreferences()),
-    interSizeClassVolumes_(params.getInterSizeClassVolumes()),
-    numberOfSizeClasses_(params.getNumberOfSizeClasses()),
-    autotrophCellSize_(params.getAutotrophCellSize()) {}
+    interSizeClassPreferences_(params->getInterSizeClassPreferences()),
+    interSizeClassVolumes_(params->getInterSizeClassVolumes()),
+    numberOfSizeClasses_(params->getNumberOfSizeClasses()),
+    autotrophCellSize_(params->getAutotrophCellSize()) {}
 
 void EncounterAlgorithm::update(std::vector<SizeClass>& sizeClasses, SizeClass& thisSizeClass) {
   eFeedingStrategy feedingStrategy = eNotEating;
@@ -125,7 +125,7 @@ void EncounterAlgorithm::feedFromHeterotrophs(Heterotroph& predator,
     }
     std::float64_t preyVolume = prey.getVolumeActual();
     std::float64_t waste = predator.consumePreyVolume(preyVolume);
-    nutrient_.addToVolume(waste);
+    nutrient_->addToVolume(waste);
     coupledSizeClassIt->getHeterotrophs().removeHeterotroph(randIndex);
   }
 }

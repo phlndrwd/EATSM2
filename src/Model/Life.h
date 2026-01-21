@@ -24,7 +24,7 @@
 class Life {
  public:
   Life() = delete;
-  explicit Life(Nutrient*, Parameters*);
+  explicit Life(Nutrient&, Parameters&);
 
   void update();
 
@@ -32,8 +32,8 @@ class Life {
   void moveHeterotrophs();
   std::uint32_t findSizeClassIndexFromVolume(const std::float64_t&) const;
 
-  Nutrient* nutrient_;
-  Parameters* params_;
+  Nutrient& nutrient_;
+  Parameters& params_;
 
   RandomSimple random_;
   EncounterAlgorithm algorithm_;

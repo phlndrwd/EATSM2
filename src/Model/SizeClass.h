@@ -38,7 +38,13 @@ struct MovingHeterotroph {
 class SizeClass {
  public:
   SizeClass() = delete;
-  explicit SizeClass(Nutrient&, Parameters&, const std::float64_t,
+  SizeClass(const SizeClass&) = delete;
+  SizeClass& operator=(const SizeClass&) = delete;
+
+  SizeClass(SizeClass&&) noexcept = default;
+  SizeClass& operator=(SizeClass&&) noexcept = default;
+
+  explicit SizeClass(Nutrient*, Parameters*, const std::float64_t,
                      const std::uint32_t, const std::uint32_t);
 
   void populate(const std::float64_t, const std::float64_t,
@@ -60,7 +66,7 @@ class SizeClass {
  private:
   void starve(const std::uint32_t);
 
-  Nutrient& nutrient_;
+  Nutrient* nutrient_;
   Functions functions_;
   const std::uint32_t index_;  // PJU FIX - Should index_ be deprecated?
 

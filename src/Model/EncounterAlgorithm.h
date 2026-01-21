@@ -30,7 +30,7 @@ struct PreyVolumes {
 
 class EncounterAlgorithm {
  public:
-  EncounterAlgorithm(Nutrient&, Parameters&, const std::uint32_t&);
+  EncounterAlgorithm(Nutrient*, Parameters*, const std::uint32_t&);
 
   void update(std::vector<SizeClass>&, SizeClass&);
 
@@ -43,7 +43,7 @@ class EncounterAlgorithm {
   void feedFromAutotrophs(Heterotroph&, std::vector<SizeClass>::iterator);
   void feedFromHeterotrophs(Heterotroph&, std::vector<SizeClass>::iterator);
 
-  Nutrient& nutrient_;
+  Nutrient* nutrient_;
 
   Functions functions_;
   RandomSimple random_;
