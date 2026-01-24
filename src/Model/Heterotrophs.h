@@ -45,29 +45,21 @@ public:
   Heterotrophs& operator=(Heterotrophs&&) noexcept = default;
   explicit Heterotrophs(Nutrient&, Parameters&, const std::uint32_t);
 
-  void subset(std::function<void(std::uint32_t)>);
-
-  template <typename F>
-  void forEachHeterotrophIndex(F&& func) {
+  void forEachHeterotrophIndex(auto&& func) {
     std::for_each(std::begin(alive_), std::end(alive_), [&](const std::uint32_t index) {
       func(index);
     });
   }
 
-  template <typename F>
-  void subset(RandomSimple& random, F&& func) {
-    const std::uint32_t numberAlive = getLivingCount();
-    if (numberAlive != 0) {
-      std::uint32_t sizeClassSubset = roundWithProbability(random, numberAlive * subsetFraction_);
-      for (auto _ = sizeClassSubset; _--;) {
-        const std::uint32_t randomIndex = random.getUniformInt(0, numberAlive - 1);
-        func(randomIndex);
-      }
+  void subset(RandomSimple& random, auto&& func) {
+    std::vector<std::uint32_t> aliveIndices = alive_;  // copy current alive indices
+    std::uint32_t subsetCount = roundWithProbability(random, aliveIndices.size() * subsetFraction_);
+    for (std::uint32_t i = 0; i < subsetCount; ++i) {
+        func(aliveIndices[i]);
     }
   }
 
-  template <typename F>
-  void forEachChild(F&& func) {
+  void forEachChild(auto&& func) {
     for (auto& child : children_) {
       func(std::move(child));
     }
@@ -87,6 +79,8 @@ public:
 
   std::uint32_t getLivingCount() const;
   std::uint32_t getDeadCount() const;
+
+  std::uint32_t getLivingIndex(const std::uint32_t);
 
 private:
   Nutrient& nutrient_;

@@ -35,9 +35,9 @@ class Life {
   Nutrient& nutrient_;
   Parameters& params_;
 
+  Autotrophs autotrophs_;
   RandomSimple random_;
   EncounterAlgorithm algorithm_;
-
   std::vector<SizeClass> sizeClasses_;
   std::vector<MovingHeterotroph> movingHeterotrophs_;
 

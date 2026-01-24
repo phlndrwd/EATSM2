@@ -9,11 +9,13 @@
 
 #include "Autotrophs.h"
 
+#include <iostream>
+
 #include "Nutrient.h"
 
 Autotrophs::Autotrophs(Nutrient& nutrient, const std::float64_t& initialVolume) :
     nutrient_(nutrient), volume_(initialVolume) {
-  //std::cout << "Autotroph pool created." << std::endl;
+  std::cout << "Autotroph pool created." << std::endl;
 }
 
 void Autotrophs::update() {

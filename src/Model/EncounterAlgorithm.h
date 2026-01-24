@@ -23,26 +23,28 @@ enum eFeedingStrategy {
 };
 
 struct PreyVolumes {
-  PreyVolumes(): totalPrey(0), autotroph(0) {}
-  std::float64_t totalPrey;
+  PreyVolumes(): total(0), autotroph(0) {}
+  std::float64_t total;
   std::float64_t autotroph;
 };
 
 class EncounterAlgorithm {
  public:
-  EncounterAlgorithm(Nutrient*, Parameters*, const std::uint32_t&);
+  EncounterAlgorithm(Autotrophs*, Nutrient*, Parameters*, const std::uint32_t&);
 
   void update(std::vector<SizeClass>&, SizeClass&);
 
  private:
   std::float64_t calcFeedingProbability(std::vector<SizeClass>&, SizeClass&,
-                                std::vector<SizeClass>::iterator&, eFeedingStrategy&);
-  PreyVolumes calcEffectiveSizeClassVolumes(std::vector<SizeClass>&, SizeClass&, std::vector<std::float64_t>&);
-  std::vector<SizeClass>::iterator setCoupledSizeClass(const std::vector<std::float64_t>&, std::vector<SizeClass>&,
-                                                       PreyVolumes&, eFeedingStrategy&);
-  void feedFromAutotrophs(Heterotroph&, std::vector<SizeClass>::iterator);
-  void feedFromHeterotrophs(Heterotroph&, std::vector<SizeClass>::iterator);
+                                        std::uint32_t, eFeedingStrategy&);
+  PreyVolumes calcEffectivePreyVolumes(std::vector<SizeClass>&, SizeClass&,
+                                       std::vector<std::float64_t>&);
+  std::uint32_t setCoupledSizeClassIndex(const std::vector<std::float64_t>&, std::vector<SizeClass>&,
+                                        PreyVolumes&, eFeedingStrategy&);
+  void feedFromAutotrophs(Heterotroph&, SizeClass&);
+  void feedFromHeterotrophs(Heterotroph&, SizeClass&);
 
+  Autotrophs* autotrophs_;
   Nutrient* nutrient_;
 
   Functions functions_;
@@ -51,6 +53,7 @@ class EncounterAlgorithm {
   const std::vector<std::vector<std::float64_t>> interSizeClassPreferences_;
   const std::vector<std::vector<std::float64_t>> interSizeClassVolumes_;
   const std::uint32_t numberOfSizeClasses_;
+  const std::uint32_t autotrophSizeIndex_;
   const std::float64_t autotrophCellSize_;
 };
 #endif

@@ -23,17 +23,23 @@ Heterotrophs::Heterotrophs(Nutrient& nutrient,
 
 Heterotroph& Heterotrophs::keyHeterotroph(const std::uint32_t index) {
   assert(!alive_.empty());
-  return *heterotrophs_.at(index).get();
+  assert(index < heterotrophs_.size());
+  assert(heterotrophs_[index] != nullptr);
+  return *heterotrophs_[index];
 }
 
 const Heterotroph& Heterotrophs::keyHeterotroph(const std::uint32_t index) const {
   assert(!alive_.empty());
-  return *heterotrophs_.at(index).get();
+  assert(index < heterotrophs_.size());
+  assert(heterotrophs_[index] != nullptr);
+  return *heterotrophs_[index];
 }
 
 std::unique_ptr<Heterotroph> Heterotrophs::ownHeterotroph(const std::uint32_t index) {
   assert(!alive_.empty());
-  return std::move(heterotrophs_.at(index));
+  assert(index < heterotrophs_.size());
+  assert(heterotrophs_[index] != nullptr);
+  return std::move(heterotrophs_[index]);
 }
 
 void Heterotrophs::removeHeterotroph(const std::uint32_t index) {
@@ -82,4 +88,10 @@ std::uint32_t Heterotrophs::getLivingCount() const {
 
 std::uint32_t Heterotrophs::getDeadCount() const {
   return static_cast<std::uint32_t>(dead_.size());
+}
+
+std::uint32_t Heterotrophs::getLivingIndex(const std::uint32_t index) {
+  assert(!alive_.empty());
+  assert(index < alive_.size());
+  return alive_[index];
 }

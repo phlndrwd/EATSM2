@@ -141,6 +141,10 @@ Heterotroph& SizeClass::getHeterotroph(const std::uint32_t index) {
   return heterotrophs_.keyHeterotroph(index);
 }
 
+std::uint32_t SizeClass::getLivingIndex(const std::uint32_t index) {
+  return heterotrophs_.getLivingIndex(index);
+}
+
 Heterotrophs& SizeClass::getHeterotrophs() {
   return heterotrophs_;
 }

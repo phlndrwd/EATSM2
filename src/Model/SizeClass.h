@@ -58,6 +58,7 @@ class SizeClass {
   std::uint32_t getIndex() const;
   std::uint32_t getPopulationSize() const;
   std::uint32_t getRandomHeterotrophIndex();
+  std::uint32_t getLivingIndex(const std::uint32_t);
 
   const Heterotroph& getHeterotroph(const std::uint32_t) const;
   Heterotroph& getHeterotroph(const std::uint32_t);

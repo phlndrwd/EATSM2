@@ -18,8 +18,9 @@
 Life::Life(Nutrient& nutrient, Parameters& params) :
         nutrient_(nutrient),
         params_(params),
+        autotrophs_(nutrient, params.getInitialAutotrophVolume()),
         random_(params.getRandomSeed()),  // Is this the first time random is used?
-        algorithm_(&nutrient, &params, random_.getUniformInt(1, UINT_MAX)),
+        algorithm_(&autotrophs_, &nutrient, &params, random_.getUniformInt(1, UINT_MAX)),
         numberOfSizeClasses_(params.getNumberOfSizeClasses()),
         varTotalHeterotrophFrequency_(0),
         varTotalHeterotrophVolume_(0),
@@ -52,17 +53,17 @@ Life::Life(Nutrient& nutrient, Parameters& params) :
 
 void Life::update() {
   /// Feeding - subset
-  //std::for_each(std::begin(sizeClasses_), std::end(sizeClasses_), [&](SizeClass& thisSizeClass) {
-  //  algorithm_.update(sizeClasses_, thisSizeClass);
-  //});
+  std::for_each(std::begin(sizeClasses_), std::end(sizeClasses_), [&](SizeClass& thisSizeClass) {
+    algorithm_.update(sizeClasses_, thisSizeClass);
+  });
   /// Metabolisation - full set
   std::for_each(std::begin(sizeClasses_), std::end(sizeClasses_), [&](SizeClass& thisSizeClass) {
     thisSizeClass.metabolisation();
   });
-  ///// Starvation - subset
-  //std::for_each(std::begin(sizeClasses_), std::end(sizeClasses_), [&](SizeClass& thisSizeClass) {
-  //  thisSizeClass.starvation();
-  //});
+  /// Starvation - subset
+  std::for_each(std::begin(sizeClasses_), std::end(sizeClasses_), [&](SizeClass& thisSizeClass) {
+    thisSizeClass.starvation();
+  });
 
 
   ///// Reproduction - full set.
