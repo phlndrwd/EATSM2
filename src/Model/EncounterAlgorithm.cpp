@@ -38,7 +38,7 @@ void EncounterAlgorithm::update(std::vector<SizeClass>& sizeClasses, SizeClass& 
       if (feedingStrategy == eHerbivore){
         feedFromAutotrophs(predator);
       } else if (feedingStrategy == eCarnivore) {
-        //feedFromHeterotrophs(predator, sizeClasses[coupledSizeClassIndex]);
+        feedFromHeterotrophs(predator, sizeClasses[coupledSizeClassIndex]);
       }
     }
   });
