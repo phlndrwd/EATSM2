@@ -27,8 +27,7 @@ Life::Life(Nutrient& nutrient, Parameters& params) :
         varTotalAutotrophVolume_(0),
         buffTotalHeterotrophFrequency_("heterotrophFrequency", "totals", params.getDataSize(), varTotalHeterotrophFrequency_),
         buffTotalHeterotrophVolume_("heterotrophVolume", "totals", params.getDataSize(), varTotalHeterotrophVolume_),
-        buffTotalAutotrophVolume_("autotrophVolume", "totals", params.getDataSize(), varTotalAutotrophVolume_){
-  std::uint32_t autotrophIndex = consts::kAutotrophSizeIndex;
+        buffTotalAutotrophVolume_("autotrophVolume", "totals", params.getDataSize(), varTotalAutotrophVolume_) {
   std::float64_t idealInitialVolume = params.getSmallestIndividualVolume() * params.getPreferredPreyVolumeRatio();
   std::uint32_t heterotrophIndex = findSizeClassIndexFromVolume(idealInitialVolume);
 
@@ -43,12 +42,6 @@ Life::Life(Nutrient& nutrient, Parameters& params) :
       random_.getUniformInt(1, UINT_MAX)
     );
   }
-
-  std::float64_t initialAutotrophVolume = autotrophIndex != index ? 0 : params.getInitialAutotrophVolume();
-
-  // PJU FIX - This is temporary!
-  std::vector<std::float64_t> sizeClassBoundaries(std::begin(params.getSizeClassMidPoints()), std::end(params.getSizeClassMidPoints()));
-  std::vector<std::float64_t> sizeClassMidPoints(std::begin(params.getSizeClassBoundaries()), std::end(params.getSizeClassBoundaries()));
 }
 
 void Life::update() {
@@ -64,22 +57,20 @@ void Life::update() {
   std::for_each(std::begin(sizeClasses_), std::end(sizeClasses_), [&](SizeClass& thisSizeClass) {
     thisSizeClass.starvation();
   });
-
-
   ///// Reproduction - full set.
   ///// Collect data at the same time.
-  //varTotalHeterotrophFrequency_ = 0;
-  //varTotalHeterotrophVolume_ = 0;
-  //varTotalAutotrophVolume_ = 0;
+  varTotalHeterotrophFrequency_ = 0;
+  varTotalHeterotrophVolume_ = 0;
+  varTotalAutotrophVolume_ = 0;
 
-  //std::for_each(std::begin(sizeClasses_), std::end(sizeClasses_), [&](SizeClass& thisSizeClass) {
-  //  thisSizeClass.reproduction();
-  //  const std::uint64_t sizeClassHeterotrophFrequency = thisSizeClass.getHeterotrophs().getLivingCount();
-  //  varTotalHeterotrophFrequency_ += sizeClassHeterotrophFrequency;
-  //  varTotalHeterotrophVolume_ += sizeClassHeterotrophFrequency * params_.getSizeClassMidPoint(thisSizeClass.getIndex());
-  //  //varTotalAutotrophVolume_ += thisSizeClass.getAutotrophs().getVolume();
-  //  //thisSizeClass.whoIsMoving(movingHeterotrophs_);
-  //});
+  std::for_each(std::begin(sizeClasses_), std::end(sizeClasses_), [&](SizeClass& thisSizeClass) {
+    //thisSizeClass.reproduction();
+    const std::uint64_t sizeClassHeterotrophFrequency = thisSizeClass.getHeterotrophs().getLivingCount();
+    varTotalHeterotrophFrequency_ += sizeClassHeterotrophFrequency;
+    varTotalHeterotrophVolume_ += sizeClassHeterotrophFrequency * params_.getSizeClassMidPoint(thisSizeClass.getIndex());
+    //thisSizeClass.whoIsMoving(movingHeterotrophs_);
+  });
+  varTotalAutotrophVolume_ += autotrophs_.getVolume();
   ////moveHeterotrophs();
 }
 
