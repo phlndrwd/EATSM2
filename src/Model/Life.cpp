@@ -59,25 +59,27 @@ void Life::update() {
   std::for_each(std::begin(sizeClasses_), std::end(sizeClasses_), [&](SizeClass& thisSizeClass) {
     thisSizeClass.metabolisation();
   });
-  /// Starvation - subset
-  std::for_each(std::begin(sizeClasses_), std::end(sizeClasses_), [&](SizeClass& thisSizeClass) {
-    thisSizeClass.starvation();
-  });
-  /// Reproduction - full set.
-  /// Collect data at the same time.
-  varTotalHeterotrophFrequency_ = 0;
-  varTotalHeterotrophVolume_ = 0;
-  varTotalAutotrophVolume_ = 0;
+  ///// Starvation - subset
+  //std::for_each(std::begin(sizeClasses_), std::end(sizeClasses_), [&](SizeClass& thisSizeClass) {
+  //  thisSizeClass.starvation();
+  //});
 
-  std::for_each(std::begin(sizeClasses_), std::end(sizeClasses_), [&](SizeClass& thisSizeClass) {
-    thisSizeClass.reproduction();
-    const std::uint64_t sizeClassHeterotrophFrequency = thisSizeClass.getHeterotrophs().getLivingCount();
-    varTotalHeterotrophFrequency_ += sizeClassHeterotrophFrequency;
-    varTotalHeterotrophVolume_ += sizeClassHeterotrophFrequency * params_.getSizeClassMidPoint(thisSizeClass.getIndex());
-    //varTotalAutotrophVolume_ += thisSizeClass.getAutotrophs().getVolume();
-    thisSizeClass.whoIsMoving(movingHeterotrophs_);
-  });
-  moveHeterotrophs();
+
+  ///// Reproduction - full set.
+  ///// Collect data at the same time.
+  //varTotalHeterotrophFrequency_ = 0;
+  //varTotalHeterotrophVolume_ = 0;
+  //varTotalAutotrophVolume_ = 0;
+
+  //std::for_each(std::begin(sizeClasses_), std::end(sizeClasses_), [&](SizeClass& thisSizeClass) {
+  //  thisSizeClass.reproduction();
+  //  const std::uint64_t sizeClassHeterotrophFrequency = thisSizeClass.getHeterotrophs().getLivingCount();
+  //  varTotalHeterotrophFrequency_ += sizeClassHeterotrophFrequency;
+  //  varTotalHeterotrophVolume_ += sizeClassHeterotrophFrequency * params_.getSizeClassMidPoint(thisSizeClass.getIndex());
+  //  //varTotalAutotrophVolume_ += thisSizeClass.getAutotrophs().getVolume();
+  //  //thisSizeClass.whoIsMoving(movingHeterotrophs_);
+  //});
+  ////moveHeterotrophs();
 }
 
 void Life::moveHeterotrophs() {

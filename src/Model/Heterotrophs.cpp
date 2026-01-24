@@ -9,7 +9,7 @@
 
 #include "Heterotrophs.h"
 
-#include <stdexcept>
+#include <cassert>
 
 Heterotrophs::Heterotrophs(Nutrient& nutrient,
                             Parameters& params,
@@ -22,53 +22,45 @@ Heterotrophs::Heterotrophs(Nutrient& nutrient,
 }
 
 Heterotroph& Heterotrophs::keyHeterotroph(const std::uint32_t index) {
-  if (alive_.size() != 0) {
-    return *heterotrophs_.at(index).get();
-  } else {
-    throw std::runtime_error("Size class is empty...");
-  }
+  assert(!alive_.empty());
+  return *heterotrophs_.at(index).get();
 }
 
 const Heterotroph& Heterotrophs::keyHeterotroph(const std::uint32_t index) const {
-  if (alive_.size() != 0) {
-    return *heterotrophs_.at(index).get();
-  } else {
-    throw std::runtime_error("Size class is empty...");
-  }
+  assert(!alive_.empty());
+  return *heterotrophs_.at(index).get();
 }
 
 std::unique_ptr<Heterotroph> Heterotrophs::ownHeterotroph(const std::uint32_t index) {
-  if (alive_.size() != 0) {
-      return std::move(heterotrophs_.at(index));
-    } else {
-      throw std::runtime_error("Size class is empty...");
-    }
+  assert(!alive_.empty());
+  return std::move(heterotrophs_.at(index));
 }
 
 void Heterotrophs::removeHeterotroph(const std::uint32_t index) {
-  if (alive_.size() != 0) {
-    alive_.erase(std::find(std::begin(alive_), std::end(alive_), index));
-    dead_.push(index);
-  } else {
-    throw std::runtime_error("Size class is empty...");
-  }
+  assert(!alive_.empty());
+
+  auto it = std::find(alive_.begin(), alive_.end(), index);
+  assert(it != alive_.end());
+
+  alive_.erase(it);
+  heterotrophs_[index].reset();
+  dead_.push(index);
 }
 
 void Heterotrophs::addHeterotroph(std::unique_ptr<Heterotroph> heterotroph) {
-  if (alive_.size() != maxPopulation_) {
-    std::int32_t index;
-    if (dead_.size() != 0) {
-      index = dead_.front();
-      dead_.pop();
-    } else {
-      index = heterotrophs_.size();
-    }
-    auto heterotrophsIt = std::next(heterotrophs_.begin(), index);
-    heterotrophs_.insert(heterotrophsIt, std::move(heterotroph));
-    alive_.push_back(index);
+  assert(alive_.size() != maxPopulation_);
+
+  std::int32_t index;
+  if (!dead_.empty()) {
+    index = dead_.front();
+    assert(!heterotrophs_[index]);  // Slot must be empty
+    dead_.pop();
   } else {
-    throw std::runtime_error("Size class is full...");
+    index = heterotrophs_.size();
+    heterotrophs_.emplace_back(nullptr);
   }
+  heterotrophs_[index] = std::move(heterotroph);
+  alive_.push_back(index);
 }
 
 void Heterotrophs::addChild(std::unique_ptr<Heterotroph> child) {
