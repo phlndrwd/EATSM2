@@ -10,6 +10,7 @@
 #ifndef NUTRIENT_H
 #define NUTRIENT_H
 
+#include <cstdint>
 #include <stdfloat>
 
 #include "Parameters.h"
@@ -18,12 +19,12 @@
 
 class Nutrient {
  public:
-  Nutrient(Parameters&);
+  Nutrient(std::uint32_t);
 
-  const std::float64_t& getVolume() const;
+  const std::float64_t getVolume() const;
 
-  void addToVolume(const std::float64_t&);
-  void subtractFromVolume(const std::float64_t&);
+  void addToVolume(const std::float64_t);
+  void subtractFromVolume(const std::float64_t);
 
  private:
   std::float64_t volume_;

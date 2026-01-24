@@ -14,22 +14,22 @@
 #include "Constants.h"
 
 namespace {
-std::uint64_t calcDataSize(const std::uint64_t maxTimeStep, const std::uint64_t samplingRate) {
+std::uint32_t calcDataSize(const std::uint32_t maxTimeStep, const std::uint32_t samplingRate) {
   if (maxTimeStep == 0) {
       throw std::invalid_argument("Numerator must be greater than zero...");
-    }
+  }
   if (samplingRate == 0) {
       throw std::invalid_argument("Division by zero is not allowed...");
-    }
+  }
   std::float64_t result = static_cast<std::float64_t>(maxTimeStep) /
-                  static_cast<std::float64_t>(samplingRate);
-  return static_cast<std::uint64_t>(std::ceil(result));
+                          static_cast<std::float64_t>(samplingRate);
+  return static_cast<std::uint32_t>(std::ceil(result));
 }
 }
 
 Parameters::Parameters(jino::Data& input):
     randomSeed_(input.getValue<std::uint8_t>(consts::kParamNames.at(eRandomSeed))),
-    maxTimeStep_(input.getValue<std::uint64_t>(consts::kParamNames.at(eMaxTimeStep))),
+    maxTimeStep_(input.getValue<std::uint32_t>(consts::kParamNames.at(eMaxTimeStep))),
     samplingRate_(input.getValue<std::uint32_t>(consts::kParamNames.at(eSamplingRate))),
     numberOfSizeClasses_(input.getValue<std::uint32_t>(consts::kParamNames.at(eNumberOfSizeClasses))),
 
@@ -78,17 +78,17 @@ void Parameters::calculate() {
 
   std::float64_t sizeClassExponentIncrement = (largestVolumeExponent_ - smallestVolumeExponent_) / numberOfSizeClasses;
   for (std::uint32_t sizeClassIndex = 0; sizeClassIndex < numberOfSizeClasses; ++sizeClassIndex) {
-      std::float64_t sizeClassMidPointExponent = smallestVolumeExponent_ + ((sizeClassIndex + 0.5) * sizeClassExponentIncrement);
-      std::float64_t sizeClassBoundaryExponent = smallestVolumeExponent_ + (sizeClassIndex * sizeClassExponentIncrement);
+    std::float64_t sizeClassMidPointExponent = smallestVolumeExponent_ + ((sizeClassIndex + 0.5) * sizeClassExponentIncrement);
+    std::float64_t sizeClassBoundaryExponent = smallestVolumeExponent_ + (sizeClassIndex * sizeClassExponentIncrement);
 
-      sizeClassBoundaries_[sizeClassIndex] = std::pow(10, sizeClassBoundaryExponent);
-      sizeClassMidPoints_[sizeClassIndex] = std::pow(10, sizeClassMidPointExponent);
+    sizeClassBoundaries_[sizeClassIndex] = std::pow(10, sizeClassBoundaryExponent);
+    sizeClassMidPoints_[sizeClassIndex] = std::pow(10, sizeClassMidPointExponent);
 
-      remainingVolumes_[sizeClassIndex] = totalVolume - sizeClassMidPoints_[sizeClassIndex];
-      linearFeedingDenominators_[sizeClassIndex] = (2 * halfSaturationConstantFraction) * remainingVolumes_[sizeClassIndex];
-      halfSaturationConstants_[sizeClassIndex] = halfSaturationConstantFraction * remainingVolumes_[sizeClassIndex];
-      maximumSizeClassPopulations_[sizeClassIndex] = std::ceil(totalVolume / sizeClassMidPoints_[sizeClassIndex]);
-    }
+    remainingVolumes_[sizeClassIndex] = totalVolume - sizeClassMidPoints_[sizeClassIndex];
+    linearFeedingDenominators_[sizeClassIndex] = (2 * halfSaturationConstantFraction) * remainingVolumes_[sizeClassIndex];
+    halfSaturationConstants_[sizeClassIndex] = halfSaturationConstantFraction * remainingVolumes_[sizeClassIndex];
+    maximumSizeClassPopulations_[sizeClassIndex] = std::ceil(totalVolume / sizeClassMidPoints_[sizeClassIndex]);
+  }
   std::float64_t sizeClassBoundaryExponent = smallestVolumeExponent_ + (numberOfSizeClasses * sizeClassExponentIncrement);
   sizeClassBoundaries_[numberOfSizeClasses] = std::pow(10, sizeClassBoundaryExponent);
 
@@ -99,7 +99,7 @@ const std::uint32_t& Parameters::getRandomSeed() const {
   return randomSeed_;
 }
 
-const std::uint64_t& Parameters::getMaxTimeStep() const {
+const std::uint32_t& Parameters::getMaxTimeStep() const {
   return maxTimeStep_;
 }
 
@@ -179,7 +179,7 @@ const std::float64_t& Parameters::getMutationStandardDeviation() const {
   return mutationStandardDeviation_;
 }
 
-const std::uint64_t& Parameters::getDataSize() const {
+const std::uint32_t& Parameters::getDataSize() const {
   return dataSize_;
 }
 
@@ -203,7 +203,7 @@ const std::vector<std::uint32_t>& Parameters::getMaximumSizeClassPopulations() c
   return maximumSizeClassPopulations_;
 }
 
-const std::uint32_t& Parameters::getMaximumSizeClassPopulation(const std::uint64_t& i) const {
+const std::uint32_t& Parameters::getMaximumSizeClassPopulation(const std::uint32_t& i) const {
   return maximumSizeClassPopulations_.at(i);
 }
 
@@ -215,11 +215,11 @@ const std::vector<std::float64_t>& Parameters::getSizeClassMidPoints() const {
   return sizeClassMidPoints_;
 }
 
-const std::float64_t& Parameters::getSizeClassBoundary(const std::uint64_t& i) const {
+const std::float64_t& Parameters::getSizeClassBoundary(const std::uint32_t& i) const {
   return sizeClassBoundaries_.at(i);
 }
 
-const std::float64_t& Parameters::getSizeClassMidPoint(const std::uint64_t& i) const {
+const std::float64_t& Parameters::getSizeClassMidPoint(const std::uint32_t& i) const {
   return sizeClassMidPoints_.at(i);
 }
 

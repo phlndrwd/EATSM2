@@ -41,7 +41,7 @@ class EncounterAlgorithm {
                                        std::vector<std::float64_t>&);
   std::uint32_t setCoupledSizeClassIndex(const std::vector<std::float64_t>&, std::vector<SizeClass>&,
                                         PreyVolumes&, eFeedingStrategy&);
-  void feedFromAutotrophs(Heterotroph&, SizeClass&);
+  void feedFromAutotrophs(Heterotroph&);
   void feedFromHeterotrophs(Heterotroph&, SizeClass&);
 
   Autotrophs* autotrophs_;

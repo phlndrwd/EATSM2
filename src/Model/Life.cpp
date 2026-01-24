@@ -18,16 +18,14 @@
 Life::Life(Nutrient& nutrient, Parameters& params) :
         nutrient_(nutrient),
         params_(params),
-        autotrophs_(nutrient, params.getInitialAutotrophVolume()),
+        autotrophs_(nutrient, params.getInitialAutotrophVolume(), params.getDataSize()),
         random_(params.getRandomSeed()),  // Is this the first time random is used?
         algorithm_(&autotrophs_, &nutrient, &params, random_.getUniformInt(1, UINT_MAX)),
         numberOfSizeClasses_(params.getNumberOfSizeClasses()),
         varTotalHeterotrophFrequency_(0),
         varTotalHeterotrophVolume_(0),
-        varTotalAutotrophVolume_(0),
         buffTotalHeterotrophFrequency_("heterotrophFrequency", "totals", params.getDataSize(), varTotalHeterotrophFrequency_),
-        buffTotalHeterotrophVolume_("heterotrophVolume", "totals", params.getDataSize(), varTotalHeterotrophVolume_),
-        buffTotalAutotrophVolume_("autotrophVolume", "totals", params.getDataSize(), varTotalAutotrophVolume_) {
+        buffTotalHeterotrophVolume_("heterotrophVolume", "totals", params.getDataSize(), varTotalHeterotrophVolume_) {
   std::float64_t idealInitialVolume = params.getSmallestIndividualVolume() * params.getPreferredPreyVolumeRatio();
   std::uint32_t heterotrophIndex = findSizeClassIndexFromVolume(idealInitialVolume);
 
@@ -61,16 +59,14 @@ void Life::update() {
   ///// Collect data at the same time.
   varTotalHeterotrophFrequency_ = 0;
   varTotalHeterotrophVolume_ = 0;
-  varTotalAutotrophVolume_ = 0;
 
   std::for_each(std::begin(sizeClasses_), std::end(sizeClasses_), [&](SizeClass& thisSizeClass) {
     //thisSizeClass.reproduction();
     const std::uint64_t sizeClassHeterotrophFrequency = thisSizeClass.getHeterotrophs().getLivingCount();
     varTotalHeterotrophFrequency_ += sizeClassHeterotrophFrequency;
-    varTotalHeterotrophVolume_ += sizeClassHeterotrophFrequency * params_.getSizeClassMidPoint(thisSizeClass.getIndex());
+    varTotalHeterotrophVolume_ += thisSizeClass.getVolume();
     //thisSizeClass.whoIsMoving(movingHeterotrophs_);
   });
-  varTotalAutotrophVolume_ += autotrophs_.getVolume();
   ////moveHeterotrophs();
 }
 

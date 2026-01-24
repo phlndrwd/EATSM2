@@ -64,6 +64,7 @@ class SizeClass {
   Heterotroph& getHeterotroph(const std::uint32_t);
   Heterotrophs& getHeterotrophs();
 
+  std::float64_t getVolume() const;
  private:
   void starve(const std::uint32_t);
 

@@ -51,11 +51,17 @@ public:
     });
   }
 
+  void forEachHeterotrophIndex(auto&& func) const {
+    std::for_each(std::begin(alive_), std::end(alive_), [&](const std::uint32_t index) {
+      func(index);
+    });
+  }
+
   void subset(RandomSimple& random, auto&& func) {
     std::vector<std::uint32_t> aliveIndices = alive_;  // copy current alive indices
     std::uint32_t subsetCount = roundWithProbability(random, aliveIndices.size() * subsetFraction_);
     for (std::uint32_t i = 0; i < subsetCount; ++i) {
-        func(aliveIndices[i]);
+      func(aliveIndices[i]);
     }
   }
 

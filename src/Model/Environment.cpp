@@ -12,7 +12,7 @@
 #include <iostream>
 
 Environment::Environment(Parameters& params) :
-        nutrient_(params),
+        nutrient_(params.getDataSize()),
         life_(nutrient_, params) {
   std::cout << "Environment created." << std::endl << std::endl;
 }

@@ -45,7 +45,7 @@ class Parameters {
   explicit Parameters(jino::Data&);
 
   const std::uint32_t& getRandomSeed() const;
-  const std::uint64_t& getMaxTimeStep() const;
+  const std::uint32_t& getMaxTimeStep() const;
   const std::uint32_t& getSamplingRate() const;
   const std::uint32_t& getNumberOfSizeClasses() const;
 
@@ -76,7 +76,7 @@ class Parameters {
   // Calculated parameters
   void calculate();
 
-  const std::uint64_t& getDataSize() const;
+  const std::uint32_t& getDataSize() const;
 
   const std::vector<std::vector<std::float64_t>>& getInterSizeClassPreferences() const;
   const std::vector<std::vector<std::float64_t>>& getInterSizeClassVolumes() const;
@@ -85,13 +85,13 @@ class Parameters {
   std::vector<std::vector<std::float64_t>>& getInterSizeClassVolumes();
 
   const std::vector<std::uint32_t>& getMaximumSizeClassPopulations() const;
-  const std::uint32_t& getMaximumSizeClassPopulation(const std::uint64_t&) const;
+  const std::uint32_t& getMaximumSizeClassPopulation(const std::uint32_t&) const;
 
   const std::vector<std::float64_t>& getSizeClassBoundaries() const;
   const std::vector<std::float64_t>& getSizeClassMidPoints() const;
 
-  const std::float64_t& getSizeClassBoundary(const std::uint64_t&) const;
-  const std::float64_t& getSizeClassMidPoint(const std::uint64_t&) const;
+  const std::float64_t& getSizeClassBoundary(const std::uint32_t&) const;
+  const std::float64_t& getSizeClassMidPoint(const std::uint32_t&) const;
 
   const std::vector<std::float64_t>& getLinearFeedingDenominators() const;
   const std::vector<std::float64_t>& getHalfSaturationConstants() const;
@@ -103,7 +103,7 @@ class Parameters {
 
  private:
   std::uint32_t randomSeed_;
-  std::uint64_t maxTimeStep_;
+  std::uint32_t maxTimeStep_;
   std::uint32_t samplingRate_;
   std::uint32_t numberOfSizeClasses_;
 
@@ -131,7 +131,7 @@ class Parameters {
   std::float64_t mutationStandardDeviation_;
 
   // Calculated parameters
-  std::uint64_t dataSize_;
+  std::uint32_t dataSize_;
 
   std::vector<std::vector<std::float64_t>> interSizeClassPreferences_;
   std::vector<std::vector<std::float64_t>> interSizeClassVolumes_;

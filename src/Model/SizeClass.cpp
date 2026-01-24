@@ -148,3 +148,12 @@ std::uint32_t SizeClass::getLivingIndex(const std::uint32_t index) {
 Heterotrophs& SizeClass::getHeterotrophs() {
   return heterotrophs_;
 }
+
+std::float64_t SizeClass::getVolume() const {
+  std::float64_t volume = 0;
+  heterotrophs_.forEachHeterotrophIndex([&](std::uint32_t index) {
+    const Heterotroph& heterotroph = heterotrophs_.keyHeterotroph(index);
+    volume += heterotroph.getVolumeActual();
+  });
+  return volume;
+}

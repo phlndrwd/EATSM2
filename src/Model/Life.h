@@ -45,11 +45,9 @@ class Life {
 
   std::uint64_t varTotalHeterotrophFrequency_;
   std::float64_t varTotalHeterotrophVolume_;
-  std::float64_t varTotalAutotrophVolume_;
 
   jino::Buffer<std::uint64_t> buffTotalHeterotrophFrequency_;
   jino::Buffer<std::float64_t> buffTotalHeterotrophVolume_;
-  jino::Buffer<std::float64_t> buffTotalAutotrophVolume_;
 };
 
 #endif

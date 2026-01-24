@@ -10,24 +10,29 @@
 #ifndef AUTOTROPHS_H
 #define AUTOTROPHS_H
 
+#include <cstdint>
 #include <stdfloat>
+
+#include "Buffer.h"
 
 class Nutrient;
 
 class Autotrophs {
  public:
   Autotrophs() = delete;
-  explicit Autotrophs(Nutrient&, const std::float64_t&);
+  explicit Autotrophs(Nutrient&, const std::float64_t, const std::uint32_t);
 
   void update();
-  void addToVolume(const std::float64_t&);
-  void subtractFromVolume(const std::float64_t&);
+  void addToVolume(const std::float64_t);
+  void subtractFromVolume(const std::float64_t);
 
-  std::float64_t& getVolume();
-  const std::float64_t& getVolume() const;
+  std::float64_t getVolume();
+  const std::float64_t getVolume() const;
 
  private:
   Nutrient& nutrient_;
+
+  jino::Buffer<std::float64_t> buffVolume_;
 
   std::float64_t volume_;
   std::float64_t toFlux_;

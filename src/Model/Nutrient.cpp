@@ -11,22 +11,22 @@
 
 #include <iostream>
 
-Nutrient::Nutrient(Parameters& params):
+Nutrient::Nutrient(std::uint32_t dataSize) :
       volume_(0),  // No option to set initial nutrient volume
       toFlux_(0),
-      buffVolume_("nutrientVolume", "totals", params.getDataSize(), volume_) {
+      buffVolume_("nutrientVolume", "totals", dataSize, volume_) {
   std::cout << "Nutrient pool created." << std::endl;
 }
 
-const std::float64_t& Nutrient::getVolume() const {
+const std::float64_t Nutrient::getVolume() const {
   return volume_;
 }
 
-void Nutrient::addToVolume(const std::float64_t& volume) {
+void Nutrient::addToVolume(const std::float64_t volume) {
   volume_ += volume;
   toFlux_ += volume;
 }
 
-void Nutrient::subtractFromVolume(const std::float64_t& volume) {
+void Nutrient::subtractFromVolume(const std::float64_t volume) {
   volume_ -= volume;
 }
