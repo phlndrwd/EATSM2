@@ -29,10 +29,13 @@ enum eGrowthTrajectory {
 
 struct MovingHeterotroph {
   std::unique_ptr<Heterotroph> heterotroph;
+  std::uint32_t previousIndex;
   std::uint32_t prevSizeClassIndex;
   eGrowthTrajectory growthTrajectory;
-  MovingHeterotroph(std::unique_ptr<Heterotroph> _heterotroph, std::uint32_t _prevSizeClassIndex, eGrowthTrajectory _growthTrajectory):
-      heterotroph(std::move(_heterotroph)), prevSizeClassIndex(_prevSizeClassIndex), growthTrajectory(_growthTrajectory) {}
+  MovingHeterotroph(std::unique_ptr<Heterotroph> _heterotroph, std::uint32_t _previousIndex,
+                    std::uint32_t _prevSizeClassIndex, eGrowthTrajectory _growthTrajectory):
+      heterotroph(std::move(_heterotroph)), previousIndex(_previousIndex),
+      prevSizeClassIndex(_prevSizeClassIndex), growthTrajectory(_growthTrajectory) {}
 };
 
 class SizeClass {
@@ -68,14 +71,19 @@ class SizeClass {
   std::float64_t getVolume() const;
 
   void addHeterotroph(std::unique_ptr<Heterotroph>);
-  void removeHeterotroph(const std::uint32_t);
+  void killHeterotroph(const std::uint32_t);
+  void removeDead();
 
  private:
   void starve(const std::uint32_t);
 
   Nutrient* nutrient_;
   Functions functions_;
-  const std::uint32_t index_;  // PJU FIX - Should index_ be deprecated?
+
+  RandomSimple random_;
+  Heterotrophs heterotrophs_;
+
+  std::vector<std::uint32_t> deadIndices_;
 
   const std::float64_t sizeClassUpper_;
   const std::float64_t sizeClassMidPoint_;
@@ -84,10 +92,8 @@ class SizeClass {
   const std::float64_t& smallestVolumeExponent_;
   const std::float64_t& largestVolumeExponent_;
 
+  const std::uint32_t index_;
   const std::uint32_t numberOfSizeClasses_;
-
-  RandomSimple random_;
-  Heterotrophs heterotrophs_;
 
 };
 

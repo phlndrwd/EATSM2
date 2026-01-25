@@ -36,15 +36,16 @@ SizeClass::SizeClass(Nutrient* nutrient, Parameters* params, const std::float64_
                      const std::uint32_t index, const std::uint32_t randomSeed) :
 	nutrient_(nutrient),
         functions_(*params),
-	index_(index),
-        sizeClassUpper_(params->getSizeClassBoundary(index_ + 1)),
-        sizeClassMidPoint_(params->getSizeClassMidPoint(index_)),
-        sizeClassLower_(params->getSizeClassBoundary(index_)),
+        random_(randomSeed),
+        heterotrophs_(*nutrient, *params, params->getMaximumSizeClassPopulation(index)),
+        deadIndices_(),
+        sizeClassUpper_(params->getSizeClassBoundary(index + 1)),
+        sizeClassMidPoint_(params->getSizeClassMidPoint(index)),
+        sizeClassLower_(params->getSizeClassBoundary(index)),
         smallestVolumeExponent_(params->getSmallestVolumeExponent()),
         largestVolumeExponent_(params->getLargestVolumeExponent()),
-        numberOfSizeClasses_(params->getNumberOfSizeClasses()),
-        random_(randomSeed),
-        heterotrophs_(*nutrient, *params, params->getMaximumSizeClassPopulation(index_)) {
+        index_(index),
+        numberOfSizeClasses_(params->getNumberOfSizeClasses()) {
   populate(initialVolume, params->getAssimilationEfficiency(),
            params->getMutationProbability(), params->getMutationStandardDeviation());
 }
@@ -103,14 +104,14 @@ void SizeClass::reproduction() {
 }
 
 void SizeClass::whoIsMoving(std::vector<MovingHeterotroph>& movingHeterotrophs) {
-  heterotrophs_.forEachHeterotrophIndex([&](std::uint32_t index) {
-    Heterotroph& heterotroph = heterotrophs_.keyHeterotroph(index);
+  heterotrophs_.forEachHeterotrophIndex([&](std::uint32_t currentIndex) {
+    Heterotroph& heterotroph = heterotrophs_.keyHeterotroph(currentIndex);
     if (heterotroph.getVolumeActual() < sizeClassLower_ && index_ > 0) {  // Zero is smallest size class
-      movingHeterotrophs.push_back(MovingHeterotroph(heterotrophs_.ownHeterotroph(index), index_, eShrinking));
-      heterotrophs_.removeHeterotroph(index);
+      movingHeterotrophs.push_back(MovingHeterotroph(heterotrophs_.ownHeterotroph(currentIndex),
+                                   currentIndex, index_, eShrinking));
     } else if (heterotroph.getVolumeActual() >= sizeClassUpper_ && index_ < numberOfSizeClasses_ - 1) {
-      movingHeterotrophs.push_back(MovingHeterotroph(heterotrophs_.ownHeterotroph(index), index_, eGrowing));
-      heterotrophs_.removeHeterotroph(index);
+      movingHeterotrophs.push_back(MovingHeterotroph(heterotrophs_.ownHeterotroph(currentIndex),
+                                   currentIndex, index_, eGrowing));
     }
   });
 }
@@ -118,7 +119,8 @@ void SizeClass::whoIsMoving(std::vector<MovingHeterotroph>& movingHeterotrophs) 
 void SizeClass::starve(const std::uint32_t index) {
   Heterotroph& heterotroph = heterotrophs_.keyHeterotroph(index);
   nutrient_->addToVolume(heterotroph.getVolumeActual());
-  heterotrophs_.removeHeterotroph(index);
+  deadIndices_.push_back(index);
+  //heterotrophs_.removeHeterotroph(index);
 }
 
 std::uint32_t SizeClass::getIndex() const {
@@ -164,6 +166,13 @@ void SizeClass::addHeterotroph(std::unique_ptr<Heterotroph> heterotroph) {
   heterotrophs_.addHeterotroph(std::move(heterotroph));
 }
 
-void SizeClass::removeHeterotroph(const std::uint32_t livingIndex) {
-  heterotrophs_.removeHeterotroph(livingIndex);
+void SizeClass::killHeterotroph(const std::uint32_t index) {
+  deadIndices_.push_back(index);
+}
+
+void SizeClass::removeDead() {
+  for (const auto index : deadIndices_) {
+    heterotrophs_.removeHeterotroph(index);
+  }
+  deadIndices_.clear();
 }

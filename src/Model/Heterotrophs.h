@@ -58,10 +58,9 @@ public:
   }
 
   void subset(RandomSimple& random, auto&& func) {
-    std::vector<std::uint32_t> aliveIndices = alive_;  // copy current alive indices
-    std::uint32_t subsetCount = roundWithProbability(random, aliveIndices.size() * subsetFraction_);
+    std::uint32_t subsetCount = roundWithProbability(random, alive_.size() * subsetFraction_);
     for (std::uint32_t i = 0; i < subsetCount; ++i) {
-      func(aliveIndices[i]);
+      func(alive_[i]);
     }
   }
 

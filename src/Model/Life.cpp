@@ -43,12 +43,10 @@ Life::Life(Nutrient& nutrient, Parameters& params) :
 }
 
 void Life::update() {
+  /// Update autotrophs first, as per EATSM1
   autotrophs_.update();
-
   /// Feeding - subset
-  std::for_each(std::begin(sizeClasses_), std::end(sizeClasses_), [&](SizeClass& thisSizeClass) {
-    algorithm_.update(sizeClasses_, thisSizeClass);
-  });
+  algorithm_.update(sizeClasses_);
   /// Metabolisation - full set
   std::for_each(std::begin(sizeClasses_), std::end(sizeClasses_), [&](SizeClass& thisSizeClass) {
     thisSizeClass.metabolisation();
@@ -57,48 +55,40 @@ void Life::update() {
   std::for_each(std::begin(sizeClasses_), std::end(sizeClasses_), [&](SizeClass& thisSizeClass) {
     thisSizeClass.starvation();
   });
-  ///// Reproduction - full set.
-  ///// Collect data at the same time.
-  varTotalHeterotrophFrequency_ = 0;
-  varTotalHeterotrophVolume_ = 0;
+  /// Reproduction - full set.
+  /// Collect data at the same time.
+  //varTotalHeterotrophFrequency_ = 0;
+  //varTotalHeterotrophVolume_ = 0;
 
-  std::for_each(std::begin(sizeClasses_), std::end(sizeClasses_), [&](SizeClass& thisSizeClass) {
-    //thisSizeClass.reproduction();
-    const std::uint64_t sizeClassHeterotrophFrequency = thisSizeClass.getPopulationSize();
-    varTotalHeterotrophFrequency_ += sizeClassHeterotrophFrequency;
-    varTotalHeterotrophVolume_ += thisSizeClass.getVolume();
-    //thisSizeClass.whoIsMoving(movingHeterotrophs_);
-  });
-  ////moveHeterotrophs();
+  //std::for_each(std::begin(sizeClasses_), std::end(sizeClasses_), [&](SizeClass& thisSizeClass) {
+  //  thisSizeClass.reproduction();
+  //  const std::uint64_t sizeClassHeterotrophFrequency = thisSizeClass.getPopulationSize();
+  //  varTotalHeterotrophFrequency_ += sizeClassHeterotrophFrequency;
+  //  varTotalHeterotrophVolume_ += thisSizeClass.getVolume();
+  //  thisSizeClass.whoIsMoving(movingHeterotrophs_);
+  //});
+  //moveHeterotrophs();
 }
 
 void Life::moveHeterotrophs() {
-  //for (const auto& movingHeterotroph : movingHeterotrophs_) {
-  //  std::uint32_t searchOffSet = 0;
-  //  if (movingHeterotroph.growthTrajectory == eShrinking) {
-  //    searchOffSet = params.getNumberOfSizeClasses() - movingHeterotroph.prevSizeClassIndex;
-  //    auto sizeClassDownIt = std::next(sizeClasses_.rbegin(), searchOffSet);
-  //    std::find_if(sizeClassDownIt, sizeClasses_.rend(), [&](SizeClass& prevSizeClass) {
-  //      if (movingHeterotroph.heterotroph->getVolumeActual() >= params.getSizeClassBoundary(prevSizeClass.getIndex())) {
-  //        prevSizeClass.addHeterotroph(std::move(movingHeterotroph.heterotroph));
-  //        return true;
-  //      } else {
-  //        return false;
-  //      }
-  //    });
-  //  } else if (movingHeterotroph.growthTrajectory == eGrowing) {
-  //    searchOffSet = movingHeterotroph.prevSizeClassIndex + 1;
-  //      auto sizeClassUpIt = std::next(sizeClasses_.begin(), searchOffSet);
-  //      std::find_if(sizeClassUpIt, sizeClasses_.end(), [&](SizeClass& nextSizeClass) {
-  //        if (movingHeterotroph.heterotroph->getVolumeActual() >= params.getSizeClassBoundary(nextSizeClass.getIndex())) {
-  //            nextSizeClass.addHeterotroph(std::move(movingHeterotroph.heterotroph));
-  //            return true;
-  //          } else {
-  //            return false;
-  //          }
-  //      });
-  //  }
-  //}
+  for (auto& moving : movingHeterotrophs_) {
+    const auto volume = moving.heterotroph->getVolumeActual();
+    if (moving.growthTrajectory == eGrowing) {
+      for (std::uint32_t index = moving.prevSizeClassIndex + 1; index < sizeClasses_.size(); ++index) {
+        if (volume >= params_.getSizeClassBoundary(index)) {
+          sizeClasses_[index].addHeterotroph(std::move(moving.heterotroph));
+          break;
+        }
+      }
+    } else if (moving.growthTrajectory == eShrinking) {
+      for (std::int32_t index = static_cast<std::int32_t>(moving.prevSizeClassIndex) - 1; index >= 0;  --index) {
+        if (volume >= params_.getSizeClassBoundary(index)) {
+          sizeClasses_[index].addHeterotroph(std::move(moving.heterotroph));
+          break;
+        }
+      }
+    }
+  }
   movingHeterotrophs_.clear();
 }
 

@@ -26,21 +26,25 @@ EncounterAlgorithm::EncounterAlgorithm(Autotrophs* autotrophs, Nutrient* nutrien
     autotrophSizeIndex_(consts::kAutotrophSizeIndex),
     autotrophCellSize_(params->getAutotrophCellSize()) {}
 
-void EncounterAlgorithm::update(std::vector<SizeClass>& sizeClasses, SizeClass& thisSizeClass) {
-  eFeedingStrategy feedingStrategy = eNotEating;
-  std::uint32_t coupledSizeClassIndex = 0;
-  std::float64_t feedingProbability = calcFeedingProbability(sizeClasses, thisSizeClass, coupledSizeClassIndex, feedingStrategy);
-  thisSizeClass.getHeterotrophs().subset(random_, [&](const std::uint32_t randomIndex) {
-    if (random_.getUniform() <= feedingProbability) {
-      std::uint32_t livingIndex = thisSizeClass.getLivingIndex(randomIndex);
-      Heterotroph& predator = thisSizeClass.getHeterotroph(livingIndex);
+void EncounterAlgorithm::update(std::vector<SizeClass>& sizeClasses) {
+  std::for_each(std::begin(sizeClasses), std::end(sizeClasses), [&](SizeClass& thisSizeClass) {
+    eFeedingStrategy feedingStrategy = eNotEating;
+    std::uint32_t coupledSizeClassIndex = 0;
+    std::float64_t feedingProbability = calcFeedingProbability(sizeClasses, thisSizeClass, coupledSizeClassIndex, feedingStrategy);
+    SizeClass& coupledSizeClass = sizeClasses[coupledSizeClassIndex];
+    thisSizeClass.getHeterotrophs().subset(random_, [&](const std::uint32_t randomIndex) {
+      if (random_.getUniform() <= feedingProbability) {
+        std::uint32_t livingIndex = thisSizeClass.getLivingIndex(randomIndex);
+        Heterotroph& predator = thisSizeClass.getHeterotroph(livingIndex);
 
-      if (feedingStrategy == eHerbivore){
-        feedFromAutotrophs(predator);
-      } else if (feedingStrategy == eCarnivore) {
-        feedFromHeterotrophs(predator, sizeClasses[coupledSizeClassIndex]);
+        if (feedingStrategy == eHerbivore){
+          feedFromAutotrophs(predator);
+        } else if (feedingStrategy == eCarnivore) {
+          feedFromHeterotrophs(predator, coupledSizeClass);
+        }
       }
-    }
+    });
+    coupledSizeClass.removeDead();
   });
 }
 
@@ -123,7 +127,7 @@ void EncounterAlgorithm::feedFromHeterotrophs(Heterotroph& predator,
     std::float64_t preyVolume = prey.getVolumeActual();
     std::float64_t waste = predator.consumePreyVolume(preyVolume);
     nutrient_->addToVolume(waste);
-    coupledSizeClass.removeHeterotroph(preyIndex);
+    coupledSizeClass.killHeterotroph(preyIndex);
   }
 }
 

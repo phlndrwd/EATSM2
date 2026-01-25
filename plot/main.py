@@ -16,8 +16,8 @@ from plot_utils import area_like_matlab
 ###############################################################################
 ## PARAMS
 ###############################################################################
-data_dir = "/home/doomsayer/Development/Repositories/eatsm2/build/Release/output/"
-data_file = "2026-01-25_11:14:59.nc"
+data_dir = "/home/doomsayer/Development/Repositories/eatsm2/build/Debug/output/"
+data_file = "2026-01-25_12:05:34.nc"
 
 var_names_totals = ["totalHeterotrophFrequency"]
 

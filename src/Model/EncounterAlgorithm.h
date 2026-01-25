@@ -32,7 +32,7 @@ class EncounterAlgorithm {
  public:
   EncounterAlgorithm(Autotrophs*, Nutrient*, Parameters*, const std::uint32_t&);
 
-  void update(std::vector<SizeClass>&, SizeClass&);
+  void update(std::vector<SizeClass>&);
 
  private:
   std::float64_t calcFeedingProbability(std::vector<SizeClass>&, SizeClass&,
