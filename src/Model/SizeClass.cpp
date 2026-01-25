@@ -109,18 +109,20 @@ void SizeClass::whoIsMoving(std::vector<MovingHeterotroph>& movingHeterotrophs) 
     if (heterotroph.getVolumeActual() < sizeClassLower_ && index_ > 0) {  // Zero is smallest size class
       movingHeterotrophs.push_back(MovingHeterotroph(heterotrophs_.ownHeterotroph(currentIndex),
                                    currentIndex, index_, eShrinking));
+      deadIndices_.push_back(currentIndex);
     } else if (heterotroph.getVolumeActual() >= sizeClassUpper_ && index_ < numberOfSizeClasses_ - 1) {
       movingHeterotrophs.push_back(MovingHeterotroph(heterotrophs_.ownHeterotroph(currentIndex),
                                    currentIndex, index_, eGrowing));
+      deadIndices_.push_back(currentIndex);
     }
   });
+  removeDead();
 }
 
 void SizeClass::starve(const std::uint32_t index) {
   Heterotroph& heterotroph = heterotrophs_.keyHeterotroph(index);
   nutrient_->addToVolume(heterotroph.getVolumeActual());
   deadIndices_.push_back(index);
-  //heterotrophs_.removeHeterotroph(index);
 }
 
 std::uint32_t SizeClass::getIndex() const {
@@ -175,4 +177,17 @@ void SizeClass::removeDead() {
     heterotrophs_.removeHeterotroph(index);
   }
   deadIndices_.clear();
+}
+
+
+std::float64_t SizeClass::getSizeClassUpper() {
+  return sizeClassUpper_;
+}
+
+std::float64_t SizeClass::getSizeClassMidPoint() {
+  return sizeClassMidPoint_;
+}
+
+std::float64_t SizeClass::getSizeClassLower() {
+  return sizeClassLower_;
 }

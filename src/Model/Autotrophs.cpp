@@ -14,7 +14,7 @@
 #include "Nutrient.h"
 
 Autotrophs::Autotrophs(Nutrient& nutrient, const std::float64_t initialVolume, const std::uint32_t dataSize) :
-    nutrient_(nutrient), volume_(initialVolume),
+    nutrient_(nutrient), volume_(initialVolume), toFlux_(0),
     buffVolume_("autotrophVolume", "totals", dataSize, volume_) {
   std::cout << "Autotroph pool created." << std::endl;
 }
@@ -38,6 +38,6 @@ std::float64_t Autotrophs::getVolume() {
   return volume_;
 }
 
-const std::float64_t Autotrophs::getVolume() const {
+std::float64_t Autotrophs::getVolume() const {
   return volume_;
 }

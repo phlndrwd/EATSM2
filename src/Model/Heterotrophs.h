@@ -59,8 +59,9 @@ public:
 
   void subset(RandomSimple& random, auto&& func) {
     std::uint32_t subsetCount = roundWithProbability(random, alive_.size() * subsetFraction_);
-    for (std::uint32_t i = 0; i < subsetCount; ++i) {
-      func(alive_[i]);
+    for (auto _ = subsetCount; _--;) {
+      std::uint32_t randomIndex = random.getUniformInt(alive_.size() - 1);
+      func(alive_[randomIndex]);
     }
   }
 

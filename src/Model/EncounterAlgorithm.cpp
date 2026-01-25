@@ -49,13 +49,13 @@ void EncounterAlgorithm::update(std::vector<SizeClass>& sizeClasses) {
 }
 
 std::float64_t EncounterAlgorithm::calcFeedingProbability(std::vector<SizeClass>& sizeClasses, SizeClass& thisSizeClass,
-                                                          std::uint32_t coupledSizeClassIndex,
+                                                          std::uint32_t& coupledSizeClassIndex,
                                                           eFeedingStrategy& feedingStrategy) {
   std::float64_t feedingProbability = 0;
   if (thisSizeClass.getPopulationSize() != 0) {
     std::vector<std::float64_t> effectivePreyVolumes(numberOfSizeClasses_, 0);
     PreyVolumes preyVolumes = calcEffectivePreyVolumes(sizeClasses, thisSizeClass, effectivePreyVolumes);
-    coupledSizeClassIndex = setCoupledSizeClassIndex(effectivePreyVolumes, sizeClasses, preyVolumes, feedingStrategy);
+    coupledSizeClassIndex = setCoupledSizeClassIndex(effectivePreyVolumes, preyVolumes, feedingStrategy);
     feedingProbability = functions_.functionalResponse(thisSizeClass.getIndex(), preyVolumes.total);
   }
   return feedingProbability;
@@ -90,7 +90,6 @@ PreyVolumes EncounterAlgorithm::calcEffectivePreyVolumes(std::vector<SizeClass>&
 
 std::uint32_t EncounterAlgorithm::setCoupledSizeClassIndex(
                                     const std::vector<std::float64_t>& effectiveSizeClassVolumes,
-                                    std::vector<SizeClass>& sizeClasses,
                                     PreyVolumes& preyVolumes,
                                     eFeedingStrategy& feedingStrategy) {
   std::uint32_t coupledSizeClassIndex = 0;

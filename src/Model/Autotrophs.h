@@ -27,7 +27,7 @@ class Autotrophs {
   void subtractFromVolume(const std::float64_t);
 
   std::float64_t getVolume();
-  const std::float64_t getVolume() const;
+  std::float64_t getVolume() const;
 
  private:
   Nutrient& nutrient_;

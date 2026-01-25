@@ -74,6 +74,10 @@ class SizeClass {
   void killHeterotroph(const std::uint32_t);
   void removeDead();
 
+  std::float64_t getSizeClassUpper();
+  std::float64_t getSizeClassMidPoint();
+  std::float64_t getSizeClassLower();
+
  private:
   void starve(const std::uint32_t);
 

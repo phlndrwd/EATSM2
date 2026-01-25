@@ -18,7 +18,7 @@ Nutrient::Nutrient(std::uint32_t dataSize) :
   std::cout << "Nutrient pool created." << std::endl;
 }
 
-const std::float64_t Nutrient::getVolume() const {
+std::float64_t Nutrient::getVolume() const {
   return volume_;
 }
 

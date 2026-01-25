@@ -21,7 +21,7 @@ class Nutrient {
  public:
   Nutrient(std::uint32_t);
 
-  const std::float64_t getVolume() const;
+  std::float64_t getVolume() const;
 
   void addToVolume(const std::float64_t);
   void subtractFromVolume(const std::float64_t);

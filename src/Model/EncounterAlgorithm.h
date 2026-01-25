@@ -36,10 +36,10 @@ class EncounterAlgorithm {
 
  private:
   std::float64_t calcFeedingProbability(std::vector<SizeClass>&, SizeClass&,
-                                        std::uint32_t, eFeedingStrategy&);
+                                        std::uint32_t&, eFeedingStrategy&);
   PreyVolumes calcEffectivePreyVolumes(std::vector<SizeClass>&, SizeClass&,
                                        std::vector<std::float64_t>&);
-  std::uint32_t setCoupledSizeClassIndex(const std::vector<std::float64_t>&, std::vector<SizeClass>&,
+  std::uint32_t setCoupledSizeClassIndex(const std::vector<std::float64_t>&,
                                         PreyVolumes&, eFeedingStrategy&);
   void feedFromAutotrophs(Heterotroph&);
   void feedFromHeterotrophs(Heterotroph&, SizeClass&);
