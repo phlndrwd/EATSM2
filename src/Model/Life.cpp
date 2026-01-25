@@ -43,6 +43,8 @@ Life::Life(Nutrient& nutrient, Parameters& params) :
 }
 
 void Life::update() {
+  autotrophs_.update();
+
   /// Feeding - subset
   std::for_each(std::begin(sizeClasses_), std::end(sizeClasses_), [&](SizeClass& thisSizeClass) {
     algorithm_.update(sizeClasses_, thisSizeClass);
@@ -62,7 +64,7 @@ void Life::update() {
 
   std::for_each(std::begin(sizeClasses_), std::end(sizeClasses_), [&](SizeClass& thisSizeClass) {
     //thisSizeClass.reproduction();
-    const std::uint64_t sizeClassHeterotrophFrequency = thisSizeClass.getHeterotrophs().getLivingCount();
+    const std::uint64_t sizeClassHeterotrophFrequency = thisSizeClass.getPopulationSize();
     varTotalHeterotrophFrequency_ += sizeClassHeterotrophFrequency;
     varTotalHeterotrophVolume_ += thisSizeClass.getVolume();
     //thisSizeClass.whoIsMoving(movingHeterotrophs_);
@@ -78,7 +80,7 @@ void Life::moveHeterotrophs() {
   //    auto sizeClassDownIt = std::next(sizeClasses_.rbegin(), searchOffSet);
   //    std::find_if(sizeClassDownIt, sizeClasses_.rend(), [&](SizeClass& prevSizeClass) {
   //      if (movingHeterotroph.heterotroph->getVolumeActual() >= params.getSizeClassBoundary(prevSizeClass.getIndex())) {
-  //        prevSizeClass.getHeterotrophs().addHeterotroph(std::move(movingHeterotroph.heterotroph));
+  //        prevSizeClass.addHeterotroph(std::move(movingHeterotroph.heterotroph));
   //        return true;
   //      } else {
   //        return false;
@@ -89,7 +91,7 @@ void Life::moveHeterotrophs() {
   //      auto sizeClassUpIt = std::next(sizeClasses_.begin(), searchOffSet);
   //      std::find_if(sizeClassUpIt, sizeClasses_.end(), [&](SizeClass& nextSizeClass) {
   //        if (movingHeterotroph.heterotroph->getVolumeActual() >= params.getSizeClassBoundary(nextSizeClass.getIndex())) {
-  //            nextSizeClass.getHeterotrophs().addHeterotroph(std::move(movingHeterotroph.heterotroph));
+  //            nextSizeClass.addHeterotroph(std::move(movingHeterotroph.heterotroph));
   //            return true;
   //          } else {
   //            return false;

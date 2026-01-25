@@ -129,16 +129,18 @@ std::uint32_t SizeClass::getPopulationSize() const {
   return heterotrophs_.getLivingCount();
 }
 
-std::uint32_t SizeClass::getRandomHeterotrophIndex() {
-  return random_.getUniformInt(0, heterotrophs_.getLivingCount() - 1);
-}
-
 const Heterotroph& SizeClass::getHeterotroph(const std::uint32_t index) const {
   return heterotrophs_.keyHeterotroph(index);
 }
 
 Heterotroph& SizeClass::getHeterotroph(const std::uint32_t index) {
   return heterotrophs_.keyHeterotroph(index);
+}
+
+Heterotroph& SizeClass::getRandomHeterotroph(std::uint32_t& livingIndex) {
+  std::uint32_t randomIndex = random_.getUniformInt(0, heterotrophs_.getLivingCount() - 1);
+  livingIndex = heterotrophs_.getLivingIndex(randomIndex);
+  return heterotrophs_.keyHeterotroph(livingIndex);
 }
 
 std::uint32_t SizeClass::getLivingIndex(const std::uint32_t index) {
@@ -156,4 +158,12 @@ std::float64_t SizeClass::getVolume() const {
     volume += heterotroph.getVolumeActual();
   });
   return volume;
+}
+
+void SizeClass::addHeterotroph(std::unique_ptr<Heterotroph> heterotroph) {
+  heterotrophs_.addHeterotroph(std::move(heterotroph));
+}
+
+void SizeClass::removeHeterotroph(const std::uint32_t livingIndex) {
+  heterotrophs_.removeHeterotroph(livingIndex);
 }

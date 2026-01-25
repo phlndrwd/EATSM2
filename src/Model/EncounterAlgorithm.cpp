@@ -48,7 +48,7 @@ std::float64_t EncounterAlgorithm::calcFeedingProbability(std::vector<SizeClass>
                                                           std::uint32_t coupledSizeClassIndex,
                                                           eFeedingStrategy& feedingStrategy) {
   std::float64_t feedingProbability = 0;
-  if (thisSizeClass.getHeterotrophs().getLivingCount() != 0) {
+  if (thisSizeClass.getPopulationSize() != 0) {
     std::vector<std::float64_t> effectivePreyVolumes(numberOfSizeClasses_, 0);
     PreyVolumes preyVolumes = calcEffectivePreyVolumes(sizeClasses, thisSizeClass, effectivePreyVolumes);
     coupledSizeClassIndex = setCoupledSizeClassIndex(effectivePreyVolumes, sizeClasses, preyVolumes, feedingStrategy);
@@ -63,7 +63,7 @@ PreyVolumes EncounterAlgorithm::calcEffectivePreyVolumes(std::vector<SizeClass>&
   PreyVolumes preyVolumes;
   for(std::uint32_t preyIndex = 0; preyIndex < numberOfSizeClasses_; ++preyIndex) {
     SizeClass& otherSizeClass = sizeClasses[preyIndex];
-    std::size_t populationSize = otherSizeClass.getHeterotrophs().getLivingCount();
+    std::size_t populationSize = otherSizeClass.getPopulationSize();
     if (&thisSizeClass == &otherSizeClass) {
       populationSize--;  // Reduce population size for a single individual for this size class.
     }
@@ -114,19 +114,16 @@ std::uint32_t EncounterAlgorithm::setCoupledSizeClassIndex(
 
 void EncounterAlgorithm::feedFromHeterotrophs(Heterotroph& predator,
                                               SizeClass& coupledSizeClass) {
-  if (coupledSizeClass.getHeterotrophs().getLivingCount() != 0) {
-    std::uint32_t randomIndex = coupledSizeClass.getRandomHeterotrophIndex();
-    std::uint32_t livingIndex = coupledSizeClass.getLivingIndex(randomIndex);
-    Heterotroph& prey = coupledSizeClass.getHeterotroph(livingIndex);
+  if (coupledSizeClass.getPopulationSize() != 0) {
+    std::uint32_t preyIndex;
+    Heterotroph& prey = coupledSizeClass.getRandomHeterotroph(preyIndex);
     while(&predator == &prey) {  // Predators cannot eat themselves
-      randomIndex = coupledSizeClass.getRandomHeterotrophIndex();
-      livingIndex = coupledSizeClass.getLivingIndex(randomIndex);
-      prey = coupledSizeClass.getHeterotroph(livingIndex);
+      prey = coupledSizeClass.getRandomHeterotroph(preyIndex);
     }
     std::float64_t preyVolume = prey.getVolumeActual();
     std::float64_t waste = predator.consumePreyVolume(preyVolume);
     nutrient_->addToVolume(waste);
-    coupledSizeClass.getHeterotrophs().removeHeterotroph(livingIndex);
+    coupledSizeClass.removeHeterotroph(preyIndex);
   }
 }
 
