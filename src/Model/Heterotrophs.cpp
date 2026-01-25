@@ -39,17 +39,11 @@ std::unique_ptr<Heterotroph> Heterotrophs::ownHeterotroph(const std::uint32_t in
   assert(!alive_.empty());
   assert(index < heterotrophs_.size());
   assert(heterotrophs_[index] != nullptr);
-
-  //auto it = std::find(alive_.begin(), alive_.end(), index);
-  //assert(it != alive_.end());
-  //alive_.erase(it);
-  //dead_.push(index);
   return std::move(heterotrophs_[index]);
 }
 
 void Heterotrophs::removeHeterotroph(const std::uint32_t index) {
   assert(!alive_.empty());
-
   auto it = std::find(alive_.begin(), alive_.end(), index);
   assert(it != alive_.end());
 

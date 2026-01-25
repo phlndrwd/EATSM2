@@ -61,7 +61,7 @@ void Life::update() {
   varTotalHeterotrophVolume_ = 0;
 
   std::for_each(std::begin(sizeClasses_), std::end(sizeClasses_), [&](SizeClass& thisSizeClass) {
-    //thisSizeClass.reproduction();
+    thisSizeClass.reproduction();
     varTotalHeterotrophFrequency_ += thisSizeClass.getPopulationSize();
     varTotalHeterotrophVolume_ += thisSizeClass.getVolume();
     //thisSizeClass.whoIsMoving(movingHeterotrophs_);
@@ -74,14 +74,14 @@ void Life::moveHeterotrophs() {
     const auto volume = moving.heterotroph->getVolumeActual();
     if (moving.growthTrajectory == eGrowing) {
       for (std::uint32_t index = moving.prevSizeClassIndex + 1; index < sizeClasses_.size(); ++index) {
-        if (volume >= params_.getSizeClassBoundary(index)) {
+        if (volume >= sizeClasses_[index].getSizeClassLower()) {
           sizeClasses_[index].addHeterotroph(std::move(moving.heterotroph));
           break;
         }
       }
     } else if (moving.growthTrajectory == eShrinking) {
       for (std::int32_t index = static_cast<std::int32_t>(moving.prevSizeClassIndex) - 1; index >= 0;  --index) {
-        if (volume >= params_.getSizeClassBoundary(index)) {
+        if (volume < sizeClasses_[index].getSizeClassUpper()) {
           sizeClasses_[index].addHeterotroph(std::move(moving.heterotroph));
           break;
         }
