@@ -32,7 +32,8 @@ Heterotroph::Heterotroph(const std::float64_t& traitValue,
 	volumeActual_(volumeHeritable_),
 	volumeMinimum_(volumeHeritable_ * consts::kMinimumFractionalVolume),
 	volumeReproduction_(consts::kReproductionFactor * volumeHeritable_),
-	assimilationEfficiency_(assimilationEfficiency) {
+        assimilationEfficiency_(assimilationEfficiency),
+        isAlive_(true) {
   volumeReproduction_ = consts::kReproductionFactor * volumeHeritable_;
   starvationMultiplier_ = 1. / (volumeHeritable_ - volumeMinimum_);
 }
@@ -45,14 +46,16 @@ Heterotroph::Heterotroph(const Traits& heritableTraits, const std::float64_t& vo
         volumeHeritable_(volumeHeritable),
         volumeActual_(volumeActual),
         volumeMinimum_(volumeMinimum),
-        assimilationEfficiency_(assimilationEfficiency) {
+        assimilationEfficiency_(assimilationEfficiency),
+        isAlive_(true) {
   volumeReproduction_ = consts::kReproductionFactor * volumeHeritable_;
   starvationMultiplier_ = 1. / (volumeHeritable_ - volumeMinimum_);
 }
 
 Heterotroph::Heterotroph(const Heterotroph& heterotroph) :
         traits_(heterotroph.traits_),
-        assimilationEfficiency_(heterotroph.assimilationEfficiency_) {
+        assimilationEfficiency_(heterotroph.assimilationEfficiency_),
+        isAlive_(true) {
   assert(this != &heterotroph);
   volumeHeritable_ = heterotroph.volumeHeritable_;
   volumeMinimum_ = heterotroph.volumeMinimum_;
@@ -63,7 +66,8 @@ Heterotroph::Heterotroph(const Heterotroph& heterotroph) :
 
 Heterotroph::Heterotroph(const Heterotroph&& heterotroph) noexcept :
         traits_(std::move(heterotroph.traits_)),
-        assimilationEfficiency_(std::move(heterotroph.assimilationEfficiency_)) {
+        assimilationEfficiency_(std::move(heterotroph.assimilationEfficiency_)),
+        isAlive_(true) {
   assert(this != &heterotroph);
   volumeHeritable_ = std::move(heterotroph.volumeHeritable_);
   volumeMinimum_ = std::move(heterotroph.volumeMinimum_);
@@ -80,6 +84,7 @@ Heterotroph& Heterotroph::operator=(const Heterotroph& heterotroph) {
     volumeReproduction_ = heterotroph.volumeReproduction_;
     volumeActual_ = heterotroph.volumeActual_;
     starvationMultiplier_ = heterotroph.starvationMultiplier_;
+    isAlive_ = true;
   }
   return *this;
 }
@@ -93,6 +98,7 @@ Heterotroph& Heterotroph::operator=(const Heterotroph&& heterotroph) {
     volumeReproduction_ = std::move(heterotroph.volumeReproduction_);
     volumeActual_ = std::move(heterotroph.volumeActual_);
     starvationMultiplier_ = std::move(heterotroph.starvationMultiplier_);
+    isAlive_ = true;
   }
   return *this;
 }
@@ -119,7 +125,7 @@ std::unique_ptr<Heterotroph> Heterotroph::getChild(RandomSimple& random, const s
   }
   volumeActual_ = volumeActual_ - childVolumeActual;
 
-  return std::move(std::make_unique<Heterotroph>(std::move(childTraits), std::move(childVolumeHeritable), std::move(childVolumeActual), std::move(childVolumeMinimum), assimilationEfficiency_));
+  return std::make_unique<Heterotroph>(std::move(childTraits), std::move(childVolumeHeritable), std::move(childVolumeActual), std::move(childVolumeMinimum), assimilationEfficiency_);
 }
 
 std::float64_t Heterotroph::consumePreyVolume(const std::float64_t preyVolume) {
@@ -158,4 +164,12 @@ std::float64_t Heterotroph::getVolumeReproduction() const {
 
 std::float64_t Heterotroph::getStarvationMultiplier() const {
   return starvationMultiplier_;
+}
+
+std::uint8_t Heterotroph::isAlive() const {
+  return isAlive_;
+}
+
+void Heterotroph::kill() {
+  isAlive_ = false;
 }

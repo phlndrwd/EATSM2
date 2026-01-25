@@ -44,6 +44,9 @@ class Heterotroph {
 
   std::float64_t getStarvationMultiplier() const;
 
+  std::uint8_t isAlive() const;
+  void kill();
+
  private:
   Traits traits_;
   std::float64_t volumeHeritable_;
@@ -54,6 +57,8 @@ class Heterotroph {
 
   std::float64_t assimilationEfficiency_;
   std::float64_t starvationMultiplier_;
+
+  std::uint8_t isAlive_;
 };
 
 #endif

@@ -39,7 +39,7 @@ void EncounterAlgorithm::update(std::vector<SizeClass>& sizeClasses) {
         if (feedingStrategy == eHerbivore){
           feedFromAutotrophs(predator);
         } else if (feedingStrategy == eCarnivore) {
-          //feedFromHeterotrophs(predator, coupledSizeClass);
+          feedFromHeterotrophs(predator, coupledSizeClass);
         }
       }
     });
@@ -119,12 +119,14 @@ void EncounterAlgorithm::feedFromHeterotrophs(Heterotroph& predator,
   if (coupledSizeClass.getPopulationSize() != 0) {
     std::uint32_t preyIndex;
     Heterotroph& prey = coupledSizeClass.getRandomHeterotroph(preyIndex);
-    while(&predator == &prey) {  // Predators cannot eat themselves
+    // Predators cannot eat themselves or eat those who've already been eaten
+    while(&predator == &prey || prey.isAlive() == false) {
       prey = coupledSizeClass.getRandomHeterotroph(preyIndex);
     }
     std::float64_t preyVolume = prey.getVolumeActual();
     std::float64_t waste = predator.consumePreyVolume(preyVolume);
     nutrient_->addToVolume(waste);
+    prey.kill();
     coupledSizeClass.killHeterotroph(preyIndex);
   }
 }
