@@ -74,7 +74,6 @@ void SizeClass::metabolisation() {
       std::float64_t waste = heterotroph.metabolise(metabolicDeduction);
       nutrient_->addToVolume(waste);
     } else {
-      //starve(index);
       nutrient_->addToVolume(heterotroph.getVolumeActual());
       deadIndices_.push_back(index);
     }
@@ -86,7 +85,6 @@ void SizeClass::starvation() {
   heterotrophs_.subset(random_, [&](std::uint32_t randomIndex) {
     Heterotroph& heterotroph = heterotrophs_.keyHeterotroph(randomIndex);
     if (random_.getUniform() <= functions_.calcStarvationProbability(heterotroph)) {
-      //starve(randomIndex);
       nutrient_->addToVolume(heterotroph.getVolumeActual());
       deadIndices_.push_back(randomIndex);
     }
@@ -120,7 +118,7 @@ void SizeClass::whoIsMoving(std::vector<MovingHeterotroph>& movingHeterotrophs) 
                                    currentIndex, index_, eGrowing));
     }
   });
-  //removeDead();
+  removeDead();
 }
 
 void SizeClass::starve(const std::uint32_t index) {
