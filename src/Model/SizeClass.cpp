@@ -74,18 +74,24 @@ void SizeClass::metabolisation() {
       std::float64_t waste = heterotroph.metabolise(metabolicDeduction);
       nutrient_->addToVolume(waste);
     } else {
-      starve(index);
+      //starve(index);
+      nutrient_->addToVolume(heterotroph.getVolumeActual());
+      deadIndices_.push_back(index);
     }
   });
+  removeDead();
 }
 
 void SizeClass::starvation() {
   heterotrophs_.subset(random_, [&](std::uint32_t randomIndex) {
     Heterotroph& heterotroph = heterotrophs_.keyHeterotroph(randomIndex);
     if (random_.getUniform() <= functions_.calcStarvationProbability(heterotroph)) {
-      starve(randomIndex);
+      //starve(randomIndex);
+      nutrient_->addToVolume(heterotroph.getVolumeActual());
+      deadIndices_.push_back(randomIndex);
     }
   });
+  removeDead();
 }
 
 void SizeClass::reproduction() {
@@ -109,14 +115,12 @@ void SizeClass::whoIsMoving(std::vector<MovingHeterotroph>& movingHeterotrophs) 
     if (heterotroph.getVolumeActual() < sizeClassLower_ && index_ > 0) {  // Zero is smallest size class
       movingHeterotrophs.push_back(MovingHeterotroph(heterotrophs_.ownHeterotroph(currentIndex),
                                    currentIndex, index_, eShrinking));
-      deadIndices_.push_back(currentIndex);
     } else if (heterotroph.getVolumeActual() >= sizeClassUpper_ && index_ < numberOfSizeClasses_ - 1) {
       movingHeterotrophs.push_back(MovingHeterotroph(heterotrophs_.ownHeterotroph(currentIndex),
                                    currentIndex, index_, eGrowing));
-      deadIndices_.push_back(currentIndex);
     }
   });
-  removeDead();
+  //removeDead();
 }
 
 void SizeClass::starve(const std::uint32_t index) {
@@ -142,7 +146,7 @@ Heterotroph& SizeClass::getHeterotroph(const std::uint32_t index) {
 }
 
 Heterotroph& SizeClass::getRandomHeterotroph(std::uint32_t& livingIndex) {
-  std::uint32_t randomIndex = random_.getUniformInt(0, heterotrophs_.getLivingCount() - 1);
+  std::uint32_t randomIndex = random_.getUniformInt(heterotrophs_.getLivingCount() - 1);
   livingIndex = heterotrophs_.getLivingIndex(randomIndex);
   return heterotrophs_.keyHeterotroph(livingIndex);
 }
@@ -178,7 +182,6 @@ void SizeClass::removeDead() {
   }
   deadIndices_.clear();
 }
-
 
 std::float64_t SizeClass::getSizeClassUpper() {
   return sizeClassUpper_;

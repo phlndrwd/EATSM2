@@ -32,15 +32,14 @@ void EncounterAlgorithm::update(std::vector<SizeClass>& sizeClasses) {
     std::uint32_t coupledSizeClassIndex = 0;
     std::float64_t feedingProbability = calcFeedingProbability(sizeClasses, thisSizeClass, coupledSizeClassIndex, feedingStrategy);
     SizeClass& coupledSizeClass = sizeClasses[coupledSizeClassIndex];
-    thisSizeClass.getHeterotrophs().subset(random_, [&](const std::uint32_t randomIndex) {
+    thisSizeClass.getHeterotrophs().subset(random_, [&](const std::uint32_t index) {
       if (random_.getUniform() <= feedingProbability) {
-        std::uint32_t livingIndex = thisSizeClass.getLivingIndex(randomIndex);
-        Heterotroph& predator = thisSizeClass.getHeterotroph(livingIndex);
+        Heterotroph& predator = thisSizeClass.getHeterotroph(index);
 
         if (feedingStrategy == eHerbivore){
           feedFromAutotrophs(predator);
         } else if (feedingStrategy == eCarnivore) {
-          feedFromHeterotrophs(predator, coupledSizeClass);
+          //feedFromHeterotrophs(predator, coupledSizeClass);
         }
       }
     });

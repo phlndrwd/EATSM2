@@ -57,16 +57,15 @@ void Life::update() {
   });
   /// Reproduction - full set.
   /// Collect data at the same time.
-  //varTotalHeterotrophFrequency_ = 0;
-  //varTotalHeterotrophVolume_ = 0;
+  varTotalHeterotrophFrequency_ = 0;
+  varTotalHeterotrophVolume_ = 0;
 
-  //std::for_each(std::begin(sizeClasses_), std::end(sizeClasses_), [&](SizeClass& thisSizeClass) {
-  //  thisSizeClass.reproduction();
-  //  const std::uint64_t sizeClassHeterotrophFrequency = thisSizeClass.getPopulationSize();
-  //  varTotalHeterotrophFrequency_ += sizeClassHeterotrophFrequency;
-  //  varTotalHeterotrophVolume_ += thisSizeClass.getVolume();
-  //  thisSizeClass.whoIsMoving(movingHeterotrophs_);
-  //});
+  std::for_each(std::begin(sizeClasses_), std::end(sizeClasses_), [&](SizeClass& thisSizeClass) {
+    //thisSizeClass.reproduction();
+    varTotalHeterotrophFrequency_ += thisSizeClass.getPopulationSize();
+    varTotalHeterotrophVolume_ += thisSizeClass.getVolume();
+    //thisSizeClass.whoIsMoving(movingHeterotrophs_);
+  });
   //moveHeterotrophs();
 }
 
