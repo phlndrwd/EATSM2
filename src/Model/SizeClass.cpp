@@ -113,9 +113,11 @@ void SizeClass::whoIsMoving(std::vector<MovingHeterotroph>& movingHeterotrophs) 
     if (heterotroph.getVolumeActual() < sizeClassLower_ && index_ > 0) {  // Zero is smallest size class
       movingHeterotrophs.push_back(MovingHeterotroph(heterotrophs_.ownHeterotroph(currentIndex),
                                    index_, eShrinking));
+      killHeterotroph(currentIndex);
     } else if (heterotroph.getVolumeActual() >= sizeClassUpper_ && index_ < numberOfSizeClasses_ - 1) {
       movingHeterotrophs.push_back(MovingHeterotroph(heterotrophs_.ownHeterotroph(currentIndex),
                                    index_, eGrowing));
+      killHeterotroph(currentIndex);
     }
   });
   removeDead();
