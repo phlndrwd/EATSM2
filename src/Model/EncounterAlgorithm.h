@@ -14,7 +14,7 @@
 
 #include "Functions.h"
 #include "Parameters.h"
-#include "SizeClass.h"
+#include "HeterotrophPopulation.h"
 
 enum eFeedingStrategy {
   eNotEating,
@@ -32,17 +32,17 @@ class EncounterAlgorithm {
  public:
   EncounterAlgorithm(Autotrophs*, Nutrient*, Parameters*, const std::uint32_t&);
 
-  void update(std::vector<SizeClass>&);
+  void update(std::vector<HeterotrophPopulation>&);
 
  private:
-  std::float64_t calcFeedingProbability(std::vector<SizeClass>&, SizeClass&,
+  std::float64_t calcFeedingProbability(std::vector<HeterotrophPopulation>&, HeterotrophPopulation&,
                                         std::uint32_t&, eFeedingStrategy&);
-  PreyVolumes calcEffectivePreyVolumes(std::vector<SizeClass>&, SizeClass&,
+  PreyVolumes calcEffectivePreyVolumes(std::vector<HeterotrophPopulation>&, HeterotrophPopulation&,
                                        std::vector<std::float64_t>&);
   std::uint32_t setCoupledSizeClassIndex(const std::vector<std::float64_t>&,
                                         PreyVolumes&, eFeedingStrategy&);
   void feedFromAutotrophs(Heterotroph&);
-  void feedFromHeterotrophs(Heterotroph&, SizeClass&);
+  void feedFromHeterotrophs(Heterotroph&, HeterotrophPopulation&);
 
   Autotrophs* autotrophs_;
   Nutrient* nutrient_;

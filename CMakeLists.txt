@@ -51,7 +51,7 @@ add_executable(eatsm2
   src/Model/Environment.cpp
   src/Model/Functions.cpp
   src/Model/Heterotroph.cpp
-  src/Model/Heterotrophs.cpp
+  src/Model/HeterotrophPopulation.cpp
   src/Model/Life.cpp
   src/Model/Nutrient.cpp
   src/Model/SizeClass.cpp

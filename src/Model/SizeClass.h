@@ -7,97 +7,97 @@
 * which can be obtained from https://opensource.org/license/bsd-3-clause/.    *
 ******************************************************************************/
 
-#ifndef SIZECLASS_H
-#define SIZECLASS_H
+#ifndef HETEROTROPHS_H
+#define HETEROTROPHS_H
 
-#include <stdfloat>
+#include <algorithm>
+#include <cmath>
+#include <cstdint>
+#include <functional>
+#include <memory>
+#include <queue>
 #include <vector>
 
-#include "Autotrophs.h"
 #include "Heterotroph.h"
-#include "Functions.h"
-#include "Heterotrophs.h"
 #include "Nutrient.h"
 #include "Parameters.h"
 #include "RandomSimple.h"
 
-enum eGrowthTrajectory {
-  eStatic,
-  eGrowing,
-  eShrinking
-};
-
-struct MovingHeterotroph {
-  std::unique_ptr<Heterotroph> heterotroph;
-  std::uint32_t prevSizeClassIndex;
-  eGrowthTrajectory growthTrajectory;
-  MovingHeterotroph(std::unique_ptr<Heterotroph> _heterotroph,
-                    std::uint32_t _prevSizeClassIndex, eGrowthTrajectory _growthTrajectory):
-      heterotroph(std::move(_heterotroph)), prevSizeClassIndex(_prevSizeClassIndex),
-      growthTrajectory(_growthTrajectory) {}
-};
+namespace {
+std::int32_t roundWithProbability(RandomSimple& random, const std::float64_t value) {
+  std::int32_t flooredValue = static_cast<std::int32_t>(std::floor(value));
+  std::float64_t probability = value - flooredValue;
+  if (random.getUniform() < probability) {
+    return flooredValue + 1;
+  } else {
+    return flooredValue;
+  }
+}
+}  // anonymous namespace
 
 class SizeClass {
- public:
+public:
   SizeClass() = delete;
   SizeClass(const SizeClass&) = delete;
   SizeClass& operator=(const SizeClass&) = delete;
 
   SizeClass(SizeClass&&) noexcept = default;
   SizeClass& operator=(SizeClass&&) noexcept = default;
+  explicit SizeClass(Nutrient&, Parameters&, const std::uint32_t);
 
-  explicit SizeClass(Nutrient*, Parameters*, const std::float64_t,
-                     const std::uint32_t, const std::uint32_t);
+  void forEachHeterotrophIndex(auto&& func) {
+    std::for_each(std::begin(alive_), std::end(alive_), [&](const std::uint32_t index) {
+      func(index);
+    });
+  }
 
-  void populate(const std::float64_t, const std::float64_t,
-                const std::float64_t, const std::float64_t);
+  void forEachHeterotrophIndex(auto&& func) const {
+    std::for_each(std::begin(alive_), std::end(alive_), [&](const std::uint32_t index) {
+      func(index);
+    });
+  }
 
-  void metabolisation();
-  void starvation();
-  void reproduction();
-  void whoIsMoving(std::vector<MovingHeterotroph>&);
+  void subset(RandomSimple& random, auto&& func) {
+    std::uint32_t subsetCount = roundWithProbability(random, alive_.size() * subsetFraction_);
+    for (auto _ = subsetCount; _--;) {
+      std::uint32_t randomIndex = random.getUniformInt(alive_.size() - 1);
+      func(alive_[randomIndex]);
+    }
+  }
 
-  std::uint32_t getIndex() const;
-  std::uint32_t getPopulationSize() const;
-  std::uint32_t getLivingIndex(const std::uint32_t);
+  void forEachChild(auto&& func) {
+    for (auto& child : children_) {
+      func(std::move(child));
+    }
+  }
 
-  const Heterotroph& getHeterotroph(const std::uint32_t) const;
-  Heterotroph& getHeterotroph(const std::uint32_t);
-  Heterotroph& getRandomHeterotroph(std::uint32_t&);  // Store living index for possible removal
+  Heterotroph& keyHeterotroph(const std::uint32_t);
+  const Heterotroph& keyHeterotroph(const std::uint32_t) const;
 
-  Heterotrophs& getHeterotrophs();
-
-  std::float64_t getVolume() const;
+  std::unique_ptr<Heterotroph> ownHeterotroph(const std::uint32_t);
+  void removeHeterotroph(const std::uint32_t);
 
   void addHeterotroph(std::unique_ptr<Heterotroph>);
-  void killHeterotroph(const std::uint32_t);
-  void removeDead();
+  void addChild(std::unique_ptr<Heterotroph>);
+  void clearChildren();
 
-  std::float64_t getSizeClassUpper();
-  std::float64_t getSizeClassMidPoint();
-  std::float64_t getSizeClassLower();
+  std::vector<std::unique_ptr<Heterotroph>>& getHeterotrophs();
 
- private:
-  void starve(const std::uint32_t);
+  std::uint32_t getLivingCount() const;
+  std::uint32_t getDeadCount() const;
 
-  Nutrient* nutrient_;
-  Functions functions_;
+  std::uint32_t getLivingIndex(const std::uint32_t);
 
-  RandomSimple random_;
-  Heterotrophs heterotrophs_;
+private:
+  Nutrient& nutrient_;
 
-  std::vector<std::uint32_t> deadIndices_;
+  const std::float64_t subsetFraction_;
+  const std::uint32_t maxPopulation_;
 
-  const std::float64_t sizeClassUpper_;
-  const std::float64_t sizeClassMidPoint_;
-  const std::float64_t sizeClassLower_;
-
-  const std::float64_t& smallestVolumeExponent_;
-  const std::float64_t& largestVolumeExponent_;
-
-  const std::uint32_t index_;
-  const std::uint32_t numberOfSizeClasses_;
-
+  std::vector<std::unique_ptr<Heterotroph>> heterotrophs_;
+  std::vector<std::unique_ptr<Heterotroph>> children_;
+  std::vector<std::uint32_t> alive_;
+  std::queue<std::uint32_t> dead_;
 };
 
-#endif // SIZECLASS_H
+#endif // HETEROTROPHS_H

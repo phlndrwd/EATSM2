@@ -17,7 +17,7 @@
 #include "Nutrient.h"
 #include "Parameters.h"
 #include "RandomSimple.h"
-#include "SizeClass.h"
+#include "HeterotrophPopulation.h"
 
 #include "Buffer.h"
 
@@ -38,7 +38,7 @@ class Life {
   Autotrophs autotrophs_;
   RandomSimple random_;
   EncounterAlgorithm algorithm_;
-  std::vector<SizeClass> sizeClasses_;
+  std::vector<HeterotrophPopulation> sizeClasses_;
   std::vector<MovingHeterotroph> movingHeterotrophs_;
 
   std::uint32_t numberOfSizeClasses_;

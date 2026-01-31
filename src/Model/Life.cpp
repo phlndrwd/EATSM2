@@ -48,11 +48,11 @@ void Life::update() {
   /// Feeding - subset
   algorithm_.update(sizeClasses_);
   /// Metabolisation - full set
-  std::for_each(std::begin(sizeClasses_), std::end(sizeClasses_), [&](SizeClass& thisSizeClass) {
+  std::for_each(std::begin(sizeClasses_), std::end(sizeClasses_), [&](HeterotrophPopulation& thisSizeClass) {
     thisSizeClass.metabolisation();
   });
   /// Starvation - subset
-  std::for_each(std::begin(sizeClasses_), std::end(sizeClasses_), [&](SizeClass& thisSizeClass) {
+  std::for_each(std::begin(sizeClasses_), std::end(sizeClasses_), [&](HeterotrophPopulation& thisSizeClass) {
     thisSizeClass.starvation();
   });
   /// Reproduction - full set.
@@ -60,7 +60,7 @@ void Life::update() {
   varTotalHeterotrophFrequency_ = 0;
   varTotalHeterotrophVolume_ = 0;
 
-  std::for_each(std::begin(sizeClasses_), std::end(sizeClasses_), [&](SizeClass& thisSizeClass) {
+  std::for_each(std::begin(sizeClasses_), std::end(sizeClasses_), [&](HeterotrophPopulation& thisSizeClass) {
     thisSizeClass.reproduction();
     varTotalHeterotrophFrequency_ += thisSizeClass.getPopulationSize();
     varTotalHeterotrophVolume_ += thisSizeClass.getVolume();

@@ -26,12 +26,12 @@ EncounterAlgorithm::EncounterAlgorithm(Autotrophs* autotrophs, Nutrient* nutrien
     autotrophSizeIndex_(consts::kAutotrophSizeIndex),
     autotrophCellSize_(params->getAutotrophCellSize()) {}
 
-void EncounterAlgorithm::update(std::vector<SizeClass>& sizeClasses) {
-  std::for_each(std::begin(sizeClasses), std::end(sizeClasses), [&](SizeClass& thisSizeClass) {
+void EncounterAlgorithm::update(std::vector<HeterotrophPopulation>& sizeClasses) {
+  std::for_each(std::begin(sizeClasses), std::end(sizeClasses), [&](HeterotrophPopulation& thisSizeClass) {
     eFeedingStrategy feedingStrategy = eNotEating;
     std::uint32_t coupledSizeClassIndex = 0;
     std::float64_t feedingProbability = calcFeedingProbability(sizeClasses, thisSizeClass, coupledSizeClassIndex, feedingStrategy);
-    SizeClass& coupledSizeClass = sizeClasses[coupledSizeClassIndex];
+    HeterotrophPopulation& coupledSizeClass = sizeClasses[coupledSizeClassIndex];
     thisSizeClass.getHeterotrophs().subset(random_, [&](const std::uint32_t index) {
       if (random_.getUniform() <= feedingProbability) {
         Heterotroph& predator = thisSizeClass.getHeterotroph(index);
@@ -47,7 +47,7 @@ void EncounterAlgorithm::update(std::vector<SizeClass>& sizeClasses) {
   });
 }
 
-std::float64_t EncounterAlgorithm::calcFeedingProbability(std::vector<SizeClass>& sizeClasses, SizeClass& thisSizeClass,
+std::float64_t EncounterAlgorithm::calcFeedingProbability(std::vector<HeterotrophPopulation>& sizeClasses, HeterotrophPopulation& thisSizeClass,
                                                           std::uint32_t& coupledSizeClassIndex,
                                                           eFeedingStrategy& feedingStrategy) {
   std::float64_t feedingProbability = 0;
@@ -60,12 +60,12 @@ std::float64_t EncounterAlgorithm::calcFeedingProbability(std::vector<SizeClass>
   return feedingProbability;
 }
 
-PreyVolumes EncounterAlgorithm::calcEffectivePreyVolumes(std::vector<SizeClass>& sizeClasses,
-                                                        SizeClass& thisSizeClass,
+PreyVolumes EncounterAlgorithm::calcEffectivePreyVolumes(std::vector<HeterotrophPopulation>& sizeClasses,
+                                                        HeterotrophPopulation& thisSizeClass,
                                                         std::vector<std::float64_t>& effectivePreyVolumes) {
   PreyVolumes preyVolumes;
   for(std::uint32_t preyIndex = 0; preyIndex < numberOfSizeClasses_; ++preyIndex) {
-    SizeClass& otherSizeClass = sizeClasses[preyIndex];
+    HeterotrophPopulation& otherSizeClass = sizeClasses[preyIndex];
     std::size_t populationSize = otherSizeClass.getPopulationSize();
     if (&thisSizeClass == &otherSizeClass) {
       populationSize--;  // Reduce population size for a single individual for this size class.
@@ -115,7 +115,7 @@ std::uint32_t EncounterAlgorithm::setCoupledSizeClassIndex(
 }
 
 void EncounterAlgorithm::feedFromHeterotrophs(Heterotroph& predator,
-                                              SizeClass& coupledSizeClass) {
+                                              HeterotrophPopulation& coupledSizeClass) {
   if (coupledSizeClass.getPopulationSize() != 0) {
     std::uint32_t preyIndex;
     Heterotroph& prey = coupledSizeClass.getRandomHeterotroph(preyIndex);
