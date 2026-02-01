@@ -24,7 +24,9 @@ class Functions {
 
   std::float64_t calcMetabolicDeduction(const Heterotroph&) const;
   std::float64_t calcStarvationProbability(const Heterotroph&) const;
-  std::float64_t calcPreferenceForPrey(const std::float64_t&, const std::float64_t&) const;
+  // calcPreferenceForPrey is officially a function, but for efficiency is used only to pre-calculate preference matrices in Parameters
+
+  std::float64_t traitValueToVolume(const std::float64_t&);
 
  private:
   void calcPreferenceMatrices(Parameters&);
@@ -43,8 +45,6 @@ class Functions {
   const std::float64_t fractionalMetabolicExpense_;
   const std::float64_t metabolicIndex_;
   const std::float64_t numberOfSizeClasses_;
-
-  const std::float64_t preferenceDenominator_;
 };
 
 #endif

@@ -36,12 +36,11 @@ class Life {
   Parameters& params_;
 
   Autotrophs autotrophs_;
+  HeterotrophPopulation heterotrophs_;
+
   RandomSimple random_;
   EncounterAlgorithm algorithm_;
-  std::vector<HeterotrophPopulation> sizeClasses_;
   std::vector<MovingHeterotroph> movingHeterotrophs_;
-
-  std::uint32_t numberOfSizeClasses_;
 
   std::uint64_t varTotalHeterotrophFrequency_;
   std::float64_t varTotalHeterotrophVolume_;

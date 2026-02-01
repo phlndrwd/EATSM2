@@ -76,6 +76,8 @@ class Parameters {
   // Calculated parameters
   void calculate();
 
+  std::float64_t calcPreferenceForPrey(const std::float64_t&, const std::float64_t&) const;
+
   const std::uint32_t& getDataSize() const;
 
   const std::vector<std::vector<std::float64_t>>& getInterSizeClassPreferences() const;
@@ -84,7 +86,6 @@ class Parameters {
   std::vector<std::vector<std::float64_t>>& getInterSizeClassPreferences();
   std::vector<std::vector<std::float64_t>>& getInterSizeClassVolumes();
 
-  const std::vector<std::uint32_t>& getMaximumSizeClassPopulations() const;
   const std::uint32_t& getMaximumSizeClassPopulation(const std::uint32_t&) const;
 
   const std::vector<std::float64_t>& getSizeClassBoundaries() const;
@@ -100,6 +101,7 @@ class Parameters {
   const std::float64_t& getLargestVolumeExponent() const;
 
   const std::float64_t& getAutotrophCellSize() const;
+  const std::float64_t& getIndividualHeterotrophVolume() const;
 
  private:
   std::uint32_t randomSeed_;
@@ -150,6 +152,8 @@ class Parameters {
   std::float64_t largestVolumeExponent_;
 
   std::float64_t autotrophCellSize_;
+  std::float64_t individualHeterotrophVolume_;
+  std::float64_t preferenceDenominator_;
 };
 
 #endif

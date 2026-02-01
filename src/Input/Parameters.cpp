@@ -62,22 +62,26 @@ Parameters::Parameters(jino::Data& input):
 void Parameters::calculate() {
   dataSize_ = calcDataSize(maxTimeStep_, samplingRate_);
 
-  std::uint32_t numberOfSizeClasses = numberOfSizeClasses_;
   std::float64_t totalVolume = initialAutotrophicVolume_ + initialHeterotrophicVolume_;
   std::float64_t halfSaturationConstantFraction = halfSaturationConstantFraction_;
 
-  maximumSizeClassPopulations_.resize(numberOfSizeClasses, 0);
-  remainingVolumes_.resize(numberOfSizeClasses);
-  linearFeedingDenominators_.resize(numberOfSizeClasses);
-  halfSaturationConstants_.resize(numberOfSizeClasses);
-  sizeClassMidPoints_.resize(numberOfSizeClasses);
-  sizeClassBoundaries_.resize(numberOfSizeClasses + 1);
+  maximumSizeClassPopulations_.resize(numberOfSizeClasses_, 0);
+  remainingVolumes_.resize(numberOfSizeClasses_);
+  linearFeedingDenominators_.resize(numberOfSizeClasses_);
+  halfSaturationConstants_.resize(numberOfSizeClasses_);
+  sizeClassMidPoints_.resize(numberOfSizeClasses_);
+  sizeClassBoundaries_.resize(numberOfSizeClasses_ + 1);
 
   smallestVolumeExponent_ = std::log10(smallestIndividualVolume_);
   largestVolumeExponent_ = std::log10(largestIndividualVolume_);
 
-  std::float64_t sizeClassExponentIncrement = (largestVolumeExponent_ - smallestVolumeExponent_) / numberOfSizeClasses;
-  for (std::uint32_t sizeClassIndex = 0; sizeClassIndex < numberOfSizeClasses; ++sizeClassIndex) {
+  autotrophCellSize_ = sizeClassMidPoints_[consts::kAutotrophSizeIndex];
+  individualHeterotrophVolume_ = autotrophCellSize_ * preferredPreyVolumeRatio_;
+  preferenceDenominator_ = 2 * std::pow(preferenceFunctionWidth_, 2);
+
+  std::float64_t sizeClassExponentIncrement = (largestVolumeExponent_ - smallestVolumeExponent_) / numberOfSizeClasses_;
+
+  for (std::uint32_t sizeClassIndex = 0; sizeClassIndex < numberOfSizeClasses_; ++sizeClassIndex) {
     std::float64_t sizeClassMidPointExponent = smallestVolumeExponent_ + ((sizeClassIndex + 0.5) * sizeClassExponentIncrement);
     std::float64_t sizeClassBoundaryExponent = smallestVolumeExponent_ + (sizeClassIndex * sizeClassExponentIncrement);
 
@@ -88,11 +92,27 @@ void Parameters::calculate() {
     linearFeedingDenominators_[sizeClassIndex] = (2 * halfSaturationConstantFraction) * remainingVolumes_[sizeClassIndex];
     halfSaturationConstants_[sizeClassIndex] = halfSaturationConstantFraction * remainingVolumes_[sizeClassIndex];
     maximumSizeClassPopulations_[sizeClassIndex] = std::ceil(totalVolume / sizeClassMidPoints_[sizeClassIndex]);
-  }
-  std::float64_t sizeClassBoundaryExponent = smallestVolumeExponent_ + (numberOfSizeClasses * sizeClassExponentIncrement);
-  sizeClassBoundaries_[numberOfSizeClasses] = std::pow(10, sizeClassBoundaryExponent);
 
-  autotrophCellSize_ = sizeClassMidPoints_[consts::kAutotrophSizeIndex];
+    // Calculate inter-SizeClass preference matrices
+    std::float64_t preferenceSum = 0;
+    std::float64_t subjectVolumeMean = sizeClassMidPoints_[sizeClassIndex];
+    interSizeClassPreferences_.resize(numberOfSizeClasses_);
+    interSizeClassVolumes_.resize(numberOfSizeClasses_);
+    for (std::uint32_t referenceIndex = 0; referenceIndex < numberOfSizeClasses_; ++referenceIndex) {
+      std::float64_t referenceVolumeMean = sizeClassMidPoints_[referenceIndex];
+      std::float64_t preferenceForReferenceSizeClass = calcPreferenceForPrey(subjectVolumeMean, referenceVolumeMean);
+
+      preferenceSum += preferenceForReferenceSizeClass;
+      interSizeClassPreferences_[sizeClassIndex].push_back(preferenceForReferenceSizeClass);
+      interSizeClassVolumes_[sizeClassIndex].push_back(preferenceForReferenceSizeClass * referenceVolumeMean);
+    }
+  }
+  std::float64_t sizeClassBoundaryExponent = smallestVolumeExponent_ + (numberOfSizeClasses_ * sizeClassExponentIncrement);
+  sizeClassBoundaries_[numberOfSizeClasses] = std::pow(10, sizeClassBoundaryExponent);
+}
+
+std::float64_t Parameters::calcPreferenceForPrey(const std::float64_t& grazerVolume, const std::float64_t& preyVolume) const {
+  return std::exp(-std::pow((std::log((preferredPreyVolumeRatio_ * preyVolume) / grazerVolume)), 2) / preferenceDenominator_);
 }
 
 const std::uint32_t& Parameters::getRandomSeed() const {
@@ -199,10 +219,6 @@ std::vector<std::vector<std::float64_t>>& Parameters::getInterSizeClassVolumes()
   return interSizeClassVolumes_;
 }
 
-const std::vector<std::uint32_t>& Parameters::getMaximumSizeClassPopulations() const {
-  return maximumSizeClassPopulations_;
-}
-
 const std::uint32_t& Parameters::getMaximumSizeClassPopulation(const std::uint32_t& i) const {
   return maximumSizeClassPopulations_.at(i);
 }
@@ -241,4 +257,8 @@ const std::float64_t& Parameters::getLargestVolumeExponent() const {
 
 const std::float64_t& Parameters::getAutotrophCellSize() const {
   return autotrophCellSize_;
+}
+
+const std::float64_t& Parameters::getIndividualHeterotrophVolume() const {
+  return individualHeterotrophVolume_;
 }

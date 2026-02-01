@@ -47,10 +47,9 @@ class HeterotrophPopulation {
   HeterotrophPopulation& operator=(HeterotrophPopulation&&) noexcept = default;
 
   explicit HeterotrophPopulation(Nutrient*, Parameters*, const std::float64_t,
-                     const std::uint32_t, const std::uint32_t);
+                                 const std::uint32_t, const std::uint32_t);
 
-  void populate(const std::float64_t, const std::float64_t,
-                const std::float64_t, const std::float64_t);
+  void update();
 
   void metabolisation();
   void starvation();
@@ -73,30 +72,18 @@ class HeterotrophPopulation {
   void killHeterotroph(const std::uint32_t);
   void removeDead();
 
-  std::float64_t getSizeClassUpper();
-  std::float64_t getSizeClassMidPoint();
-  std::float64_t getSizeClassLower();
-
  private:
+  void populate(Parameters* params);
   void starve(const std::uint32_t);
 
   Nutrient* nutrient_;
   Functions functions_;
 
   RandomSimple random_;
-  SizeClass heterotrophs_;
-
+  std::vector<SizeClass> sizeClasses_;
   std::vector<std::uint32_t> deadIndices_;
 
-  const std::float64_t sizeClassUpper_;
-  const std::float64_t sizeClassMidPoint_;
-  const std::float64_t sizeClassLower_;
-
-  const std::float64_t& smallestVolumeExponent_;
-  const std::float64_t& largestVolumeExponent_;
-
-  const std::uint32_t index_;
-  const std::uint32_t numberOfSizeClasses_;
+  std::uint32_t numberOfSizeClasses_;
 
 };
 

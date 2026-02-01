@@ -15,7 +15,7 @@
 #include <cstdint>
 #include <functional>
 #include <memory>
-#include <queue>
+#include <stdfloat>
 #include <vector>
 
 #include "Heterotroph.h"
@@ -43,25 +43,26 @@ public:
 
   SizeClass(SizeClass&&) noexcept = default;
   SizeClass& operator=(SizeClass&&) noexcept = default;
-  explicit SizeClass(Nutrient&, Parameters&, const std::uint32_t);
+  explicit SizeClass(Parameters*, const std::uint32_t);
 
-  void forEachHeterotrophIndex(auto&& func) {
-    std::for_each(std::begin(alive_), std::end(alive_), [&](const std::uint32_t index) {
-      func(index);
-    });
+  void forEachHeterotroph(auto&& func) {
+    for (std::uint32_t i = 0; i < static_cast<std::uint32_t>(heterotrophs_.size()); ++i) {
+      func(i, *heterotrophs_[i].get());
+    }
   }
 
-  void forEachHeterotrophIndex(auto&& func) const {
-    std::for_each(std::begin(alive_), std::end(alive_), [&](const std::uint32_t index) {
-      func(index);
-    });
+  void forEachHeterotroph(auto&& func) const {
+    for (std::uint32_t i = 0; i < static_cast<std::uint32_t>(heterotrophs_.size()); ++i) {
+      func(i, *heterotrophs_[i].get());
+    }
   }
 
   void subset(RandomSimple& random, auto&& func) {
-    std::uint32_t subsetCount = roundWithProbability(random, alive_.size() * subsetFraction_);
+    std::uint32_t populationSize = static_cast<std::uint32_t>(heterotrophs_.size());
+    std::uint32_t subsetCount = roundWithProbability(random, populationSize * subsetFraction_);
     for (auto _ = subsetCount; _--;) {
-      std::uint32_t randomIndex = random.getUniformInt(alive_.size() - 1);
-      func(alive_[randomIndex]);
+      std::uint32_t randomIndex = random.getUniformInt(populationSize - 1);
+      func(randomIndex, *heterotrophs_[randomIndex].get());
     }
   }
 
@@ -81,23 +82,25 @@ public:
   void addChild(std::unique_ptr<Heterotroph>);
   void clearChildren();
 
-  std::vector<std::unique_ptr<Heterotroph>>& getHeterotrophs();
+  std::uint32_t getSize() const;
 
-  std::uint32_t getLivingCount() const;
-  std::uint32_t getDeadCount() const;
-
-  std::uint32_t getLivingIndex(const std::uint32_t);
+  const std::float64_t& getSizeClassUpper() const;
+  const std::float64_t& getSizeClassMidPoint() const;
+  const std::float64_t& getSizeClassLower() const;
 
 private:
-  Nutrient& nutrient_;
+  const std::uint32_t index_;
+  const std::uint32_t maxPopulation_;
+
+  const std::float64_t sizeClassUpper_;
+  const std::float64_t sizeClassMidPoint_;
+  const std::float64_t sizeClassLower_;
 
   const std::float64_t subsetFraction_;
-  const std::uint32_t maxPopulation_;
 
   std::vector<std::unique_ptr<Heterotroph>> heterotrophs_;
   std::vector<std::unique_ptr<Heterotroph>> children_;
-  std::vector<std::uint32_t> alive_;
-  std::queue<std::uint32_t> dead_;
+  std::vector<std::uint32_t> dead_;
 };
 
 #endif // HETEROTROPHS_H

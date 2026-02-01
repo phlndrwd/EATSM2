@@ -29,17 +29,6 @@ Life::Life(Nutrient& nutrient, Parameters& params) :
   std::float64_t idealInitialVolume = params.getSmallestIndividualVolume() * params.getPreferredPreyVolumeRatio();
   std::uint32_t heterotrophIndex = findSizeClassIndexFromVolume(idealInitialVolume);
 
-  std::uint32_t index = 0;
-  for (index = 0; index < numberOfSizeClasses_; ++index) {
-    const std::float64_t initialHeterotrophVolume = heterotrophIndex != index ? 0 : params.getInitialHeterotrophVolume();
-    sizeClasses_.emplace_back(
-      &nutrient_,
-      &params_,
-      initialHeterotrophVolume,
-      index,
-      random_.getUniformInt(1, UINT_MAX)
-    );
-  }
 }
 
 void Life::update() {
@@ -91,13 +80,3 @@ void Life::moveHeterotrophs() {
   movingHeterotrophs_.clear();
 }
 
-std::uint32_t Life::findSizeClassIndexFromVolume(const std::float64_t& volume) const {
-  std::uint32_t sizeClassIndex = 0;
-  for (std::uint32_t index = 1; index <= numberOfSizeClasses_; ++index) {
-    if (volume < params_.getSizeClassBoundary(index)) {
-      sizeClassIndex = index - 1;
-      break;
-    }
-  }
-  return sizeClassIndex;
-}

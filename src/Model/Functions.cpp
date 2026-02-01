@@ -24,33 +24,8 @@ Functions::Functions(Parameters& params) :
     preferenceFunctionWidth_(params.getPreferenceFunctionWidth()),
     fractionalMetabolicExpense_(params.getFractionalMetabolicExpense()),
     metabolicIndex_(params.getMetabolicIndex()),
-    numberOfSizeClasses_(params.getNumberOfSizeClasses()),
-    preferenceDenominator_(2 * std::pow(preferenceFunctionWidth_, 2)) {
+    numberOfSizeClasses_(params.getNumberOfSizeClasses()) {
   calcPreferenceMatrices(params);
-}
-
-void Functions::calcPreferenceMatrices(Parameters& params) {
-  const std::vector<std::float64_t>& sizeClassMidPoints = params.getSizeClassMidPoints();
-  // Calculating here to avoid circular dependeny in EcologicalData
-  std::vector<std::vector<std::float64_t>>& interSizeClassPreferences = params.getInterSizeClassPreferences();
-  std::vector<std::vector<std::float64_t>>& interSizeClassVolumes = params.getInterSizeClassVolumes();
-
-  interSizeClassPreferences.resize(numberOfSizeClasses_);
-  interSizeClassVolumes.resize(numberOfSizeClasses_);
-
-  for (std::uint32_t subjectIndex = 0; subjectIndex < numberOfSizeClasses_; ++subjectIndex) {
-    std::float64_t subjectVolumeMean = sizeClassMidPoints[subjectIndex];
-    std::float64_t preferenceSum = 0;
-
-    for (std::uint32_t referenceIndex = 0; referenceIndex < numberOfSizeClasses_; ++referenceIndex) {
-      std::float64_t referenceVolumeMean = sizeClassMidPoints[referenceIndex];
-      std::float64_t preferenceForReferenceSizeClass = calcPreferenceForPrey(subjectVolumeMean, referenceVolumeMean);
-
-      preferenceSum += preferenceForReferenceSizeClass;
-      interSizeClassPreferences[subjectIndex].push_back(preferenceForReferenceSizeClass);
-      interSizeClassVolumes[subjectIndex].push_back(preferenceForReferenceSizeClass * referenceVolumeMean);
-    }
-  }
 }
 
 std::float64_t Functions::functionalResponse(const std::uint32_t& predatorIndex, const std::float64_t& effectivePreyVolume) const {
@@ -61,8 +36,9 @@ std::float64_t Functions::calcMetabolicDeduction(const Heterotroph& heterotroph)
   return fractionalMetabolicExpense_ * std::pow(heterotroph.getVolumeActual(), metabolicIndex_);
 }
 
-std::float64_t Functions::calcPreferenceForPrey(const std::float64_t& grazerVolume, const std::float64_t& preyVolume) const {
-  return std::exp(-std::pow((std::log((preferredPreyVolumeRatio_ * preyVolume) / grazerVolume)), 2) / preferenceDenominator_);
+std::float64_t Functions::traitValueToVolume(const std::float64_t& traitValue, const std::float64_t& smallestVolumeExponent, const std::float64_t& largestVolumeExponent) {
+  std::float64_t volumeExponent = traitValue * (largestVolumeExponent - smallestVolumeExponent) + smallestVolumeExponent;
+  return std::pow(10, volumeExponent);
 }
 
 std::float64_t Functions::calcStarvationProbability(const Heterotroph& heterotroph) const {

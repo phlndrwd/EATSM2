@@ -11,60 +11,48 @@
 
 #include <cassert>
 
-SizeClass::SizeClass(Nutrient& nutrient,
-                            Parameters& params,
-                     const std::uint32_t maxPopulation) :
-        nutrient_(nutrient),
-	subsetFraction_(params.getSizeClassSubsetFraction()),
-	maxPopulation_(maxPopulation) {
-  heterotrophs_.reserve(maxPopulation);
-  alive_.reserve(maxPopulation);
+namespace {
+
+
+
+}  // anonymous namespace
+
+SizeClass::SizeClass(Parameters* params, const std::uint32_t index) :
+        index_(index),
+        maxPopulation_(params->getMaximumSizeClassPopulation(index)),
+        sizeClassUpper_(params->getSizeClassBoundary(index + 1)),
+        sizeClassMidPoint_(params->getSizeClassMidPoint(index)),
+        sizeClassLower_(params->getSizeClassBoundary(index)),
+        subsetFraction_(params->getSizeClassSubsetFraction()) {
+  heterotrophs_.reserve(maxPopulation_);
 }
 
 Heterotroph& SizeClass::keyHeterotroph(const std::uint32_t index) {
-  assert(!alive_.empty());
   assert(index < heterotrophs_.size());
   assert(heterotrophs_[index] != nullptr);
   return *heterotrophs_[index];
 }
 
 const Heterotroph& SizeClass::keyHeterotroph(const std::uint32_t index) const {
-  assert(!alive_.empty());
   assert(index < heterotrophs_.size());
   assert(heterotrophs_[index] != nullptr);
   return *heterotrophs_[index];
 }
 
 std::unique_ptr<Heterotroph> SizeClass::ownHeterotroph(const std::uint32_t index) {
-  assert(!alive_.empty());
   assert(index < heterotrophs_.size());
   assert(heterotrophs_[index] != nullptr);
   return std::move(heterotrophs_[index]);
 }
 
 void SizeClass::removeHeterotroph(const std::uint32_t index) {
-  assert(!alive_.empty());
-  auto it = std::find(alive_.begin(), alive_.end(), index);
-  assert(it != alive_.end());
-
-  alive_.erase(it);
-  heterotrophs_[index].reset();
-  dead_.push(index);
+  assert(index < heterotrophs_.size());
+  heterotrophs_.erase(std::next(std::begin(heterotrophs_), index));
 }
 
 void SizeClass::addHeterotroph(std::unique_ptr<Heterotroph> heterotroph) {
-  assert(alive_.size() < maxPopulation_);
-  std::int32_t index;
-  if (!dead_.empty()) {
-    index = dead_.front();
-    assert(!heterotrophs_[index]);  // Slot must be empty
-    dead_.pop();
-  } else {
-    index = heterotrophs_.size();
-    heterotrophs_.emplace_back(nullptr);
-  }
-  heterotrophs_[index] = std::move(heterotroph);
-  alive_.push_back(index);
+  assert(heterotrophs_.size() < maxPopulation_);
+  heterotrophs_.push_back(std::move(heterotroph));
 }
 
 void SizeClass::addChild(std::unique_ptr<Heterotroph> child) {
@@ -75,21 +63,19 @@ void SizeClass::clearChildren() {
   children_.clear();
 }
 
-std::vector<std::unique_ptr<Heterotroph>>& SizeClass::getHeterotrophs() {
-  return heterotrophs_;
+std::uint32_t SizeClass::getSize() const {
+  return static_cast<std::uint32_t>(heterotrophs_.size());
 }
 
-std::uint32_t SizeClass::getLivingCount() const {
-  return static_cast<std::uint32_t>(alive_.size());
+const std::float64_t& SizeClass::getSizeClassUpper() const {
+  return sizeClassUpper_;
 }
 
-
-std::uint32_t SizeClass::getDeadCount() const {
-  return static_cast<std::uint32_t>(dead_.size());
+const std::float64_t& SizeClass::getSizeClassMidPoint() const {
+  return sizeClassMidPoint_;
 }
 
-std::uint32_t SizeClass::getLivingIndex(const std::uint32_t index) {
-  assert(!alive_.empty());
-  assert(index < alive_.size());
-  return alive_[index];
+const std::float64_t& SizeClass::getSizeClassLower() const {
+  return sizeClassLower_;
 }
+
