@@ -54,23 +54,6 @@ class HeterotrophPopulation {
   void metabolisation();
   void starvation();
   void reproduction();
-  void whoIsMoving(std::vector<MovingHeterotroph>&);
-
-  std::uint32_t getIndex() const;
-  std::uint32_t getPopulationSize() const;
-  std::uint32_t getLivingIndex(const std::uint32_t);
-
-  const Heterotroph& getHeterotroph(const std::uint32_t) const;
-  Heterotroph& getHeterotroph(const std::uint32_t);
-  Heterotroph& getRandomHeterotroph(std::uint32_t&);  // Store living index for possible removal
-
-  SizeClass& getHeterotrophs();
-
-  std::float64_t getVolume() const;
-
-  void addHeterotroph(std::unique_ptr<Heterotroph>);
-  void killHeterotroph(const std::uint32_t);
-  void removeDead();
 
  private:
   void populate(Parameters* params);
@@ -81,8 +64,6 @@ class HeterotrophPopulation {
 
   RandomSimple random_;
   std::vector<SizeClass> sizeClasses_;
-  std::vector<std::uint32_t> deadIndices_;
-
   std::uint32_t numberOfSizeClasses_;
 
 };

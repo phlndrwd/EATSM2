@@ -105,13 +105,15 @@ void HeterotrophPopulation::populate(Parameters* params) {
 void HeterotrophPopulation::metabolisation() {
   for (auto& sizeClass : sizeClasses_ ) {
     sizeClass.forEachHeterotroph(
-      [&](std::uint32_t index, Heterotroph& heterotroph) {
+      [&](Heterotroph& heterotroph) {
         std::float64_t metabolicDeduction = functions_.calcMetabolicDeduction(heterotroph);
         if ((heterotroph.getVolumeActual() - metabolicDeduction) > 0) {
           std::float64_t waste = heterotroph.metabolise(metabolicDeduction);
           nutrient_->addToVolume(waste);
         } else {
           nutrient_->addToVolume(heterotroph.getVolumeActual());
+
+          sizeClass.
           deadIndices_.push_back(index);
         }
       }

@@ -46,14 +46,14 @@ public:
   explicit SizeClass(Parameters*, const std::uint32_t);
 
   void forEachHeterotroph(auto&& func) {
-    for (std::uint32_t i = 0; i < static_cast<std::uint32_t>(heterotrophs_.size()); ++i) {
-      func(i, *heterotrophs_[i].get());
+    for (auto& heterotroph : heterotrophs_) {
+      func(i, *heterotroph.get());
     }
   }
 
   void forEachHeterotroph(auto&& func) const {
-    for (std::uint32_t i = 0; i < static_cast<std::uint32_t>(heterotrophs_.size()); ++i) {
-      func(i, *heterotrophs_[i].get());
+    for (const auto& heterotroph : heterotrophs_) {
+      func(i, *heterotroph.get());
     }
   }
 
@@ -62,7 +62,7 @@ public:
     std::uint32_t subsetCount = roundWithProbability(random, populationSize * subsetFraction_);
     for (auto _ = subsetCount; _--;) {
       std::uint32_t randomIndex = random.getUniformInt(populationSize - 1);
-      func(randomIndex, *heterotrophs_[randomIndex].get());
+      func(*heterotrophs_[randomIndex].get());
     }
   }
 
@@ -82,6 +82,8 @@ public:
   void addChild(std::unique_ptr<Heterotroph>);
   void clearChildren();
 
+  void kill(Heterotroph&);
+
   std::uint32_t getSize() const;
 
   const std::float64_t& getSizeClassUpper() const;
@@ -100,7 +102,7 @@ private:
 
   std::vector<std::unique_ptr<Heterotroph>> heterotrophs_;
   std::vector<std::unique_ptr<Heterotroph>> children_;
-  std::vector<std::uint32_t> dead_;
+  std::vector<Heterotroph*> dead_;
 };
 
 #endif // HETEROTROPHS_H

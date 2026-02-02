@@ -45,8 +45,8 @@ std::unique_ptr<Heterotroph> SizeClass::ownHeterotroph(const std::uint32_t index
   return std::move(heterotrophs_[index]);
 }
 
-void SizeClass::removeHeterotroph(const std::uint32_t index) {
-  assert(index < heterotrophs_.size());
+void SizeClass::removeHeterotroph(Heterotroph& heterotroph) {
+  auto it = std::find(heterotrophs_.begin(), heterotrophs_.end(), heterotroph);
   heterotrophs_.erase(std::next(std::begin(heterotrophs_), index));
 }
 
@@ -61,6 +61,11 @@ void SizeClass::addChild(std::unique_ptr<Heterotroph> child) {
 
 void SizeClass::clearChildren() {
   children_.clear();
+}
+
+void SizeClass::kill(Heterotroph& heterotroph) {
+  heterotroph.kill();
+  dead_.push_back(heterotroph);
 }
 
 std::uint32_t SizeClass::getSize() const {
