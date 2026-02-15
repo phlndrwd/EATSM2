@@ -32,23 +32,23 @@ std::float64_t Functions::functionalResponse(const std::uint32_t& predatorIndex,
   return (effectivePreyVolume / (halfSaturationConstants_[predatorIndex] + effectivePreyVolume));
 }
 
-std::float64_t Functions::calcMetabolicDeduction(const Heterotroph& heterotroph) const {
-  return fractionalMetabolicExpense_ * std::pow(heterotroph.getVolumeActual(), metabolicIndex_);
+std::float64_t Functions::calcMetabolicDeduction(const Heterotroph* heterotroph) const {
+  return fractionalMetabolicExpense_ * std::pow(heterotroph->getVolumeActual(), metabolicIndex_);
 }
 
-std::float64_t Functions::traitValueToVolume(const std::float64_t& traitValue, const std::float64_t& smallestVolumeExponent, const std::float64_t& largestVolumeExponent) {
-  std::float64_t volumeExponent = traitValue * (largestVolumeExponent - smallestVolumeExponent) + smallestVolumeExponent;
-  return std::pow(10, volumeExponent);
-}
-
-std::float64_t Functions::calcStarvationProbability(const Heterotroph& heterotroph) const {
-  const std::float64_t& volumeActual = heterotroph.getVolumeActual();
-  const std::float64_t& volumeMinimum = heterotroph.getVolumeMinimum();
+std::float64_t Functions::calcStarvationProbability(const Heterotroph* heterotroph) const {
+  const std::float64_t& volumeActual = heterotroph->getVolumeActual();
+  const std::float64_t& volumeMinimum = heterotroph->getVolumeMinimum();
 
   if (volumeActual <= volumeMinimum)
     return 1;
-  else if (volumeActual >= heterotroph.getVolumeHeritable())
+  else if (volumeActual >= heterotroph->getVolumeHeritable())
     return 0;
   else
-    return (1 + ((volumeMinimum - volumeActual) * heterotroph.getStarvationMultiplier()));
+    return (1 + ((volumeMinimum - volumeActual) * heterotroph->getStarvationMultiplier()));
 }
+
+//std::float64_t Functions::traitValueToVolume(const std::float64_t& traitValue, const std::float64_t& smallestVolumeExponent, const std::float64_t& largestVolumeExponent) {
+//  std::float64_t volumeExponent = traitValue * (largestVolumeExponent - smallestVolumeExponent) + smallestVolumeExponent;
+//  return std::pow(10, volumeExponent);
+//}

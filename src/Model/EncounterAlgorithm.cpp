@@ -32,7 +32,7 @@ void EncounterAlgorithm::update(std::vector<HeterotrophPopulation>& sizeClasses)
     std::uint32_t coupledSizeClassIndex = 0;
     std::float64_t feedingProbability = calcFeedingProbability(sizeClasses, thisSizeClass, coupledSizeClassIndex, feedingStrategy);
     HeterotrophPopulation& coupledSizeClass = sizeClasses[coupledSizeClassIndex];
-    thisSizeClass.getHeterotrophs().subset(random_, [&](const std::uint32_t index) {
+    thisSizeClass.subset(random_, [&](const std::uint32_t index) {
       if (random_.getUniform() <= feedingProbability) {
         Heterotroph& predator = thisSizeClass.getHeterotroph(index);
 

@@ -24,35 +24,36 @@ SizeClass::SizeClass(Parameters* params, const std::uint32_t index) :
         sizeClassMidPoint_(params->getSizeClassMidPoint(index)),
         sizeClassLower_(params->getSizeClassBoundary(index)),
         subsetFraction_(params->getSizeClassSubsetFraction()) {
-  heterotrophs_.reserve(maxPopulation_);
+  living_.reserve(maxPopulation_);
 }
 
 Heterotroph& SizeClass::keyHeterotroph(const std::uint32_t index) {
-  assert(index < heterotrophs_.size());
-  assert(heterotrophs_[index] != nullptr);
-  return *heterotrophs_[index];
+  assert(index < living_.size());
+  assert(living_[index] != nullptr);
+  return *living_[index];
 }
 
 const Heterotroph& SizeClass::keyHeterotroph(const std::uint32_t index) const {
-  assert(index < heterotrophs_.size());
-  assert(heterotrophs_[index] != nullptr);
-  return *heterotrophs_[index];
+  assert(index < living_.size());
+  assert(living_[index] != nullptr);
+  return *living_[index];
 }
 
 std::unique_ptr<Heterotroph> SizeClass::ownHeterotroph(const std::uint32_t index) {
-  assert(index < heterotrophs_.size());
-  assert(heterotrophs_[index] != nullptr);
-  return std::move(heterotrophs_[index]);
+  assert(index < living_.size());
+  assert(living_[index] != nullptr);
+  return std::move(living_[index]);
 }
 
-void SizeClass::removeHeterotroph(Heterotroph& heterotroph) {
-  auto it = std::find(heterotrophs_.begin(), heterotrophs_.end(), heterotroph);
-  heterotrophs_.erase(std::next(std::begin(heterotrophs_), index));
+void SizeClass::removeDead() {
+  std::erase_if(living_, [](const std::unique_ptr<Heterotroph>& heterotroph) {
+    return !heterotroph->isAlive();
+  });
 }
 
 void SizeClass::addHeterotroph(std::unique_ptr<Heterotroph> heterotroph) {
-  assert(heterotrophs_.size() < maxPopulation_);
-  heterotrophs_.push_back(std::move(heterotroph));
+  assert(living_.size() < maxPopulation_);
+  living_.push_back(std::move(heterotroph));
 }
 
 void SizeClass::addChild(std::unique_ptr<Heterotroph> child) {
@@ -63,13 +64,8 @@ void SizeClass::clearChildren() {
   children_.clear();
 }
 
-void SizeClass::kill(Heterotroph& heterotroph) {
-  heterotroph.kill();
-  dead_.push_back(heterotroph);
-}
-
 std::uint32_t SizeClass::getSize() const {
-  return static_cast<std::uint32_t>(heterotrophs_.size());
+  return static_cast<std::uint32_t>(living_.size());
 }
 
 const std::float64_t& SizeClass::getSizeClassUpper() const {

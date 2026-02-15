@@ -7,8 +7,8 @@
 * which can be obtained from https://opensource.org/license/bsd-3-clause/.    *
 ******************************************************************************/
 
-#ifndef HETEROTROPHS_H
-#define HETEROTROPHS_H
+#ifndef living_H
+#define living_H
 
 #include <algorithm>
 #include <cmath>
@@ -46,23 +46,28 @@ public:
   explicit SizeClass(Parameters*, const std::uint32_t);
 
   void forEachHeterotroph(auto&& func) {
-    for (auto& heterotroph : heterotrophs_) {
-      func(i, *heterotroph.get());
+    for (auto& heterotroph : living_) {
+      func(heterotroph.get());
     }
   }
 
   void forEachHeterotroph(auto&& func) const {
-    for (const auto& heterotroph : heterotrophs_) {
-      func(i, *heterotroph.get());
+    for (const auto& heterotroph : living_) {
+      func(heterotroph.get());
     }
   }
 
   void subset(RandomSimple& random, auto&& func) {
-    std::uint32_t populationSize = static_cast<std::uint32_t>(heterotrophs_.size());
+    std::uint32_t populationSize = static_cast<std::uint32_t>(living_.size());
     std::uint32_t subsetCount = roundWithProbability(random, populationSize * subsetFraction_);
     for (auto _ = subsetCount; _--;) {
-      std::uint32_t randomIndex = random.getUniformInt(populationSize - 1);
-      func(*heterotrophs_[randomIndex].get());
+      Heterotroph* randomHeterotroph = nullptr;
+      std::uint32_t randomIndex = 0;
+      do {
+        randomIndex = random.getUniformInt(populationSize - 1);
+        randomHeterotroph = living_[randomIndex].get();
+      } while (!randomHeterotroph->isAlive());
+      func(randomHeterotroph);
     }
   }
 
@@ -76,13 +81,11 @@ public:
   const Heterotroph& keyHeterotroph(const std::uint32_t) const;
 
   std::unique_ptr<Heterotroph> ownHeterotroph(const std::uint32_t);
-  void removeHeterotroph(const std::uint32_t);
 
   void addHeterotroph(std::unique_ptr<Heterotroph>);
   void addChild(std::unique_ptr<Heterotroph>);
   void clearChildren();
-
-  void kill(Heterotroph&);
+  void removeDead();
 
   std::uint32_t getSize() const;
 
@@ -100,9 +103,8 @@ private:
 
   const std::float64_t subsetFraction_;
 
-  std::vector<std::unique_ptr<Heterotroph>> heterotrophs_;
+  std::vector<std::unique_ptr<Heterotroph>> living_;
   std::vector<std::unique_ptr<Heterotroph>> children_;
-  std::vector<Heterotroph*> dead_;
 };
 
-#endif // HETEROTROPHS_H
+#endif // living_H

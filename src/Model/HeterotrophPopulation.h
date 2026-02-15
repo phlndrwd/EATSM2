@@ -51,13 +51,14 @@ class HeterotrophPopulation {
 
   void update();
 
+  void feeding();
   void metabolisation();
   void starvation();
   void reproduction();
 
  private:
   void populate(Parameters* params);
-  void starve(const std::uint32_t);
+  void removeDead();
 
   Nutrient* nutrient_;
   Functions functions_;

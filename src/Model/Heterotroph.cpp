@@ -17,6 +17,10 @@
 #include "RandomSimple.h"
 
 namespace {
+std::float64_t traitValueToVolume(const std::float64_t& traitValue, const std::float64_t& smallestVolumeExponent, const std::float64_t& largestVolumeExponent) {
+  std::float64_t volumeExponent = traitValue * (largestVolumeExponent - smallestVolumeExponent) + smallestVolumeExponent;
+  return std::pow(10, volumeExponent);
+}
 
 }
 
