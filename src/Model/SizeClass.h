@@ -46,8 +46,8 @@ public:
   explicit SizeClass(Parameters*, const std::uint32_t);
 
   void forEachHeterotroph(auto&& func) {
-    for (auto& heterotroph : living_) {
-      func(heterotroph.get());
+    for (std::uint32_t index = 0; index < getLivingCount(); ++index) {
+      func(index, living_[index].get());
     }
   }
 
@@ -77,8 +77,10 @@ public:
     }
   }
 
-  Heterotroph& keyHeterotroph(const std::uint32_t);
-  const Heterotroph& keyHeterotroph(const std::uint32_t) const;
+  Heterotroph* keyHeterotroph(const std::uint32_t);
+  const Heterotroph* keyHeterotroph(const std::uint32_t) const;
+
+  Heterotroph* getRandomHeterotroph(RandomSimple&);
 
   std::unique_ptr<Heterotroph> ownHeterotroph(const std::uint32_t);
 
@@ -87,7 +89,9 @@ public:
   void clearChildren();
   void removeDead();
 
-  std::uint32_t getSize() const;
+  std::uint32_t getLivingCount() const;
+
+  const std::uint32_t& getIndex() const;
 
   const std::float64_t& getSizeClassUpper() const;
   const std::float64_t& getSizeClassMidPoint() const;

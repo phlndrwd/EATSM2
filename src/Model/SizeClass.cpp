@@ -27,16 +27,23 @@ SizeClass::SizeClass(Parameters* params, const std::uint32_t index) :
   living_.reserve(maxPopulation_);
 }
 
-Heterotroph& SizeClass::keyHeterotroph(const std::uint32_t index) {
+Heterotroph* SizeClass::keyHeterotroph(const std::uint32_t index) {
   assert(index < living_.size());
   assert(living_[index] != nullptr);
-  return *living_[index];
+  return living_[index].get();
 }
 
-const Heterotroph& SizeClass::keyHeterotroph(const std::uint32_t index) const {
+const Heterotroph* SizeClass::keyHeterotroph(const std::uint32_t index) const {
   assert(index < living_.size());
   assert(living_[index] != nullptr);
-  return *living_[index];
+  return living_[index].get();
+}
+
+Heterotroph* SizeClass::getRandomHeterotroph(RandomSimple& random) {
+  std::uint32_t randomIndex = random.getUniformInt(getLivingCount() - 1);
+  assert(randomIndex < living_.size());
+  assert(living_[randomIndex] != nullptr);
+  return living_[randomIndex].get();
 }
 
 std::unique_ptr<Heterotroph> SizeClass::ownHeterotroph(const std::uint32_t index) {
@@ -47,7 +54,7 @@ std::unique_ptr<Heterotroph> SizeClass::ownHeterotroph(const std::uint32_t index
 
 void SizeClass::removeDead() {
   std::erase_if(living_, [](const std::unique_ptr<Heterotroph>& heterotroph) {
-    return !heterotroph->isAlive();
+    return !heterotroph || !heterotroph->isAlive();
   });
 }
 
@@ -64,8 +71,12 @@ void SizeClass::clearChildren() {
   children_.clear();
 }
 
-std::uint32_t SizeClass::getSize() const {
+std::uint32_t SizeClass::getLivingCount() const {
   return static_cast<std::uint32_t>(living_.size());
+}
+
+const std::uint32_t& SizeClass::getIndex() const {
+  return index_;
 }
 
 const std::float64_t& SizeClass::getSizeClassUpper() const {

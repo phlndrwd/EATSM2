@@ -13,7 +13,6 @@
 #include <stdfloat>
 #include <vector>
 
-#include "EncounterAlgorithm.h"
 #include "Nutrient.h"
 #include "Parameters.h"
 #include "RandomSimple.h"
@@ -30,7 +29,6 @@ class Life {
 
  private:
   void moveHeterotrophs();
-  std::uint32_t findSizeClassIndexFromVolume(const std::float64_t&) const;
 
   Nutrient& nutrient_;
   Parameters& params_;
@@ -38,8 +36,6 @@ class Life {
   Autotrophs autotrophs_;
   HeterotrophPopulation heterotrophs_;
 
-  RandomSimple random_;
-  EncounterAlgorithm algorithm_;
   std::vector<MovingHeterotroph> movingHeterotrophs_;
 
   std::uint64_t varTotalHeterotrophFrequency_;

@@ -76,7 +76,6 @@ void Parameters::calculate() {
   largestVolumeExponent_ = std::log10(largestIndividualVolume_);
 
   autotrophCellSize_ = sizeClassMidPoints_[consts::kAutotrophSizeIndex];
-  individualHeterotrophVolume_ = autotrophCellSize_ * preferredPreyVolumeRatio_;
   preferenceDenominator_ = 2 * std::pow(preferenceFunctionWidth_, 2);
 
   std::float64_t sizeClassExponentIncrement = (largestVolumeExponent_ - smallestVolumeExponent_) / numberOfSizeClasses_;
@@ -109,10 +108,24 @@ void Parameters::calculate() {
   }
   std::float64_t sizeClassBoundaryExponent = smallestVolumeExponent_ + (numberOfSizeClasses_ * sizeClassExponentIncrement);
   sizeClassBoundaries_[numberOfSizeClasses_] = std::pow(10, sizeClassBoundaryExponent);
+
+  individualHeterotrophVolume_ = autotrophCellSize_ * preferredPreyVolumeRatio_;
+  individualHetertrophIndex_ = findSizeClassIndexFromVolume(individualHeterotrophVolume_);
 }
 
 std::float64_t Parameters::calcPreferenceForPrey(const std::float64_t& grazerVolume, const std::float64_t& preyVolume) const {
   return std::exp(-std::pow((std::log((preferredPreyVolumeRatio_ * preyVolume) / grazerVolume)), 2) / preferenceDenominator_);
+}
+
+std::uint32_t Parameters::findSizeClassIndexFromVolume(const std::float64_t& volume) const {
+  std::uint32_t sizeClassIndex = 0;
+  for (std::uint32_t index = 1; index <= numberOfSizeClasses_; ++index) {
+    if (volume < getSizeClassBoundary(index)) {
+      sizeClassIndex = index - 1;
+      break;
+    }
+  }
+  return sizeClassIndex;
 }
 
 const std::uint32_t& Parameters::getRandomSeed() const {
@@ -261,4 +274,8 @@ const std::float64_t& Parameters::getAutotrophCellSize() const {
 
 const std::float64_t& Parameters::getIndividualHeterotrophVolume() const {
   return individualHeterotrophVolume_;
+}
+
+const std::uint32_t& Parameters::getIndividualHeterotrophIndex() const {
+  return individualHetertrophIndex_;
 }

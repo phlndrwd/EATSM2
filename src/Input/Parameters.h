@@ -77,6 +77,7 @@ class Parameters {
   void calculate();
 
   std::float64_t calcPreferenceForPrey(const std::float64_t&, const std::float64_t&) const;
+  std::uint32_t findSizeClassIndexFromVolume(const std::float64_t& volume) const;
 
   const std::uint32_t& getDataSize() const;
 
@@ -102,6 +103,8 @@ class Parameters {
 
   const std::float64_t& getAutotrophCellSize() const;
   const std::float64_t& getIndividualHeterotrophVolume() const;
+
+  const std::uint32_t& getIndividualHeterotrophIndex() const;
 
  private:
   std::uint32_t randomSeed_;
@@ -152,8 +155,10 @@ class Parameters {
   std::float64_t largestVolumeExponent_;
 
   std::float64_t autotrophCellSize_;
-  std::float64_t individualHeterotrophVolume_;
   std::float64_t preferenceDenominator_;
+  std::float64_t individualHeterotrophVolume_;
+
+  std::uint32_t individualHetertrophIndex_;
 };
 
 #endif

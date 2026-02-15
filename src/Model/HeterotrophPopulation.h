@@ -27,6 +27,18 @@ enum eGrowthTrajectory {
   eShrinking
 };
 
+enum eFeedingStrategy {
+  eNotEating,
+  eHerbivore,
+  eCarnivore
+};
+
+struct PreyVolumes {
+  PreyVolumes(): total(0), autotroph(0) {}
+  std::float64_t total;
+  std::float64_t autotroph;
+};
+
 struct MovingHeterotroph {
   std::unique_ptr<Heterotroph> heterotroph;
   std::uint32_t prevSizeClassIndex;
@@ -46,8 +58,7 @@ class HeterotrophPopulation {
   HeterotrophPopulation(HeterotrophPopulation&&) noexcept = default;
   HeterotrophPopulation& operator=(HeterotrophPopulation&&) noexcept = default;
 
-  explicit HeterotrophPopulation(Nutrient*, Parameters*, const std::float64_t,
-                                 const std::uint32_t, const std::uint32_t);
+  explicit HeterotrophPopulation(Nutrient*, Autotrophs*, Parameters*, const std::uint32_t&);
 
   void update();
 
@@ -60,13 +71,29 @@ class HeterotrophPopulation {
   void populate(Parameters* params);
   void removeDead();
 
+  std::float64_t calcFeedingProbability(SizeClass&, std::uint32_t&, eFeedingStrategy&);
+  PreyVolumes calcEffectivePreyVolumes(SizeClass&, std::vector<std::float64_t>&);
+  std::uint32_t setCoupledSizeClassIndex(const std::vector<std::float64_t>&,
+                                         PreyVolumes&, eFeedingStrategy&);
+  void feedFromAutotrophs(Heterotroph*);
+  void feedFromHeterotrophs(Heterotroph*, SizeClass&);
+
   Nutrient* nutrient_;
+  Autotrophs* autotrophs_;
+
   Functions functions_;
 
   RandomSimple random_;
   std::vector<SizeClass> sizeClasses_;
-  std::uint32_t numberOfSizeClasses_;
+  std::vector<MovingHeterotroph> movingHeterotrophs_;
 
+  const std::vector<std::vector<std::float64_t>> interSizeClassPreferences_;
+  const std::vector<std::vector<std::float64_t>> interSizeClassVolumes_;
+  const std::float64_t smallestVolumeExponent_;
+  const std::float64_t largestVolumeExponent_;
+  const std::float64_t autotrophCellSize_;
+  const std::uint32_t numberOfSizeClasses_;
+  const std::uint32_t autotrophSizeIndex_;
 };
 
 #endif // SIZECLASS_H

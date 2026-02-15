@@ -24,9 +24,7 @@ Functions::Functions(Parameters& params) :
     preferenceFunctionWidth_(params.getPreferenceFunctionWidth()),
     fractionalMetabolicExpense_(params.getFractionalMetabolicExpense()),
     metabolicIndex_(params.getMetabolicIndex()),
-    numberOfSizeClasses_(params.getNumberOfSizeClasses()) {
-  calcPreferenceMatrices(params);
-}
+    numberOfSizeClasses_(params.getNumberOfSizeClasses()) {}
 
 std::float64_t Functions::functionalResponse(const std::uint32_t& predatorIndex, const std::float64_t& effectivePreyVolume) const {
   return (effectivePreyVolume / (halfSaturationConstants_[predatorIndex] + effectivePreyVolume));

@@ -43,11 +43,8 @@ add_subdirectory(../jino jino_build)
 
 add_executable(eatsm2
   src/Main.cpp
-
   src/Input/Parameters.cpp
-
   src/Model/Autotrophs.cpp
-  src/Model/EncounterAlgorithm.cpp
   src/Model/Environment.cpp
   src/Model/Functions.cpp
   src/Model/Heterotroph.cpp
@@ -56,7 +53,6 @@ add_executable(eatsm2
   src/Model/Nutrient.cpp
   src/Model/SizeClass.cpp
   src/Model/Traits.cpp
-
   src/Tools/RandomSimple.cpp
 )
 
