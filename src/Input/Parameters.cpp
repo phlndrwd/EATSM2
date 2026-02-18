@@ -75,7 +75,6 @@ void Parameters::calculate() {
   smallestVolumeExponent_ = std::log10(smallestIndividualVolume_);
   largestVolumeExponent_ = std::log10(largestIndividualVolume_);
 
-  autotrophCellSize_ = sizeClassMidPoints_[consts::kAutotrophSizeIndex];
   preferenceDenominator_ = 2 * std::pow(preferenceFunctionWidth_, 2);
 
   std::float64_t sizeClassExponentIncrement = (largestVolumeExponent_ - smallestVolumeExponent_) / numberOfSizeClasses_;
@@ -109,6 +108,8 @@ void Parameters::calculate() {
   std::float64_t sizeClassBoundaryExponent = smallestVolumeExponent_ + (numberOfSizeClasses_ * sizeClassExponentIncrement);
   sizeClassBoundaries_[numberOfSizeClasses_] = std::pow(10, sizeClassBoundaryExponent);
 
+  // Size vectors need to be populated beforehand.
+  autotrophCellSize_ = sizeClassMidPoints_[consts::kAutotrophSizeIndex];
   individualHeterotrophVolume_ = autotrophCellSize_ * preferredPreyVolumeRatio_;
   individualHetertrophIndex_ = findSizeClassIndexFromVolume(individualHeterotrophVolume_);
 }
