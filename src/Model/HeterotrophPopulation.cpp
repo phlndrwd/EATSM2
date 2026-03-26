@@ -41,6 +41,10 @@ HeterotrophPopulation::HeterotrophPopulation(Nutrient* nutrient, Autotrophs* aut
         autotrophs_(autotrophs),
         functions_(*params),
         random_(randomSeed),
+        varTotalHeterotrophFrequency_(0),
+        varTotalHeterotrophVolume_(0),
+        buffTotalHeterotrophFrequency_("heterotrophFrequency", "totals", params->getDataSize(), varTotalHeterotrophFrequency_),
+        buffTotalHeterotrophVolume_("heterotrophVolume", "totals", params->getDataSize(), varTotalHeterotrophVolume_),
         interSizeClassPreferences_(params->getInterSizeClassPreferences()),
         interSizeClassVolumes_(params->getInterSizeClassVolumes()),
         smallestVolumeExponent_(params->getSmallestVolumeExponent()),
@@ -52,10 +56,20 @@ HeterotrophPopulation::HeterotrophPopulation(Nutrient* nutrient, Autotrophs* aut
 }
 
 void HeterotrophPopulation::update() {
-  feeding();
-  metabolisation();
-  starvation();
-  reproduction();
+  //feeding();
+  //metabolisation();
+  //starvation();
+  //reproduction();
+
+
+
+  varTotalHeterotrophFrequency_ = 0;
+  varTotalHeterotrophVolume_ = 0;
+
+  forEachSizeClass([&](const SizeClass& sizeClass) {
+    varTotalHeterotrophFrequency_ += sizeClass.getLivingCount();
+    varTotalHeterotrophVolume_ += sizeClass.getVolume();
+  });
 }
 
 void HeterotrophPopulation::populate(Parameters* params) {
@@ -222,7 +236,7 @@ PreyVolumes HeterotrophPopulation::calcEffectivePreyVolumes(SizeClass& thisSizeC
       std::float64_t sizeClassVolume = interSizeClassVolumes_[thisSizeClass.getIndex()][preyIndex];
       heterotrophVolume = sizeClassVolume * populationSize;
     }
-    effectivePreyVolumes[preyIndex] = heterotrophVolume + autotrophVolume;;
+    effectivePreyVolumes[preyIndex] = heterotrophVolume + autotrophVolume;
     preyVolumes.total += effectivePreyVolumes[preyIndex];
   }
   return preyVolumes;

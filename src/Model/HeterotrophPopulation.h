@@ -21,6 +21,8 @@
 #include "Parameters.h"
 #include "RandomSimple.h"
 
+#include "Buffer.h"
+
 enum eGrowthTrajectory {
   eStatic,
   eGrowing,
@@ -60,6 +62,12 @@ class HeterotrophPopulation {
 
   explicit HeterotrophPopulation(Nutrient*, Autotrophs*, Parameters*, const std::uint32_t&);
 
+  void forEachSizeClass(auto&& func) const {
+    for (const auto& sizeClass : sizeClasses_) {
+      func(sizeClass);
+    }
+  }
+
   void update();
 
   void feeding();
@@ -86,6 +94,13 @@ class HeterotrophPopulation {
   RandomSimple random_;
   std::vector<SizeClass> sizeClasses_;
   std::vector<MovingHeterotroph> movingHeterotrophs_;
+
+  // Data collection
+  std::uint64_t varTotalHeterotrophFrequency_;
+  std::float64_t varTotalHeterotrophVolume_;
+
+  jino::Buffer<std::uint64_t> buffTotalHeterotrophFrequency_;
+  jino::Buffer<std::float64_t> buffTotalHeterotrophVolume_;
 
   const std::vector<std::vector<std::float64_t>> interSizeClassPreferences_;
   const std::vector<std::vector<std::float64_t>> interSizeClassVolumes_;

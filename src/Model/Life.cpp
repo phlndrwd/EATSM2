@@ -19,11 +19,8 @@ Life::Life(Nutrient& nutrient, Parameters& params) :
     nutrient_(nutrient),
     params_(params),
     autotrophs_(nutrient, params.getInitialAutotrophVolume(), params.getDataSize()),
-    heterotrophs_(&nutrient, &autotrophs_, &params, params.getRandomSeed()), // Is this the first time random is used?
-    varTotalHeterotrophFrequency_(0),
-    varTotalHeterotrophVolume_(0),
-    buffTotalHeterotrophFrequency_("heterotrophFrequency", "totals", params.getDataSize(), varTotalHeterotrophFrequency_),
-    buffTotalHeterotrophVolume_("heterotrophVolume", "totals", params.getDataSize(), varTotalHeterotrophVolume_) {}
+    heterotrophs_(&nutrient, &autotrophs_, &params, params.getRandomSeed()) // Is this the first time random is used?
+ {}
 
 void Life::update() {
   autotrophs_.update();

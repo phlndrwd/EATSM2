@@ -18,8 +18,6 @@
 #include "RandomSimple.h"
 #include "HeterotrophPopulation.h"
 
-#include "Buffer.h"
-
 class Life {
  public:
   Life() = delete;
@@ -37,12 +35,6 @@ class Life {
   HeterotrophPopulation heterotrophs_;
 
   std::vector<MovingHeterotroph> movingHeterotrophs_;
-
-  std::uint64_t varTotalHeterotrophFrequency_;
-  std::float64_t varTotalHeterotrophVolume_;
-
-  jino::Buffer<std::uint64_t> buffTotalHeterotrophFrequency_;
-  jino::Buffer<std::float64_t> buffTotalHeterotrophVolume_;
 };
 
 #endif

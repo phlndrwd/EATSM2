@@ -90,6 +90,7 @@ public:
   void removeDead();
 
   std::uint32_t getLivingCount() const;
+  std::float64_t getVolume() const;
 
   const std::uint32_t& getIndex() const;
 

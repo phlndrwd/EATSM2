@@ -75,6 +75,14 @@ std::uint32_t SizeClass::getLivingCount() const {
   return static_cast<std::uint32_t>(living_.size());
 }
 
+std::float64_t SizeClass::getVolume() const {
+  std::float64_t volume = 0;
+  forEachHeterotroph([&](const Heterotroph* heterotroph) {
+    volume += heterotroph->getVolumeActual();
+  });
+  return volume;
+}
+
 const std::uint32_t& SizeClass::getIndex() const {
   return index_;
 }
